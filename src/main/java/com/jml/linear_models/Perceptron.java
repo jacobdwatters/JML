@@ -1,12 +1,16 @@
-package org.jml.linear_models;
+package com.jml.linear_models;
 
-import org.jml.core.Models;
+import com.jml.core.Models;
 
 import java.util.HashMap;
 
-public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[][], double[]> {
 
-
+/**
+ * Fits a one layer perceptron to a set of features.<br><br>
+ *
+ * Perceptron is a linear classifier that is analogous to logistic regression using stochastic gradient descent.
+ */
+public class Perceptron implements Models<Perceptron, double[][], double[][]> {
     /**
      * Constructs model and prepares for training using the given parameters.
      *
@@ -31,7 +35,7 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets, HashMap<String, Double> args) {
+    public double[][] fit(double[][] features, double[][] targets, HashMap<String, Double> args) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -46,7 +50,7 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets) {
+    public double[][] fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -54,15 +58,15 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
     /**
      * Uses fitted/trained model to make predictions on features.
      *
-     * @param features
+     * @param features Features to make predictions on.
      * @return The models predicted labels.
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[] predict(double[][] features) {
+    public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
-        return new double[0];
+        return null;
     }
 
     /**
@@ -72,7 +76,7 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
      * @return The fitted / trained model located in the specified file.
      */
     @Override
-    public LinearRegressionSGD loadModel(String filePath) {
+    public Perceptron loadModel(String filePath) {
         // TODO: Auto-generated method stub
         return null;
     }

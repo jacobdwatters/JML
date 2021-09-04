@@ -1,4 +1,4 @@
-package org.jml.core;
+package com.jml.core;
 
 import java.util.HashMap;
 
