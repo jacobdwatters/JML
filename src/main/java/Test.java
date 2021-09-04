@@ -1,28 +1,23 @@
-import linalg.Matrix;
-import linalg.Decompose;
+
+import org.jml.linear_models.Perceptron;
+import java.util.HashMap;
 
 public class Test {
     public static void main(String[] args) {
-        double[][] a = {{1.2, 2, 3},
-                        {4, 5.5, 6}};
-        double[][] b = {{1, 2},
-                        {3, 4},
-                        {5, 6}};
-        Matrix A = new Matrix(a);
-        Matrix B = new Matrix(b);
+        Perceptron model = new Perceptron();
+        double[][][] x = {
+                            {{1, 2, 3, 4},
+                             {5, 6, 7, 4}},
 
-        System.out.println("A:\n" + A + "\n\n");
-        System.out.println("B:\n" + B + "\n\n");
-        System.out.println("A*B:\n" + A.mult(B) + "\n\n");
+                            {{1, 2, 3, 4},
+                             {5, 6, 7, 4}},
 
-        System.out.println("----------------------------------------------" +
-                "\nQR decomposition of B...\n");
-        Matrix[] QR = Decompose.QR(B);
-        System.out.println("Q:\n" + QR[0] + "\n\n");
-        System.out.println("R:\n" + QR[1] + "\n");
-        System.out.println("Q*R=A: " + QR[0].mult(QR[1]).round(10).equals(B));
-        System.out.println("Q is orthogonal?: " + QR[0].isOrthogonal());
-        System.out.println("R is upper-triangular?: " + QR[1].isTriU());
+                            {{1, 2, 3, 4},
+                             {5, 6, 7, 4}},
+                         };
+        double[] y = {4, 5, 6};
+        HashMap<String, Double> a = new HashMap<>();
 
+        model.fit(x, y, a);
     }
 }
