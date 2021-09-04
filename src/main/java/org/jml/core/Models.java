@@ -7,8 +7,8 @@ import java.util.HashMap;
  * This interface specified the requirements for a machine learning model.
  *
  * @param <E> The type of the model.
- * @param <X> The type of the feature dataset.
- * @param <Y> The type of the target dataset.
+ * @param <X> The type of the features dataset.
+ * @param <Y> The type of the targets dataset.
  */
 public interface Models<E, X, Y> {
 
