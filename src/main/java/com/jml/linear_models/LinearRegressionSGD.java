@@ -1,12 +1,19 @@
-package org.jml.linear_models;
+package com.jml.linear_models;
 
-import org.jml.core.Models;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import com.jml.core.Models;
 import java.util.HashMap;
 
-public class Perceptron implements Models<Perceptron, Object, Object> {
+
+/**
+ * Model for least squares linear regression of one variable by stochastic gradient descent.<br><br>
+ *
+ * LinearRegressionSGD fits a model y = b<sub>0</sub> + b<sub>1</sub>x to the datasets by minimizing
+ * the residuals of the sum of squares between the values in the target dataset and the values predicted
+ * by the model. This is using stochastic gradient descent.
+ */
+public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[][], double[]> {
+
+
     /**
      * Constructs model and prepares for training using the given parameters.
      *
@@ -31,38 +38,7 @@ public class Perceptron implements Models<Perceptron, Object, Object> {
      *                                  compiled.
      */
     @Override
-    public double[][] fit(Object features, Object targets, HashMap<String, Double> args) {
-
-        // TODO: This is just temporary for testing --------------------------------------------------------------------
-        if(features.getClass().isArray()) {
-            System.out.println("We have an array!");
-        } else {
-            System.out.println("We don't have an array :(");
-        }
-
-        // This gets the number of dimensions the array has. This would go in a utility class.
-        Object o = features;
-        Class<?> c = features.getClass();
-        ArrayList<Integer> dimensionSizes = new ArrayList<>();
-        int dimensions = 0;
-        while (c.isArray()) {
-            dimensions++;
-            dimensionSizes.add(Array.getLength(o));
-            o = Array.get(o, 0);
-            if (o == null) {
-                break;
-            }
-            c = o.getClass();
-        }
-
-        System.out.println("Dimensions: " + dimensions);
-        System.out.print("Sizes: ");
-
-        for(int i : dimensionSizes) {
-            System.out.print(i + ",");
-        }
-        // END OF TESTING ----------------------------------------------------------------------------------------------
-
+    public double[][] fit(double[][] features, double[] targets, HashMap<String, Double> args) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -77,7 +53,7 @@ public class Perceptron implements Models<Perceptron, Object, Object> {
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(Object features, Object targets) {
+    public double[][] fit(double[][] features, double[] targets) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -85,15 +61,15 @@ public class Perceptron implements Models<Perceptron, Object, Object> {
     /**
      * Uses fitted/trained model to make predictions on features.
      *
-     * @param features
+     * @param features Features to make predictions on.
      * @return The models predicted labels.
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      *                                  the specification when the model was compiled.
      */
     @Override
-    public Object predict(Object features) {
+    public double[] predict(double[][] features) {
         // TODO: Auto-generated method stub
-        return null;
+        return new double[0];
     }
 
     /**
@@ -103,7 +79,7 @@ public class Perceptron implements Models<Perceptron, Object, Object> {
      * @return The fitted / trained model located in the specified file.
      */
     @Override
-    public Perceptron loadModel(String filePath) {
+    public LinearRegressionSGD loadModel(String filePath) {
         // TODO: Auto-generated method stub
         return null;
     }

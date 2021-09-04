@@ -1,10 +1,18 @@
-package org.jml.linear_models;
+package com.jml.linear_models;
 
-import org.jml.core.Models;
-
+import com.jml.core.Models;
 import java.util.HashMap;
 
-public class PolynomialRegression implements Models<PolynomialRegression, double[], double[]> {
+
+/**
+ * Model for least squares linear regression of multiple variables by stochastic gradient descent.<br><br>
+ *
+ * PolynomialRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x  + b<sub>2</sub>x<sup>2</sup> + ... +
+ * b<sub>n</sub>x<sup>n</sup> to the datasets by minimizing
+ * the residuals of the sum of squares between the values in the target dataset and the values predicted
+ * by the model. This is using stochastic gradient descent.
+ */
+public class PolynomialRegression implements Models<PolynomialRegression, double[][], double[]> {
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -30,7 +38,7 @@ public class PolynomialRegression implements Models<PolynomialRegression, double
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[] features, double[] targets, HashMap<String, Double> args) {
+    public double[][] fit(double[][] features, double[] targets, HashMap<String, Double> args) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -45,7 +53,7 @@ public class PolynomialRegression implements Models<PolynomialRegression, double
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[] features, double[] targets) {
+    public double[][] fit(double[][] features, double[] targets) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -53,13 +61,13 @@ public class PolynomialRegression implements Models<PolynomialRegression, double
     /**
      * Uses fitted/trained model to make predictions on features.
      *
-     * @param features
+     * @param features Features to make predictions on.
      * @return The models predicted labels.
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[] predict(double[] features) {
+    public double[] predict(double[][] features) {
         // TODO: Auto-generated method stub
         return new double[0];
     }

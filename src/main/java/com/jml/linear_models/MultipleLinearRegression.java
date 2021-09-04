@@ -1,10 +1,18 @@
-package org.jml.linear_models;
+package com.jml.linear_models;
 
-import org.jml.core.Models;
+import com.jml.core.Models;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LinearRegression implements Models<LinearRegression, double[][], double[]>  {
 
+/**
+ * Model for least squares linear regression of multiple variables by stochastic gradient descent.<br><br>
+ *
+ * MultipleLinearRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x + ... + b<sub>n</sub>x to the datasets by minimizing
+ * the residuals of the sum of squares between the values in the target dataset and the values predicted
+ * by the model. This is using stochastic gradient descent.
+ */
+public class MultipleLinearRegression implements Models<LinearRegressionSGD, ArrayList<double[][]>, double[]> {
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -30,7 +38,7 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets, HashMap<String, Double> args) {
+    public double[][] fit(ArrayList<double[][]> features, double[] targets, HashMap<String, Double> args) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -45,7 +53,7 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets) {
+    public double[][] fit(ArrayList<double[][]> features, double[] targets) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -53,13 +61,13 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
     /**
      * Uses fitted/trained model to make predictions on features.
      *
-     * @param features
+     * @param features The features to make predictions on.
      * @return The models predicted labels.
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[] predict(double[][] features) {
+    public double[] predict(ArrayList<double[][]> features) {
         // TODO: Auto-generated method stub
         return new double[0];
     }
@@ -71,7 +79,7 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
      * @return The fitted / trained model located in the specified file.
      */
     @Override
-    public LinearRegression loadModel(String filePath) {
+    public LinearRegressionSGD loadModel(String filePath) {
         // TODO: Auto-generated method stub
         return null;
     }
