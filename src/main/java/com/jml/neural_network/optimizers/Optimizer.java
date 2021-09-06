@@ -4,10 +4,11 @@ abstract class Optimizer {
 
 
     /**
-     * Applies optimizers update rule to x.
+     * Applies specified optimizer rule to x.
      *
-     * @param x Value to update
+     * @param weights Weights of layer
+     * @param outputs output of layer
      * @return
      */
-    public abstract double update(int x);
+    public abstract double optimize(double[][] weights, double[] outputs);
 }
