@@ -2,6 +2,8 @@ package com.jml.neural_network;
 
 import com.jml.core.Models;
 import com.jml.neural_network.layers.Layer;
+import com.jml.neural_network.optimizers.Momentum;
+
 import java.util.HashMap;
 
 public class NeuralNetwork implements Models<NeuralNetwork, double[][], double[][]> {

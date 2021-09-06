@@ -8,5 +8,5 @@ public abstract class Activation<E> {
      * @param data Data to apply the activation function to.
      * @return The image of the data under the activation function.
      */
-    public abstract E  apply(E data);
+    public abstract E apply(E data);
 }
