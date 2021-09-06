@@ -16,6 +16,14 @@ public interface Models<E, X, Y> {
      * Constructs model and prepares for training using the given parameters.
      *
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     */
+    void compile();
+
+
+    /**
+     * Constructs model and prepares for training using the given parameters.
+     *
+     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      * @param args A hashtable containing additional arguments in the form <name, value>.
      */
     void compile(HashMap<String, Double> args);

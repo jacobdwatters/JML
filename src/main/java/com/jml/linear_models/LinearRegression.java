@@ -17,6 +17,24 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
     /**
      * Constructs model and prepares for training using the given parameters.
      *
+     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile() {
+        compile(new HashMap<String, Double>());
+    }
+
+
+    /**
+     * Constructs model and prepares for training using the given parameters.
+     *
+     * Valid additional args
+     * <pre>
+     *  - Normalization:
+     *      <"normalize", 0> - Default. No normalization is used.
+     *      <"normalize", 1> - Normalizes data using min-max scaling.
+     * <pre/>
+     *
      * @param args A hashtable containing additional arguments in the form <name, value>.
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
@@ -33,9 +51,10 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
      * @param targets  The targets of the training set.
      * @param args     A hashtable containing additional arguments in the form <name, value>.
      * @return Returns details of the fitting / training process.
-     * @throws IllegalArgumentException Can be thrown for the following reasons<br>
-     *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
-     *                                  - If the features and targets are not correctly sized per the specification when the model was
+     * @throws IllegalArgumentException
+     * Can be thrown for the following reasons<br>
+     *  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
+     *  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
     @Override
