@@ -25,6 +25,7 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
         // TODO: Auto-generated method stub
     }
 
+
     /**
      * Fits or trains the model with the given features and targets.
      *
@@ -43,6 +44,7 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
         return new double[0][];
     }
 
+
     /**
      * Fits or trains the model with the given features and targets.
      *
@@ -58,6 +60,7 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
         return new double[0][];
     }
 
+
     /**
      * Uses fitted/trained model to make predictions on features.
      *
@@ -72,17 +75,6 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
         return new double[0];
     }
 
-    /**
-     * Loads a trained model from a specified file containing a fitted / trained model.
-     *
-     * @param filePath File path, including extension, of fitted / trained model to be loaded.
-     * @return The fitted / trained model located in the specified file.
-     */
-    @Override
-    public LinearRegressionSGD loadModel(String filePath) {
-        // TODO: Auto-generated method stub
-        return null;
-    }
 
     /**
      * Saves a trained model to the specified file path.
@@ -93,6 +85,7 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
     }
+
 
     /**
      * Prints details of model to the standard output.

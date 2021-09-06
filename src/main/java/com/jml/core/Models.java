@@ -20,6 +20,7 @@ public interface Models<E, X, Y> {
      */
     void compile(HashMap<String, Double> args);
 
+
     /**
      * Fits or trains the model with the given features and targets.
      *
@@ -35,6 +36,7 @@ public interface Models<E, X, Y> {
      */
     double[][] fit(X features, Y targets, HashMap<String, Double> args);
 
+
     /**
      * Fits or trains the model with the given features and targets.
      *
@@ -47,6 +49,7 @@ public interface Models<E, X, Y> {
      */
     double[][] fit(X features, Y targets);
 
+
     /**
      * Uses fitted/trained model to make predictions on features.
      *
@@ -58,13 +61,6 @@ public interface Models<E, X, Y> {
      */
     Y predict(X features);
 
-    /**
-     * Loads a trained model from a specified file containing a fitted / trained model.
-     *
-     * @param filePath File path, including extension, of fitted / trained model to be loaded.
-     * @return The fitted / trained model located in the specified file.
-     */
-    E loadModel(String filePath);
 
     /**
      * Saves a trained model to the specified file path.
@@ -72,6 +68,7 @@ public interface Models<E, X, Y> {
      * @param filePath File path, including extension, to save fitted / trained model to.
      */
     void saveModel(String filePath);
+
 
     /**
      * Prints details of model to the standard output.

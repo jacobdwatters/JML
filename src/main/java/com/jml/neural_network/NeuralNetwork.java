@@ -1,18 +1,10 @@
-package com.jml.linear_models;
+package com.jml.neural_network;
 
 import com.jml.core.Models;
-import java.util.ArrayList;
+import com.jml.neural_network.layers.Layer;
 import java.util.HashMap;
 
-
-/**
- * Model for least squares linear regression of multiple variables by stochastic gradient descent.<br><br>
- *
- * MultipleLinearRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x + ... + b<sub>n</sub>x to the datasets by minimizing
- * the residuals of the sum of squares between the values in the target dataset and the values predicted
- * by the model. This is using stochastic gradient descent.
- */
-public class MultipleLinearRegression implements Models<LinearRegressionSGD, ArrayList<double[][]>, double[]> {
+public class NeuralNetwork implements Models<NeuralNetwork, double[][], double[][]> {
 
 
     /**
@@ -40,7 +32,7 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      *                                  compiled.
      */
     @Override
-    public double[][] fit(ArrayList<double[][]> features, double[] targets, HashMap<String, Double> args) {
+    public double[][] fit(double[][] features, double[][] targets, HashMap<String, Double> args) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -56,7 +48,7 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(ArrayList<double[][]> features, double[] targets) {
+    public double[][] fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -71,9 +63,19 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[] predict(ArrayList<double[][]> features) {
+    public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
-        return new double[0];
+        return new double[0][];
+    }
+
+
+    /**
+     * Adds specified layer to the network.
+     *
+     * @param layer Layer to add to the neural network.
+     */
+    public void add(Layer layer) {
+        // TODO: Auto-generated method stub
     }
 
 

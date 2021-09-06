@@ -11,6 +11,8 @@ import java.util.HashMap;
  * Perceptron is a linear classifier that is analogous to logistic regression using stochastic gradient descent.
  */
 public class Perceptron implements Models<Perceptron, double[][], double[][]> {
+
+
     /**
      * Constructs model and prepares for training using the given parameters.
      *
@@ -21,6 +23,7 @@ public class Perceptron implements Models<Perceptron, double[][], double[][]> {
     public void compile(HashMap<String, Double> args) {
         // TODO: Auto-generated method stub
     }
+
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -40,6 +43,7 @@ public class Perceptron implements Models<Perceptron, double[][], double[][]> {
         return new double[0][];
     }
 
+
     /**
      * Fits or trains the model with the given features and targets.
      *
@@ -55,6 +59,7 @@ public class Perceptron implements Models<Perceptron, double[][], double[][]> {
         return new double[0][];
     }
 
+
     /**
      * Uses fitted/trained model to make predictions on features.
      *
@@ -69,17 +74,6 @@ public class Perceptron implements Models<Perceptron, double[][], double[][]> {
         return null;
     }
 
-    /**
-     * Loads a trained model from a specified file containing a fitted / trained model.
-     *
-     * @param filePath File path, including extension, of fitted / trained model to be loaded.
-     * @return The fitted / trained model located in the specified file.
-     */
-    @Override
-    public Perceptron loadModel(String filePath) {
-        // TODO: Auto-generated method stub
-        return null;
-    }
 
     /**
      * Saves a trained model to the specified file path.
@@ -90,6 +84,7 @@ public class Perceptron implements Models<Perceptron, double[][], double[][]> {
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
     }
+
 
     /**
      * Prints details of model to the standard output.
