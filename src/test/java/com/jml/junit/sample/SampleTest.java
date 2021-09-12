@@ -1,3 +1,5 @@
+package com.jml.junit.sample;
+
 import com.jml.linear_models.LinearRegression;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

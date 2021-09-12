@@ -1,6 +1,6 @@
 package com.jml.linear_models;
 
-import com.jml.core.Models;
+import com.jml.core.Model;
 import java.util.HashMap;
 
 
@@ -11,36 +11,46 @@ import java.util.HashMap;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is solved explicitly.
  */
-public class LinearRegression implements Models<LinearRegression, double[][], double[]> {
+public class LinearRegression extends Model<double[][], double[]> {
 
+    // Used as regressor since simple linear regression is a special case of polynomial regression.
+    private PolynomialRegression polyRegress = new PolynomialRegression();
 
     /**
-     * Constructs model and prepares for training using the given parameters.
+     * Constructs model and prepares for training using the given parameters.<br>
+     * If you would like to add additional arguments see {@link #compile(HashMap) compile(HashMap)}.
+     *
      *
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
     @Override
     public void compile() {
-        compile(new HashMap<String, Double>());
+        compile(null);
     }
 
 
     /**
      * Constructs model and prepares for training using the given parameters.
      *
-     * Valid additional args
+     * Valid additional arguments.
      * <pre>
      *  - Normalization:
      *      <"normalize", 0> - Default. No normalization is used.
      *      <"normalize", 1> - Normalizes data using min-max scaling.
      * <pre/>
      *
+     * If you don't want to add additional arguments consider using {@link #compile() compile()} or pass null for args.
+     *
      * @param args A hashtable containing additional arguments in the form <name, value>.
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
     @Override
     public void compile(HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
+        if(args.containsKey("degree")) {
+            throw new IllegalArgumentException("Can not pass degree as an argument for " + this.getClass());
+        }
+
+        polyRegress.compile(args);
     }
 
 
@@ -112,5 +122,14 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
     @Override
     public void printDetails() {
         // TODO: Auto-generated method stub
+    }
+
+    public static void main(String[] args) {
+        Model<?, ?> l = new LinearRegression();
+        HashMap<String, Double> args_ = new HashMap<String, Double>();
+
+
+        l.compile(args_);
+
     }
 }

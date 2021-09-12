@@ -6,18 +6,17 @@ import java.util.HashMap;
 /**
  * This interface specified the requirements for a machine learning model.
  *
- * @param <E> The type of the model.
  * @param <X> The type of the features dataset.
  * @param <Y> The type of the targets dataset.
  */
-public interface Models<E, X, Y> {
+public abstract class Model<X, Y> {
 
     /**
      * Constructs model and prepares for training using the given parameters.
      *
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
-    void compile();
+    public abstract void compile();
 
 
     /**
@@ -26,7 +25,7 @@ public interface Models<E, X, Y> {
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      * @param args A hashtable containing additional arguments in the form <name, value>.
      */
-    void compile(HashMap<String, Double> args);
+    public abstract void compile(HashMap<String, Double> args);
 
 
     /**
@@ -42,7 +41,7 @@ public interface Models<E, X, Y> {
      * @param args A hashtable containing additional arguments in the form <name, value>.
      * @return Returns details of the fitting / training process.
      */
-    double[][] fit(X features, Y targets, HashMap<String, Double> args);
+    public abstract double[][] fit(X features, Y targets, HashMap<String, Double> args);
 
 
     /**
@@ -55,11 +54,11 @@ public interface Models<E, X, Y> {
      * @param targets The targets of the training set.
      * @return - Returns details of the fitting / training process.
      */
-    double[][] fit(X features, Y targets);
+    public abstract double[][] fit(X features, Y targets);
 
 
     /**
-     * Uses fitted/trained model to make predictions on features.
+     * Uses fitted/trained model to make prediction on single feature.
      *
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      * the specification when the model was compiled.
@@ -67,7 +66,7 @@ public interface Models<E, X, Y> {
      * @param features The features to make predictions on.
      * @return The models predicted labels.
      */
-    Y predict(X features);
+    public abstract Y predict(X features);
 
 
     /**
@@ -75,11 +74,11 @@ public interface Models<E, X, Y> {
      *
      * @param filePath File path, including extension, to save fitted / trained model to.
      */
-    void saveModel(String filePath);
+    public abstract void saveModel(String filePath);
 
 
     /**
      * Prints details of model to the standard output.
      */
-    void printDetails();
+    public abstract void printDetails();
 }

@@ -1,6 +1,6 @@
 package com.jml.linear_models;
 
-import com.jml.core.Models;
+import com.jml.core.Model;
 import java.util.HashMap;
 
 
@@ -11,8 +11,18 @@ import java.util.HashMap;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[][], double[]> {
+public class LinearRegressionSGD extends Model<double[][], double[]> {
 
+
+    /**
+     * Constructs model and prepares for training using the given parameters.
+     *
+     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile() {
+
+    }
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -22,9 +32,8 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
      */
     @Override
     public void compile(HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
-    }
 
+    }
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -40,10 +49,8 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
      */
     @Override
     public double[][] fit(double[][] features, double[] targets, HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
         return new double[0][];
     }
-
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -56,25 +63,21 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
      */
     @Override
     public double[][] fit(double[][] features, double[] targets) {
-        // TODO: Auto-generated method stub
         return new double[0][];
     }
 
-
     /**
-     * Uses fitted/trained model to make predictions on features.
+     * Uses fitted/trained model to make prediction on single feature.
      *
-     * @param features Features to make predictions on.
+     * @param features The features to make predictions on.
      * @return The models predicted labels.
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      *                                  the specification when the model was compiled.
      */
     @Override
     public double[] predict(double[][] features) {
-        // TODO: Auto-generated method stub
         return new double[0];
     }
-
 
     /**
      * Saves a trained model to the specified file path.
@@ -83,15 +86,14 @@ public class LinearRegressionSGD implements Models<LinearRegressionSGD, double[]
      */
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub
-    }
 
+    }
 
     /**
      * Prints details of model to the standard output.
      */
     @Override
     public void printDetails() {
-        // TODO: Auto-generated method stub
+
     }
 }

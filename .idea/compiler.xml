@@ -9,5 +9,8 @@
         <module name="JML" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Java-Linear-Algebra" target="16" />
+    </bytecodeTargetLevel>
   </component>
 </project>

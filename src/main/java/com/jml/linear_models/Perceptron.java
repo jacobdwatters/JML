@@ -1,6 +1,6 @@
 package com.jml.linear_models;
 
-import com.jml.core.Models;
+import com.jml.core.Model;
 
 import java.util.HashMap;
 
@@ -10,8 +10,18 @@ import java.util.HashMap;
  *
  * Perceptron is a linear classifier that is analogous to logistic regression using stochastic gradient descent.
  */
-public class Perceptron implements Models<Perceptron, double[][], double[][]> {
+public class Perceptron extends Model<double[][], double[][]> {
 
+
+    /**
+     * Constructs model and prepares for training using the given parameters.
+     *
+     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile() {
+
+    }
 
     /**
      * Constructs model and prepares for training using the given parameters.
