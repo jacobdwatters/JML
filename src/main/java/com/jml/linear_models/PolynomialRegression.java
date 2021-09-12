@@ -186,11 +186,9 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public String toString() {
-        String details = """
-                Model Details
-                ----------------------------
-                """;
-        details += "Model Type: " + this.MODEL_TYPE+ "\n";
+        String details =    "Model Details\n" +
+                "----------------------------\n";
+        details += "Model Type: " + this.MODEL_TYPE+ "\n";;
         details += "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
         details += "Polynomial Degree: " + degree + "\n";
         details += "Coefficients (high->low): ";
