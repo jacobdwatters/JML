@@ -124,12 +124,22 @@ public class LinearRegression extends Model<double[][], double[]> {
         // TODO: Auto-generated method stub
     }
 
-    public static void main(String[] args) {
-        Model<?, ?> l = new LinearRegression();
-        HashMap<String, Double> args_ = new HashMap<String, Double>();
+
+    /**
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+        return this.toString();
+    }
 
 
-        l.compile(args_);
-
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+        return null;
     }
 }

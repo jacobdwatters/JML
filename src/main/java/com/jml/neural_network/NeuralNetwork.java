@@ -108,4 +108,26 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     public void printDetails() {
         // TODO: Auto-generated method stub
     }
+
+    /**
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+        return null;
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+        return null;
+    }
 }

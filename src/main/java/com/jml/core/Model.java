@@ -81,4 +81,21 @@ public abstract class Model<X, Y> {
      * Prints details of model to the standard output.
      */
     public abstract void printDetails();
+
+
+    /**
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    public abstract String getDetails();
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    public abstract String toString();
 }

@@ -94,11 +94,31 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
         // TODO: Auto-generated method stub.
     }
 
+
     /**
      * Prints details of model to the standard output.
      */
     @Override
     public void printDetails() {
         // TODO: Auto-generated method stub.
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+        return this.toString();
+    }
+
+
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+        return null;
     }
 }

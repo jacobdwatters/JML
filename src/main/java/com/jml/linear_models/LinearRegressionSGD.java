@@ -96,4 +96,22 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
     public void printDetails() {
 
     }
+
+    /**
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+        return this.toString();
+    }
+
+
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+        return null;
+    }
 }

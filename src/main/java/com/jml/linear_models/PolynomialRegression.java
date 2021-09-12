@@ -19,7 +19,8 @@ import java.util.Objects;
  * by the model. This is using stochastic gradient descent.
  */
 public class PolynomialRegression extends Model<double[], double[]> {
-    public final String MODEL_TYPE = "Polynomaial Regression";
+    public final String MODEL_TYPE = "Polynomial Regression";
+    private boolean isFit = false;
     private final String DEGREE = "degree";
     private final String NORMALIZE = "normalize";
     private int degree = 1; // Defaults to simple linear regression.
@@ -34,7 +35,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public void compile() {
-        compile(new HashMap<String, Double>());
+        compile(new HashMap<>());
     }
 
     /**
@@ -100,6 +101,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public double[][] fit(double[] features, double[] targets, HashMap<String, Double> args) {
+        isFit = true;
         double[][] results = new double[1][];
         Vector x = new Vector(features);
         Matrix y = (new Vector(targets)).toMatrix();
@@ -162,32 +164,38 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public void printDetails() {
-        String details = this.MODEL_TYPE+"\n";
+        System.out.print(this);
+    }
 
-        for(int i=0; i<this.MODEL_TYPE.length(); i++) {
-            details += "-";
-        }
-        details += "\nCoefficients (high->low): ";
-        details += ArrayUtils.asString(coefficients);
-
-        System.out.print(details);
-        // TODO: Auto-generated method stub
+    /**
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+       return this.toString();
     }
 
 
-    public static void main(String[] args) {
-        double[] features = {1.49, 3.03, 0.57, 5.74, 3.51, 3.73, 2.98, -0.18, 6.23, 3.38, 2.15, 2.1, 3.93, 2.47, -0.41};
-        double[] targets = {44.6, 57.8, 49.9, 61.3, 49.6, 61.8, 49.0, 44.7, 59.2, 53.9, 46.5, 54.7, 50.3, 51.2, 45.7};
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+        String details = """
+                Model Details
+                ----------------------------
+                """;
+        details += "Model Type: " + this.MODEL_TYPE+ "\n";
+        details += "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
+        details += "Polynomial Degree: " + degree + "\n";
+        details += "Coefficients (high->low): ";
+        details += ArrayUtils.asString(coefficients);
 
-        HashMap<String, Double> arguments = new HashMap<>();
-        arguments.put("degree", 6.0);
-
-        Model m = new PolynomialRegression();
-        m.compile(arguments);
-        double[][] c  = m.fit(features, targets);
-
-        System.out.println("\n\n\n");
-        m.printDetails();
-        System.out.println("\n\n\n");
+        return details;
     }
 }
