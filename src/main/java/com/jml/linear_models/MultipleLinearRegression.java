@@ -2,7 +2,7 @@ package com.jml.linear_models;
 
 import com.jml.core.Model;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -32,7 +32,7 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
     @Override
-    public void compile(HashMap<String, Double> args) {
+    public void compile(Map<String, Double> args) {
         // TODO: Auto-generated method stub.
     }
 
@@ -49,7 +49,7 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
      *                                  compiled.
      */
     @Override
-    public double[][] fit(ArrayList<double[][]> features, double[] targets, HashMap<String, Double> args) {
+    public double[][] fit(ArrayList<double[][]> features, double[] targets, Map<String, Double> args) {
         // TODO: Auto-generated method stub.
         return new double[0][];
     }
@@ -96,15 +96,6 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
 
 
     /**
-     * Prints details of model to the standard output.
-     */
-    @Override
-    public void printDetails() {
-        // TODO: Auto-generated method stub.
-    }
-
-
-    /**
      * Forms a string of the important aspects of the model.<br>
      * same as {@link #toString()}
      *
@@ -116,9 +107,14 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
     }
 
 
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
     @Override
     public String toString() {
         // TODO: Auto-generated method stub.
-        return null;
+        return "";
     }
 }

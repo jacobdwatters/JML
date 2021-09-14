@@ -1,7 +1,7 @@
 package linalg;
 
 import linalg.complex_number.CNumber;
-import linalg.util.ArrayUtils;
+import linalg.util.LinAlgArrayUtils;
 import linalg.util.Parser;
 import linalg.util.StringUtils;
 
@@ -20,7 +20,8 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 					MatrixComparisons {
 	
 	protected String shape; // String representation of matrix dimensions. e.g. "<numRows>x<numCols>"
-	
+	private static final String NEGATIVE_SHAPE_ERR = "Matrix size must be non-negative but received ";
+
 	/**
 	 * Number of rows in matrix 
 	 */
@@ -51,14 +52,13 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(int size) {
 		if(size < 0) {
-			throw new IllegalArgumentException("Matrix size must be "
-					+ "non-negative but received " + size);
+			throw new IllegalArgumentException(NEGATIVE_SHAPE_ERR + size);
 		}
 		
 		this.m = size;
 		this.n = size;
 		shape = m + "x" + n;
-		entries = ArrayUtils.zeros(m, n);
+		entries = LinAlgArrayUtils.zeros(m, n);
 	}
 	
 	
@@ -70,8 +70,7 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(int size, CNumber s) {
 		if(size < 0) {
-			throw new IllegalArgumentException("Matrix size must be "
-					+ "non-negative but received " + size);
+			throw new IllegalArgumentException(NEGATIVE_SHAPE_ERR + size);
 		}
 		
 		this.m = size;
@@ -95,13 +94,12 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(int m, int n) {
 		if(m < 0 || n < 0) {
-			throw new IllegalArgumentException("Matrix dimensions must be "
-					+ "non-negative but received " + m + "x" + n);
+			throw new IllegalArgumentException(NEGATIVE_SHAPE_ERR + m + "x" + n);
 		}
 		this.m = m;
 		this.n = n;
 		shape = m + "x" + n;
-		entries = ArrayUtils.zeros(m, n);
+		entries = LinAlgArrayUtils.zeros(m, n);
 	}
 	
 	
@@ -114,8 +112,7 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(int m, int n, CNumber s) {
 		if(m < 0 || n < 0) {
-			throw new IllegalArgumentException("Matrix dimensions must be "
-					+ "positive integers but received " + m + "x" + n);
+			throw new IllegalArgumentException(NEGATIVE_SHAPE_ERR + m + "x" + n);
 		}
 		
 		this.entries = new CNumber[m][n];
@@ -143,8 +140,7 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(int m, int n, double s) {
 		if(m < 0 || n < 0) {
-			throw new IllegalArgumentException("Matrix dimensions must be "
-					+ "positive integers but received " + m + "x" + n);
+			throw new IllegalArgumentException(NEGATIVE_SHAPE_ERR + m + "x" + n);
 		}
 		
 		this.entries = new CNumber[m][n];
@@ -257,10 +253,10 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(String shape) {
 		int[] dimensions = Parser.parseShape(shape);
-		this.shape = shape.replaceAll(" ", "");
+		this.shape = shape.replace(" ", "");
 		m = dimensions[0];
 		n = dimensions[1];
-		entries = ArrayUtils.zeros(m, n);
+		entries = LinAlgArrayUtils.zeros(m, n);
 	}
 	
 	
@@ -272,10 +268,10 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(String shape, CNumber s) {
 		int[] dimensions = Parser.parseShape(shape);
-		this.shape = shape.replaceAll(" ", "");
+		this.shape = shape.replace(" ", "");
 		m = dimensions[0];
 		n = dimensions[1];
-		entries = ArrayUtils.zeros(m, n);
+		entries = LinAlgArrayUtils.zeros(m, n);
 		CNumber S = new CNumber(s);
 		
 		for(int i = 0; i < m; i++) {
@@ -294,10 +290,10 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public Matrix(String shape, double s) {
 		int[] dimensions = Parser.parseShape(shape);
-		this.shape = shape.replaceAll(" ", "");
+		this.shape = shape.replace(" ", "");
 		m = dimensions[0];
 		n = dimensions[1];
-		entries = ArrayUtils.zeros(m, n);
+		entries = LinAlgArrayUtils.zeros(m, n);
 		CNumber S = new CNumber(s);
 		
 		for(int i = 0; i < m; i++) {
@@ -315,8 +311,8 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 * @return A square zero matrix of given size.
 	 */
 	public static Matrix zeros(int size) {
-		double[][] zeros = new double[size][size];
-		return new Matrix(zeros);
+		double[][] zeroMatrix = new double[size][size];
+		return new Matrix(zeroMatrix);
 	}
 	
 	
@@ -329,8 +325,8 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 * @return A zero matrix with given number of rows and columns.
 	 */
 	public static Matrix zeros(int numRows, int numCols) {
-		double[][] zeros = new double[numRows][numCols];
-		return new Matrix(zeros);
+		double[][] zeroMatrix = new double[numRows][numCols];
+		return new Matrix(zeroMatrix);
 	}
 	
 	
@@ -537,10 +533,10 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	// TODO: boolean... should be replaced by method overloading.
 	public static Matrix random(int rows, int cols, double min, double max, boolean... magnitude_flag) {
 		if(magnitude_flag.length > 0) {
-			return new Matrix(ArrayUtils.random(rows, cols, min, max, magnitude_flag[0]));
+			return new Matrix(LinAlgArrayUtils.random(rows, cols, min, max, magnitude_flag[0]));
 		}
 		else {
-			return new Matrix(ArrayUtils.random(rows, cols, min, max));
+			return new Matrix(LinAlgArrayUtils.random(rows, cols, min, max));
 		}
 	}
 	
@@ -576,10 +572,10 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 */
 	public static Matrix random(int rows, int cols, boolean... magnitude_flag) {
 		if(magnitude_flag.length > 0) {
-			return new Matrix(ArrayUtils.random(rows, cols, 0, 1, magnitude_flag[0]));
+			return new Matrix(LinAlgArrayUtils.random(rows, cols, 0, 1, magnitude_flag[0]));
 		}
 		else {
-			return new Matrix(ArrayUtils.random(rows, cols, 0, 1));
+			return new Matrix(LinAlgArrayUtils.random(rows, cols, 0, 1));
 		}
 	}
 	
@@ -609,7 +605,7 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 * @return Matrix of specified size with random entries.
 	 */
 	public static Matrix random(int rows, int cols, double mag) {
-		return new Matrix(ArrayUtils.random(rows, cols, mag));
+		return new Matrix(LinAlgArrayUtils.random(rows, cols, mag));
 	}
 	
 	
@@ -622,7 +618,7 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 * @return Matrix of specified size with random entries.
 	 */
 	public static Matrix randn(int rows, int cols, boolean complex) {
-		return new Matrix(ArrayUtils.randn(rows, cols, complex));
+		return new Matrix(LinAlgArrayUtils.randn(rows, cols, complex));
 	}
 	
 	
@@ -634,7 +630,7 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 * @return Complex matrix of specified size with random entries.
 	 */
 	public static Matrix randomComplex(int rows, int cols) {
-		return new Matrix(ArrayUtils.randomComplex(rows, cols));
+		return new Matrix(LinAlgArrayUtils.randomComplex(rows, cols));
 	}
 	
 	

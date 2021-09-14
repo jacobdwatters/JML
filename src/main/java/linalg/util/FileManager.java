@@ -48,7 +48,7 @@ public class FileManager {
 
             inputStream.close();
         }catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Could not find file " + filePath);
         }
 
         System.out.println("m: " + lines.size());
@@ -67,7 +67,7 @@ public class FileManager {
             lineNo++;
         }
 		
-		return new Matrix(arr); // TODO:
+		return new Matrix(arr);
 	}
 	
 	
@@ -99,7 +99,7 @@ public class FileManager {
 		try (PrintWriter out = new PrintWriter(filePath)) {
 		    out.println(contents);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.err.println("Could not find file " + filePath);
 		}
 	}
 	

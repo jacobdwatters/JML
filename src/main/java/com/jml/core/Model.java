@@ -1,6 +1,5 @@
 package com.jml.core;
-
-import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -25,7 +24,7 @@ public abstract class Model<X, Y> {
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      * @param args A hashtable containing additional arguments in the form <name, value>.
      */
-    public abstract void compile(HashMap<String, Double> args);
+    public abstract void compile(Map<String, Double> args);
 
 
     /**
@@ -41,7 +40,7 @@ public abstract class Model<X, Y> {
      * @param args A hashtable containing additional arguments in the form <name, value>.
      * @return Returns details of the fitting / training process.
      */
-    public abstract double[][] fit(X features, Y targets, HashMap<String, Double> args);
+    public abstract double[][] fit(X features, Y targets, Map<String, Double> args);
 
 
     /**
@@ -75,12 +74,6 @@ public abstract class Model<X, Y> {
      * @param filePath File path, including extension, to save fitted / trained model to.
      */
     public abstract void saveModel(String filePath);
-
-
-    /**
-     * Prints details of model to the standard output.
-     */
-    public abstract void printDetails();
 
 
     /**

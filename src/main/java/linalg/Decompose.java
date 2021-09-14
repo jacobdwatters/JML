@@ -23,7 +23,9 @@ public class Decompose {
 	
 	// TODO: All LU factorizations should generalize to rectangular matrices.
 	// TODO: The cholesky factorization do not function properly for complex matrices.
-	
+
+	private static final String NOT_SQUARE_ERR = "Matrix must be square but got ";
+
 	/**
 	 * Factors a square matrix into a lower triangular matrix, L, and an upper triangular matrix, U, such that A = L*U. <br>
 	 * Note: This method does not use partial pivoting. To use partial pivoting see one of the following <br><br>
@@ -37,7 +39,7 @@ public class Decompose {
 	 */
 	public static Matrix[] LU(Matrix A) {
 		if(!A.isSquare()) {
-			throw new IllegalArgumentException("Matrix must be square but got " + A.shape);
+			throw new IllegalArgumentException(NOT_SQUARE_ERR + A.shape);
 		}
 		
 		return LUDecomposition.exicute(A, LUDecomposition.LU); // This will be two Matrices (L and U);
@@ -59,7 +61,7 @@ public class Decompose {
 	 */
 	public static Matrix[] LUP(Matrix A) {
 		if(!A.isSquare()) {
-			throw new IllegalArgumentException("Matrix must be square but got " + A.shape);
+			throw new IllegalArgumentException(NOT_SQUARE_ERR + A.shape);
 		}
 		
 		return LUDecomposition.exicute(A, LUDecomposition.LUP);
@@ -82,7 +84,7 @@ public class Decompose {
 	 */
 	public static Matrix[] LUPQ(Matrix A) {
 		if(!A.isSquare()) {
-			throw new IllegalArgumentException("Matrix must be square but got " + A.shape);
+			throw new IllegalArgumentException(NOT_SQUARE_ERR + A.shape);
 		}
 		
 		return LUDecomposition.exicute(A, LUDecomposition.LUPQ);
@@ -101,7 +103,7 @@ public class Decompose {
 	 */
 	public static Matrix[] LDU(Matrix A) {
 		if(!A.isSquare()) {
-			throw new IllegalArgumentException("Matrix must be square but got " + A.shape);
+			throw new IllegalArgumentException(NOT_SQUARE_ERR + A.shape);
 		}
 		
 		return LUDecomposition.exicute(A, LUDecomposition.LDU);
@@ -141,7 +143,7 @@ public class Decompose {
 	/**
 	 * Computes the Cholesky decomposition of a Hermation, positive-definite matrix into the product 
 	 * of a lower triangular matrix and its conjugate transpose. This is similar to the 
-	 * {@link LU(Matrix) LU decomposition} with the special requirement that L=U<sup>*</sup> where U<sup>*</sup> is 
+	 * {@link #LU(Matrix) LU decomposition} with the special requirement that L=U<sup>*</sup> where U<sup>*</sup> is
 	 * the conjugate transpose of U.
 	 * 
 	 * @param A - A hermation, positive-definite matrix to be decomposed.
@@ -169,7 +171,7 @@ public class Decompose {
 	 */
 	public static Matrix schur(Matrix A) {
 		if(!A.isSquare()) {
-			throw new IllegalArgumentException("Matrix must be square but got shape " + A.shape);
+			throw new IllegalArgumentException(NOT_SQUARE_ERR + A.shape);
 		}
 		
 		return SchurDecomposition.schurDecomp(A, true, true);
@@ -192,7 +194,7 @@ public class Decompose {
 	 */
 	public static Matrix schur(Matrix A, boolean complex) {
 		if(!A.isSquare()) {
-			throw new IllegalArgumentException("Matrix must be square but got shape " + A.shape);
+			throw new IllegalArgumentException(NOT_SQUARE_ERR + A.shape);
 		}
 		
 		return SchurDecomposition.schurDecomp(A, complex, true);
@@ -208,13 +210,11 @@ public class Decompose {
 	 * {@link #schur(Matrix, boolean) schur(Matrix A, boolean complex)} for optional real or complex Schur decomposition.
 	 * 
 	 * @param A - Matrix to decompose
-	 * @param complex - Flag to compute real or complex Schur decomposition. If true, the complex Schur decomposition will be computed. If false
-	 * 		the real Schur decomposition will be computed.
 	 * @return An array of matrices of length two containing in order [Q, T]. // TODO: Change schurDecomp so this is actually what is returned
 	 */
 	public static Matrix schurReal(Matrix A) {
 		if(!A.isSquare()) {
-			throw new IllegalArgumentException("Matrix must be square but got shape " + A.shape);
+			throw new IllegalArgumentException(NOT_SQUARE_ERR + A.shape);
 		}
 		
 		return SchurDecomposition.schurDecomp(A, false, true);

@@ -1,7 +1,7 @@
 package linalg;
 
 import linalg.complex_number.CNumber;
-import linalg.util.ArrayUtils;
+import linalg.util.LinAlgArrayUtils;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ interface MatrixProperties {
 	 * 
 	 * @return Number of rows in matrix.
 	 */
-	public default int numCols() { 
+	default int numCols() { 
 		Matrix A = (Matrix) this;
 		return A.n;
 	}
@@ -28,7 +28,7 @@ interface MatrixProperties {
 	 * 
 	 * @return Number of columns in matrix.
 	 */
-	public default int numRows() { 
+	default int numRows() { 
 		Matrix A = (Matrix) this;
 		return A.m; 
 	}
@@ -39,7 +39,7 @@ interface MatrixProperties {
 	 * 
 	 * @return Returns shape of this matrix shape as String e.g. "m x n".
 	 */
-	public default String shape() {
+	 default String shape() {
 		Matrix A = (Matrix) this;
 		return A.shape;
 	}
@@ -50,7 +50,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is square, false otherwise.
 	 */
-	public default boolean isSquare() {
+	 default boolean isSquare() {
 		Matrix A = (Matrix) this;
 		return (A.m==A.n);
 	}
@@ -62,7 +62,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is empty, false otherwise.
 	 */
-	public default boolean isEmpty() {
+	 default boolean isEmpty() {
 		Matrix A = (Matrix) this;
 		return (A.m==0 && A.n==0);
 	}
@@ -75,10 +75,9 @@ interface MatrixProperties {
 	 * 
 	 * @return minimum value of this matrix
 	 */
-	public default CNumber min() {
-		CNumber min = CNumber.MAX_VALUE;
-		
-		
+	 default CNumber min() {
+		CNumber min;
+
 		if(this.isReal()) {
 			min = new CNumber(this.minReal());
 		} else {
@@ -98,7 +97,7 @@ interface MatrixProperties {
 	 * @return Returns minimum real value of this matrix.
 	 */
 	// TODO: Complex values should be completely ignored in general.
-	public default double minReal() {
+	 default double minReal() {
 		double currentMin = Double.MAX_VALUE;
 		Matrix A = (Matrix) this;
 		
@@ -121,8 +120,8 @@ interface MatrixProperties {
 	 * 
 	 * @return Returns maximum value of this matrix.
 	 */
-	public default CNumber max() {
-		CNumber max = CNumber.MIN_VALUE;
+	 default CNumber max() {
+		CNumber max;
 		
 		if(this.isReal()) {
 			max = new CNumber(this.maxReal());
@@ -144,7 +143,7 @@ interface MatrixProperties {
 	 * @return Returns maximum real value of this matrix.
 	 */
 	// TODO: Complex values should be completely ignored in general.
-	public default double maxReal() {
+	 default double maxReal() {
 		double currentMax = Double.MIN_VALUE;
 		
 		Matrix A = (Matrix) this;
@@ -167,7 +166,7 @@ interface MatrixProperties {
 	 * 
 	 * @return Returns value with minimum magnitude in this matrix.
 	 */
-	public default CNumber minComplex() {
+	 default CNumber minComplex() {
 		CNumber currentMin = CNumber.MAX_VALUE;
 		Matrix A = (Matrix) this;
 		
@@ -189,7 +188,7 @@ interface MatrixProperties {
 	 * 
 	 * @return Returns value with maximum magnitude in this matrix.
 	 */
-	public default CNumber maxComplex() {
+	 default CNumber maxComplex() {
 		CNumber currentMax = CNumber.MIN_VALUE;
 		Matrix A = (Matrix) this;
 		
@@ -210,7 +209,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if matrix has no complex entries. Otherwise, false.
 	 */
-	public default boolean isReal() {
+	 default boolean isReal() {
 		Matrix A = (Matrix) this;
 		boolean result = true;
 		
@@ -232,7 +231,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if matrix has at least one non-real entry. Otherwise, false.
 	 */
-	public default boolean isComplex() {
+	 default boolean isComplex() {
 		Matrix A = (Matrix) this;
 		boolean result = false;
 		
@@ -256,7 +255,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if matrix is a column or row vector, otherwise returns false.
 	 */
-	public default boolean isVector() {
+	 default boolean isVector() {
 		Matrix A = (Matrix) this;
 		boolean result = false;
 		
@@ -274,7 +273,7 @@ interface MatrixProperties {
 	 * @return 0 if the matrix is NOT a vector, 1 if the matrix is a row vector,
 	 * 2 if the matrix is a column vector, and 3 if the matrix is of shape 1x1
 	 */
-	public default int vectorType() {
+	 default int vectorType() {
 		Matrix A = (Matrix) this;
 		int result = 0;
 		
@@ -300,7 +299,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is self-adjoint. Otherwise, returns false.
 	 */
-	public default boolean isSelfAdjoint() {
+	 default boolean isSelfAdjoint() {
 		return this.isHermation();
 	}
 	
@@ -313,7 +312,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is hermation. Otherwise, returns false.
 	 */
-	public default boolean isHermation() {
+	 default boolean isHermation() {
 		Matrix A = (Matrix) this;
 		return A.H().equals(A);
 	}
@@ -331,7 +330,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if this matrix is symmetric, false otherwise. 
 	 */
-	public default boolean isSymmetric() {
+	 default boolean isSymmetric() {
 		Matrix A = (Matrix) this;
 		
 		if(!A.isSquare()) {
@@ -354,7 +353,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if this matrix is symmetric, false otherwise. 
 	 */
-	public default boolean isSkewSymmetric() {
+	 default boolean isSkewSymmetric() {
 		Matrix A = (Matrix) this;
 		
 		if(!A.isSquare()) {
@@ -389,7 +388,7 @@ interface MatrixProperties {
 	 * 					
 	 * @return True if the matrix is symmetric/skew-symmetric. Otherwise, returns false.
 	 */
-	public default boolean isSymmetric(String skewOption) {
+	 default boolean isSymmetric(String skewOption) {
 		Matrix A = (Matrix) this;
 		boolean result = false;
 		
@@ -416,7 +415,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is orthogonal. Otherwise, returns false.
 	 */
-	public default boolean isOrthogonal() {
+	 default boolean isOrthogonal() {
 		Matrix A = ((Matrix) this);
 		
 		if(!A.isSquare()) {
@@ -442,7 +441,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is unitary. Otherwise, returns false.
 	 */
-	public default boolean isUnitary() {
+	 default boolean isUnitary() {
 		Matrix A = (Matrix) this;
 		
 		if(!A.isSquare()) {
@@ -476,7 +475,7 @@ interface MatrixProperties {
 	 * 		- 1 if Matrix is lower triangular.<br>
 	 * 		- 2 if Matrix is upper triangular.
 	 */
-	public default int isTri() {
+	 default int isTri() {
 		int result = -1;
 		Matrix A = (Matrix) this;
 		
@@ -498,7 +497,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if this matrix is upper triangular. Otherwise, returns false.
 	 */
-	public default boolean isTriU() {
+	 default boolean isTriU() {
 		boolean result = true;
 		Matrix A = (Matrix) this;
 		
@@ -521,7 +520,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if this matrix is lower triangular. Otherwise, returns false.
 	 */
-	public default boolean isTriL() {
+	 default boolean isTriL() {
 		boolean result = true;
 		Matrix A = (Matrix) this;
 		
@@ -548,7 +547,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if this matrix is diagonal. Otherwise, returns false.
 	 */
-	public default boolean isDiagonal() {
+	 default boolean isDiagonal() {
 		Matrix A = (Matrix) this;
 		
 		if(!A.isSquare()) {
@@ -564,7 +563,7 @@ interface MatrixProperties {
 	 * 
 	 * @return Returns true if matrix is full rank. Otherwise, returns false.
 	 */
-	public default boolean isFullRank() {	
+	 default boolean isFullRank() {	
 		boolean result = false;
 		Matrix A = (Matrix) this;
 		
@@ -577,7 +576,7 @@ interface MatrixProperties {
 	
 	
 	// TODO: javadoc
-	public default boolean isSingular() {
+	 default boolean isSingular() {
 		Matrix A = (Matrix) this;
 		int tol = 13; // TODO: make this an optional parameter?
 		
@@ -592,7 +591,7 @@ interface MatrixProperties {
 	 * @returns Returns the Frobenius norm.
 	 */
 	// TODO: Look into other implementations Can be computed using square of singular values or with trace. 
-	public default CNumber norm() {
+	 default CNumber norm() {
 		return norm(2, 2);
 	}
 	
@@ -607,7 +606,7 @@ interface MatrixProperties {
 	 * @param p - norm parameter
 	 * @return
 	 */
-	public default CNumber norm(double p) {
+	 default CNumber norm(double p) {
 		if(p == Double.POSITIVE_INFINITY) {
 			return infNorm();
 		}
@@ -625,7 +624,7 @@ interface MatrixProperties {
 	 */
 	// TODO: Look into other implementations Can be computed using square of singular values or with trace. 
 	// See https://en.wikipedia.org/wiki/Matrix_norm#L2,1_and_Lp,q_norms
-	public default CNumber norm(double p, double q) {	
+	 default CNumber norm(double p, double q) {	
 		double norm = 0;
 		Matrix A = (Matrix) this;
 		
@@ -646,8 +645,8 @@ interface MatrixProperties {
 	}
 	
 	
-	public default CNumber infNorm() {
-		CNumber[] values = ArrayUtils.flatten(((Matrix) this).entries);
+	 default CNumber infNorm() {
+		CNumber[] values = LinAlgArrayUtils.flatten(((Matrix) this).entries);
 		return new CNumber(CNumber.max(values).mag());
 	}
 	
@@ -660,7 +659,7 @@ interface MatrixProperties {
 	 * 
 	 * @return A matrix whose rows are row vectors forming an orthonormal basis for the row space of this matrix.
 	 */
-	public default Matrix rowSpace() {
+	 default Matrix rowSpace() {
 		Matrix A = (Matrix) this,
 			   rrefA = A.T().rref(),
 			   C = new Matrix(rrefA.m, 0), // Orthonormal basis of column space
@@ -695,7 +694,7 @@ interface MatrixProperties {
 	 * 
 	 * @return A matrix whose columns are column vectors forming an orthonormal basis for the columns space of this matrix.
 	 */
-	public default Matrix colSpace() { // TODO: Return in matrix instead
+	 default Matrix colSpace() { // TODO: Return in matrix instead
 		Matrix A = (Matrix) this,
 			   rrefA = A.rref(),
 			   C = new Matrix(rrefA.m, 0), // Orthonormal basis of column space
@@ -732,7 +731,7 @@ interface MatrixProperties {
 	 * 
 	 * @return A matrix whose column vectors from an orthonormal basis for the null space of this matrix.
 	 */
-	public default Matrix nullSpace() {
+	 default Matrix nullSpace() {
 		Matrix A = ((Matrix) this).rref(),
 			   x,
 			   N = new Matrix(A.m, 0), // Matrix  containing orthonormal nullspace.
@@ -787,7 +786,7 @@ interface MatrixProperties {
 	 * 
 	 * @return
 	 */
-	public default Matrix leftNullSpace() {
+	 default Matrix leftNullSpace() {
 		return ((Matrix) this).T().nullSpace();
 	}
 	
@@ -796,7 +795,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if matrix only contains positive real entries.
 	 */
-	public default boolean isPos() {
+	 default boolean isPos() {
 		Matrix A = (Matrix) this;
 		boolean result = true;
 		
@@ -817,7 +816,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if matrix only contains negative entries.
 	 */
-	public default boolean isNeg() {
+	 default boolean isNeg() {
 		Matrix A = (Matrix) this;
 		boolean result = true;
 		
@@ -842,7 +841,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is positive-definite. Otherwise, returns false.
 	 */
-	public default boolean isPosDef() {
+	 default boolean isPosDef() {
 		boolean result = false;
 		
 		
@@ -870,7 +869,7 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is positive-semidefinite. Otherwise, returns false.
 	 */
-	public default boolean isPosSemidef() {
+	 default boolean isPosSemidef() {
 		boolean result = false;
 		
 		
@@ -902,12 +901,12 @@ interface MatrixProperties {
 	 *  an associated eigenvector.
 	 */
 	// TODO: add eigPairs which returns an array of matrices where each matrix is an eigenvector and the eigenvalue.
-	public default Matrix[] eig() {
+	 default Matrix[] eig() {
 		Matrix[] eigenpairs = new Matrix[2];
 		
 		Matrix A = (Matrix) this;
 		Matrix lam = Decompose.schur(A).diagAsVector().T(); // Get eigenvalues of A using the schur decomposition
-		lam = new Vector(ArrayUtils.group(lam.entries[0])).round(13); // Round eigenvalues to near machine epsilon and group equivalent eigenvalues.
+		lam = new Vector(LinAlgArrayUtils.group(lam.entries[0])).round(13); // Round eigenvalues to near machine epsilon and group equivalent eigenvalues.
 		
 		Matrix I = Matrix.I(A.m),
 				   zero = new Matrix(A.m, 1),
@@ -959,7 +958,7 @@ interface MatrixProperties {
 	 * 
 	 * @return Returns a column vector containing the eigenvalues of this matrix.
 	 */
-	public default Matrix eigVals() {
+	 default Matrix eigVals() {
 		Matrix A = (Matrix) this;
 		return Decompose.schur(A).diagAsVector();
 	}
@@ -971,13 +970,13 @@ interface MatrixProperties {
 	 * 
 	 * @return True if the matrix is diagonalizable. Otherwise, returns false.
 	 */
-	public default boolean isDiagonalizable() {
+	 default boolean isDiagonalizable() {
 		Matrix A = (Matrix) this,
 			   I = Matrix.I(A.m); 
 		boolean result = true;
 		int count = 0;
 		
-		Matrix lam = new Vector(ArrayUtils.group(A.eigVals().T().entries[0])),
+		Matrix lam = new Vector(LinAlgArrayUtils.group(A.eigVals().T().entries[0])),
 			   nullSpace;
 		ArrayList<Integer> multiplicites = new ArrayList<Integer>(); // Contains multiplicity for each eigenvalue
 		ArrayList<Integer> eigenDim = new ArrayList<Integer>(); // Contains dimension of each eigenspace for all eigenvalues.
@@ -1000,7 +999,7 @@ interface MatrixProperties {
 		}
 		
 		for(int i=0; i<eigenDim.size(); i++) {
-			if(eigenDim.get(i) != multiplicites.get(i)) {
+			if(eigenDim.get(i).equals(multiplicites.get(i))) {
 				result = false;
 				break;
 			}
@@ -1010,7 +1009,7 @@ interface MatrixProperties {
 	}
 	
 	
-	public static void main(String args[]) {
+	 static void main(String args[]) {
 		int[][] a = {{0, 1, 0, 0},
 					 {0, 0, 1, 0},
 					 {0, 0, 0, 1},

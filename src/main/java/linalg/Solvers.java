@@ -4,7 +4,8 @@ import linalg.complex_number.CNumber;
 
 public class Solvers {
 
-	
+	private static final String IS_SINGULAR_ERR = "Matrix is singular.";
+
 	/**
 	 * Solves multiple real or complex systems of equations with the same coefficient matrix. That is, solves for the vector x in
 	 * Ax=b for many different b vectors.
@@ -15,7 +16,7 @@ public class Solvers {
 	 */
 	public static Vector[] solve(Matrix A, Vector...b) {	
 		if(A.isSingular()) {
-			throw new IllegalArgumentException("Matrix is singular.");
+			throw new IllegalArgumentException(IS_SINGULAR_ERR);
 		}
 		
 		Vector y[] = new Vector[b.length];
@@ -44,7 +45,7 @@ public class Solvers {
 	 */
 	public static Vector solve(Matrix A, Vector b) {
 		if(A.isSingular()) { // TODO: A.det() fails for some matrices meaning the isSingular method does not work
-			throw new IllegalArgumentException("Matrix is singular.");
+			throw new IllegalArgumentException(IS_SINGULAR_ERR);
 		}
 		
 		Matrix LU[] = Decompose.LUPQ(A);
@@ -66,7 +67,7 @@ public class Solvers {
 	 */
 	public static Vector sovle(Matrix A, Matrix b) {
 		if(A.isSingular()) {
-			throw new IllegalArgumentException("Matrix is singular.");
+			throw new IllegalArgumentException(IS_SINGULAR_ERR);
 		}
 		
 		return solve(A, b.toVector());
@@ -83,7 +84,7 @@ public class Solvers {
 	 */
 	public static Vector solveQR(Matrix A, Vector b) {
 		if(A.isSingular()) {
-			throw new IllegalArgumentException("Matrix is singular.");
+			throw new IllegalArgumentException(IS_SINGULAR_ERR);
 		}
 		
 		Matrix[] QR = Decompose.QR(A);
@@ -104,7 +105,7 @@ public class Solvers {
 	 */
 	public static Vector solveQR(Matrix A, Matrix b) {
 		if(A.isSingular()) {
-			throw new IllegalArgumentException("Matrix is singular.");
+			throw new IllegalArgumentException(IS_SINGULAR_ERR);
 		}
 		
 		return solveQR(A, b.toVector());
@@ -189,33 +190,5 @@ public class Solvers {
 		}
 
 		return y;
-	}
-
-
-	// FOR DEVELOPMENT TESTING ONLY //
-	public static void main(String args[]) {
-		double[][] A_entries = {{1, -2, 3},
-								{2, 1, 1},
-								{-3, 2, -2}};
-
-		double[] b1_entries = {7, 4, -10};
-		double[] b2_entries  = {2, 3, 5};
-		double[] b3_entries  = {4, 1, 90};
-
-		Matrix A = new Matrix(A_entries);
-		
-		Vector b1 = new Vector(b1_entries);
-		Vector b2 = new Vector(b2_entries, Vector.ROW_VECTOR);
-		Vector b3 = new Vector(b3_entries);
-		
-		Vector x = solveQR(A, b1);
-		Vector[] x2 = solve(A, b1, b2, b3);
-
-		Matrix.print("A:\n", A, "\n\n");
-		Matrix.print("b:\n", b1, "\n\n");
-		Matrix.print("x:\n", x.round(10), "\n\n");
-		Matrix.print("x1:\n", x2[0].round(10), "\n\n");
-		Matrix.print("x2:\n", x2[1].round(10), "\n\n");
-		Matrix.print("x3:\n", x2[2].round(10), "\n\n");
 	}
 }

@@ -11,7 +11,7 @@ interface MatrixComparisons {
 	 * @param B - Matrix to compare equality with
 	 * @return True if both matrices are element-wise equivalent. Otherwise, false.
 	 */
-	public default boolean equals(Matrix B) {
+	 default boolean equals(Matrix B) {
 		Matrix A = (Matrix) this;
 		boolean equal = true;
 		
@@ -46,7 +46,7 @@ interface MatrixComparisons {
 	 * @return - true if the dimensions specified by <code>code</code> are equvalent. 
 	 * Otherwise. returns false
 	 */
-	public default boolean sameShape(Matrix B, int code) {
+	 default boolean sameShape(Matrix B, int code) {
 		Matrix A = (Matrix) this;
 		boolean result = true;
 		
@@ -80,7 +80,7 @@ interface MatrixComparisons {
 	 * @return - True if the number of rows and number of column
 	 * of the two matrices are both equal. Otherwise, returns false.
 	 */
-	public default boolean sameShape(Matrix B) {
+	 default boolean sameShape(Matrix B) {
 		return this.sameShape(B, 0);
 	}
 	
@@ -104,7 +104,7 @@ interface MatrixComparisons {
 	 *
 	 * @return Returns true if matrix has all zero elements. Otherwise, returns false.
 	 */
-	public default boolean isZero() {
+	 default boolean isZero() {
 		Matrix A = (Matrix) this;
 		boolean result = true;
 		
@@ -126,7 +126,7 @@ interface MatrixComparisons {
 	 *
 	 * @return Returns true if the matrix in question is an identity matrix. Otherwise, returns false.
 	 */
-	public default boolean isI() {
+	 default boolean isI() {
 		Matrix A = (Matrix) this;
 		boolean result = true;
 		
@@ -161,7 +161,7 @@ interface MatrixComparisons {
 	 * 
 	 * @return True if B is the inverse of this matrix. Otherwise, returns false.
 	 */
-	public default boolean isInv(Matrix B) {
+	 default boolean isInv(Matrix B) {
 		return B.equals(((Matrix) this).inv());
 	}
 }

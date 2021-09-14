@@ -17,7 +17,7 @@ public class ArrayUtils {
         BigDecimal bd;
 
         for(int i=0; i<arr.length; i++) {
-            bd = new BigDecimal(arr[i]).setScale(n, RoundingMode.HALF_UP);
+            bd = BigDecimal.valueOf(arr[i]).setScale(n, RoundingMode.HALF_UP);
             result[i] = bd.doubleValue();
         }
 

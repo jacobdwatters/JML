@@ -105,12 +105,11 @@ public class CNumber {
 	 * and a complex number is returned.
 	 */
 	public static CNumber randn(boolean complex) {
-		Random rand = new Random();
-		double real = rand.nextGaussian();
+		double real = random.nextGaussian();
 		double imaginary;
 		
 		if(complex) {
-			imaginary = rand.nextGaussian();
+			imaginary = random.nextGaussian();
 			return new CNumber(real, imaginary);
 		} else {
 			return new CNumber(real);
@@ -498,10 +497,11 @@ public class CNumber {
 	 * @param b - Number to check equivalence to
 	 * @return True if the two numbers are equivalent. Otherwise, returns false.
 	 */
-	public boolean equals(CNumber b) {
+	public boolean equals(Object b) {
 		boolean result = false;
+		CNumber c = (CNumber) b;
 
-		if (this.re == b.re && this.im == b.im) { // Then the two numbers are equal
+		if (this.re == c.re && this.im == c.im) { // Then the two numbers are equal
 			result = true;
 		}
 
@@ -512,7 +512,7 @@ public class CNumber {
 	/**
 	 * Checks for equivalence between two complex numbers
 	 * <br><br>
-	 * Also see {@link #equals(CNumber) equals(CNumber b)}
+	 * Also see {@link #equals(Object)}
 	 * 
 	 * @param b - Number to check equivalence to
 	 * @return True if the two numbers are equivalent. Otherwise, returns false.
@@ -544,8 +544,8 @@ public class CNumber {
 					decimals);
 		}
 		
-	    double real = new BigDecimal(n.re).setScale(decimals, RoundingMode.HALF_UP).doubleValue();
-	    double imaginary = new BigDecimal(n.im).setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+	    double real = BigDecimal.valueOf(n.re).setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+	    double imaginary = BigDecimal.valueOf(n.im).setScale(decimals, RoundingMode.HALF_UP).doubleValue();
 	    
 	    return new CNumber(real, imaginary);
 	}
@@ -614,7 +614,7 @@ public class CNumber {
 	/**
 	 * Computes the magnitude of a complex number (The numbers distance from the
 	 * origin in the complex plane). <br>
-	 * This method is the same as {@link #abs() abs()}
+	 * This method is the same as {@link #abs(CNumber)}
 	 * 
 	 * @return magnitude of complex number
 	 */
@@ -865,19 +865,9 @@ public class CNumber {
 	
 	// FOR DEVELOPMENT TESTING ONLY //
 	public static void main(String[] args) {
-		CNumber y = new CNumber(" 0.52619328+0.04179506i");
-		CNumber x = new CNumber("0.5259511884033119 + 0.04473862971113276i");
-		CNumber a = divide(y, x);
-		
-		CNumber[][] v = {{new CNumber("0.5259511884033119 + 0.04473862971113276i")},
-						{ new CNumber("0.37303854553454646 + 0.01790835558709278i")},
-						{ new CNumber("0.5759183045846009 + 0.003222503580642827i")},
-						{ new CNumber("0.5002030174733275") }};
-		Matrix V = new Matrix(v);
-		
-		System.out.println(a);
-		Matrix.print("\n\nav:\n", V.scalMult(a), "\n\n");
-		Matrix.print("\n\nnorm:\n", V.scalMult(a).norm(), "\n\n");
-		Matrix.print("\n\nnorm:\n", V.norm(), "\n\n");
+		CNumber y = new CNumber("3+2i");
+		CNumber x = new CNumber("3+2i");
+
+		System.out.println("\n\n" + x.equals(y) + "\n\n");
 	}
 }

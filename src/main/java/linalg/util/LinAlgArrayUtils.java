@@ -2,8 +2,10 @@ package linalg.util;
 
 import linalg.complex_number.CNumber;
 
-public class ArrayUtils {
-	
+public class LinAlgArrayUtils {
+
+	private static final String INVALID_AXIS_ERR = "Axis must be 0 or 1 but got ";
+
 	public static CNumber[][] random(int rows, int cols, double min, double max, boolean... magnitude_flag) {
 		// TODO: Cant have more than one flag
 		
@@ -186,7 +188,7 @@ public class ArrayUtils {
 				result[i][0] = arr[i];
 			}
 		} else {
-			throw new IllegalArgumentException("Axis must be 0 or 1 but got " + axis);
+			throw new IllegalArgumentException(INVALID_AXIS_ERR + axis);
 		} 
 		
 		return result;
@@ -225,7 +227,7 @@ public class ArrayUtils {
 				result[i][0] = new CNumber(arr[i]);
 			}
 		} else {
-			throw new IllegalArgumentException("Axis must be 0 or 1 but got " + axis);
+			throw new IllegalArgumentException(INVALID_AXIS_ERR + axis);
 		} 
 		
 		return result;
@@ -264,7 +266,7 @@ public class ArrayUtils {
 				result[i][0] = new CNumber(arr[i]);
 			}
 		} else {
-			throw new IllegalArgumentException("Axis must be 0 or 1 but got " + axis);
+			throw new IllegalArgumentException(INVALID_AXIS_ERR + axis);
 		} 
 		
 		return result;
@@ -287,7 +289,7 @@ public class ArrayUtils {
 	}
 	
 	
-	// Groups instances of the same number together in array
+	// Group instances of the same number together in array
 	public static CNumber[] group(CNumber[] values) {
 		CNumber temp;
 		double tol = 12; // Tolerance of what is considered "equal"
@@ -303,20 +305,5 @@ public class ArrayUtils {
 		}
 		
 		return values;
-	}
-	
-	
-	// FOR DEVELOPMENT TESTING ONLY //
-	public static void main(String[] args) {
-		CNumber[][] e = 
-			{{new CNumber("1"), 		new CNumber(3), 						new CNumber("14i"), 		new CNumber("5i")},
-			 {new CNumber(3),			new CNumber(CNumber.IMAGINARY_UNIT), 	new CNumber("i"), 		new CNumber(32.1)},
-			 {new CNumber("3+4i"), 		new CNumber("2"), 						new CNumber("3"), 		new CNumber(3, 4)},
-			 {new CNumber("1 + -3i"), 	new CNumber("5i"), 						new CNumber("1 + -3i"), 	new CNumber(CNumber.PI)}};
-		
-		
-		
-		printArr(group(flatten(e)));
-				
 	}
 }

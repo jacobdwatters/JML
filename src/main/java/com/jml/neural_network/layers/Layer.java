@@ -13,7 +13,7 @@ public abstract class Layer<E, F> {
      * @param outDim Layer output dimension.
      * @param activation Activation function for layer.
      */
-    public Layer(E inDim, F outDim, String activation) {
+    protected Layer(E inDim, F outDim, String activation) {
         this.inDim = inDim;
         this.outDim = outDim;
         this.activation = activation;

@@ -6,7 +6,7 @@ import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -21,8 +21,8 @@ import java.util.Objects;
 public class PolynomialRegression extends Model<double[], double[]> {
     public final String MODEL_TYPE = "Polynomial Regression";
     private boolean isFit = false;
-    private final String DEGREE = "degree";
-    private final String NORMALIZE = "normalize";
+    private static final String DEGREE_KEY = "degree";
+    private static final String NORMALIZE_KEY = "normalize";
     private int degree = 1; // Defaults to simple linear regression.
     private int normalization = 0; // Default is no normalization.
     private double[] coefficients;
@@ -35,7 +35,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public void compile() {
-        compile(new HashMap<>());
+        compile(null);
     }
 
     /**
@@ -55,10 +55,10 @@ public class PolynomialRegression extends Model<double[], double[]> {
      * ignored and will NOT throw error.
      */
     @Override
-    public void compile(HashMap<String, Double> args) {
+    public void compile(Map<String, Double> args) {
         if(!Objects.isNull(args) && !args.isEmpty()) { // Then args is not null and is not empty
-            if(args.containsKey(NORMALIZE)) {
-                double value = args.get(NORMALIZE);
+            if(args.containsKey(NORMALIZE_KEY)) {
+                double value = args.get(NORMALIZE_KEY);
 
                 if(value != 0 || value != 1) {
                     throw new IllegalArgumentException("Normalization must be 0 or 1 but got " + value);
@@ -66,8 +66,8 @@ public class PolynomialRegression extends Model<double[], double[]> {
                     this.normalization = (int) value;
                 }
             }
-            if(args.containsKey(DEGREE)) {
-                double value = args.get(DEGREE);
+            if(args.containsKey(DEGREE_KEY)) {
+                double value = args.get(DEGREE_KEY);
                 if(value != (int) value) { // Then value is not an integer
                     throw new IllegalArgumentException("Degree must be integer but got " + value);
                 } else {
@@ -100,7 +100,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[] features, double[] targets, HashMap<String, Double> args) {
+    public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
         isFit = true;
         double[][] results = new double[1][];
         Vector x = new Vector(features);
@@ -158,14 +158,6 @@ public class PolynomialRegression extends Model<double[], double[]> {
         // TODO: Auto-generated method stub
     }
 
-
-    /**
-     * Prints details of model to the standard output.
-     */
-    @Override
-    public void printDetails() {
-        System.out.print(this);
-    }
 
     /**
      * Forms a string of the important aspects of the model.<br>

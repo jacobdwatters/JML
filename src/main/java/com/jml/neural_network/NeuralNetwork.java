@@ -2,11 +2,12 @@ package com.jml.neural_network;
 
 import com.jml.core.Model;
 import com.jml.neural_network.layers.Layer;
-
-import java.util.HashMap;
+import java.util.Map;
 
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
+
+    private Layer<?, ?> layer;
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -15,7 +16,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public void compile() {
-
+        // TODO: Auto-generated method stub
     }
 
     /**
@@ -25,7 +26,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
     @Override
-    public void compile(HashMap<String, Double> args) {
+    public void compile(Map<String, Double> args) {
         // TODO: Auto-generated method stub
     }
 
@@ -43,7 +44,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[][] targets, HashMap<String, Double> args) {
+    public double[][] fit(double[][] features, double[][] targets, Map<String, Double> args) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
@@ -85,7 +86,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *
      * @param layer Layer to add to the neural network.
      */
-    public void add(Layer layer) {
+    public void add(Layer<?, ?> layer) {
         // TODO: Auto-generated method stub
     }
 
@@ -102,14 +103,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
 
     /**
-     * Prints details of model to the standard output.
-     */
-    @Override
-    public void printDetails() {
-        // TODO: Auto-generated method stub
-    }
-
-    /**
      * Forms a string of the important aspects of the model.<br>
      * same as {@link #toString()}
      *
@@ -117,6 +110,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public String getDetails() {
+        // TODO: Auto-generated method stub
         return null;
     }
 
@@ -128,6 +122,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public String toString() {
-        return null;
+        // TODO: Auto-generated method stub
+        return "";
     }
 }

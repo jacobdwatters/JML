@@ -4,9 +4,13 @@ import com.jml.util.Stats;
 import linalg.Matrix;
 import linalg.Vector;
 
-import java.util.Arrays;
-
 public class Normalize {
+
+
+    // Private constructor to hide implicate one.
+    private Normalize() {
+        throw new IllegalStateException("Utility class, Can not create instantiated.");
+    }
 
 
     /**

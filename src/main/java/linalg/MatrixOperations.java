@@ -15,7 +15,7 @@ interface MatrixOperations {
 	 * @param B - matrix to add to the instance matrix
 	 * @return result of matrix addition
 	 */
-	public default Matrix add(Matrix B) {
+	 default Matrix add(Matrix B) {
 		Matrix A = (Matrix) this;
 		Matrix C = new Matrix(A.m, A.n);
 		MatrixChecks.dimensionCheck(A, B, MatrixChecks.SAME_DIM);
@@ -37,7 +37,7 @@ interface MatrixOperations {
 	 * @param B - matrix to subtract to the instance matrix
 	 * @return result of matrix subtraction
 	 */
-	public default Matrix sub(Matrix B) {
+	 default Matrix sub(Matrix B) {
 		Matrix A = (Matrix) this;
 		Matrix C = new Matrix(A.m, A.n);
 		MatrixChecks.dimensionCheck(A, B, MatrixChecks.SAME_DIM);
@@ -63,7 +63,7 @@ interface MatrixOperations {
 	 * @param B - matrix to multiply to the instance matrix
 	 * @return result of matrix multiplication
 	 */
-	public default Matrix mult(Matrix B) {
+	 default Matrix mult(Matrix B) {
 		Matrix A = (Matrix) this;
 		
 		if(!MatrixComparisons.matMultCheck(A, B)) {
@@ -93,7 +93,7 @@ interface MatrixOperations {
 	 * @param B - matrix to multiply element-wise to this matrix.
 	 * @return result of element-wise matrix multiplication.
 	 */
-	public default Matrix elemMult(Matrix B) {
+	 default Matrix elemMult(Matrix B) {
 		Matrix A = (Matrix) this;
 		Matrix C = new Matrix(A.m, A.n);
 		MatrixChecks.dimensionCheck(A, B, MatrixChecks.SAME_DIM);
@@ -116,7 +116,7 @@ interface MatrixOperations {
 	 * @param factor - value to multiply this matrix by.
 	 * @return The scalar multiplication of the matrix and the factor.
 	 */
-	public default Matrix scalMult(double factor) {
+	 default Matrix scalMult(double factor) {
 		return this.scalMult(new CNumber(factor));
 	}
 	
@@ -127,7 +127,7 @@ interface MatrixOperations {
 	 * @param factor - value to multiply matrix by.
 	 * @return The scalar multiplication of the matrix and the factor.
 	 */
-	public default Matrix scalMult(CNumber factor) {
+	 default Matrix scalMult(CNumber factor) {
 		Matrix A = (Matrix) this;
 		Matrix result = new Matrix(A.m, A.n);
 		
@@ -147,7 +147,7 @@ interface MatrixOperations {
 	 * @param B - matrix to divide element-wise the instance matrix with.
 	 * @return result of element-wise matrix multiplication.
 	 */
-	public default Matrix elemDiv(Matrix B) {
+	 default Matrix elemDiv(Matrix B) {
 		Matrix A = (Matrix) this;
 		Matrix C = new Matrix(A.m, A.n);
 		MatrixChecks.dimensionCheck(A, B, MatrixChecks.SAME_DIM);
@@ -172,7 +172,7 @@ interface MatrixOperations {
 	 * @param divisor - value to divide matrix by.
 	 * @return The scalar division of the matrix and the divisor.
 	 */
-	public default Matrix scalDiv(double divisor) {
+	 default Matrix scalDiv(double divisor) {
 		double factor = 1/divisor;
 		return this.scalMult(new CNumber(factor));
 	}
@@ -184,7 +184,7 @@ interface MatrixOperations {
 	 * @param divisor - value to divide matrix by.
 	 * @return The scalar division of the matrix and the divisor.
 	 */
-	public default Matrix scalDiv(CNumber divisor) {
+	 default Matrix scalDiv(CNumber divisor) {
 		CNumber factor = CNumber.divide(CNumber.ONE, divisor);
 		return this.scalMult(factor);
 	}
@@ -196,7 +196,7 @@ interface MatrixOperations {
 	 * @param B - Second matrix for the Frobenius inner product.
  	 * @return the Frobenius inner product.
 	 */
-	public default CNumber fip(Matrix B) {
+	 default CNumber fip(Matrix B) {
 		return this.mult(B).tr();
 	}
 	
@@ -207,7 +207,7 @@ interface MatrixOperations {
 	 * @param matrixList - List of matrices from which to compute the matrix direct sum.
 	 * @return The result of direct summing the matrices in matrixList to this matrix.
 	 */
-	public default Matrix directSum(Matrix... matrixList) { // TODO: Because this is not static, include "this" in the direct sum.
+	 default Matrix directSum(Matrix... matrixList) { // TODO: Because this is not static, include "this" in the direct sum.
 		Matrix A = (Matrix) this;
 		int new_m = A.m, new_n = A.n,
 			current_m = 0, current_n = 0;
@@ -242,7 +242,7 @@ interface MatrixOperations {
 	 * 
 	 * @return The element-wise square root of this matrix.
 	 */
-	public default Matrix sqrt() {
+	 default Matrix sqrt() {
 		Matrix A = ((Matrix) this).copy();
 		
 		for(int i=0; i<A.m; i++) {
@@ -262,7 +262,7 @@ interface MatrixOperations {
 	 * 
 	 * @return - element-wise absolute value of matrix.
 	 */
-	public default Matrix abs() {
+	 default Matrix abs() {
 		Matrix A = (Matrix) this;
 		Matrix abs = new Matrix(A.m, A.n);
 		
@@ -281,7 +281,7 @@ interface MatrixOperations {
 	 * 
 	 * @return transpose of matrix
 	 */
-	public default Matrix transpose() {
+	 default Matrix transpose() {
 		return this.T();
 	}
 	
@@ -292,7 +292,7 @@ interface MatrixOperations {
 	 * 
 	 * @return transpose of matrix
 	 */
-	public default Matrix T() {
+	 default Matrix T() {
 		Matrix A = (Matrix) this;
 		Matrix At = new Matrix(A.n, A.m);
 		
@@ -319,7 +319,7 @@ interface MatrixOperations {
 	 * 
 	 * @return Conjugate of matrix
 	 */
-	public default Matrix conjugate() {
+	 default Matrix conjugate() {
 		Matrix A = (Matrix) this;
 		Matrix Ac = new Matrix(A.m, A.n);
 		
@@ -340,7 +340,7 @@ interface MatrixOperations {
 	 * 
 	 * @return The conjugate transpose of this matrix.
 	 */
-	public default Matrix conjT() {
+	 default Matrix conjT() {
 		return this.conjugate().T();
 	}
 	
@@ -352,7 +352,7 @@ interface MatrixOperations {
 	 * 
 	 * @return adjoint of matrix.
 	 */
-	public default Matrix hermAdjoint() {
+	 default Matrix hermAdjoint() {
 		return this.conjugate().T();
 	}
 	
@@ -364,7 +364,7 @@ interface MatrixOperations {
 	 * 
 	 * @return adjoint of matrix.
 	 */
-	public default Matrix H() {
+	 default Matrix H() {
 		return this.conjugate().T();
 	}
 	
@@ -432,7 +432,7 @@ interface MatrixOperations {
 	 * 
 	 * @return determinant of matrix.
 	 */
-	public default CNumber det() {
+	 default CNumber det() {
 		Matrix A = (Matrix) this;
 		
 		if(!A.isSquare()) {
@@ -459,7 +459,7 @@ interface MatrixOperations {
 	 * @param B
 	 * @return
 	 */
-	public default Matrix stack(Matrix B) {
+	 default Matrix stack(Matrix B) {
 		return this.stack(B, 0);
 	}
 	
@@ -475,7 +475,7 @@ interface MatrixOperations {
 	 * @param axis - Axis along which to stack matrices.
 	 * @return Returns A and B stacked along specified axis.
 	 */
-	public default Matrix stack(Matrix B, int axis) {
+	 default Matrix stack(Matrix B, int axis) {
 		Matrix A = (Matrix) this;
 		Matrix result = null;
 		
@@ -529,7 +529,7 @@ interface MatrixOperations {
 	 * @param B - Matrix to augment to this matrix.
 	 * @return The matrix B augmented to this matrix.
 	 */
-	public default Matrix augment(Matrix B) {
+	 default Matrix augment(Matrix B) {
 		return this.stack(B, 1);
 	}
 	
@@ -552,7 +552,7 @@ interface MatrixOperations {
 	 * 
 	 * @return Row-echelon form of matrix
 	 */
-	public default Matrix ref() {
+	 default Matrix ref() {
 		Matrix A = ((Matrix) this).copy();
 		CNumber m, scale;
 		
@@ -617,7 +617,7 @@ interface MatrixOperations {
 	 * </pre>
 	 * @return
 	 */
-	public default Matrix rref(boolean partialPivoting) {
+	 default Matrix rref(boolean partialPivoting) {
 		if(partialPivoting) return rref();
 		else return rrefNoPivot();
 	}
@@ -643,7 +643,7 @@ interface MatrixOperations {
 	 * 
 	 * @return Row-echelon form of matrix.
 	 */
-	public default Matrix rref() {
+	 default Matrix rref() {
 		Matrix A = ((Matrix) this).copy();
 		CNumber mult, scale, currentMax;
 		int maxIndex;
@@ -773,7 +773,7 @@ interface MatrixOperations {
 	 * 
 	 * @return Returns extended row-echelon form of this matrix.
 	 */
-	public default Matrix erref() {
+	 default Matrix erref() {
 		Matrix A = (Matrix) this;
 		Matrix I = Matrix.I(A.m);
 		Matrix Aug = A.augment(I);
@@ -790,7 +790,7 @@ interface MatrixOperations {
 	 * 
 	 * @return trace of this matrix.
 	 */
-	public default CNumber trace() {
+	 default CNumber trace() {
 		Matrix A = (Matrix) this;
 		
 		if(!A.isSquare()) {
@@ -815,7 +815,7 @@ interface MatrixOperations {
 	 * 
 	 * @return trace of this matrix.
 	 */
-	public default CNumber tr() {
+	 default CNumber tr() {
 		return this.trace();
 	}
 	
@@ -829,7 +829,7 @@ interface MatrixOperations {
 	 * @return Returns the rank of this matrix.
 	 */
 	// TODO: Should be switched to rank revealing QR decomposition as it is more numerically stable.
-	public default int rank() {
+	 default int rank() {
 		Matrix A = (Matrix) this;
 		Matrix rrefA = A.rref();
 		int rank = A.m;
@@ -853,19 +853,19 @@ interface MatrixOperations {
 	 * 
 	 * @return Returns the rank of this matrix.
 	 */
-	public default int nullity() {
+	 default int nullity() {
 		int rank = this.rank();
 		return ((Matrix) this).m - rank;
 	}
 	
 	
 	/**
-	 * Computes the matrix inverse if it exists. This is done by first computing the {@link #linalg.Decompose.QR(Matrix) QR decomposition}
+	 * Computes the matrix inverse if it exists. This is done by first computing the {@link linalg.Decompose#QR(Matrix) QR decomposition}
 	 * The inverse of a Matrix A is A<sup>-1</sup> satisfying AA<sup>-1</sup>=I where I is the appropriately sized Identity matrix.
 	 * 
 	 * @return The inverse of this matrix.
 	 */
-	public default Matrix inverse() {
+	 default Matrix inverse() {
 		Matrix A = (Matrix) this;
 		
 		if(!A.isSingular()) {
@@ -897,12 +897,12 @@ interface MatrixOperations {
 	
 	
 	/**
-	 * Computes the matrix inverse if it exists. This is done by first computing the {@link #LinAlg.Decompose.QR(Matrix) QR decomposition}
+	 * Computes the matrix inverse if it exists. This is done by first computing the {@link linalg.Decompose#QR(Matrix) QR decomposition}
 	 * The inverse of a Matrix A is A<sup>-1</sup> satisfying AA<sup>-1</sup>=I where I is the appropriately sized Identity matrix.
 	 * 
 	 * @return The inverse of this matrix.
 	 */
-	public default Matrix inv() {
+	 default Matrix inv() {
 		return this.inverse();
 	}
 	
@@ -943,7 +943,7 @@ interface MatrixOperations {
 	 * 
 	 * @return new matrix that contains the reciprocals of this matrix
 	 */
-	public default Matrix recep() {
+	 default Matrix recep() {
 		Matrix A = new Matrix((Matrix) this).copy();
 		
 		for(int i=0; i<A.m; i++) {
@@ -956,7 +956,7 @@ interface MatrixOperations {
 	}
 	
 	
-	public static void main(String[] args) {
+	 static void main(String[] args) {
 
 		
 		int[][] b = {{1, 3, 3},

@@ -1,11 +1,14 @@
 package linalg;
 
 import linalg.complex_number.CNumber;
-import linalg.util.ArrayUtils;
+import linalg.util.LinAlgArrayUtils;
 
 public class Vector extends Matrix {
 	public static final int COLUMN_VECTOR = 0,
 								ROW_VECTOR = 1;
+
+	private static final String INVALID_TYPE_ERR = "Type must be either " + COLUMN_VECTOR + " or "
+			+ ROW_VECTOR + " but got ";
 	protected int type;
 	protected int length;
 	
@@ -52,8 +55,7 @@ public class Vector extends Matrix {
 			this.m = size;
 			this.n = 1;
 		} else {
-			throw new IllegalArgumentException("Type must be either " + COLUMN_VECTOR + " or "
-					+ ROW_VECTOR + " but got " + type + ".");
+			throw new IllegalArgumentException(INVALID_TYPE_ERR + type + ".");
 		}
 		
 		this.shape = m + "x" + n;
@@ -68,7 +70,7 @@ public class Vector extends Matrix {
 	 * @param entries - entries of the column vector.
 	 */
 	public Vector(int[] entries) {
-		this.entries = ArrayUtils.extend2D(entries, 1);
+		this.entries = LinAlgArrayUtils.extend2D(entries, 1);
 		this.m = entries.length;
 		this.n = 1;
 		this.shape = m + "x" + n;
@@ -86,20 +88,19 @@ public class Vector extends Matrix {
 	 */
 	public Vector(int[] entries, int type) {
 		if(type == ROW_VECTOR) {
-			this.entries = ArrayUtils.extend2D(entries, 0);
+			this.entries = LinAlgArrayUtils.extend2D(entries, 0);
 			this.n = entries.length;
 			this.m = 1;
 			this.shape = m + "x" + n;
 			this.type = ROW_VECTOR;
 		} else if(type == COLUMN_VECTOR) {
-			this.entries = ArrayUtils.extend2D(entries, 1);
+			this.entries = LinAlgArrayUtils.extend2D(entries, 1);
 			this.m = entries.length;
 			this.n = 1;
 			this.shape = m + "x" + n;
 			this.type = COLUMN_VECTOR;
 		} else {
-			throw new IllegalArgumentException("Type must be either " + COLUMN_VECTOR + " or "
-					+ ROW_VECTOR + " but got " + type + ".");
+			throw new IllegalArgumentException(INVALID_TYPE_ERR + type + ".");
 		}
 		
 		this.length = entries.length;
@@ -112,7 +113,7 @@ public class Vector extends Matrix {
 	 * @param entries - entries of the column vector.
 	 */
 	public Vector(double[] entries) {
-		this.entries = ArrayUtils.extend2D(entries, 1);
+		this.entries = LinAlgArrayUtils.extend2D(entries, 1);
 		this.m = entries.length;
 		this.n = 1;
 		this.shape = m + "x" + n;
@@ -130,20 +131,19 @@ public class Vector extends Matrix {
 	 */
 	public Vector(double[] entries, int type) {
 		if(type == ROW_VECTOR) {
-			this.entries = ArrayUtils.extend2D(entries, 0);
+			this.entries = LinAlgArrayUtils.extend2D(entries, 0);
 			this.n = entries.length;
 			this.m = 1;
 			this.shape = m + "x" + n;
 			this.type = ROW_VECTOR;
 		} else if(type == COLUMN_VECTOR) {
-			this.entries = ArrayUtils.extend2D(entries, 1);
+			this.entries = LinAlgArrayUtils.extend2D(entries, 1);
 			this.m = entries.length;
 			this.n = 1;
 			this.shape = m + "x" + n;
 			this.type = COLUMN_VECTOR;
 		} else {
-			throw new IllegalArgumentException("Type must be either " + COLUMN_VECTOR + " or "
-					+ ROW_VECTOR + " but got " + type + ".");
+			throw new IllegalArgumentException(INVALID_TYPE_ERR + type + ".");
 		}
 		
 		this.length = entries.length;
@@ -156,7 +156,7 @@ public class Vector extends Matrix {
 	 * @param entries - entries of the column vector.
 	 */
 	public Vector(CNumber[] entries) {
-		this.entries = ArrayUtils.extend2D(entries, 1);
+		this.entries = LinAlgArrayUtils.extend2D(entries, 1);
 		this.m = entries.length;
 		this.n = 1;
 		this.shape = m + "x" + n;
@@ -174,22 +174,21 @@ public class Vector extends Matrix {
 	 */
 	public Vector(CNumber[] entries, int type) {
 		if(type == ROW_VECTOR) {
-			this.entries = ArrayUtils.extend2D(entries, 0);
+			this.entries = LinAlgArrayUtils.extend2D(entries, 0);
 			this.n = entries.length;
 			this.m = 1;
 			this.shape = m + "x" + n;
 			this.type = ROW_VECTOR;
 			
 		} else if(type == COLUMN_VECTOR) {
-			this.entries = ArrayUtils.extend2D(entries, 1);
+			this.entries = LinAlgArrayUtils.extend2D(entries, 1);
 			this.m = entries.length;
 			this.n = 1;
 			this.shape = m + "x" + n;
 			this.type = COLUMN_VECTOR;
 			
 		} else {
-			throw new IllegalArgumentException("Type must be either " + COLUMN_VECTOR + " or "
-					+ ROW_VECTOR + " but got " + type + ".");
+			throw new IllegalArgumentException(INVALID_TYPE_ERR + type + ".");
 		}
 		
 		this.length = entries.length;
@@ -352,7 +351,7 @@ public class Vector extends Matrix {
 			return this.infNorm();
 		}
 		else {
-			CNumber[] values = ArrayUtils.flatten(this.entries);
+			CNumber[] values = LinAlgArrayUtils.flatten(this.entries);
 			double result = 0;
 			
 			for(CNumber val : values) { // Compute the standard p-norm
@@ -376,7 +375,7 @@ public class Vector extends Matrix {
 	 * @return The infinity or maximum norm of this vector.
 	 */
 	public CNumber infNorm() {
-		CNumber[] values = ArrayUtils.flatten(this.entries);
+		CNumber[] values = LinAlgArrayUtils.flatten(this.entries);
 		
 		return new CNumber(CNumber.max(values).mag());
 	}
@@ -402,7 +401,7 @@ public class Vector extends Matrix {
 	 * @return Result of vector addition.
 	 */
 	public Vector add(Vector b) {
-		return new Vector(ArrayUtils.flatten(super.add(b).entries), b.type);
+		return new Vector(LinAlgArrayUtils.flatten(super.add(b).entries), b.type);
 	}
 	
 	
@@ -413,12 +412,12 @@ public class Vector extends Matrix {
 	 * @return Result of vector subtraction.
 	 */
 	public Vector sub(Vector b) {
-		return new Vector(ArrayUtils.flatten(super.sub(b).entries), b.type);
+		return new Vector(LinAlgArrayUtils.flatten(super.sub(b).entries), b.type);
 	}
 	
 	
 	public Vector scalDiv(CNumber value) {
-		return new Vector(ArrayUtils.flatten(super.scalDiv(value).entries), this.type);
+		return new Vector(LinAlgArrayUtils.flatten(super.scalDiv(value).entries), this.type);
 	}
 	
 	public Vector scalDiv(double value) {
