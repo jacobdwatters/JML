@@ -2,7 +2,7 @@ package linalg.util;
 
 /* TODO: This can not be a public class
  */
-public class ShapeLexer extends Lexer {
+class ShapeLexer extends Lexer {
 	
 	/**
 	 * @param content - String representation of matrix shape e.g. "numRows x numCols"

@@ -3,7 +3,7 @@ package linalg.util;
 
 /* TODO: This can not be a public class
  */
-public class Token {
+class Token {
 	private String kind;
 	private String details;
 	  

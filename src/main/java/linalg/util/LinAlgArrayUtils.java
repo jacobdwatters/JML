@@ -2,9 +2,18 @@ package linalg.util;
 
 import linalg.complex_number.CNumber;
 
+
+/**
+ * Contains some utility functions to manipulate arrays.
+ */
 public class LinAlgArrayUtils {
 
 	private static final String INVALID_AXIS_ERR = "Axis must be 0 or 1 but got ";
+
+	private LinAlgArrayUtils()  {
+		throw new IllegalStateException("Utility class, Can not create instantiated.");
+	}
+
 
 	public static CNumber[][] random(int rows, int cols, double min, double max, boolean... magnitude_flag) {
 		// TODO: Cant have more than one flag

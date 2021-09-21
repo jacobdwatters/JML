@@ -5,7 +5,21 @@ import linalg.complex_number.CNumber;
 
 
 /**
- * This interface just containes some different matrices for testing purposes.
+ * This interface just contains some different matrices for testing purposes.<br>
+ *
+ * <pre>
+ *     Matrices:
+ *     		- {@link #MATRIX_0}
+ *     		- {@link #MATRIX_1}
+ *     		- {@link #MATRIX_2}
+ *     		- {@link #MATRIX_3}
+ *     		- {@link #MATRIX_4}
+ *     		- {@link #MATRIX_5}
+ *     		- {@link #MATRIX_6}
+ *     		- {@link #MATRIX_7}
+ *     		- {@link #MATRIX_8}
+ * </pre>
+ *
  * @author Jacob Watters
  */
 public class ExampleMatrices {

@@ -1,7 +1,13 @@
 package linalg;
 
 /**
- * A place to define various print options for Matrices and vectors.
+ * A place to define various print options for Matrices and vectors.<br>
+ * <pre>
+ *     Supported Print Options:
+ *     		- {@link #PADDING}
+ *     		- {@link #MAX_ROWS}
+ *     		- {@link #MAX_COLUMNS}
+ * </pre>
  * 
  * @author Jacob Watters
  */

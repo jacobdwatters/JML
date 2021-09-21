@@ -1,6 +1,8 @@
 package linalg.util;
 
-/* TODO: This can not be a public class
+
+/**
+ * Parser for complex number strings or matrix shape strings.
  */
 public class Parser {
 	

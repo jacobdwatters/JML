@@ -1,15 +1,13 @@
 package com.jml.linalg;
 
-import com.jml.linear_models.PolynomialRegression;
 import linalg.Matrix;
 import linalg.complex_number.CNumber;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MatrixConstructorTest {
+class MatrixConstructorTest {
     Matrix m;
 
     @Test // Defines a test method
@@ -26,7 +24,7 @@ public class MatrixConstructorTest {
 
     @Test // Defines a test method
     @DisplayName("Checking size matrix constructor") // define the name of the test which is displayed to the user
-    void sizeTestCase() {
+    void sizeConstructorTestCase() {
         for(int size1 = 0; size1<15; size1++) {
             m = new Matrix(size1);
             CNumber[][] expected = new CNumber[size1][size1];

@@ -2,6 +2,10 @@ package linalg;
 
 import linalg.complex_number.CNumber;
 
+
+/**
+ * This class contains methods for solving systems of linear equations.
+ */
 public class Solvers {
 
 	private static final String IS_SINGULAR_ERR = "Matrix is singular.";

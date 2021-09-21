@@ -3,6 +3,10 @@ package linalg;
 import linalg.complex_number.CNumber;
 import linalg.util.LinAlgArrayUtils;
 
+
+/**
+ * This class supports the creation, manipulations, and operations of Vectors.
+ */
 public class Vector extends Matrix {
 	public static final int COLUMN_VECTOR = 0,
 								ROW_VECTOR = 1;

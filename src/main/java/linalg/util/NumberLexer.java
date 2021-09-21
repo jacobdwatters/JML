@@ -17,7 +17,7 @@ package linalg.util;
 
 /* TODO: This can not be a public class
  */
-public class NumberLexer extends Lexer {
+class NumberLexer extends Lexer {
 	
 	/**
 	 * @param content - String representation of complex number

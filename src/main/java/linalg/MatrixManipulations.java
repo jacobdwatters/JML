@@ -26,17 +26,18 @@ import linalg.util.Parser;
 	 default Matrix reshape(int newM, int newN) {
 		Matrix A = ((Matrix) this).flatten();
 		Matrix reshape = new Matrix(newM, newN);
-		int offset = 0;
-		
+		int aj=0;
+
 		if(newM*newN != A.m*A.n) {
 			throw new IllegalArgumentException("Can not reshape matrix of shape " + A.shape + " to " + newM + "x" + newN + ".");
 		}
-		
-		for(int i=0; i<A.m; i++) {
-			for(int j=0; j<A.n; j++) {
-				reshape.entries[i][j] = new CNumber(A.entries[0][j + offset]);
+
+
+		for(int i=0; i<reshape.m; i++) {
+			for(int j=0; j<reshape.n; j++) {
+				reshape.entries[i][j] = new CNumber(A.entries[0][aj]);
+				aj++;
 			}
-			offset++;
 		}
 		
 				

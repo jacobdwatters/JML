@@ -1,8 +1,9 @@
 package linalg.util;
 
-/* TODO: This can not be a public class
+/**
+ * Performs lexicographical analysis and produces tokens.
  */
-public class Lexer {
+class Lexer {
 	protected String content = ""; // Content of Lexer
 	
 	
