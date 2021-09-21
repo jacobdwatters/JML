@@ -5,7 +5,7 @@ import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
-
+import java.lang.Math;
 import java.util.Map;
 import java.util.Objects;
 
@@ -20,12 +20,17 @@ import java.util.Objects;
  */
 public class PolynomialRegression extends Model<double[], double[]> {
     public final String MODEL_TYPE = "Polynomial Regression";
-    private boolean isFit = false;
-    private static final String DEGREE_KEY = "degree";
-    private static final String NORMALIZE_KEY = "normalize";
+    private boolean isFit = false, isCompiled = false;
+    public static final String DEGREE_KEY = "degree";
+    public static final String NORMALIZE_KEY = "normalize";
     private int degree = 1; // Defaults to simple linear regression.
     private int normalization = 0; // Default is no normalization.
     private double[] coefficients;
+    private String details = "Model Details\n" +
+            "----------------------------\n" +
+            "Model Type: " + this.MODEL_TYPE+ "\n" +
+            "Is Compiled: No\n" +
+            "Is Trained: No\n";
 
     /**
      * Constructs model and prepares for training using default parameters. i.e. the degree of the polynomial will be 1,
@@ -70,11 +75,16 @@ public class PolynomialRegression extends Model<double[], double[]> {
                 double value = args.get(DEGREE_KEY);
                 if(value != (int) value) { // Then value is not an integer
                     throw new IllegalArgumentException("Degree must be integer but got " + value);
+                } else if(value <= 0) {
+                    throw new IllegalArgumentException("Degree must greater than 0 but got " + value);
                 } else {
                     this.degree = (int) value;
                 }
             }
         }
+
+        isCompiled = true; // Set the compiled flag to true.
+        buildDetails(); // Build the details of the model.
     }
 
 
@@ -101,6 +111,10 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
+        if(!isCompiled) {
+            throw new IllegalStateException("Model must be compiled before it can be fit.");
+        }
+
         isFit = true;
         double[][] results = new double[1][];
         Vector x = new Vector(features);
@@ -112,6 +126,8 @@ public class PolynomialRegression extends Model<double[], double[]> {
         Vector b = VT.mult(y).toVector();
         coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0];
         results[0] = coefficients;
+
+        buildDetails(); // Build the details of the model.
 
         return results;
     }
@@ -143,8 +159,36 @@ public class PolynomialRegression extends Model<double[], double[]> {
      * @return The models predicted labels.
      */
     public double[] predict(double[] features) {
-        // TODO: Auto-generated method stub
-        return null;
+        if(!isFit || !isCompiled) {
+            throw new IllegalStateException("Model must be compiled and fit before predictions can be made.");
+        }
+
+        double[] predictions = new double[features.length];
+        int position = 0;
+
+        for(double feature : features) { // For each feature, compute the prediction.
+            for (int j = coefficients.length - 1; j >= 0; j--) {
+                predictions[position] += coefficients[j] * Math.pow(feature, j);
+            }
+            position++;
+        }
+
+        return predictions;
+    }
+
+
+    /**
+     * Gets the coefficients for the model.<br>
+     * Model must be fit before this can be called.
+     *
+     * @return Returns the computed coefficients of the model.
+     */
+    public double[] getCoefficients() {
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before predictions can be made.");
+        }
+
+        return coefficients;
     }
 
 
@@ -156,6 +200,34 @@ public class PolynomialRegression extends Model<double[], double[]> {
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
+    }
+
+
+    // Construct details of model
+    private void buildDetails() {
+        details ="Model Details\n" +
+                "----------------------------\n" +
+                "Model Type: " + this.MODEL_TYPE+ "\n" +
+                "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
+                "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
+
+        if(isCompiled) {
+            details += "Polynomial Degree: " + degree + "\n";
+        }
+
+        if(isFit) {
+            details += "Coefficients (high->low): ";
+            details += ArrayUtils.asString(coefficients);
+            details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ";
+
+            for(int i=2; i<coefficients.length; i++) {
+                details += coefficients[i] + "x^" + i;
+
+                if(i<coefficients.length-1) {
+                    details += " + ";
+                }
+            }
+        }
     }
 
 
@@ -178,14 +250,6 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public String toString() {
-        String details =    "Model Details\n" +
-                "----------------------------\n";
-        details += "Model Type: " + this.MODEL_TYPE+ "\n";;
-        details += "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
-        details += "Polynomial Degree: " + degree + "\n";
-        details += "Coefficients (high->low): ";
-        details += ArrayUtils.asString(coefficients);
-
         return details;
     }
 }
