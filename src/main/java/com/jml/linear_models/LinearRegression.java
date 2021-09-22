@@ -1,7 +1,7 @@
 package com.jml.linear_models;
 
-import com.jml.core.Models;
-import java.util.HashMap;
+import com.jml.core.Model;
+import java.util.Map;
 
 
 /**
@@ -11,19 +11,48 @@ import java.util.HashMap;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is solved explicitly.
  */
-public class LinearRegression implements Models<LinearRegression, double[][], double[]> {
+public class LinearRegression extends Model<double[][], double[]> {
+
+    // Used as regressor since simple linear regression is a special case of polynomial regression.
+    private PolynomialRegression polyRegress = new PolynomialRegression();
+
+    /**
+     * Constructs model and prepares for training using the given parameters.<br>
+     * If you would like to add additional arguments see {@link #compile(Map) compile(HashMap)}.
+     *
+     *
+     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile() {
+        compile(null);
+    }
 
 
     /**
      * Constructs model and prepares for training using the given parameters.
      *
+     * Valid additional arguments.
+     * <pre>
+     *  - Normalization:
+     *      <"normalize", 0> - Default. No normalization is used.
+     *      <"normalize", 1> - Normalizes data using min-max scaling.
+     * <pre/>
+     *
+     * If you don't want to add additional arguments consider using {@link #compile() compile()} or pass null for args.
+     *
      * @param args A hashtable containing additional arguments in the form <name, value>.
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
     @Override
-    public void compile(HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
+    public void compile(Map<String, Double> args) {
+        if(args.containsKey("degree")) {
+            throw new IllegalArgumentException("Can not pass degree as an argument for " + this.getClass());
+        }
+
+        polyRegress.compile(args);
     }
+
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -32,16 +61,18 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
      * @param targets  The targets of the training set.
      * @param args     A hashtable containing additional arguments in the form <name, value>.
      * @return Returns details of the fitting / training process.
-     * @throws IllegalArgumentException Can be thrown for the following reasons<br>
-     *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
-     *                                  - If the features and targets are not correctly sized per the specification when the model was
+     * @throws IllegalArgumentException
+     * Can be thrown for the following reasons<br>
+     *  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
+     *  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets, HashMap<String, Double> args) {
+    public double[][] fit(double[][] features, double[] targets, Map<String, Double> args) {
         // TODO: Auto-generated method stub
         return new double[0][];
     }
+
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -58,6 +89,7 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
         return new double[0][];
     }
 
+
     /**
      * Uses fitted/trained model to make predictions on features.
      *
@@ -72,17 +104,6 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
         return new double[0];
     }
 
-    /**
-     * Loads a trained model from a specified file containing a fitted / trained model.
-     *
-     * @param filePath File path, including extension, of fitted / trained model to be loaded.
-     * @return The fitted / trained model located in the specified file.
-     */
-    @Override
-    public LinearRegression loadModel(String filePath) {
-        // TODO: Auto-generated method stub
-        return null;
-    }
 
     /**
      * Saves a trained model to the specified file path.
@@ -94,11 +115,27 @@ public class LinearRegression implements Models<LinearRegression, double[][], do
         // TODO: Auto-generated method stub
     }
 
+
     /**
-     * Prints details of model to the standard output.
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
      */
     @Override
-    public void printDetails() {
-        // TODO: Auto-generated method stub
+    public String getDetails() {
+        return this.toString();
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+        return "";
     }
 }

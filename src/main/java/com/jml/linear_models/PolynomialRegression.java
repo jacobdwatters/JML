@@ -1,104 +1,269 @@
 package com.jml.linear_models;
 
-import com.jml.core.Models;
-import java.util.HashMap;
+import com.jml.core.Model;
+import com.jml.core.ModelTypes;
+import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
+import linalg.Matrix;
+import linalg.Solvers;
+import linalg.Vector;
+import java.lang.Math;
+import java.util.Map;
+import java.util.Objects;
 
 
 /**
- * Model for least squares linear regression of multiple variables by stochastic gradient descent.<br><br>
+ * Model for least squares linear regression of polynomials.<br><br>
  *
  * PolynomialRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x  + b<sub>2</sub>x<sup>2</sup> + ... +
  * b<sub>n</sub>x<sup>n</sup> to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-public class PolynomialRegression implements Models<PolynomialRegression, double[][], double[]> {
+public class PolynomialRegression extends Model<double[], double[]> {
+    public final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
+    protected boolean isFit = false, isCompiled = false;
+    public static final String DEGREE_KEY = "degree";
+    public static final String NORMALIZE_KEY = "normalize";
+    protected int degree = 1; // Defaults to simple linear regression.
+    protected int normalization = 0; // Default is no normalization.
+    protected double[] coefficients;
+    private String details = "Model Details\n" +
+            "----------------------------\n" +
+            "Model Type: " + this.MODEL_TYPE+ "\n" +
+            "Is Compiled: No\n" +
+            "Is Trained: No\n";
+
+    /**
+     * Constructs model and prepares for training using default parameters. i.e. the degree of the polynomial will be 1,
+     * and no normalization will be used.
+     *
+     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile() {
+        compile(null);
+    }
 
     /**
      * Constructs model and prepares for training using the given parameters.
      *
+     * Valid additional args. All others will be ignored.
+     * <pre>
+     *  - Degree of polynomial to fit:
+     *      <"degree", n> - where n is the integer degree of polynomial to fit. n=1 is the default value.
+     *  - Normalization:
+     *      <"normalize", 0> - Default. No normalization is used.
+     *      <"normalize", 1> - Normalizes data by subtracting mean and dividing by the L2-norm before applying regression.
+     * <pre/>
+     *
      * @param args A hashtable containing additional arguments in the form <name, value>.
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     * @throws IllegalArgumentException If values in <code>args</code> are invalid of a specified key. Unspecified keys will simply be
+     * ignored and will NOT throw error.
      */
     @Override
-    public void compile(HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
+    public void compile(Map<String, Double> args) {
+        if(!Objects.isNull(args) && !args.isEmpty()) { // Then args is not null and is not empty
+            if(args.containsKey(NORMALIZE_KEY)) {
+                double value = args.get(NORMALIZE_KEY);
+
+                if(value != 0 || value != 1) {
+                    throw new IllegalArgumentException("Normalization must be 0 or 1 but got " + value);
+                } else {
+                    this.normalization = (int) value;
+                }
+            }
+            if(args.containsKey(DEGREE_KEY)) {
+                double value = args.get(DEGREE_KEY);
+                if(value != (int) value) { // Then value is not an integer
+                    throw new IllegalArgumentException("Degree must be integer but got " + value);
+                } else if(value <= 0) {
+                    throw new IllegalArgumentException("Degree must greater than 0 but got " + value);
+                } else {
+                    this.degree = (int) value;
+                }
+            }
+        }
+
+        isCompiled = true; // Set the compiled flag to true.
+        buildDetails(); // Build the details of the model.
     }
 
+
     /**
-     * Fits or trains the model with the given features and targets.
+     * Fits the model with the given features and targets.
+     *
+     * Valid additional args. All others will be ignored.
+     * <pre>
+     *  - R value (goodness of fit):
+     *      <"fit", 0> - Default. No R value is returned.
+     *      <"fit", 1> - R value of model will be calculated and returned.
+     * <pre/>
      *
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
      * @param args     A hashtable containing additional arguments in the form <name, value>.
-     * @return Returns details of the fitting / training process.
+     * @return A 2D array containing the following on a row: <br>
+     *  - The coefficients of the polynomial from highest to lowest degree.
+     *  - The R value (goodness of fit) if indicated in args.
      * @throws IllegalArgumentException Can be thrown for the following reasons<br>
      *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets, HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
-        return new double[0][];
+    public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
+        if(!isCompiled) {
+            throw new IllegalStateException("Model must be compiled before it can be fit.");
+        }
+
+        isFit = true;
+        double[][] results = new double[1][];
+        Vector x = new Vector(features);
+        Matrix y = (new Vector(targets)).toMatrix();
+        Matrix V = Matrix.van(x, degree+1);
+        Matrix VT = V.T();
+
+        Matrix A = VT.mult(V);
+        Vector b = VT.mult(y).toVector();
+        coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0];
+        results[0] = coefficients;
+
+        buildDetails(); // Build the details of the model.
+
+        return results;
     }
+
 
     /**
      * Fits or trains the model with the given features and targets.
      *
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
-     * @return - Returns details of the fitting / training process.
+     * @return A 2D array containing the following on a row: <br>
+     *  - The coefficients of the polynomial from highest to lowest degree.
      * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets) {
-        // TODO: Auto-generated method stub
-        return new double[0][];
+    public double[][] fit(double[] features, double[] targets) {
+        return fit(features, targets, null);
     }
 
+
     /**
-     * Uses fitted/trained model to make predictions on features.
+     * Uses fitted/trained model to make prediction on single feature.
      *
-     * @param features Features to make predictions on.
-     * @return The models predicted labels.
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public double[] predict(double[][] features) {
-        // TODO: Auto-generated method stub
-        return new double[0];
-    }
-
-    /**
-     * Loads a trained model from a specified file containing a fitted / trained model.
+     * the specification when the model was compiled.
      *
-     * @param filePath File path, including extension, of fitted / trained model to be loaded.
-     * @return The fitted / trained model located in the specified file.
+     * @param features The features to make predictions on.
+     * @return The models predicted labels.
      */
-    @Override
-    public PolynomialRegression loadModel(String filePath) {
-        // TODO: Auto-generated method stub
-        return null;
+    public double[] predict(double[] features) {
+        if(!isFit || !isCompiled) {
+            throw new IllegalStateException("Model must be compiled and fit before predictions can be made.");
+        }
+
+        double[] predictions = new double[features.length];
+        int position = 0;
+
+        for(double feature : features) { // For each feature, compute the prediction.
+            for (int j = coefficients.length - 1; j >= 0; j--) {
+                predictions[position] += coefficients[j] * Math.pow(feature, j);
+            }
+            position++;
+        }
+
+        return predictions;
     }
 
+
     /**
-     * Saves a trained model to the specified file path.
+     * Gets the coefficients for the model.<br>
+     * Model must be fit before this can be called.
+     *
+     * @return Returns the computed coefficients of the model.
+     */
+    public double[] getCoefficients() {
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before coefficients can be returned.");
+        }
+
+        return coefficients;
+    }
+
+
+    /**
+     * Saves a trained model to the specified file path including the name of the file.
+     * <b><u>Do not</u></b> include a file extension.
+     * The file will be saved as *.mdl to the path specified.
      *
      * @param filePath File path, including extension, to save fitted / trained model to.
      */
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before it can be saved.");
+        }
+
+        // Construct the blocks for the model file.
+        Block modelType = new Block(PolyRegTags.MODEL_TYPE.toString(), MODEL_TYPE);
+        Block coef = new Block(PolyRegTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients).replaceAll("[]]", ""));
+        Block deg = new Block(PolyRegTags.DEGREE.toString(), Integer.toString(degree));
+        Block norm = new Block(PolyRegTags.NORMALIZE.toString(), Integer.toString(normalization));
+
+        FileManager.stringToFile(Block.buildFileContent(modelType, coef, deg, norm), filePath + ".mdl");
     }
 
+
+    // Construct details of model
+    protected void buildDetails() {
+        details ="Model Details\n" +
+                "----------------------------\n" +
+                "Model Type: " + this.MODEL_TYPE+ "\n" +
+                "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
+                "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
+
+        if(isCompiled) {
+            details += "Polynomial Degree: " + degree + "\n";
+        }
+
+        if(isFit && coefficients!=null) {
+            details += "Coefficients (high->low): ";
+            details += ArrayUtils.asString(coefficients);
+            details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ";
+
+            for(int i=2; i<coefficients.length; i++) {
+                details += coefficients[i] + "x^" + i;
+
+                if(i<coefficients.length-1) {
+                    details += " + ";
+                }
+            }
+        }
+    }
+
+
     /**
-     * Prints details of model to the standard output.
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
      */
     @Override
-    public void printDetails() {
-        // TODO: Auto-generated method stub
+    public String getDetails() {
+       return this.toString();
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+        return details;
     }
 }

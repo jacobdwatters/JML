@@ -1,16 +1,13 @@
-package com.jml.linear_models;
+package com.jml.neural_network;
 
 import com.jml.core.Model;
+import com.jml.neural_network.layers.Layer;
 import java.util.Map;
 
+public class NeuralNetwork extends Model<double[][], double[][]> {
 
-/**
- * Fits a one layer perceptron to a set of features.<br><br>
- *
- * Perceptron is a linear classifier that is analogous to logistic regression using stochastic gradient descent.
- */
-public class Perceptron extends Model<double[][], double[][]> {
 
+    private Layer<?, ?> layer;
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -72,7 +69,7 @@ public class Perceptron extends Model<double[][], double[][]> {
     /**
      * Uses fitted/trained model to make predictions on features.
      *
-     * @param features Features to make predictions on.
+     * @param features The features to make predictions on.
      * @return The models predicted labels.
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      *                                  the specification when the model was compiled.
@@ -80,7 +77,17 @@ public class Perceptron extends Model<double[][], double[][]> {
     @Override
     public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
-        return null;
+        return new double[0][];
+    }
+
+
+    /**
+     * Adds specified layer to the network.
+     *
+     * @param layer Layer to add to the neural network.
+     */
+    public void add(Layer<?, ?> layer) {
+        // TODO: Auto-generated method stub
     }
 
 
@@ -103,8 +110,10 @@ public class Perceptron extends Model<double[][], double[][]> {
      */
     @Override
     public String getDetails() {
-        return this.toString();
+        // TODO: Auto-generated method stub
+        return null;
     }
+
 
     /**
      * Forms a string of the important aspects of the model.
@@ -113,7 +122,7 @@ public class Perceptron extends Model<double[][], double[][]> {
      */
     @Override
     public String toString() {
-        // TODO: Auto-generated method stub.
+        // TODO: Auto-generated method stub
         return "";
     }
 }

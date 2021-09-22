@@ -1,8 +1,8 @@
 package com.jml.linear_models;
 
-import com.jml.core.Models;
+import com.jml.core.Model;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -12,7 +12,18 @@ import java.util.HashMap;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-public class MultipleLinearRegression implements Models<LinearRegressionSGD, ArrayList<double[][]>, double[]> {
+public class MultipleLinearRegression extends Model<ArrayList<double[][]>, double[]> {
+
+
+    /**
+     * Constructs model and prepares for training using the given parameters.
+     *
+     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile() {
+        // TODO: Auto-generated method stub.
+    }
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -21,8 +32,8 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
     @Override
-    public void compile(HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
+    public void compile(Map<String, Double> args) {
+        // TODO: Auto-generated method stub.
     }
 
     /**
@@ -38,8 +49,8 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      *                                  compiled.
      */
     @Override
-    public double[][] fit(ArrayList<double[][]> features, double[] targets, HashMap<String, Double> args) {
-        // TODO: Auto-generated method stub
+    public double[][] fit(ArrayList<double[][]> features, double[] targets, Map<String, Double> args) {
+        // TODO: Auto-generated method stub.
         return new double[0][];
     }
 
@@ -54,12 +65,12 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      */
     @Override
     public double[][] fit(ArrayList<double[][]> features, double[] targets) {
-        // TODO: Auto-generated method stub
+        // TODO: Auto-generated method stub.
         return new double[0][];
     }
 
     /**
-     * Uses fitted/trained model to make predictions on features.
+     * Uses fitted/trained model to make prediction on single feature.
      *
      * @param features The features to make predictions on.
      * @return The models predicted labels.
@@ -68,21 +79,10 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      */
     @Override
     public double[] predict(ArrayList<double[][]> features) {
-        // TODO: Auto-generated method stub
+        // TODO: Auto-generated method stub.
         return new double[0];
     }
 
-    /**
-     * Loads a trained model from a specified file containing a fitted / trained model.
-     *
-     * @param filePath File path, including extension, of fitted / trained model to be loaded.
-     * @return The fitted / trained model located in the specified file.
-     */
-    @Override
-    public LinearRegressionSGD loadModel(String filePath) {
-        // TODO: Auto-generated method stub
-        return null;
-    }
 
     /**
      * Saves a trained model to the specified file path.
@@ -91,14 +91,30 @@ public class MultipleLinearRegression implements Models<LinearRegressionSGD, Arr
      */
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub
+        // TODO: Auto-generated method stub.
     }
 
+
     /**
-     * Prints details of model to the standard output.
+     * Forms a string of the important aspects of the model.<br>
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
      */
     @Override
-    public void printDetails() {
-        // TODO: Auto-generated method stub
+    public String getDetails() {
+        return this.toString();
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+        return "";
     }
 }
