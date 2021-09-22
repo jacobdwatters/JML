@@ -1,5 +1,7 @@
 package com.jml.core;
-import java.util.Map;
+
+import com.jml.util.FileManager;
+import java.util.*;
 
 
 /**
@@ -91,4 +93,70 @@ public abstract class Model<X, Y> {
      * @return String representation of model.
      */
     public abstract String toString();
+
+
+    /**
+     * Loads a model from specified file path including extension.<br>
+     * Models must be saved as an MDL file (i.e. *.mdl).
+     *
+     * @param filePath File path, including file extension, of model to load.
+     * @return Returns a saved trained model from the file path.
+     */
+    public static Model load(String filePath) {
+        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(".mdl")) {
+            throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
+        }
+
+        Model model = null;
+        String currentBlock;
+
+        String fileContent = FileManager.readFile(filePath);
+        List<String> lines = new ArrayList<String>(),
+        blocks = new ArrayList<String>();
+        Collections.addAll(lines, fileContent.split("\n"));
+
+        while(!lines.isEmpty()) {
+            blocks.add(nextBlock(lines));
+        }
+
+        Class<Model> clazz = Model.class;
+
+        return clazz.cast(ModelFromData.create(blocks));
+    }
+
+
+    /**
+     * A helper method which gets the next block from an ArrayList of file lines.
+     * This also removes that block from the lines.
+     *
+     * @param lines Lines of file.
+     * @return The string format of the block.
+     */
+    private static String nextBlock(List<String> lines) {
+        StringBuilder block = new StringBuilder();
+        boolean foundStart = false, blockFound = false;
+
+        while(!blockFound) {
+            if(lines.get(0).matches("<(.*?)>") && lines.get(0).contains("<\\")) {
+                if(!foundStart) {
+                    throw new IllegalStateException("Unable to load model. Parser got stuck in a bad state.");
+                }
+
+                block.append(lines.remove(0)); // Remove line and add it to block
+                block.append("\n");
+
+                blockFound=true; // This is the end of the block
+            }
+            else if(lines.get(0).matches("<(.*?)>") && !lines.get(0).contains("\\")) { // Then we have the beginning of a block
+                foundStart = true;
+                block.append(lines.remove(0)); // Remove line and add it to block
+                block.append("\n");
+            } else {
+                block.append(lines.remove(0)); // Remove line and add it to block
+                block.append("\n");
+            }
+        }
+
+        return block.toString();
+    }
 }

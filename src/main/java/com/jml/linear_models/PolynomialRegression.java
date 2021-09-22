@@ -1,7 +1,9 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
+import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
@@ -19,13 +21,13 @@ import java.util.Objects;
  * by the model. This is using stochastic gradient descent.
  */
 public class PolynomialRegression extends Model<double[], double[]> {
-    public final String MODEL_TYPE = "Polynomial Regression";
-    private boolean isFit = false, isCompiled = false;
+    public final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
+    protected boolean isFit = false, isCompiled = false;
     public static final String DEGREE_KEY = "degree";
     public static final String NORMALIZE_KEY = "normalize";
-    private int degree = 1; // Defaults to simple linear regression.
-    private int normalization = 0; // Default is no normalization.
-    private double[] coefficients;
+    protected int degree = 1; // Defaults to simple linear regression.
+    protected int normalization = 0; // Default is no normalization.
+    protected double[] coefficients;
     private String details = "Model Details\n" +
             "----------------------------\n" +
             "Model Type: " + this.MODEL_TYPE+ "\n" +
@@ -185,7 +187,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     public double[] getCoefficients() {
         if(!isFit) {
-            throw new IllegalStateException("Model must be fit before predictions can be made.");
+            throw new IllegalStateException("Model must be fit before coefficients can be returned.");
         }
 
         return coefficients;
@@ -193,18 +195,30 @@ public class PolynomialRegression extends Model<double[], double[]> {
 
 
     /**
-     * Saves a trained model to the specified file path.
+     * Saves a trained model to the specified file path including the name of the file.
+     * <b><u>Do not</u></b> include a file extension.
+     * The file will be saved as *.mdl to the path specified.
      *
      * @param filePath File path, including extension, to save fitted / trained model to.
      */
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before it can be saved.");
+        }
+
+        // Construct the blocks for the model file.
+        Block modelType = new Block(PolyRegTags.MODEL_TYPE.toString(), MODEL_TYPE);
+        Block coef = new Block(PolyRegTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients).replaceAll("[]]", ""));
+        Block deg = new Block(PolyRegTags.DEGREE.toString(), Integer.toString(degree));
+        Block norm = new Block(PolyRegTags.NORMALIZE.toString(), Integer.toString(normalization));
+
+        FileManager.stringToFile(Block.buildFileContent(modelType, coef, deg, norm), filePath + ".mdl");
     }
 
 
     // Construct details of model
-    private void buildDetails() {
+    protected void buildDetails() {
         details ="Model Details\n" +
                 "----------------------------\n" +
                 "Model Type: " + this.MODEL_TYPE+ "\n" +
@@ -215,7 +229,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
             details += "Polynomial Degree: " + degree + "\n";
         }
 
-        if(isFit) {
+        if(isFit && coefficients!=null) {
             details += "Coefficients (high->low): ";
             details += ArrayUtils.asString(coefficients);
             details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ";

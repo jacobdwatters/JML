@@ -26,7 +26,7 @@ public class ArrayUtils {
 
 
     public static String asString(double[] arr) {
-        String arrAsString = "[";
+        String arrAsString = "";
 
         for(int i=0; i<arr.length; i++) {
             arrAsString += arr[i];
@@ -36,7 +36,7 @@ public class ArrayUtils {
             }
         }
 
-        return arrAsString + "]";
+        return arrAsString;
     }
 
 }
