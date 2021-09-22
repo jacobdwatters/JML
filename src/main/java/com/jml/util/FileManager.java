@@ -21,24 +21,11 @@ public class FileManager {
      * @param filePath File path including file extension/
      */
     public static void stringToFile(String data, String filePath) {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(filePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        try {
-            writer = new BufferedWriter(new FileWriter(filePath));
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(data);
         } catch (IOException e) {
             System.err.print("Could not write to file " + filePath);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                System.err.print("Could not close writer.");
-            }
         }
     }
 
