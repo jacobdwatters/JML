@@ -1,8 +1,8 @@
 package com.jml.core;
 
 import com.jml.util.Stats;
-import linalg.Matrix;
-import linalg.Vector;
+import com.jml.linalg.Matrix;
+import com.jml.linalg.Vector;
 
 public class Normalize {
 

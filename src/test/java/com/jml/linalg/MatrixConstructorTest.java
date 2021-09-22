@@ -1,7 +1,6 @@
 package com.jml.linalg;
 
-import linalg.Matrix;
-import linalg.complex_number.CNumber;
+import com.jml.linalg.complex_number.CNumber;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

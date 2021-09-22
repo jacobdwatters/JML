@@ -28,7 +28,7 @@ class PolynomialRegressionExceptionTest {
 
 
     @Test // Defines a test method
-    @DisplayName("Testing for attepted fitting/prediction but model is not compiled yet.") // define the name of the test which is displayed to the user
+    @DisplayName("Test for attempted fitting/prediction but model is not compiled yet.") // define the name of the test which is displayed to the user
     void notCompiledTestCase() {
         assertThrows(Exception.class, () -> model.fit(features, targets));
         assertThrows(Exception.class, () -> model.predict(tests));
@@ -36,7 +36,7 @@ class PolynomialRegressionExceptionTest {
 
 
     @Test // Defines a test method
-    @DisplayName("Testing for attempted prediction but model is not fit.") // define the name of the test which is displayed to the user
+    @DisplayName("Test for attempted prediction but model is not fit.") // define the name of the test which is displayed to the user
     void notFitTestCase() {
         double[] expected = {45.96048699, 1.95748083, 0.06892953};
         double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
@@ -51,18 +51,17 @@ class PolynomialRegressionExceptionTest {
 
 
     @Test // Defines a test method
-    @DisplayName("Testing for degree 1") // define the name of the test which is displayed to the user
+    @DisplayName("Test for attempted compile with invalid normalization value") // define the name of the test which is displayed to the user
     void invalidNormalizationCase() {
         HashMap<String, Double> arguments = new HashMap<>();
         arguments.put(PolynomialRegression.NORMALIZE_KEY, 2.0);
-
 
         assertThrows(Exception.class, () -> model.compile(arguments));
     }
 
 
     @Test // Defines a test method
-    @DisplayName("Testing for degree 1") // define the name of the test which is displayed to the user
+    @DisplayName("Test for exception when degree is invalid") // define the name of the test which is displayed to the user
     void invalidDegreeCase() {
         HashMap<String, Double> arguments1 = new HashMap<>();
         arguments1.put(PolynomialRegression.DEGREE_KEY, 2.1);
