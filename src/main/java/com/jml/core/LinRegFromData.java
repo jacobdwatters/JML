@@ -1,14 +1,13 @@
 package com.jml.core;
 
+import com.jml.linear_models.LinearRegression;
 import com.jml.linear_models.LinearModelTags;
-import com.jml.linear_models.PolynomialRegression;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-class PolyRegFromData extends PolynomialRegression {
-
+class LinRegFromData extends LinearRegression {
     private static Scanner scanner;
 
     /**
@@ -17,9 +16,9 @@ class PolyRegFromData extends PolynomialRegression {
      * @return The polynomial regression model specified by the data.
      */
     static Model create(List<String> tags, List<String> contents) {
-        PolyRegFromData polyRegModel = new PolyRegFromData();
-        polyRegModel.isCompiled = true; // Since we are loading a pretrained model, set to true.
-        polyRegModel.isFit = true; // Since we are loading a pretrained model, set to true.
+        LinRegFromData linRegModel = new LinRegFromData();
+        linRegModel.isCompiled = true; // Since we are loading a pretrained model, set to true.
+        linRegModel.isFit = true; // Since we are loading a pretrained model, set to true.
 
         while(!tags.isEmpty() && !contents.isEmpty()) {
             // Get the tag/content pair
@@ -27,19 +26,16 @@ class PolyRegFromData extends PolynomialRegression {
             String content = contents.remove(0);
             scanner = new Scanner(content);
 
-            if(tag.equals(LinearModelTags.DEGREE.toString())) {
-                polyRegModel.degree = scanner.nextInt();
-
-            } else if(tag.equals(LinearModelTags.NORMALIZE.toString())) {
-                polyRegModel.normalization = scanner.nextInt();
+            if(tag.equals(LinearModelTags.NORMALIZE.toString())) {
+                linRegModel.normalization = scanner.nextInt();
 
             } else if(tag.equals(LinearModelTags.COEFFICIENTS.toString())) {
                 String[] coeffStrings = content.split(",");
 
-                polyRegModel.coefficients = Arrays.stream(coeffStrings)
+                linRegModel.coefficients = Arrays.stream(coeffStrings)
                         .mapToDouble(Double::parseDouble)
                         .toArray();
-                
+
             } else {
                 throw new IllegalArgumentException("Failed to load model. Unrecognized tag in file.");
             }
@@ -47,16 +43,9 @@ class PolyRegFromData extends PolynomialRegression {
             scanner.close();
         }
 
-        polyRegModel.buildDetails();
-        Class<PolynomialRegression> clazz = PolynomialRegression.class;
+        linRegModel.buildDetails();
+        Class<LinearRegression> clazz = LinearRegression.class;
 
-        return clazz.cast(polyRegModel);
-    }
-
-
-    private double nextDouble(String content) {
-        scanner = new Scanner(content);
-
-        return scanner.nextDouble();
+        return clazz.cast(linRegModel);
     }
 }

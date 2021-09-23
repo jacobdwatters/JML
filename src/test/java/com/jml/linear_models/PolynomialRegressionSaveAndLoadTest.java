@@ -90,5 +90,6 @@ public class PolynomialRegressionSaveAndLoadTest {
         model.compile(args);
         double[][] c = model.fit(features, targets);
         assertThrows(Exception.class, () -> model.saveModel(filePath));
+        assertThrows(Exception.class, () -> Model.load(filePath));
     }
 }

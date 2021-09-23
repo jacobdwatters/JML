@@ -1,5 +1,5 @@
 package com.jml.linear_models;
 
-public enum PolyRegTags {
+public enum LinearModelTags {
     MODEL_TYPE, COEFFICIENTS, DEGREE, NORMALIZE
 }
