@@ -337,7 +337,7 @@ public class Matrix implements MatrixOperations, MatrixManipulations, MatrixProp
 	 * @param shape - Shape of zero matrix.
 	 * @return A zero matrix with given number of rows and columns.
 	 */
-	public static Matrix Zeros(String shape) {
+	public static Matrix zeros(String shape) {
 		int[] dimensions = Parser.parseShape(shape);
 		int m = dimensions[0];
 		int n = dimensions[1];

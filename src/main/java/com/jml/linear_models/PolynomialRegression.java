@@ -201,7 +201,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 
-        if(this.getClass().getSimpleName().equals("LinearRegression")) {
+        if(this instanceof LinearRegression) {
             blockList = new Block[3];
             linOrPolyType = ModelTypes.LINEAR_REGRESSION.toString();
         } else {
