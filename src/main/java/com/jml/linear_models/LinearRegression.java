@@ -9,6 +9,7 @@ import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -54,8 +55,10 @@ public class LinearRegression extends PolynomialRegression {
      */
     @Override
     public void compile(Map<String, Double> args) {
-        if(args.containsKey(PolynomialRegression.DEGREE_KEY)) { // Ensure no degree is passed to super class.
-            args.remove(PolynomialRegression.DEGREE_KEY);
+        if(!Objects.isNull(args) && !args.isEmpty()) {
+            if(args.containsKey(LinearRegression.DEGREE_KEY)) { // Ensure no degree is passed to super class.
+                args.remove(LinearRegression.DEGREE_KEY);
+            }
         }
 
         super.compile(args);
