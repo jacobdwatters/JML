@@ -1,7 +1,15 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
+import com.jml.core.ModelTypes;
+import com.jml.linalg.Matrix;
+import com.jml.linalg.Solvers;
+import com.jml.linalg.Vector;
+import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
+
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -11,46 +19,50 @@ import java.util.Map;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is solved explicitly.
  */
-public class LinearRegression extends Model<double[][], double[]> {
-
-    // Used as regressor since simple linear regression is a special case of polynomial regression.
-    private PolynomialRegression polyRegress = new PolynomialRegression();
+public class LinearRegression extends PolynomialRegression {
+    public final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();
+    private String details = "Model Details\n" +
+            "----------------------------\n" +
+            "Model Type: " + this.MODEL_TYPE+ "\n" +
+            "Is Compiled: No\n" +
+            "Is Trained: No\n";
 
     /**
-     * Constructs model and prepares for training using the given parameters.<br>
-     * If you would like to add additional arguments see {@link #compile(Map) compile(HashMap)}.
-     *
+     * Constructs model and prepares for training using default parameters. i.e. no normalization will be used.
      *
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
     @Override
     public void compile() {
-        compile(null);
+        super.compile();
+        buildDetails();
     }
 
 
     /**
      * Constructs model and prepares for training using the given parameters.
      *
-     * Valid additional arguments.
+     * Valid additional args. All others will be ignored.
      * <pre>
      *  - Normalization:
      *      <"normalize", 0> - Default. No normalization is used.
-     *      <"normalize", 1> - Normalizes data using min-max scaling.
+     *      <"normalize", 1> - Normalizes data by subtracting mean and dividing by the L2-norm before applying regression.
      * <pre/>
      *
-     * If you don't want to add additional arguments consider using {@link #compile() compile()} or pass null for args.
-     *
      * @param args A hashtable containing additional arguments in the form <name, value>.
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     * @throws IllegalArgumentException If values in <code>args</code> are invalid of a specified key. Unspecified keys will simply be
+     * ignored and will NOT throw error.
      */
     @Override
     public void compile(Map<String, Double> args) {
-        if(args.containsKey("degree")) {
-            throw new IllegalArgumentException("Can not pass degree as an argument for " + this.getClass());
+        if(!Objects.isNull(args) && !args.isEmpty()) {
+            if(args.containsKey(LinearRegression.DEGREE_KEY)) { // Ensure no degree is passed to super class.
+                args.remove(LinearRegression.DEGREE_KEY);
+            }
         }
 
-        polyRegress.compile(args);
+        super.compile(args);
+        buildDetails();
     }
 
 
@@ -59,60 +71,67 @@ public class LinearRegression extends Model<double[][], double[]> {
      *
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
-     * @param args     A hashtable containing additional arguments in the form <name, value>.
-     * @return Returns details of the fitting / training process.
-     * @throws IllegalArgumentException
-     * Can be thrown for the following reasons<br>
-     *  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
-     *  - If the features and targets are not correctly sized per the specification when the model was
-     *                                  compiled.
-     */
-    @Override
-    public double[][] fit(double[][] features, double[] targets, Map<String, Double> args) {
-        // TODO: Auto-generated method stub
-        return new double[0][];
-    }
-
-
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @return - Returns details of the fitting / training process.
+     * @return A 2D array containing the following on a row: <br>
+     *  - The coefficients of the line from lowest to highest degree.
      * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[] targets) {
-        // TODO: Auto-generated method stub
-        return new double[0][];
+    public double[][] fit(double[] features, double[] targets) {
+        double[][] result = super.fit(features, targets, null);
+        buildDetails();
+        return result;
     }
 
 
     /**
-     * Uses fitted/trained model to make predictions on features.
+     * Fits the model with the given features and targets.
      *
-     * @param features Features to make predictions on.
-     * @return The models predicted labels.
-     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
-     *                                  the specification when the model was compiled.
+     * Valid additional args. All others will be ignored.
+     * <pre>
+     *  - R value (goodness of fit):
+     *      <"fit", 0> - Default. No R value is returned.
+     *      <"fit", 1> - R value of model will be calculated and returned.
+     * <pre/>
+     *
+     * @param features The features of the training set.
+     * @param targets  The targets of the training set.
+     * @param args     A hashtable containing additional arguments in the form <name, value>.
+     * @return A 2D array containing the following on a row: <br>
+     *  - The coefficients of the line from lowest to highest degree.
+     *  - The R value (goodness of fit) if indicated in args.
+     * @throws IllegalArgumentException Can be thrown for the following reasons<br>
+     *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
+     *                                  - If the features and targets are not correctly sized per the specification when the model was
+     *                                  compiled.
      */
+    // TODO: Add ability to get R value.
     @Override
-    public double[] predict(double[][] features) {
-        // TODO: Auto-generated method stub
-        return new double[0];
+    public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
+        double[][] result = super.fit(features, targets, args);
+        buildDetails();
+        return result;
     }
 
 
-    /**
-     * Saves a trained model to the specified file path.
-     *
-     * @param filePath File path, including extension, to save fitted / trained model to.
-     */
+    // Construct details of model
     @Override
-    public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub
+    protected void buildDetails() {
+        details ="Model Details\n" +
+                "----------------------------\n" +
+                "Model Type: " + this.MODEL_TYPE+ "\n" +
+                "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
+                "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
+
+        if(isCompiled) {
+            details += "Normalization: " + (normalization==1 ? "Yes" : "No") + "\n";
+        }
+
+        if(isFit && coefficients!=null) {
+            details += "Coefficients (low->high): ";
+            details += ArrayUtils.asString(coefficients);
+            details += "\nLine: y = " + coefficients[0] + " + " + coefficients[1] + "x";
+        }
     }
 
 
@@ -135,7 +154,6 @@ public class LinearRegression extends Model<double[][], double[]> {
      */
     @Override
     public String toString() {
-        // TODO: Auto-generated method stub.
-        return "";
+        return details;
     }
 }

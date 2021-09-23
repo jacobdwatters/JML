@@ -4,10 +4,12 @@ import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
-import linalg.Matrix;
-import linalg.Solvers;
-import linalg.Vector;
+import com.jml.linalg.Matrix;
+import com.jml.linalg.Solvers;
+import com.jml.linalg.Vector;
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,7 +20,7 @@ import java.util.Objects;
  * PolynomialRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x  + b<sub>2</sub>x<sup>2</sup> + ... +
  * b<sub>n</sub>x<sup>n</sup> to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
- * by the model. This is using stochastic gradient descent.
+ * by the model. This is solved explicitly.
  */
 public class PolynomialRegression extends Model<double[], double[]> {
     public final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
@@ -45,6 +47,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
         compile(null);
     }
 
+
     /**
      * Constructs model and prepares for training using the given parameters.
      *
@@ -67,7 +70,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
             if(args.containsKey(NORMALIZE_KEY)) {
                 double value = args.get(NORMALIZE_KEY);
 
-                if(value != 0 || value != 1) {
+                if(!(value == 0.0 || value == 1.0)) {
                     throw new IllegalArgumentException("Normalization must be 0 or 1 but got " + value);
                 } else {
                     this.normalization = (int) value;
@@ -104,13 +107,14 @@ public class PolynomialRegression extends Model<double[], double[]> {
      * @param targets  The targets of the training set.
      * @param args     A hashtable containing additional arguments in the form <name, value>.
      * @return A 2D array containing the following on a row: <br>
-     *  - The coefficients of the polynomial from highest to lowest degree.
+     *  - The coefficients of the polynomial from lowest to highest degree.
      *  - The R value (goodness of fit) if indicated in args.
      * @throws IllegalArgumentException Can be thrown for the following reasons<br>
      *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
+    // TODO: Add ability to get R value.
     @Override
     public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
         if(!isCompiled) {
@@ -141,7 +145,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
      * @return A 2D array containing the following on a row: <br>
-     *  - The coefficients of the polynomial from highest to lowest degree.
+     *  - The coefficients of the polynomial from lowest to highest degree.
      * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
      *                                  the specification when the model was compiled.
      */
@@ -180,40 +184,38 @@ public class PolynomialRegression extends Model<double[], double[]> {
 
 
     /**
-     * Gets the coefficients for the model.<br>
-     * Model must be fit before this can be called.
-     *
-     * @return Returns the computed coefficients of the model.
-     */
-    public double[] getCoefficients() {
-        if(!isFit) {
-            throw new IllegalStateException("Model must be fit before coefficients can be returned.");
-        }
-
-        return coefficients;
-    }
-
-
-    /**
      * Saves a trained model to the specified file path including the name of the file.
-     * <b><u>Do not</u></b> include a file extension.
-     * The file will be saved as *.mdl to the path specified.
+     * File path must include the extension .mdl.
      *
      * @param filePath File path, including extension, to save fitted / trained model to.
      */
     @Override
     public void saveModel(String filePath) {
+        String linOrPolyType;
+        Block[] blockList;
+
         if(!isFit) {
             throw new IllegalStateException("Model must be fit before it can be saved.");
         }
+        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(".mdl")) {
+            throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
+        }
+
+        if(this instanceof LinearRegression) {
+            blockList = new Block[3];
+            linOrPolyType = ModelTypes.LINEAR_REGRESSION.toString();
+        } else {
+            blockList = new Block[4];
+            linOrPolyType = this.MODEL_TYPE;
+            blockList[3] = new Block(LinearModelTags.DEGREE.toString(), Integer.toString(degree));
+        }
 
         // Construct the blocks for the model file.
-        Block modelType = new Block(PolyRegTags.MODEL_TYPE.toString(), MODEL_TYPE);
-        Block coef = new Block(PolyRegTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients).replaceAll("[]]", ""));
-        Block deg = new Block(PolyRegTags.DEGREE.toString(), Integer.toString(degree));
-        Block norm = new Block(PolyRegTags.NORMALIZE.toString(), Integer.toString(normalization));
+        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), linOrPolyType);
+        blockList[1] = new Block(LinearModelTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients));
+        blockList[2] = new Block(LinearModelTags.NORMALIZE.toString(), Integer.toString(normalization));
 
-        FileManager.stringToFile(Block.buildFileContent(modelType, coef, deg, norm), filePath + ".mdl");
+        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);
     }
 
 
@@ -225,12 +227,14 @@ public class PolynomialRegression extends Model<double[], double[]> {
                 "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
                 "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
 
+
         if(isCompiled) {
+            details += "Normalization: " + (normalization==1 ? "Yes" : "No") + "\n";
             details += "Polynomial Degree: " + degree + "\n";
         }
 
         if(isFit && coefficients!=null) {
-            details += "Coefficients (high->low): ";
+            details += "Coefficients (low->high): ";
             details += ArrayUtils.asString(coefficients);
             details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ";
 

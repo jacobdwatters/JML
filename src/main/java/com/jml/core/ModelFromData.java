@@ -30,7 +30,7 @@ class ModelFromData {
         if(modelType.equals(ModelTypes.POLYNOMIAL_REGRESSION.toString())) {
             model = PolyRegFromData.create(tags, contents);
         } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION.toString())) {
-            // TODO:
+            model = LinRegFromData.create(tags, contents);
         } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION_SGD.toString())) {
             // TODO:
         } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {

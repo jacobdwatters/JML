@@ -1,9 +1,8 @@
 package com.jml.core;
 
-import com.jml.linear_models.PolyRegTags;
+import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.PolynomialRegression;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -28,13 +27,13 @@ class PolyRegFromData extends PolynomialRegression {
             String content = contents.remove(0);
             scanner = new Scanner(content);
 
-            if(tag.equals(PolyRegTags.DEGREE.toString())) {
+            if(tag.equals(LinearModelTags.DEGREE.toString())) {
                 polyRegModel.degree = scanner.nextInt();
 
-            } else if(tag.equals(PolyRegTags.NORMALIZE.toString())) {
+            } else if(tag.equals(LinearModelTags.NORMALIZE.toString())) {
                 polyRegModel.normalization = scanner.nextInt();
 
-            } else if(tag.equals(PolyRegTags.COEFFICIENTS.toString())) {
+            } else if(tag.equals(LinearModelTags.COEFFICIENTS.toString())) {
                 String[] coeffStrings = content.split(",");
 
                 polyRegModel.coefficients = Arrays.stream(coeffStrings)
