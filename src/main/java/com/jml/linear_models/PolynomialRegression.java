@@ -236,7 +236,11 @@ public class PolynomialRegression extends Model<double[], double[]> {
         if(isFit && coefficients!=null) {
             details += "Coefficients (low->high): ";
             details += ArrayUtils.asString(coefficients);
-            details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ";
+            details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x";
+
+            if(coefficients.length > 2) {
+                details += " + ";
+            }
 
             for(int i=2; i<coefficients.length; i++) {
                 details += coefficients[i] + "x^" + i;
