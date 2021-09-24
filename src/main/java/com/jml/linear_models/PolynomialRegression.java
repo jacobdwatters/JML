@@ -4,12 +4,12 @@ import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
-import com.jml.linalg.Matrix;
-import com.jml.linalg.Solvers;
-import com.jml.linalg.Vector;
+
+import linalg.Matrix;
+import linalg.Solvers;
+import linalg.Vector;
+
 import java.lang.Math;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,10 +23,36 @@ import java.util.Objects;
  * by the model. This is solved explicitly.
  */
 public class PolynomialRegression extends Model<double[], double[]> {
+
+
     public final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
+
     protected boolean isFit = false, isCompiled = false;
+
+    /**
+     * Key for the degree of the polynomial. <br>
+     * The associated value will be the degree for the polynomial used in regression.
+     */
     public static final String DEGREE_KEY = "degree";
+
+    /**
+     * Key for use of normalization before regression. <br>
+     * The associated value will indicate weather to normalize the features before regression.
+     */
     public static final String NORMALIZE_KEY = "normalize";
+
+    /**
+     * Key for computation of correlation coefficient. <br>
+     * The associated value will indicate weather to compute the correlation coefficient after regression.
+     */
+    public static final String CORRELATION_KEY = "R";
+
+    /**
+     * Key for computation of coefficient of determination. <br>
+     * The associated value will indicate weather to compute the coefficient of determination after regression.
+     */
+    public static final String DETERMINATION_KEY = "R2";
+
     protected int degree = 1; // Defaults to simple linear regression.
     protected int normalization = 0; // Default is no normalization.
     protected double[] coefficients;
@@ -106,9 +132,10 @@ public class PolynomialRegression extends Model<double[], double[]> {
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
      * @param args     A hashtable containing additional arguments in the form <name, value>.
-     * @return A 2D array containing the following on a row: <br>
+     * @return A 2D array containing the following on a row in the following order: <br>
      *  - The coefficients of the polynomial from lowest to highest degree.
-     *  - The R value (goodness of fit) if indicated in args.
+     *  - The R value (correlation coefficient, i.e. the amount of correlation) if indicated in args.
+     *  - The R^2 value (coefficient of determination, i.e. goodness of fit) if indicated in args.
      * @throws IllegalArgumentException Can be thrown for the following reasons<br>
      *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
      *                                  - If the features and targets are not correctly sized per the specification when the model was
@@ -120,9 +147,23 @@ public class PolynomialRegression extends Model<double[], double[]> {
         if(!isCompiled) {
             throw new IllegalStateException("Model must be compiled before it can be fit.");
         }
+        boolean computeCorrelation = false, computeDetermination = false;
+        int resultRows = 1;
+
+        if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
+            if(args.containsKey(CORRELATION_KEY)) {
+                computeCorrelation = true;
+                resultRows++;
+            }
+            if(args.containsKey(DETERMINATION_KEY)) {
+                computeDetermination = true;
+                resultRows++;
+            }
+        }
 
         isFit = true;
-        double[][] results = new double[1][];
+        double[][] results = new double[resultRows][];
+
         Vector x = new Vector(features);
         Matrix y = (new Vector(targets)).toMatrix();
         Matrix V = Matrix.van(x, degree+1);
@@ -236,11 +277,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
         if(isFit && coefficients!=null) {
             details += "Coefficients (low->high): ";
             details += ArrayUtils.asString(coefficients);
-            details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x";
-
-            if(coefficients.length > 2) {
-                details += " + ";
-            }
+            details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ";
 
             for(int i=2; i<coefficients.length; i++) {
                 details += coefficients[i] + "x^" + i;

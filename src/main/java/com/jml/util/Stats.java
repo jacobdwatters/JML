@@ -53,4 +53,29 @@ public class Stats {
 
         return median;
     }
+
+
+    /**
+     * Computes the r<sup>2</sup> value or correlation between two sets of data.
+     *
+     * @param x Dataset one
+     * @param y Dataset two
+     * @return The correlation coefficient for the given datasets.
+     */
+    public static double correlation(double[] x, double y) {
+        // Todo: implementation
+        return 0;
+    }
+
+
+    /**
+     * Computes the r value or determination between two sets of data.
+     *
+     * @param x Dataset one
+     * @param y Dataset two
+     * @return The coefficient of determination for the given datasets.
+     */
+    public static double determination(double[] x, double y) {
+        return Math.sqrt(correlation(x, y));
+    }
 }
