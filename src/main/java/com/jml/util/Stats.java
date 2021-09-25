@@ -64,6 +64,11 @@ public class Stats {
     public static double correlation(double[] y, double[] y_pred) {
         ArrayErrors.checkSameLength(y, y_pred); // Ensure the arrays are the same length.
 
+        double sst = sst(y);
+        if(sst == 0) {
+            throw new ArithmeticException("Division by zero will occur because sst=0.");
+        }
+
         return 1-(sse(y, y_pred)/sst(y));
     }
 
