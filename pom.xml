@@ -8,11 +8,25 @@
     <artifactId>java-machine-learning</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.8.0-RC1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jacobdwatters</groupId>
+            <artifactId>Java-Linear-Algebra</artifactId>
+            <version>master-3563dc115e-1</version>
         </dependency>
     </dependencies>
 

@@ -1,6 +1,7 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -50,7 +51,10 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
      */
     @Override
     public double[][] fit(ArrayList<double[][]> features, double[] targets, Map<String, Double> args) {
-        // TODO: Auto-generated method stub.
+
+
+
+
         return new double[0][];
     }
 

@@ -1,5 +1,7 @@
 package com.jml.core.losses;
 
+import com.jml.util.ArrayErrors;
+import com.jml.util.Stats;
 
 /**
  * This class contains lambda functions for various loss functions including:
@@ -22,16 +24,8 @@ public class Loss {
      * and <code>x<code/> is the actual data and <code>y<code/> is the predicted data.
      */
     static LossFunction mse = (double[] actual, double[] expected) -> {
-        if(actual.length != expected.length) {
-            throw new IllegalArgumentException("actual and expected must be the same length but got " +
-                    actual.length + " and " + expected.length);
-        }
-        double loss = 0;
+        ArrayErrors.checkSameLength(actual, expected);
 
-        for(int i=0; i<actual.length; i++) {
-            loss += Math.pow(actual[i]-expected[i], 2);
-        }
-
-        return loss/actual.length;
+        return Stats.sse(actual, expected)/actual.length;
     };
 }
