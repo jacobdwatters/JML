@@ -18,15 +18,26 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.8.0-RC1</version>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.jacobdwatters</groupId>
             <artifactId>Java-Linear-Algebra</artifactId>
             <version>master-3563dc115e-1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.7</version>
         </dependency>
     </dependencies>
 
@@ -59,6 +70,26 @@
                     <parallel>methods</parallel>
                     <threadCount>10</threadCount>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -24,9 +24,7 @@ import java.util.Objects;
  * by the model. This is solved explicitly.
  */
 public class PolynomialRegression extends Model<double[], double[]> {
-
-
-    public final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
+    final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
 
     protected boolean isFit = false, isCompiled = false;
 
