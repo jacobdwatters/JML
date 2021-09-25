@@ -51,7 +51,10 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
      */
     @Override
     public double[][] fit(ArrayList<double[][]> features, double[] targets, Map<String, Double> args) {
-        // TODO: Auto-generated method stub.
+
+
+
+
         return new double[0][];
     }
 

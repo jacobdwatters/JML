@@ -147,16 +147,16 @@ public class PolynomialRegression extends Model<double[], double[]> {
         if(!isCompiled) {
             throw new IllegalStateException("Model must be compiled before it can be fit.");
         }
-        boolean computeCorrelation = false, computeDetermination = false;
+
         int resultRows = 1;
 
         if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
             if(args.containsKey(CORRELATION_KEY)) {
-                computeCorrelation = true;
+
                 resultRows++;
             }
             if(args.containsKey(DETERMINATION_KEY)) {
-                computeDetermination = true;
+
                 resultRows++;
             }
         }
