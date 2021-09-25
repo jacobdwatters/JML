@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="PolynomialRegressionTest" time="0.098" tests="2" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="16"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\17194\IdeaProjects\JML\target\test-classes;C:\Users\17194\IdeaProjects\JML\target\classes;C:\Users\17194\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.8.0-RC1\junit-jupiter-api-5.8.0-RC1.jar;C:\Users\17194\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\17194\.m2\repository\org\junit\platform\junit-platform-commons\1.8.0-RC1\junit-platform-commons-1.8.0-RC1.jar;C:\Users\17194\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="user.timezone" value="America/Denver"/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="java.vm.specification.version" value="16"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-16.0.1\bin"/>
+    <property name="sun.java.command" value="C:\Users\17194\AppData\Local\Temp\surefire6641819393267999835\surefirebooter1467473112882957245.jar C:\Users\17194\AppData\Local\Temp\surefire6641819393267999835 2021-09-11T19-48-15_546-jvmRun1 surefire9875576818076208658tmp surefire_010956908664486000422tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\17194\IdeaProjects\JML\target\test-classes;C:\Users\17194\IdeaProjects\JML\target\classes;C:\Users\17194\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.8.0-RC1\junit-jupiter-api-5.8.0-RC1.jar;C:\Users\17194\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\17194\.m2\repository\org\junit\platform\junit-platform-commons\1.8.0-RC1\junit-platform-commons-1.8.0-RC1.jar;C:\Users\17194\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\17194"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2021-04-20"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-16.0.1"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\17194\IdeaProjects\JML"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\17194\AppData\Local\Temp\surefire6641819393267999835\surefirebooter1467473112882957245.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="16.0.1+9-24"/>
+    <property name="user.name" value="17194"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="C:\Users\17194\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="C:\Users\17194\AppData\Local\Temp\"/>
+    <property name="idea.version" value="2021.2.1"/>
+    <property name="java.version" value="16.0.1"/>
+    <property name="user.dir" value="C:\Users\17194\IdeaProjects\JML"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-16.0.1\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Users\17194\AppData\Local\Microsoft\WindowsApps;;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="16.0.1+9-24"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="60.0"/>
+  </properties>
+  <testcase name="degreeOneTestCase" classname="PolynomialRegressionTest" time="0.069">
+    <system-out><![CDATA[V:
+[ [ 1  1.49  ]
+  [ 1  3.03  ]
+  [ 1  0.57  ]
+  [ 1  5.74  ]
+  [ 1  3.51  ]
+  [ 1  3.73  ]
+  [ 1  2.98  ]
+  [ 1  -0.18 ]
+  [ 1  6.23  ]
+  [ 1  3.38  ]
+   ...
+  [ 1  -0.41 ] ]
+
+VT:
+[ [  1     1     1     1     1     1     1      1     1     1    ...    1   ]
+  [ 1.49  3.03  0.57  5.74  3.51  3.73  2.98  -0.18  6.23  3.38  ...  -0.41 ] ]
+
+A:
+[ [         15          40.720000000000006 ]
+  [ 40.720000000000006  160.80299999999997 ] ]
+
+]]></system-out>
+  </testcase>
+  <testcase name="degreeTwoTestCase" classname="PolynomialRegressionTest" time="0.008">
+    <system-out><![CDATA[V:
+[ [ 1  1.49         2.2201        ]
+  [ 1  3.03         9.1809        ]
+  [ 1  0.57   0.32489999999999997 ]
+  [ 1  5.74         32.9476       ]
+  [ 1  3.51   12.320099999999998  ]
+  [ 1  3.73         13.9129       ]
+  [ 1  2.98         8.8804        ]
+  [ 1  -0.18        0.0324        ]
+  [ 1  6.23   38.812900000000006  ]
+  [ 1  3.38   11.424399999999999  ]
+   ...
+  [ 1  -0.41  0.16809999999999997 ] ]
+
+VT:
+[ [   1       1              1              1             1              1       1       1             1                   1           ...           1          ]
+  [  1.49    3.03          0.57           5.74           3.51          3.73     2.98   -0.18          6.23                3.38         ...         -0.41        ]
+  [ 2.2201  9.1809  0.32489999999999997  32.9476  12.320099999999998  13.9129  8.8804  0.0324  38.812900000000006  11.424399999999999  ...  0.16809999999999997 ] ]
+
+A:
+[ [         15          40.720000000000006  160.80299999999997 ]
+  [ 40.720000000000006  160.80299999999997  717.3438939999999  ]
+  [ 160.80299999999997  717.3438939999999   3552.6517813800006 ] ]
+
+]]></system-out>
+  </testcase>
+</testsuite>

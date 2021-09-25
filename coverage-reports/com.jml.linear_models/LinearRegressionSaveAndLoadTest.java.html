@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LinearRegressionSaveAndLoadTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JML$All_Tests_JaCoCo.exec</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">LinearRegressionSaveAndLoadTest.java</span></div><h1>LinearRegressionSaveAndLoadTest.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
+
+import com.jml.core.Model;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+<span class="fc" id="L14">class LinearRegressionSaveAndLoadTest {</span>
+
+    Model&lt;double[], double[]&gt; model;
+    Model&lt;double[], double[]&gt; loadedModel;
+    double[] features;
+    double[] targets;
+    double[] tests;
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L24">        model = new LinearRegression();</span>
+<span class="fc" id="L25">        loadedModel = new LinearRegression();</span>
+<span class="fc" id="L26">        features = new double[]{1, 4, 5, 6, 7};</span>
+<span class="fc" id="L27">        targets = new double[]{3, 4, 5, 6, 10};</span>
+<span class="fc" id="L28">        tests = new double[]{-1.2, 0, 1, 5};</span>
+<span class="fc" id="L29">    }</span>
+
+    @Test // Defines a test method
+    @DisplayName(&quot;Checks if model is saved and loaded properly.&quot;) // define the name of the test which is displayed to the user
+    void SaveAndLoadModelDegree1TestCase() {
+<span class="fc" id="L34">        String filePath = &quot;./src/test/java/com/jml/linear_models/test_model_files/testLinModel1.mdl&quot;;</span>
+
+<span class="fc" id="L36">        model.compile();</span>
+<span class="fc" id="L37">        double[][] c = model.fit(features, targets);</span>
+<span class="fc" id="L38">        double[] initialPredictions = model.predict(tests);</span>
+<span class="fc" id="L39">        model.saveModel(filePath);</span>
+
+<span class="fc" id="L41">        loadedModel = Model.load(filePath);</span>
+
+<span class="fc" id="L43">        assertEquals(model.getDetails(), loadedModel.getDetails());</span>
+<span class="fc" id="L44">        assertArrayEquals(initialPredictions, loadedModel.predict(tests));</span>
+<span class="fc" id="L45">    }</span>
+
+
+    @Test // Defines a test method
+    @DisplayName(&quot;Checks if model is saved and loaded properly.&quot;) // define the name of the test which is displayed to the user
+    void SaveAndLoadModelDegree3TestCase() {
+<span class="fc" id="L51">        String filePath = &quot;./src/test/java/com/jml/linear_models/test_model_files/testLinModel2.mdl&quot;;</span>
+
+<span class="fc" id="L53">        Map&lt;String, Double&gt; args = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L54">        args.put(LinearRegression.NORMALIZE_KEY, 1.0);</span>
+
+<span class="fc" id="L56">        model.compile(args);</span>
+<span class="fc" id="L57">        double[][] c = model.fit(features, targets);</span>
+<span class="fc" id="L58">        double[] initialPredictions = model.predict(tests);</span>
+<span class="fc" id="L59">        model.saveModel(filePath);</span>
+
+<span class="fc" id="L61">        loadedModel = Model.load(filePath);</span>
+
+<span class="fc" id="L63">        assertEquals(model.getDetails(), loadedModel.getDetails());</span>
+<span class="fc" id="L64">        assertArrayEquals(initialPredictions, loadedModel.predict(tests));</span>
+<span class="fc" id="L65">    }</span>
+
+
+    @Test // Defines a test method
+    @DisplayName(&quot;Checks if exception is thrown if model is saved before being fit.&quot;) // define the name of the test which is displayed to the user
+    void SaveAndModelNotFitExceptionTestCase() {
+<span class="fc" id="L71">        String filePath = &quot;./src/test/java/com/jml/linear_models/test_model_files/testLinModel3.mdl&quot;;</span>
+
+<span class="fc" id="L73">        model.compile();</span>
+<span class="pc" id="L74">        assertThrows(Exception.class, () -&gt; model.saveModel(filePath));</span>
+<span class="fc" id="L75">    }</span>
+
+
+    @Test // Defines a test method
+    @DisplayName(&quot;Checks if exception is thrown if model has incorrect file extension.&quot;) // define the name of the test which is displayed to the user
+    void SaveAndModelIncorrectFileExceptionTestCase() {
+<span class="fc" id="L81">        String filePath = &quot;./src/test/java/com/jml/linear_models/test_model_files/testLinModel3.txt&quot;;</span>
+
+<span class="fc" id="L83">        model.compile();</span>
+<span class="fc" id="L84">        double[][] c = model.fit(features, targets);</span>
+<span class="pc" id="L85">        assertThrows(Exception.class, () -&gt; model.saveModel(filePath));</span>
+<span class="pc" id="L86">        assertThrows(Exception.class, () -&gt; Model.load(filePath));</span>
+<span class="fc" id="L87">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
