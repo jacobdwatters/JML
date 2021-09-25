@@ -54,7 +54,7 @@ class PolyRegFromData extends PolynomialRegression {
     }
 
 
-    private double nextDouble(String content) {
+    private static double nextDouble(String content) {
         scanner = new Scanner(content);
 
         return scanner.nextDouble();

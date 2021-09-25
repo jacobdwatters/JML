@@ -61,7 +61,7 @@ public class Stats {
      * @param y_pred Dataset two.
      * @return The correlation coefficient for the given datasets.
      */
-    public static double correlation(double[] y, double[] y_pred) {
+    public static double determination(double[] y, double[] y_pred) {
         ArrayErrors.checkSameLength(y, y_pred); // Ensure the arrays are the same length.
 
         double sst = sst(y);
@@ -80,8 +80,8 @@ public class Stats {
      * @param y_pred Dataset two.
      * @return The coefficient of determination for the given datasets.
      */
-    public static double determination(double[] y, double[] y_pred) {
-        return Math.sqrt(correlation(y, y_pred));
+    public static double correlation(double[] y, double[] y_pred) {
+        return Math.sqrt(determination(y, y_pred));
     }
 
 

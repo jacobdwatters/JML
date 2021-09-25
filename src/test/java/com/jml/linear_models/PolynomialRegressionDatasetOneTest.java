@@ -44,21 +44,83 @@ class PolynomialRegressionDatasetOneTest {
 
 
     @Test // Defines a test method
-    @DisplayName("Testing for degree 2") // define the name of the test which is displayed to the user
-    void degreeTwoTestCase() {
+    @DisplayName("Testing for degree 1") // define the name of the test which is displayed to the user
+    void degreeTwoRTestCase() {
         double[] expected = {45.96048699, 1.95748083, 0.06892953};
         double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
 
         HashMap<String, Double> arguments = new HashMap<>();
+        HashMap<String, Double> fitArguments = new HashMap<>();
+
         arguments.put("degree", 2.0);
 
+        fitArguments.put("R", 1.0);
+        double[] rExpected = {0.7600600};
+
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets);
+        double[][] c  = model.fit(features, targets, fitArguments);
         double[] values = ArrayUtils.round(c[0], 8);
+        double[] R = c[1];
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
         assertArrayEquals(testingExpected, predictions);
+        assertArrayEquals(ArrayUtils.round(R, 7), rExpected);
+    }
+
+
+    @Test // Defines a test method
+    @DisplayName("Testing for degree 1") // define the name of the test which is displayed to the user
+    void degreeTwoR2TestCase() {
+        double[] expected = {45.96048699, 1.95748083, 0.06892953};
+        double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
+        HashMap<String, Double> arguments = new HashMap<>();
+        HashMap<String, Double> fitArguments = new HashMap<>();
+
+        arguments.put("degree", 2.0);
+        fitArguments.put("R2", 1.0);
+        double[] r2Expected = {0.5776913};
+
+        model.compile(arguments);
+        double[][] c  = model.fit(features, targets, fitArguments);
+        double[] values = ArrayUtils.round(c[0], 8);
+        double[] R2 = c[1];
+        double[] predictions = ArrayUtils.round(model.predict(tests), 7);
+
+        assertArrayEquals(expected, values);
+        assertArrayEquals(testingExpected, predictions);
+        assertArrayEquals(ArrayUtils.round(R2, 7), r2Expected);
+    }
+
+
+    @Test // Defines a test method
+    @DisplayName("Testing for degree 2") // define the name of the test which is displayed to the user
+    void degreeTwoTestCase() {
+        double[] expected = {45.96048699, 1.95748083, 0.06892953};
+        double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
+        double[] r2Expected = {0.5776913};
+        double[] rExpected = {0.7600600};
+
+        HashMap<String, Double> arguments = new HashMap<>();
+        HashMap<String, Double> fitArguments = new HashMap<>();
+
+        arguments.put("degree", 2.0);
+        arguments.put("normalize", 1.0);
+
+        fitArguments.put("R", 1.0);
+        fitArguments.put("R2", 1.0);
+
+        model.compile(arguments);
+        double[][] c  = model.fit(features, targets, fitArguments);
+        double[] values = ArrayUtils.round(c[0], 8);
+        double[] R = c[1];
+        double[] R2 = c[2];
+        double[] predictions = ArrayUtils.round(model.predict(tests), 7);
+
+        assertArrayEquals(expected, values);
+        assertArrayEquals(testingExpected, predictions);
+        assertArrayEquals(ArrayUtils.round(R2, 7), r2Expected);
+        assertArrayEquals(ArrayUtils.round(R, 7), rExpected);
     }
 
 

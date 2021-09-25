@@ -5,6 +5,7 @@ import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 
+import com.jml.util.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
@@ -23,9 +24,7 @@ import java.util.Objects;
  * by the model. This is solved explicitly.
  */
 public class PolynomialRegression extends Model<double[], double[]> {
-
-
-    public final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
+    final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
 
     protected boolean isFit = false, isCompiled = false;
 
@@ -124,9 +123,12 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *
      * Valid additional args. All others will be ignored.
      * <pre>
-     *  - R value (goodness of fit):
-     *      <"fit", 0> - Default. No R value is returned.
-     *      <"fit", 1> - R value of model will be calculated and returned.
+     *  - R value (correlation):
+     *      <"R", 0> - Default. No R value is returned.
+     *      <"R", 1> - R value of model will be calculated and returned.
+     *  - R^2 value (goodness of fit):
+     *      <"R2", 0> - Default. No R^2 value is returned.
+     *      <"R2", 1> - R^2 value of model will be calculated and returned.
      * <pre/>
      *
      * @param features The features of the training set.
@@ -141,7 +143,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
-    // TODO: Add ability to get R value.
+    // TODO: should this return a map instead? Or rather, only the coefficients?
     @Override
     public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
         if(!isCompiled) {
@@ -149,14 +151,15 @@ public class PolynomialRegression extends Model<double[], double[]> {
         }
 
         int resultRows = 1;
+        boolean computeCorrelation = false, computeDetermination = false;
 
         if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
             if(args.containsKey(CORRELATION_KEY)) {
-
+                computeCorrelation = true;
                 resultRows++;
             }
             if(args.containsKey(DETERMINATION_KEY)) {
-
+                computeDetermination = true;
                 resultRows++;
             }
         }
@@ -173,6 +176,20 @@ public class PolynomialRegression extends Model<double[], double[]> {
         Vector b = VT.mult(y).toVector();
         coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0];
         results[0] = coefficients;
+
+
+        /* TODO: The return value should almost certainly be a map. To guarantee that things are in the correct order
+            For an array, we need to check every case except for none. So for n arguments we must check 2^n-1 cases.
+            This is clearly not practical for several arguments. So we should use a map instead.
+         */
+        if(computeCorrelation && computeDetermination) {
+            results[1] = new double[]{Stats.correlation(targets, this.predict(features))};
+            results[2] = new double[]{Stats.determination(targets, this.predict(features))};
+        } else if(computeCorrelation) {
+            results[1] =  new double[]{Stats.correlation(targets, this.predict(features))};
+        } else if(computeDetermination) {
+            results[1] = new double[]{Stats.determination(targets, this.predict(features))};
+        }
 
         buildDetails(); // Build the details of the model.
 

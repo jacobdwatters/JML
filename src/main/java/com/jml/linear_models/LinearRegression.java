@@ -16,7 +16,7 @@ import java.util.Objects;
  * by the model. This is solved explicitly.
  */
 public class LinearRegression extends PolynomialRegression {
-    public final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();
+    final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();
     private String details = "Model Details\n" +
             "----------------------------\n" +
             "Model Type: " + this.MODEL_TYPE+ "\n" +
