@@ -30,27 +30,27 @@ import java.util.Arrays;
      * @return The median of the dataset.
      */
     public static double median(double[] data) {
-<span class="nc" id="L33">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
+<span class="fc" id="L33">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
         double median;
 
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        if(data.length==1) {</span>
-<span class="nc" id="L37">            median = data[0]; // Then we have the median</span>
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        } else if(data.length==2) {</span>
-<span class="nc" id="L39">            median = (data[0] + data[1]) / 2; // No need to sort here</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if(data.length==1) {</span>
+<span class="fc" id="L37">            median = data[0]; // Then we have the median</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        } else if(data.length==2) {</span>
+<span class="fc" id="L39">            median = (data[0] + data[1]) / 2; // No need to sort here</span>
         } else {
-<span class="nc" id="L41">            double[] sorted = new double[data.length];</span>
-<span class="nc" id="L42">            System.arraycopy(data, 0, sorted, 0, data.length);</span>
-<span class="nc" id="L43">            Arrays.sort(sorted);</span>
-<span class="nc" id="L44">            int index = (int) (data.length / 2);</span>
+<span class="fc" id="L41">            double[] sorted = new double[data.length];</span>
+<span class="fc" id="L42">            System.arraycopy(data, 0, sorted, 0, data.length);</span>
+<span class="fc" id="L43">            Arrays.sort(sorted);</span>
+<span class="fc" id="L44">            int index = (int) (data.length / 2);</span>
 
-<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (data.length % 2 == 0) { // Then we have an even number of entries.</span>
-<span class="nc" id="L47">                median = (data[index] + data[index - 1]) / 2;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            if (data.length % 2 == 0) { // Then we have an even number of entries.</span>
+<span class="fc" id="L47">                median = (sorted[index] + sorted[index - 1]) / 2;</span>
             } else {
-<span class="nc" id="L49">                median = data[index];</span>
+<span class="fc" id="L49">                median = sorted[index];</span>
             }
         }
 
-<span class="nc" id="L53">        return median;</span>
+<span class="fc" id="L53">        return median;</span>
     }
 
 

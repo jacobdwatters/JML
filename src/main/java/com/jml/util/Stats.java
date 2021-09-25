@@ -44,9 +44,9 @@ public class Stats {
             int index = (int) (data.length / 2);
 
             if (data.length % 2 == 0) { // Then we have an even number of entries.
-                median = (data[index] + data[index - 1]) / 2;
+                median = (sorted[index] + sorted[index - 1]) / 2;
             } else {
-                median = data[index];
+                median = sorted[index];
             }
         }
 
