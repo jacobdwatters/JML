@@ -123,9 +123,12 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *
      * Valid additional args. All others will be ignored.
      * <pre>
-     *  - R value (goodness of fit):
-     *      <"fit", 0> - Default. No R value is returned.
-     *      <"fit", 1> - R value of model will be calculated and returned.
+     *  - R value (correlation):
+     *      <"R", 0> - Default. No R value is returned.
+     *      <"R", 1> - R value of model will be calculated and returned.
+     *  - R^2 value (goodness of fit):
+     *      <"R2", 0> - Default. No R^2 value is returned.
+     *      <"R2", 1> - R^2 value of model will be calculated and returned.
      * <pre/>
      *
      * @param features The features of the training set.
@@ -140,7 +143,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
-    // TODO: should this return a map instead?
+    // TODO: should this return a map instead? Or rather, only the coefficients?
     @Override
     public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
         if(!isCompiled) {
@@ -149,8 +152,6 @@ public class PolynomialRegression extends Model<double[], double[]> {
 
         int resultRows = 1;
         boolean computeCorrelation = false, computeDetermination = false;
-
-
 
         if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
             if(args.containsKey(CORRELATION_KEY)) {
@@ -182,12 +183,12 @@ public class PolynomialRegression extends Model<double[], double[]> {
             This is clearly not practical for several arguments. So we should use a map instead.
          */
         if(computeCorrelation && computeDetermination) {
-            results[1] = new double[]{Stats.correlation(features, this.predict(targets))};
-            results[2] = new double[]{Stats.determination(features, this.predict(targets))};
+            results[1] = new double[]{Stats.correlation(targets, this.predict(features))};
+            results[2] = new double[]{Stats.determination(targets, this.predict(features))};
         } else if(computeCorrelation) {
-            results[1] =  new double[]{Stats.correlation(features, this.predict(targets))};
+            results[1] =  new double[]{Stats.correlation(targets, this.predict(features))};
         } else if(computeDetermination) {
-            results[1] = new double[]{Stats.determination(features, this.predict(targets))};
+            results[1] = new double[]{Stats.determination(targets, this.predict(features))};
         }
 
         buildDetails(); // Build the details of the model.

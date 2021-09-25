@@ -15,10 +15,10 @@ public class ArrayErrors {
      * @param arr Array in question.
      */
     public static void checkNotEmpty(double[] arr) {
-<span class="nc bnc" id="L18" title="All 2 branches missed.">        if(arr.length==0) {</span>
+<span class="pc bpc" id="L18" title="1 of 2 branches missed.">        if(arr.length==0) {</span>
 <span class="nc" id="L19">            throw new IllegalArgumentException(&quot;Array is empty.&quot;);</span>
         }
-<span class="nc" id="L21">    }</span>
+<span class="fc" id="L21">    }</span>
 
 
     /**
@@ -29,10 +29,10 @@ public class ArrayErrors {
      * @param arr2 Array two in question.
      */
     public static void checkSameLength(double[] arr1, double[] arr2) {
-<span class="nc bnc" id="L32" title="All 2 branches missed.">        if(arr1.length!=arr2.length) {</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        if(arr1.length!=arr2.length) {</span>
 <span class="nc" id="L33">            throw new IllegalArgumentException(&quot;Arrays must have the same length but got &quot; + arr1.length + &quot; and &quot; +</span>
                     arr2.length);
         }
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L36">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

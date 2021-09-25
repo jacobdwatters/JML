@@ -44,97 +44,159 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 
     @Test // Defines a test method
-    @DisplayName(&quot;Testing for degree 2&quot;) // define the name of the test which is displayed to the user
-    void degreeTwoTestCase() {
+    @DisplayName(&quot;Testing for degree 1&quot;) // define the name of the test which is displayed to the user
+    void degreeTwoRTestCase() {
 <span class="fc" id="L49">        double[] expected = {45.96048699, 1.95748083, 0.06892953};</span>
 <span class="fc" id="L50">        double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};</span>
 
 <span class="fc" id="L52">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L53">        arguments.put(&quot;degree&quot;, 2.0);</span>
+<span class="fc" id="L53">        HashMap&lt;String, Double&gt; fitArguments = new HashMap&lt;&gt;();</span>
 
-<span class="fc" id="L55">        model.compile(arguments);</span>
-<span class="fc" id="L56">        double[][] c  = model.fit(features, targets);</span>
-<span class="fc" id="L57">        double[] values = ArrayUtils.round(c[0], 8);</span>
-<span class="fc" id="L58">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+<span class="fc" id="L55">        arguments.put(&quot;degree&quot;, 2.0);</span>
 
-<span class="fc" id="L60">        assertArrayEquals(expected, values);</span>
-<span class="fc" id="L61">        assertArrayEquals(testingExpected, predictions);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L57">        fitArguments.put(&quot;R&quot;, 1.0);</span>
+<span class="fc" id="L58">        double[] rExpected = {0.7600600};</span>
+
+<span class="fc" id="L60">        model.compile(arguments);</span>
+<span class="fc" id="L61">        double[][] c  = model.fit(features, targets, fitArguments);</span>
+<span class="fc" id="L62">        double[] values = ArrayUtils.round(c[0], 8);</span>
+<span class="fc" id="L63">        double[] R = c[1];</span>
+<span class="fc" id="L64">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+
+<span class="fc" id="L66">        assertArrayEquals(expected, values);</span>
+<span class="fc" id="L67">        assertArrayEquals(testingExpected, predictions);</span>
+<span class="fc" id="L68">        assertArrayEquals(ArrayUtils.round(R, 7), rExpected);</span>
+<span class="fc" id="L69">    }</span>
+
+
+    @Test // Defines a test method
+    @DisplayName(&quot;Testing for degree 1&quot;) // define the name of the test which is displayed to the user
+    void degreeTwoR2TestCase() {
+<span class="fc" id="L75">        double[] expected = {45.96048699, 1.95748083, 0.06892953};</span>
+<span class="fc" id="L76">        double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};</span>
+<span class="fc" id="L77">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L78">        HashMap&lt;String, Double&gt; fitArguments = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L80">        arguments.put(&quot;degree&quot;, 2.0);</span>
+<span class="fc" id="L81">        fitArguments.put(&quot;R2&quot;, 1.0);</span>
+<span class="fc" id="L82">        double[] r2Expected = {0.5776913};</span>
+
+<span class="fc" id="L84">        model.compile(arguments);</span>
+<span class="fc" id="L85">        double[][] c  = model.fit(features, targets, fitArguments);</span>
+<span class="fc" id="L86">        double[] values = ArrayUtils.round(c[0], 8);</span>
+<span class="fc" id="L87">        double[] R2 = c[1];</span>
+<span class="fc" id="L88">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+
+<span class="fc" id="L90">        assertArrayEquals(expected, values);</span>
+<span class="fc" id="L91">        assertArrayEquals(testingExpected, predictions);</span>
+<span class="fc" id="L92">        assertArrayEquals(ArrayUtils.round(R2, 7), r2Expected);</span>
+<span class="fc" id="L93">    }</span>
+
+
+    @Test // Defines a test method
+    @DisplayName(&quot;Testing for degree 2&quot;) // define the name of the test which is displayed to the user
+    void degreeTwoTestCase() {
+<span class="fc" id="L99">        double[] expected = {45.96048699, 1.95748083, 0.06892953};</span>
+<span class="fc" id="L100">        double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};</span>
+<span class="fc" id="L101">        double[] r2Expected = {0.5776913};</span>
+<span class="fc" id="L102">        double[] rExpected = {0.7600600};</span>
+
+<span class="fc" id="L104">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L105">        HashMap&lt;String, Double&gt; fitArguments = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L107">        arguments.put(&quot;degree&quot;, 2.0);</span>
+<span class="fc" id="L108">        arguments.put(&quot;normalize&quot;, 1.0);</span>
+
+<span class="fc" id="L110">        fitArguments.put(&quot;R&quot;, 1.0);</span>
+<span class="fc" id="L111">        fitArguments.put(&quot;R2&quot;, 1.0);</span>
+
+<span class="fc" id="L113">        model.compile(arguments);</span>
+<span class="fc" id="L114">        double[][] c  = model.fit(features, targets, fitArguments);</span>
+<span class="fc" id="L115">        double[] values = ArrayUtils.round(c[0], 8);</span>
+<span class="fc" id="L116">        double[] R = c[1];</span>
+<span class="fc" id="L117">        double[] R2 = c[2];</span>
+<span class="fc" id="L118">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+
+<span class="fc" id="L120">        assertArrayEquals(expected, values);</span>
+<span class="fc" id="L121">        assertArrayEquals(testingExpected, predictions);</span>
+<span class="fc" id="L122">        assertArrayEquals(ArrayUtils.round(R2, 7), r2Expected);</span>
+<span class="fc" id="L123">        assertArrayEquals(ArrayUtils.round(R, 7), rExpected);</span>
+<span class="fc" id="L124">    }</span>
 
 
     @Test // Defines a test method
     @DisplayName(&quot;Testing for degree 3&quot;) // define the name of the test which is displayed to the user
     void degreeThreeTestCase() {
-<span class="fc" id="L68">        double[] expected = {45.95457914, 0.79220291, 0.67392271, -0.06934747};</span>
-<span class="fc" id="L69">        double[] testingExpected = {46.0942168, 45.9545791, 47.3513573, 49.6798961, 52.9397664, 55.4679162};</span>
+<span class="fc" id="L130">        double[] expected = {45.95457914, 0.79220291, 0.67392271, -0.06934747};</span>
+<span class="fc" id="L131">        double[] testingExpected = {46.0942168, 45.9545791, 47.3513573, 49.6798961, 52.9397664, 55.4679162};</span>
 
-<span class="fc" id="L71">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L72">        arguments.put(&quot;degree&quot;, 3.0);</span>
+<span class="fc" id="L133">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L134">        arguments.put(&quot;degree&quot;, 3.0);</span>
 
-<span class="fc" id="L74">        model.compile(arguments);</span>
-<span class="fc" id="L75">        double[][] c  = model.fit(features, targets);</span>
-<span class="fc" id="L76">        double[] values = ArrayUtils.round(c[0], 8);</span>
-<span class="fc" id="L77">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+<span class="fc" id="L136">        model.compile(arguments);</span>
+<span class="fc" id="L137">        double[][] c  = model.fit(features, targets);</span>
+<span class="fc" id="L138">        double[] values = ArrayUtils.round(c[0], 8);</span>
+<span class="fc" id="L139">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
 
-<span class="fc" id="L79">        assertArrayEquals(expected, values);</span>
-<span class="fc" id="L80">        assertArrayEquals(testingExpected, predictions);</span>
-<span class="fc" id="L81">    }</span>
+<span class="fc" id="L141">        assertArrayEquals(expected, values);</span>
+<span class="fc" id="L142">        assertArrayEquals(testingExpected, predictions);</span>
+<span class="fc" id="L143">    }</span>
 
 
     @Test // Defines a test method
     @DisplayName(&quot;Testing for degree 4&quot;) // define the name of the test which is displayed to the user
     void degreeFourTestCase() {
-<span class="fc" id="L87">        double[] expected = {46.37140013, 2.21354807, -1.01447580, 0.44798964, -0.04608911};</span>
-<span class="fc" id="L88">        double[] testingExpected = {41.3846008, 46.3714001, 47.9723729, 49.5870844, 52.7085899, 55.8665043};</span>
+<span class="fc" id="L149">        double[] expected = {46.37140013, 2.21354807, -1.01447580, 0.44798964, -0.04608911};</span>
+<span class="fc" id="L150">        double[] testingExpected = {41.3846008, 46.3714001, 47.9723729, 49.5870844, 52.7085899, 55.8665043};</span>
 
-<span class="fc" id="L90">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L91">        arguments.put(&quot;degree&quot;, 4.0);</span>
+<span class="fc" id="L152">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L153">        arguments.put(&quot;degree&quot;, 4.0);</span>
 
-<span class="fc" id="L93">        model.compile(arguments);</span>
-<span class="fc" id="L94">        double[][] c  = model.fit(features, targets);</span>
-<span class="fc" id="L95">        double[] values = ArrayUtils.round(c[0], 8);</span>
-<span class="fc" id="L96">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+<span class="fc" id="L155">        model.compile(arguments);</span>
+<span class="fc" id="L156">        double[][] c  = model.fit(features, targets);</span>
+<span class="fc" id="L157">        double[] values = ArrayUtils.round(c[0], 8);</span>
+<span class="fc" id="L158">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
 
-<span class="fc" id="L98">        assertArrayEquals(expected, values);</span>
-<span class="fc" id="L99">        assertArrayEquals(testingExpected, predictions);</span>
-<span class="fc" id="L100">    }</span>
+<span class="fc" id="L160">        assertArrayEquals(expected, values);</span>
+<span class="fc" id="L161">        assertArrayEquals(testingExpected, predictions);</span>
+<span class="fc" id="L162">    }</span>
 
 
     @Test // Defines a test method
     @DisplayName(&quot;Testing for degree 5&quot;) // define the name of the test which is displayed to the user
     void degreeFiveTestCase() {
-<span class="fc" id="L106">        double[] expected = {46.32787494, 2.13168183, -0.81750590, 0.34053349, -0.02399977, -0.00153648};</span>
-<span class="fc" id="L107">        double[] testingExpected = {41.9582637, 46.3278749, 47.9570481, 49.6123191, 52.7016377, 55.8513508};</span>
+<span class="fc" id="L168">        double[] expected = {46.32787494, 2.13168183, -0.81750590, 0.34053349, -0.02399977, -0.00153648};</span>
+<span class="fc" id="L169">        double[] testingExpected = {41.9582637, 46.3278749, 47.9570481, 49.6123191, 52.7016377, 55.8513508};</span>
 
-<span class="fc" id="L109">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L110">        arguments.put(&quot;degree&quot;, 5.0);</span>
+<span class="fc" id="L171">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L172">        arguments.put(&quot;degree&quot;, 5.0);</span>
 
-<span class="fc" id="L112">        model.compile(arguments);</span>
-<span class="fc" id="L113">        double[][] c  = model.fit(features, targets);</span>
-<span class="fc" id="L114">        double[] values = ArrayUtils.round(c[0], 8);</span>
-<span class="fc" id="L115">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+<span class="fc" id="L174">        model.compile(arguments);</span>
+<span class="fc" id="L175">        double[][] c  = model.fit(features, targets);</span>
+<span class="fc" id="L176">        double[] values = ArrayUtils.round(c[0], 8);</span>
+<span class="fc" id="L177">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
 
-<span class="fc" id="L117">        assertArrayEquals(expected, values);</span>
-<span class="fc" id="L118">        assertArrayEquals(testingExpected, predictions);</span>
-<span class="fc" id="L119">    }</span>
+<span class="fc" id="L179">        assertArrayEquals(expected, values);</span>
+<span class="fc" id="L180">        assertArrayEquals(testingExpected, predictions);</span>
+<span class="fc" id="L181">    }</span>
 
 
     @Test // Defines a test method
     @DisplayName(&quot;Testing for degree 6&quot;) // define the name of the test which is displayed to the user
     void degreeSixTestCase() {
-<span class="fc" id="L125">        double[] expected = {48.0173315, 2.5733680, -10.6886001, 9.9701278, -3.5275208, 0.5457470, -0.0309329};</span>
-<span class="fc" id="L126">        double[] testingExpected = {3.5442995, 48.0173315, 46.8595204, 49.2145514, 53.4008314, 54.4796373};</span>
+<span class="fc" id="L187">        double[] expected = {48.0173315, 2.5733680, -10.6886001, 9.9701278, -3.5275208, 0.5457470, -0.0309329};</span>
+<span class="fc" id="L188">        double[] testingExpected = {3.5442995, 48.0173315, 46.8595204, 49.2145514, 53.4008314, 54.4796373};</span>
 
-<span class="fc" id="L128">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L129">        arguments.put(&quot;degree&quot;, 6.0);</span>
+<span class="fc" id="L190">        HashMap&lt;String, Double&gt; arguments = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L191">        arguments.put(&quot;degree&quot;, 6.0);</span>
 
-<span class="fc" id="L131">        model.compile(arguments);</span>
-<span class="fc" id="L132">        double[][] c  = model.fit(features, targets);</span>
-<span class="fc" id="L133">        double[] values = ArrayUtils.round(c[0], 7);</span>
-<span class="fc" id="L134">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
+<span class="fc" id="L193">        model.compile(arguments);</span>
+<span class="fc" id="L194">        double[][] c  = model.fit(features, targets);</span>
+<span class="fc" id="L195">        double[] values = ArrayUtils.round(c[0], 7);</span>
+<span class="fc" id="L196">        double[] predictions = ArrayUtils.round(model.predict(tests), 7);</span>
 
-<span class="fc" id="L136">        assertArrayEquals(expected, values);</span>
-<span class="fc" id="L137">        assertArrayEquals(testingExpected, predictions);</span>
-<span class="fc" id="L138">    }</span>
+<span class="fc" id="L198">        assertArrayEquals(expected, values);</span>
+<span class="fc" id="L199">        assertArrayEquals(testingExpected, predictions);</span>
+<span class="fc" id="L200">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
