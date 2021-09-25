@@ -5,6 +5,7 @@ import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 
+import com.jml.util.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
@@ -141,7 +142,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
-    // TODO: Add ability to get R value.
+    // TODO: should this return a map instead?
     @Override
     public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
         if(!isCompiled) {
@@ -149,14 +150,17 @@ public class PolynomialRegression extends Model<double[], double[]> {
         }
 
         int resultRows = 1;
+        boolean computeCorrelation = false, computeDetermination = false;
+
+
 
         if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
             if(args.containsKey(CORRELATION_KEY)) {
-
+                computeCorrelation = true;
                 resultRows++;
             }
             if(args.containsKey(DETERMINATION_KEY)) {
-
+                computeDetermination = true;
                 resultRows++;
             }
         }
@@ -173,6 +177,20 @@ public class PolynomialRegression extends Model<double[], double[]> {
         Vector b = VT.mult(y).toVector();
         coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0];
         results[0] = coefficients;
+
+
+        /* TODO: The return value should almost certainly be a map. To guarantee that things are in the correct order
+            For an array, we need to check every case except for none. So for n arguments we must check 2^n-1 cases.
+            This is clearly not practical for several arguments. So we should use a map instead.
+         */
+        if(computeCorrelation && computeDetermination) {
+            results[1] = new double[]{Stats.correlation(features, this.predict(targets))};
+            results[2] = new double[]{Stats.determination(features, this.predict(targets))};
+        } else if(computeCorrelation) {
+            results[1] =  new double[]{Stats.correlation(features, this.predict(targets))};
+        } else if(computeDetermination) {
+            results[1] = new double[]{Stats.determination(features, this.predict(targets))};
+        }
 
         buildDetails(); // Build the details of the model.
 
