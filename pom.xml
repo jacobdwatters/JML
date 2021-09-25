@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.github.jacobdwatters</groupId>
             <artifactId>Java-Linear-Algebra</artifactId>
-            <version>v0.0.1-beta</version>
+            <version>master-3563dc115e-1</version>
         </dependency>
     </dependencies>
 
