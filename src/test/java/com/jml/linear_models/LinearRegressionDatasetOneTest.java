@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class LinearRegressionDatasetOneTest {
@@ -40,4 +43,22 @@ class LinearRegressionDatasetOneTest {
         assertArrayEquals(testingExpected, predictions);
     }
 
+
+    @Test // Defines a test method
+    @DisplayName("Testing for Linear Regression model.") // define the name of the test which is displayed to the user
+    void DatasetOneSecondTestCase() {
+        double[] expected = {45.65396403, 2.34259675};
+        double[] testingExpected = {42.8428479, 45.6539640, 47.9965608, 50.3391575, 53.0097178, 55.0243510};
+
+        Map<String, Double> arguments = new HashMap<>();
+        arguments.put("degree", 3.0);
+
+        model.compile(arguments); // Attempt to add a degree arguments
+        double[][] c  = model.fit(features, targets);
+        double[] values = ArrayUtils.round(c[0], 8);
+        double[] predictions = ArrayUtils.round(model.predict(tests), 7);
+
+        assertArrayEquals(expected, values);
+        assertArrayEquals(testingExpected, predictions);
+    }
 }

@@ -2,6 +2,7 @@ package com.jml.linear_models;
 
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
+import com.jml.core.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 
@@ -55,11 +56,15 @@ public class PolynomialRegression extends Model<double[], double[]> {
     protected int degree = 1; // Defaults to simple linear regression.
     protected int normalization = 0; // Default is no normalization.
     protected double[] coefficients;
-    private String details = "Model Details\n" +
+
+    // Details of model in human-readable format.
+    private StringBuilder details = new StringBuilder(
+            "Model Details\n" +
             "----------------------------\n" +
             "Model Type: " + this.MODEL_TYPE+ "\n" +
             "Is Compiled: No\n" +
-            "Is Trained: No\n";
+            "Is Trained: No\n"
+    );
 
     /**
      * Constructs model and prepares for training using default parameters. i.e. the degree of the polynomial will be 1,
@@ -164,7 +169,11 @@ public class PolynomialRegression extends Model<double[], double[]> {
             }
         }
 
-        isFit = true;
+        if(normalization==1) { // Then use l2 normalization.
+            features = Normalize.l2Normalize(features);
+        }
+
+
         double[][] results = new double[resultRows][];
 
         Vector x = new Vector(features);
@@ -176,7 +185,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
         Vector b = VT.mult(y).toVector();
         coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0];
         results[0] = coefficients;
-
+        isFit = true;
 
         /* TODO: The return value should almost certainly be a map. To guarantee that things are in the correct order
             For an array, we need to check every case except for none. So for n arguments we must check 2^n-1 cases.
@@ -279,28 +288,30 @@ public class PolynomialRegression extends Model<double[], double[]> {
 
     // Construct details of model
     protected void buildDetails() {
-        details ="Model Details\n" +
+        details = new StringBuilder(
+                "Model Details\n" +
                 "----------------------------\n" +
                 "Model Type: " + this.MODEL_TYPE+ "\n" +
                 "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
-                "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
+                "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
+                );
 
 
         if(isCompiled) {
-            details += "Normalization: " + (normalization==1 ? "Yes" : "No") + "\n";
-            details += "Polynomial Degree: " + degree + "\n";
+            details.append("Normalization: " + (normalization==1 ? "Yes" : "No") + "\n");
+            details.append("Polynomial Degree: " + degree + "\n");
         }
 
         if(isFit && coefficients!=null) {
-            details += "Coefficients (low->high): ";
-            details += ArrayUtils.asString(coefficients);
-            details += "\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ";
+            details.append("Coefficients (low->high): ");
+            details.append(ArrayUtils.asString(coefficients));
+            details.append("\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ");
 
             for(int i=2; i<coefficients.length; i++) {
-                details += coefficients[i] + "x^" + i;
+                details.append(coefficients[i] + "x^" + i);
 
                 if(i<coefficients.length-1) {
-                    details += " + ";
+                    details.append(" + ");
                 }
             }
         }
@@ -326,6 +337,6 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     @Override
     public String toString() {
-        return details;
+        return details.toString();
     }
 }
