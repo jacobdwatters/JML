@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 
 // Contains test cases for polynomial regression of various degrees with no normalization.
+@DisplayName("Polynomial Regression Test on dataset 1")
 class PolynomialRegressionDatasetOneTest {
     Model<double[], double[]> model;
     double[] features;
@@ -26,8 +27,7 @@ class PolynomialRegressionDatasetOneTest {
         tests = new double[]{-1.2, 0, 1, 2, 3.14, 4};
     }
 
-
-    @Test // Defines a test method
+    @Test
     @DisplayName("Testing for degree 1") // define the name of the test which is displayed to the user
     void degreeOneTestCase() {
         double[] expected = {45.65396403, 2.34259675};
@@ -44,18 +44,17 @@ class PolynomialRegressionDatasetOneTest {
 
 
     @Test // Defines a test method
-    @DisplayName("Testing for degree 1") // define the name of the test which is displayed to the user
+    @DisplayName("Testing for degree 2 with normalization") // define the name of the test which is displayed to the user
     void degreeTwoRTestCase() {
         double[] expected = {45.96048699, 1.95748083, 0.06892953};
         double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
+        double[] rExpected = {0.7600600};
 
         HashMap<String, Double> arguments = new HashMap<>();
         HashMap<String, Double> fitArguments = new HashMap<>();
 
         arguments.put("degree", 2.0);
-
         fitArguments.put("R", 1.0);
-        double[] rExpected = {0.7600600};
 
         model.compile(arguments);
         double[][] c  = model.fit(features, targets, fitArguments);
@@ -70,7 +69,7 @@ class PolynomialRegressionDatasetOneTest {
 
 
     @Test // Defines a test method
-    @DisplayName("Testing for degree 1") // define the name of the test which is displayed to the user
+    @DisplayName("Testing for degree 2") // define the name of the test which is displayed to the user
     void degreeTwoR2TestCase() {
         double[] expected = {45.96048699, 1.95748083, 0.06892953};
         double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
@@ -96,8 +95,8 @@ class PolynomialRegressionDatasetOneTest {
     @Test // Defines a test method
     @DisplayName("Testing for degree 2") // define the name of the test which is displayed to the user
     void degreeTwoTestCase() {
-        double[] expected = {45.96048699, 1.95748083, 0.06892953};
-        double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
+        double[] expected = {51.78236529, 29.56813204, 11.08407582};
+        double[] testingExpected = {32.261676, 51.7823653, 92.4345732, 155.2549327, 253.9108538, 347.4001065};
         double[] r2Expected = {0.5776913};
         double[] rExpected = {0.7600600};
 
