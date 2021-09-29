@@ -1,7 +1,9 @@
 package com.jml.neural_network;
 
 import com.jml.core.Model;
+import com.jml.core.ModelBucket;
 import com.jml.neural_network.layers.Layer;
+
 import java.util.Map;
 
 public class NeuralNetwork extends Model<double[][], double[][]> {
@@ -44,9 +46,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *                                  compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[][] targets, Map<String, Double> args) {
+    public ModelBucket fit(double[][] features, double[][] targets, Map<String, Double> args) {
         // TODO: Auto-generated method stub
-        return new double[0][];
+        return null;
     }
 
 
@@ -60,9 +62,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[][] features, double[][] targets) {
+    public ModelBucket fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
-        return new double[0][];
+        return null;
     }
 
 

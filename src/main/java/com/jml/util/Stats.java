@@ -1,8 +1,22 @@
 package com.jml.util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 public class Stats {
+
+    private Stats() {
+        throw new IllegalStateException("Utility Class.");
+    }
+
+
+    public static double round(double value, int decimals) {
+        double result;
+        BigDecimal bd = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);;
+        result = bd.doubleValue();
+        return result;
+    }
 
 
     /**

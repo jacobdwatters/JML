@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MultipleLinearRegression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">MultipleLinearRegression.java</span></div><h1>MultipleLinearRegression.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
 
 import com.jml.core.Model;
+import com.jml.core.ModelBucket;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ import java.util.Map;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-<span class="nc" id="L15">public class MultipleLinearRegression extends Model&lt;ArrayList&lt;double[][]&gt;, double[]&gt; {</span>
+<span class="nc" id="L17">public class MultipleLinearRegression extends Model&lt;ArrayList&lt;double[][]&gt;, double[]&gt; {</span>
 
 
     /**
@@ -23,7 +25,7 @@ import java.util.Map;
     @Override
     public void compile() {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L26">    }</span>
+<span class="nc" id="L28">    }</span>
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -34,7 +36,7 @@ import java.util.Map;
     @Override
     public void compile(Map&lt;String, Double&gt; args) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L37">    }</span>
+<span class="nc" id="L39">    }</span>
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -49,9 +51,9 @@ import java.util.Map;
      *                                  compiled.
      */
     @Override
-    public double[][] fit(ArrayList&lt;double[][]&gt; features, double[] targets, Map&lt;String, Double&gt; args) {
+    public ModelBucket fit(ArrayList&lt;double[][]&gt; features, double[] targets, Map&lt;String, Double&gt; args) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L54">        return new double[0][];</span>
+<span class="nc" id="L56">        return null;</span>
     }
 
     /**
@@ -64,9 +66,9 @@ import java.util.Map;
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(ArrayList&lt;double[][]&gt; features, double[] targets) {
+    public ModelBucket fit(ArrayList&lt;double[][]&gt; features, double[] targets) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L69">        return new double[0][];</span>
+<span class="nc" id="L71">        return null;</span>
     }
 
     /**
@@ -80,7 +82,7 @@ import java.util.Map;
     @Override
     public double[] predict(ArrayList&lt;double[][]&gt; features) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L83">        return new double[0];</span>
+<span class="nc" id="L85">        return new double[0];</span>
     }
 
 
@@ -92,7 +94,7 @@ import java.util.Map;
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L95">    }</span>
+<span class="nc" id="L97">    }</span>
 
 
     /**
@@ -103,7 +105,7 @@ import java.util.Map;
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L106">        return this.toString();</span>
+<span class="nc" id="L108">        return this.toString();</span>
     }
 
 
@@ -115,7 +117,7 @@ import java.util.Map;
     @Override
     public String toString() {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L118">        return &quot;&quot;;</span>
+<span class="nc" id="L120">        return &quot;&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

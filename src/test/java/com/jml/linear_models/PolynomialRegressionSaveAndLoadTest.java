@@ -1,7 +1,6 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
-import com.jml.util.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ public class PolynomialRegressionSaveAndLoadTest {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testPolyModel1.mdl";
 
         model.compile();
-        double[][] c = model.fit(features, targets);
+        model.fit(features, targets);
         double[] initialPredictions = model.predict(tests);
         model.saveModel(filePath);
 
@@ -55,7 +54,7 @@ public class PolynomialRegressionSaveAndLoadTest {
         args.put(PolynomialRegression.NORMALIZE_KEY, 1.0);
 
         model.compile(args);
-        double[][] c = model.fit(features, targets);
+        model.fit(features, targets);
         double[] initialPredictions = model.predict(tests);
         model.saveModel(filePath);
 
@@ -88,7 +87,7 @@ public class PolynomialRegressionSaveAndLoadTest {
         args.put(PolynomialRegression.DEGREE_KEY, 2.0);
 
         model.compile(args);
-        double[][] c = model.fit(features, targets);
+        model.fit(features, targets);
         assertThrows(Exception.class, () -> model.saveModel(filePath));
         assertThrows(Exception.class, () -> Model.load(filePath));
     }

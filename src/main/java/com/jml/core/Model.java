@@ -1,7 +1,11 @@
 package com.jml.core;
 
 import com.jml.util.FileManager;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -42,7 +46,7 @@ public abstract class Model<X, Y> {
      * @param args A hashtable containing additional arguments in the form <name, value>.
      * @return Returns details of the fitting / training process.
      */
-    public abstract double[][] fit(X features, Y targets, Map<String, Double> args);
+    public abstract ModelBucket fit(X features, Y targets, Map<String, Double> args);
 
 
     /**
@@ -55,7 +59,7 @@ public abstract class Model<X, Y> {
      * @param targets The targets of the training set.
      * @return - Returns details of the fitting / training process.
      */
-    public abstract double[][] fit(X features, Y targets);
+    public abstract ModelBucket fit(X features, Y targets);
 
 
     /**
