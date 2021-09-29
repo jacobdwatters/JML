@@ -14,7 +14,7 @@ java-machine-learning,com.jml.neural_network.optimizers,Momentum,5,0,0,0,2,0,2,0
 java-machine-learning,com.jml.neural_network.optimizers,Optimizer,3,0,0,0,1,0,1,0,1,0
 java-machine-learning,com.jml.core,LinRegFromData,5,73,2,6,1,21,2,4,0,2
 java-machine-learning,com.jml.core,ModelFromData,41,156,15,21,7,32,12,10,1,3
-java-machine-learning,com.jml.core,ModelBucket,73,73,17,7,18,20,14,5,4,3
+java-machine-learning,com.jml.core,ModelBucket,0,146,7,17,0,38,7,12,0,7
 java-machine-learning,com.jml.core,Normalize,9,27,0,0,3,4,2,1,2,1
 java-machine-learning,com.jml.core,ModelTypes,0,39,0,0,0,3,0,1,0,1
 java-machine-learning,com.jml.core,Model,5,138,2,14,1,27,2,9,0,3

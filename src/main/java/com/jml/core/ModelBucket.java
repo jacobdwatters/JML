@@ -140,7 +140,7 @@ public class ModelBucket {
      * @return Returns the Integer associated with the provided key if it exists and has the correct type.
      * If there is no value for that key, then the method will return null.
      */
-    public Object getInteger(String key) {
+    public Integer getInteger(String key) {
         Object data = null;
         Integer dataAsArr = null;
 

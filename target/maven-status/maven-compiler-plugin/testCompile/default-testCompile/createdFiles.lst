@@ -1,5 +1,7 @@
 com\jml\linear_models\PolynomialRegressionDatasetOneTest.class
+com\jml\core\ModelBucketExceptionTest.class
 com\jml\util\ArrayErrorsTest.class
+com\jml\core\ModelBucketTest.class
 com\jml\linear_models\PolynomialRegressionExceptionTest.class
 com\jml\util\StatsTest.class
 com\jml\linear_models\LinearRegressionDatasetOneTest.class
