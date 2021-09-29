@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModelBucket.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.core</a> &gt; <span class="el_source">ModelBucket.java</span></div><h1>ModelBucket.java</h1><pre class="source lang-java linenums">package com.jml.core;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+/**
+ * A container for holding the results of a fitted model. This Object will hold different
+ * data depending on the model.&lt;br&gt;&lt;br&gt;
+ *
+ * All data is accessed through the various &lt;code&gt;get*(String)&lt;/code&gt; methods:
+ * &lt;pre&gt;
+ *     - {@link #getDoubleArr(String)}
+ *     - {@link #getDoubleArr2D(String)}
+ *     - {@link #getDouble(String)}
+ *     - {@link #getInteger(String)}
+ * &lt;/pre&gt;
+ *
+ * If you need to get the Class of the object in the ModelBucket, you can use {@link #type(String)}
+ */
+public class ModelBucket {
+<span class="fc" id="L22">    Map&lt;String, Object&gt; bucket = new HashMap&lt;&gt;();</span>
+
+
+    /**
+     * Creates a model bucket from the elements of a map.
+     * @param bucketElements Elements to copy to bucket.
+     */
+<span class="fc" id="L29">    public ModelBucket(Map&lt;String, Object&gt; bucketElements) {</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; entry : bucketElements.entrySet()) {</span>
+<span class="fc" id="L31">            bucket.put(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L32">        }</span>
+<span class="fc" id="L33">    }</span>
+
+
+    /**
+     * Checks if a key exists in this bucket and that the data associated with this key is not null.
+     *
+     * @param key Key associated with the data of interests.
+     * @return
+     */
+    public boolean containsKeyNotNull(String key) {
+<span class="nc bnc" id="L43" title="All 4 branches missed.">        return (bucket.containsKey(key) &amp;&amp; bucket.get(key) != null);</span>
+    }
+
+
+    /**
+     * Gets the class type of the object in this bucket associated with the given key.&lt;br&gt;&lt;br&gt;
+     *
+     * It is recommended to call {@link #containsKeyNotNull(String)} before this method to ensure the key exists in this
+     * bucket. If the key does not exist, or if it exists and is null, this method will throw a null pointer
+     * exception.
+     *
+     * @param key Key associated with the data of interests.
+     * @return The Class of the object in this bucket which
+     * @throws NullPointerException If the object does not exist or if it exists and is null.
+     */
+    public Class type(String key) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if(containsKeyNotNull(key)) {</span>
+<span class="nc" id="L60">            return bucket.get(key).getClass();</span>
+        } else {
+<span class="nc" id="L62">            throw new NullPointerException(&quot;Object exists but is null. Can not get type of null.&quot;);</span>
+        }
+    }
+
+
+    /**
+     * Looks up the double array associated with the given key.
+     *
+     * @param key Key associated double array.
+     * @return Returns the double array associated with the provided key if it exists and has the correct type.
+     * If there is no value for that key, then the method will return null.
+     */
+    public double[] getDoubleArr(String key) {
+<span class="fc" id="L75">        Object data = null;</span>
+<span class="fc" id="L76">        double[] dataAsArr = null;</span>
+
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if(bucket.containsKey(key)) {</span>
+<span class="fc" id="L79">            data = bucket.get(key);</span>
+
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">            if(data instanceof double[]) {</span>
+<span class="fc" id="L82">                dataAsArr = (double[]) data;</span>
+            }
+        }
+
+<span class="fc" id="L86">        return dataAsArr;</span>
+    }
+
+
+    /**
+     * Looks up the 2D double array associated with the given key.
+     *
+     * @param key Key associated 2D double array.
+     * @return Returns the 2D double array associated with the provided key if it exists and has the correct type.
+     * If there is no value for that key, then the method will return null.
+     */
+    public double[][] getDoubleArr2D(String key) {
+<span class="nc" id="L98">        Object data = null;</span>
+<span class="nc" id="L99">        double[][] dataAsArr = null;</span>
+
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if(bucket.containsKey(key)) {</span>
+<span class="nc" id="L102">            data = bucket.get(key);</span>
+
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if(data instanceof double[][]) {</span>
+<span class="nc" id="L105">                dataAsArr = (double[][]) data;</span>
+            }
+        }
+
+<span class="nc" id="L109">        return dataAsArr;</span>
+    }
+
+
+    /**
+     * Looks up the Double associated with the given key.
+     *
+     * @param key Key associated Double.
+     * @return Returns the Double associated with the provided key if it exists and has the correct type.
+     * If there is no value for that key, then the method will return null.
+     */
+    public Double getDouble(String key) {
+<span class="fc" id="L121">        Object data = null;</span>
+<span class="fc" id="L122">        Double dataAsArr = null;</span>
+
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if(bucket.containsKey(key)) {</span>
+<span class="fc" id="L125">            data = bucket.get(key);</span>
+
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">            if(data instanceof Double) {</span>
+<span class="fc" id="L128">                dataAsArr = (Double) data;</span>
+            }
+        }
+
+<span class="fc" id="L132">        return dataAsArr;</span>
+    }
+
+
+    /**
+     * Looks up the Integer associated with the given key.
+     *
+     * @param key Key associated Integer.
+     * @return Returns the Integer associated with the provided key if it exists and has the correct type.
+     * If there is no value for that key, then the method will return null.
+     */
+    public Object getInteger(String key) {
+<span class="nc" id="L144">        Object data = null;</span>
+<span class="nc" id="L145">        Integer dataAsArr = null;</span>
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if(bucket.containsKey(key)) {</span>
+<span class="nc" id="L148">            data = bucket.get(key);</span>
+
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if(data instanceof Integer) {</span>
+<span class="nc" id="L151">                dataAsArr = (Integer) data;</span>
+            }
+        }
+
+<span class="nc" id="L155">        return dataAsArr;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
