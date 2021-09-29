@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MultipleLinearRegression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">MultipleLinearRegression.java</span></div><h1>MultipleLinearRegression.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
+
+import com.jml.core.Model;
+import com.jml.core.ModelBucket;
+import com.jml.core.ModelTypes;
+import com.jml.core.Normalize;
+import com.jml.util.ArrayUtils;
+import com.jml.util.Stats;
+import linalg.Matrix;
+import linalg.Solvers;
+import linalg.Vector;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+
+/**
+ * Model for least squares linear regression of multiple variables by stochastic gradient descent.&lt;br&gt;&lt;br&gt;
+ *
+ * MultipleLinearRegression fits a model y = b&lt;sub&gt;0&lt;/sub&gt; + b&lt;sub&gt;1&lt;/sub&gt;x + ... + b&lt;sub&gt;n&lt;/sub&gt;x to the datasets by minimizing
+ * the residuals of the sum of squares between the values in the target dataset and the values predicted
+ * by the model. This is using stochastic gradient descent.
+ */
+// TODO: Refactor polynomial regression as a special case of multiple regression
+<span class="nc" id="L26">public class MultipleLinearRegression extends Model&lt;double[][], double[]&gt; {</span>
+<span class="nc" id="L27">    final String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();</span>
+
+<span class="nc" id="L29">    protected boolean isFit = false, isCompiled = false;</span>
+
+    /**
+     * Key for the degree of the polynomial. &lt;br&gt;
+     * The associated value will be the degree for the polynomial used in regression.
+     */
+    public static final String DEGREE_KEY = &quot;degree&quot;;
+
+    /**
+     * Key for use of normalization before regression. &lt;br&gt;
+     * The associated value will indicate weather to normalize the features before regression.
+     */
+    public static final String NORMALIZE_KEY = &quot;normalize&quot;;
+
+    /**
+     * Key for computation of correlation coefficient. &lt;br&gt;
+     * The associated value will indicate weather to compute the correlation coefficient after regression.
+     */
+    public static final String CORRELATION_KEY = &quot;r&quot;;
+
+    /**
+     * Key for computation of coefficient of determination. &lt;br&gt;
+     * The associated value will indicate weather to compute the coefficient of determination after regression.
+     */
+    public static final String DETERMINATION_KEY = &quot;r2&quot;;
+
+<span class="nc" id="L55">    protected int normalization = 0; // Default is no normalization.</span>
+    protected double[] coefficients;
+
+    /**
+     * Constructs model and prepares for training using the given parameters.
+     *
+     * @throws IllegalArgumentException If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile() {
+<span class="nc" id="L65">        compile(null);</span>
+<span class="nc" id="L66">    }</span>
+
+
+    /**
+     * Constructs model and prepares for training using the given parameters.
+     *
+     * @param args A hashtable containing additional arguments in the form &lt;name, value&gt;.
+     * &lt;pre&gt;
+     *  - Normalization:
+     *      &lt;&quot;normalize&quot;, 0&gt; - Default. No normalization is used.
+     *      &lt;&quot;normalize&quot;, 1&gt; - Normalizes data by subtracting mean and dividing by the L2-norm before applying regression.
+     * &lt;/pre&gt;
+     * @throws IllegalArgumentException If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments.
+     */
+    @Override
+    public void compile(Map&lt;String, Double&gt; args) {
+<span class="nc bnc" id="L82" title="All 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) { // Then args is not null and is not empty</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if(args.containsKey(NORMALIZE_KEY)) {</span>
+<span class="nc" id="L84">                double value = args.get(NORMALIZE_KEY);</span>
+
+<span class="nc bnc" id="L86" title="All 4 branches missed.">                if(!(value == 0.0 || value == 1.0)) {</span>
+<span class="nc" id="L87">                    throw new IllegalArgumentException(&quot;Normalization must be 0 or 1 but got &quot; + value);</span>
+                } else {
+<span class="nc" id="L89">                    this.normalization = (int) value;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L94">        isCompiled = true; // Set the compiled flag to true.</span>
+<span class="nc" id="L95">        buildDetails(); // Build the details of the model.</span>
+<span class="nc" id="L96">    }</span>
+
+
+    /**
+     * Fits or trains the model with the given features and targets.
+     *
+     * @param features The features of the training set.
+     * @param targets  The targets of the training set.
+     * @param args     A hashtable containing additional arguments in the form &lt;name, value&gt;.
+     * @return Returns details of the fitting / training process.
+     * @throws IllegalArgumentException Can be thrown for the following reasons&lt;br&gt;
+     *                                  - If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments. &lt;br&gt;
+     *                                  - If the features and targets are not correctly sized per the specification when the model was
+     *                                  compiled.
+     */
+    @Override
+    public ModelBucket fit(double[][] features, double[] targets, Map&lt;String, Double&gt; args) {
+
+<span class="nc" id="L114">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L115">        boolean computeCorrelation = false, computeDetermination = false;</span>
+
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if(!isCompiled) {</span>
+<span class="nc" id="L118">            throw new IllegalStateException(&quot;Model must be compiled before it can be fit.&quot;);</span>
+        }
+
+<span class="nc bnc" id="L121" title="All 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) { // Check for various optional arguments</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            if(args.containsKey(CORRELATION_KEY)) {</span>
+<span class="nc" id="L123">                computeCorrelation = true;</span>
+            }
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            if(args.containsKey(DETERMINATION_KEY)) {</span>
+<span class="nc" id="L126">                computeDetermination = true;</span>
+            }
+        }
+
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if(normalization==1) { // Then use l2 normalization.</span>
+<span class="nc" id="L131">            features = Normalize.l2Normalize(features);</span>
+        }
+
+<span class="nc" id="L134">        Matrix y = (new Vector(targets)).toMatrix();</span>
+<span class="nc" id="L135">        Matrix V = new Matrix(features);</span>
+<span class="nc" id="L136">        Matrix ones = Matrix.ones(features.length, 1);</span>
+<span class="nc" id="L137">        V = ones.augment(V);</span>
+
+<span class="nc" id="L139">        Matrix VT = V.T();</span>
+<span class="nc" id="L140">        Matrix A = VT.mult(V);</span>
+<span class="nc" id="L141">        Vector b = VT.mult(y).toVector();</span>
+
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if(A.isSingular()) { // Then we can not explicitly solve Ax=b for a single solution.</span>
+<span class="nc" id="L144">            throw new IllegalArgumentException(&quot;The data resulted in an equation with a singular matrix. &quot; +</span>
+                    &quot;Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.&quot;);
+        }
+
+<span class="nc" id="L148">        coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0]; // Compute the model parameters</span>
+<span class="nc" id="L149">        results.put(&quot;coefficients&quot;, coefficients);</span>
+<span class="nc" id="L150">        isFit = true;</span>
+
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if(computeCorrelation) {</span>
+<span class="nc" id="L153">            results.put(&quot;r&quot;, Stats.correlation(targets, this.predict(features)));</span>
+        }
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if(computeDetermination) {</span>
+<span class="nc" id="L156">            results.put(&quot;r2&quot;, Stats.determination(targets, this.predict(features)));</span>
+        }
+
+<span class="nc" id="L159">        buildDetails(); // Build the details of the model.</span>
+
+<span class="nc" id="L161">        return new ModelBucket(results);</span>
+    }
+
+    /**
+     * Fits or trains the model with the given features and targets.
+     *
+     * @param features The features of the training set.
+     * @param targets  The targets of the training set.
+     * @return Returns details of the fitting / training process in a {@link ModelBucket}.
+     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
+     *                                  the specification when the model was compiled.
+     */
+    @Override
+    public ModelBucket fit(double[][] features, double[] targets) {
+<span class="nc" id="L175">        return fit(features, targets, null);</span>
+    }
+
+
+    /**
+     * Uses fitted/trained model to make prediction on single feature.
+     *
+     * @param features The features to make predictions on.
+     * @return The models predicted labels.
+     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
+     *                                  the specification when the model was compiled.
+     */
+    @Override
+    public double[] predict(double[][] features) {
+<span class="nc bnc" id="L189" title="All 4 branches missed.">        if(!isFit || !isCompiled) {</span>
+<span class="nc" id="L190">            throw new IllegalStateException(&quot;Model must be compiled and fit before predictions can be made.&quot;);</span>
+        }
+
+<span class="nc" id="L193">        double[] predictions = new double[features.length];</span>
+
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        for(int i=0; i&lt;features.length; i++) {</span>
+
+<span class="nc bnc" id="L197" title="All 2 branches missed.">            for (int j = 1; j &lt; coefficients.length; j++) {</span>
+<span class="nc" id="L198">                predictions[i] += coefficients[j]*features[i][j-1];</span>
+            }
+
+<span class="nc" id="L201">            predictions[i] += coefficients[0];</span>
+        }
+
+<span class="nc" id="L204">        return predictions;</span>
+    }
+
+
+    /**
+     * Saves a trained model to the specified file path.
+     *
+     * @param filePath File path, including extension, to save fitted / trained model to.
+     */
+    @Override
+    public void saveModel(String filePath) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L216">    }</span>
+
+
+    private void buildDetails() {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L221">    }</span>
+
+
+    /**
+     * Forms a string of the important aspects of the model.&lt;br&gt;
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+<span class="nc" id="L232">        return this.toString();</span>
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L244">        return &quot;&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
