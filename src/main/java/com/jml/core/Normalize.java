@@ -39,4 +39,22 @@ public class Normalize {
 
         return x.sub(m).scalDiv(x.norm()).getValuesAsDouble()[0];
     }
+
+
+    /**
+     * Normalizes each column of the data by subtracting the mean of that column and dividing by the
+     * L2-norm of that column.
+     *
+     * @param data - data to normalize.
+     * @return The L2-normalized data.
+     */
+    public static double[][] l2Normalize(double[][] data) {
+        Matrix A = new Matrix(data).T();
+
+        for(int i=0; i< data.length; i++) {
+            A.setCol(l2Normalize(data[i]), i);
+        }
+
+        return A.T().getValuesAsDouble();
+    }
 }

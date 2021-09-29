@@ -66,6 +66,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
             "Is Trained: No\n"
     );
 
+
     /**
      * Constructs model and prepares for training using default parameters. i.e. the degree of the polynomial will be 1,
      * and no normalization will be used.
@@ -155,18 +156,15 @@ public class PolynomialRegression extends Model<double[], double[]> {
             throw new IllegalStateException("Model must be compiled before it can be fit.");
         }
 
-        int resultRows = 1;
         boolean computeCorrelation = false, computeDetermination = false;
         Map<String, Object> results = new HashMap<>();
 
         if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
             if(args.containsKey(CORRELATION_KEY)) {
                 computeCorrelation = true;
-                resultRows++;
             }
             if(args.containsKey(DETERMINATION_KEY)) {
                 computeDetermination = true;
-                resultRows++;
             }
         }
 
