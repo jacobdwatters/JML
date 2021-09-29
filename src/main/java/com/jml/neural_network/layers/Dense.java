@@ -1,7 +1,5 @@
 package com.jml.neural_network.layers;
 
-import com.jml.neural_network.activations.Activation;
-
 public class Dense extends Layer<Integer, Integer> {
 
     /**

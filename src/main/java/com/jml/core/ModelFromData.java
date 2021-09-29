@@ -1,6 +1,5 @@
 package com.jml.core;
 
-import com.jml.linear_models.PolynomialRegression;
 import java.util.ArrayList;
 import java.util.List;
 

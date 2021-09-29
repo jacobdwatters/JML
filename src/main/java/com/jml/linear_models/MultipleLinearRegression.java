@@ -1,6 +1,8 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
+import com.jml.core.ModelBucket;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -49,9 +51,9 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
      *                                  compiled.
      */
     @Override
-    public double[][] fit(ArrayList<double[][]> features, double[] targets, Map<String, Double> args) {
+    public ModelBucket fit(ArrayList<double[][]> features, double[] targets, Map<String, Double> args) {
         // TODO: Auto-generated method stub.
-        return new double[0][];
+        return null;
     }
 
     /**
@@ -64,9 +66,9 @@ public class MultipleLinearRegression extends Model<ArrayList<double[][]>, doubl
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(ArrayList<double[][]> features, double[] targets) {
+    public ModelBucket fit(ArrayList<double[][]> features, double[] targets) {
         // TODO: Auto-generated method stub.
-        return new double[0][];
+        return null;
     }
 
     /**

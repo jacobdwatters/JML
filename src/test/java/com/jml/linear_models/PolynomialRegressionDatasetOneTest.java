@@ -2,12 +2,17 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
+import com.jml.core.ModelBucket;
 import com.jml.util.ArrayUtils;
+import com.jml.util.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 // Contains test cases for polynomial regression of various degrees with no normalization.
@@ -34,8 +39,8 @@ class PolynomialRegressionDatasetOneTest {
         double[] testingExpected = {42.8428479, 45.6539640, 47.9965608, 50.3391575, 53.0097178, 55.0243510};
 
         model.compile();
-        double[][] c  = model.fit(features, targets);
-        double[] values = ArrayUtils.round(c[0], 8);
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
@@ -48,23 +53,24 @@ class PolynomialRegressionDatasetOneTest {
     void degreeTwoRTestCase() {
         double[] expected = {45.96048699, 1.95748083, 0.06892953};
         double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
-        double[] rExpected = {0.7600600};
+        double rExpected = 0.7600600;
 
         HashMap<String, Double> arguments = new HashMap<>();
         HashMap<String, Double> fitArguments = new HashMap<>();
 
         arguments.put("degree", 2.0);
-        fitArguments.put("R", 1.0);
+        fitArguments.put("r", 1.0);
 
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets, fitArguments);
-        double[] values = ArrayUtils.round(c[0], 8);
-        double[] R = c[1];
+
+        ModelBucket fitResults = model.fit(features, targets, fitArguments);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
+        double R = fitResults.getDouble("r");
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
         assertArrayEquals(testingExpected, predictions);
-        assertArrayEquals(ArrayUtils.round(R, 7), rExpected);
+        assertEquals(Stats.round(R, 7), rExpected);
     }
 
 
@@ -73,22 +79,24 @@ class PolynomialRegressionDatasetOneTest {
     void degreeTwoR2TestCase() {
         double[] expected = {45.96048699, 1.95748083, 0.06892953};
         double[] testingExpected = {43.7107685, 45.9604870, 47.9868974, 50.1511668, 52.7865944, 54.8932828};
+        double r2Expected = 0.5776913;
+
         HashMap<String, Double> arguments = new HashMap<>();
         HashMap<String, Double> fitArguments = new HashMap<>();
 
         arguments.put("degree", 2.0);
-        fitArguments.put("R2", 1.0);
-        double[] r2Expected = {0.5776913};
+        fitArguments.put("r2", 1.0);
 
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets, fitArguments);
-        double[] values = ArrayUtils.round(c[0], 8);
-        double[] R2 = c[1];
+
+        ModelBucket fitResults = model.fit(features, targets, fitArguments);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
+        double R2 = fitResults.getDouble("r2");
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
         assertArrayEquals(testingExpected, predictions);
-        assertArrayEquals(ArrayUtils.round(R2, 7), r2Expected);
+        assertEquals(Stats.round(R2, 7), r2Expected);
     }
 
 
@@ -97,8 +105,8 @@ class PolynomialRegressionDatasetOneTest {
     void degreeTwoTestCase() {
         double[] expected = {51.78236529, 29.56813204, 11.08407582};
         double[] testingExpected = {32.261676, 51.7823653, 92.4345732, 155.2549327, 253.9108538, 347.4001065};
-        double[] r2Expected = {0.5776913};
-        double[] rExpected = {0.7600600};
+        double r2Expected = 0.5776913;
+        double rExpected = 0.7600600;
 
         HashMap<String, Double> arguments = new HashMap<>();
         HashMap<String, Double> fitArguments = new HashMap<>();
@@ -106,20 +114,21 @@ class PolynomialRegressionDatasetOneTest {
         arguments.put("degree", 2.0);
         arguments.put("normalize", 1.0);
 
-        fitArguments.put("R", 1.0);
-        fitArguments.put("R2", 1.0);
+        fitArguments.put("r", 1.0);
+        fitArguments.put("r2", 1.0);
 
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets, fitArguments);
-        double[] values = ArrayUtils.round(c[0], 8);
-        double[] R = c[1];
-        double[] R2 = c[2];
+
+        ModelBucket fitResults = model.fit(features, targets, fitArguments);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
+        double R = fitResults.getDouble("r");
+        double R2 = fitResults.getDouble("r2");
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
         assertArrayEquals(testingExpected, predictions);
-        assertArrayEquals(ArrayUtils.round(R2, 7), r2Expected);
-        assertArrayEquals(ArrayUtils.round(R, 7), rExpected);
+        assertEquals(Stats.round(R2, 7), r2Expected);
+        assertEquals(Stats.round(R, 7), rExpected);
     }
 
 
@@ -133,8 +142,8 @@ class PolynomialRegressionDatasetOneTest {
         arguments.put("degree", 3.0);
 
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets);
-        double[] values = ArrayUtils.round(c[0], 8);
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
@@ -152,8 +161,8 @@ class PolynomialRegressionDatasetOneTest {
         arguments.put("degree", 4.0);
 
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets);
-        double[] values = ArrayUtils.round(c[0], 8);
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
@@ -171,8 +180,8 @@ class PolynomialRegressionDatasetOneTest {
         arguments.put("degree", 5.0);
 
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets);
-        double[] values = ArrayUtils.round(c[0], 8);
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
@@ -190,8 +199,8 @@ class PolynomialRegressionDatasetOneTest {
         arguments.put("degree", 6.0);
 
         model.compile(arguments);
-        double[][] c  = model.fit(features, targets);
-        double[] values = ArrayUtils.round(c[0], 7);
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 7);
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);

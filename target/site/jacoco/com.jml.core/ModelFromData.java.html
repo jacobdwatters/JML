@@ -1,49 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModelFromData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.core</a> &gt; <span class="el_source">ModelFromData.java</span></div><h1>ModelFromData.java</h1><pre class="source lang-java linenums">package com.jml.core;
 
-import com.jml.linear_models.PolynomialRegression;
 import java.util.ArrayList;
 import java.util.List;
 
 class ModelFromData {
-<span class="nc" id="L8">    private ModelFromData() {throw new IllegalStateException(&quot;Utility class. Cannot be instantiated&quot;);}</span>
+<span class="nc" id="L7">    private ModelFromData() {throw new IllegalStateException(&quot;Utility class. Cannot be instantiated&quot;);}</span>
 
 
     // Creates a model from a list of blocks.
     static Model create(List&lt;String&gt; blocks) {
-<span class="fc" id="L13">        Model model = null;</span>
+<span class="fc" id="L12">        Model model = null;</span>
         String block;
-<span class="fc" id="L15">        List&lt;String&gt; tags = new ArrayList&lt;&gt;(), contents = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L14">        List&lt;String&gt; tags = new ArrayList&lt;&gt;(), contents = new ArrayList&lt;&gt;();</span>
 
-<span class="fc bfc" id="L17" title="All 2 branches covered.">        while(!blocks.isEmpty()) {</span>
-<span class="fc" id="L18">            block = blocks.remove(0); // get the next block</span>
-<span class="fc" id="L19">            tags.add(getTag(block));</span>
-<span class="fc" id="L20">            contents.add(getContent(block));</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        while(!blocks.isEmpty()) {</span>
+<span class="fc" id="L17">            block = blocks.remove(0); // get the next block</span>
+<span class="fc" id="L18">            tags.add(getTag(block));</span>
+<span class="fc" id="L19">            contents.add(getContent(block));</span>
         }
 
-<span class="pc bpc" id="L23" title="1 of 2 branches missed.">        if(!tags.get(0).equals(&quot;MODEL_TYPE&quot;)) {</span>
-<span class="nc" id="L24">            throw new IllegalArgumentException(&quot;The first tag in the file is not MODEL_TYPE.&quot;);</span>
+<span class="pc bpc" id="L22" title="1 of 2 branches missed.">        if(!tags.get(0).equals(&quot;MODEL_TYPE&quot;)) {</span>
+<span class="nc" id="L23">            throw new IllegalArgumentException(&quot;The first tag in the file is not MODEL_TYPE.&quot;);</span>
         }
 
-<span class="fc" id="L27">        String modelType = contents.remove(0);</span>
-<span class="fc" id="L28">        tags.remove(0);</span>
+<span class="fc" id="L26">        String modelType = contents.remove(0);</span>
+<span class="fc" id="L27">        tags.remove(0);</span>
 
-<span class="fc bfc" id="L30" title="All 2 branches covered.">        if(modelType.equals(ModelTypes.POLYNOMIAL_REGRESSION.toString())) {</span>
-<span class="fc" id="L31">            model = PolyRegFromData.create(tags, contents);</span>
-<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION.toString())) {</span>
-<span class="fc" id="L33">            model = LinRegFromData.create(tags, contents);</span>
-<span class="nc bnc" id="L34" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION_SGD.toString())) {</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if(modelType.equals(ModelTypes.POLYNOMIAL_REGRESSION.toString())) {</span>
+<span class="fc" id="L30">            model = PolyRegFromData.create(tags, contents);</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION.toString())) {</span>
+<span class="fc" id="L32">            model = LinRegFromData.create(tags, contents);</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION_SGD.toString())) {</span>
             // TODO:
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {</span>
             // TODO:
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
             // TODO:
-<span class="nc bnc" id="L40" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {</span>
             // TODO:
         } else {
-<span class="nc" id="L43">            throw new IllegalArgumentException(&quot;The file does not seem to contain a valid model.&quot;);</span>
+<span class="nc" id="L42">            throw new IllegalArgumentException(&quot;The file does not seem to contain a valid model.&quot;);</span>
         }
 
-<span class="fc" id="L46">        return model;</span>
+<span class="fc" id="L45">        return model;</span>
     }
 
 
@@ -53,18 +52,18 @@ class ModelFromData {
      * @return The content from the block
      */
     private static String getContent(String block) {
-<span class="fc" id="L56">        int start=-1, end=-1;</span>
+<span class="fc" id="L55">        int start=-1, end=-1;</span>
 
-<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
-<span class="pc bpc" id="L59" title="1 of 4 branches missed.">            if(block.charAt(i)=='&gt;' &amp;&amp; end==-1) {</span>
-<span class="fc" id="L60">                start=i+1;</span>
-<span class="fc bfc" id="L61" title="All 4 branches covered.">            } else if(block.charAt(i)=='&lt;' &amp;&amp; start&gt;-1) {</span>
-<span class="fc" id="L62">                end=i;</span>
-<span class="fc" id="L63">                break;</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
+<span class="pc bpc" id="L58" title="1 of 4 branches missed.">            if(block.charAt(i)=='&gt;' &amp;&amp; end==-1) {</span>
+<span class="fc" id="L59">                start=i+1;</span>
+<span class="fc bfc" id="L60" title="All 4 branches covered.">            } else if(block.charAt(i)=='&lt;' &amp;&amp; start&gt;-1) {</span>
+<span class="fc" id="L61">                end=i;</span>
+<span class="fc" id="L62">                break;</span>
             }
         }
 
-<span class="fc" id="L67">        return block.substring(start, end).replaceAll(&quot;\\s&quot;,&quot;&quot;);</span>
+<span class="fc" id="L66">        return block.substring(start, end).replaceAll(&quot;\\s&quot;,&quot;&quot;);</span>
     }
 
 
@@ -74,20 +73,20 @@ class ModelFromData {
      * @return The Tag from the block
      */
     private static String getTag(String block) {
-<span class="fc" id="L77">        boolean foundStart = false;</span>
-<span class="fc" id="L78">        StringBuilder tag = new StringBuilder();</span>
+<span class="fc" id="L76">        boolean foundStart = false;</span>
+<span class="fc" id="L77">        StringBuilder tag = new StringBuilder();</span>
 
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
-<span class="fc bfc" id="L81" title="All 2 branches covered.">            if(block.charAt(i)=='&lt;') {</span>
-<span class="fc" id="L82">                foundStart = true;</span>
-<span class="pc bpc" id="L83" title="1 of 4 branches missed.">            } else if(foundStart &amp;&amp; block.charAt(i)!='&gt;') {</span>
-<span class="fc" id="L84">                tag.append(block.charAt(i)); // Add the character to the tag.</span>
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">            } else if(block.charAt(i)=='&gt;') {</span>
-<span class="fc" id="L86">                break; // Then we are done.</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if(block.charAt(i)=='&lt;') {</span>
+<span class="fc" id="L81">                foundStart = true;</span>
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">            } else if(foundStart &amp;&amp; block.charAt(i)!='&gt;') {</span>
+<span class="fc" id="L83">                tag.append(block.charAt(i)); // Add the character to the tag.</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            } else if(block.charAt(i)=='&gt;') {</span>
+<span class="fc" id="L85">                break; // Then we are done.</span>
             }
         }
 
-<span class="fc" id="L90">        return tag.toString();</span>
+<span class="fc" id="L89">        return tag.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
