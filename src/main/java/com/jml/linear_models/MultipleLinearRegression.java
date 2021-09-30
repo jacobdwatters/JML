@@ -17,11 +17,11 @@ import java.util.Objects;
 
 
 /**
- * Model for least squares linear regression of multiple variables by stochastic gradient descent.<br><br>
+ * Model for least squares linear regression of multiple variables by least squares.<br><br>
  *
  * MultipleLinearRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x + ... + b<sub>n</sub>x to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
- * by the model. This is using stochastic gradient descent.
+ * by the model.
  */
 // TODO: Refactor polynomial regression as a special case of multiple regression
 public class MultipleLinearRegression extends Model<double[][], double[]> {
