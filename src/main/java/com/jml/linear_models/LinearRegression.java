@@ -1,6 +1,7 @@
 package com.jml.linear_models;
 
 
+import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
 
@@ -73,10 +74,10 @@ public class LinearRegression extends PolynomialRegression {
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[] features, double[] targets) {
-        double[][] result = super.fit(features, targets, null);
+    public ModelBucket fit(double[] features, double[] targets) {
+        ModelBucket results = super.fit(features, targets, null);
         buildDetails();
-        return result;
+        return results;
     }
 
 
@@ -93,19 +94,15 @@ public class LinearRegression extends PolynomialRegression {
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
      * @param args     A hashtable containing additional arguments in the form <name, value>.
-     * @return A 2D array containing the following on a row: <br>
-     *  - The coefficients of the line from lowest to highest degree.
-     *  - The R value (correlation coefficient, i.e. the amount of correlation) if indicated in args.
-     *  - The R^2 value (coefficient of determination, i.e. goodness of fit) if indicated in args.
+     * @return A Map containing the results of fitting.
      * @throws IllegalArgumentException Can be thrown for the following reasons<br>
      *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
-    // TODO: Add ability to get R value.
     @Override
-    public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
-        double[][] result = super.fit(features, targets, args);
+    public ModelBucket fit(double[] features, double[] targets, Map<String, Double> args) {
+        ModelBucket result = super.fit(features, targets, args);
         buildDetails();
         return result;
     }

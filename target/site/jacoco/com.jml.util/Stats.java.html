@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Stats.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.util</a> &gt; <span class="el_source">Stats.java</span></div><h1>Stats.java</h1><pre class="source lang-java linenums">package com.jml.util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
-<span class="nc" id="L5">public class Stats {</span>
+public class Stats {
+
+<span class="nc" id="L9">    private Stats() {</span>
+<span class="nc" id="L10">        throw new IllegalStateException(&quot;Utility Class.&quot;);</span>
+    }
+
+
+    public static double round(double value, int decimals) {
+        double result;
+<span class="fc" id="L16">        BigDecimal bd = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);;</span>
+<span class="fc" id="L17">        result = bd.doubleValue();</span>
+<span class="fc" id="L18">        return result;</span>
+    }
 
 
     /**
@@ -12,14 +26,14 @@ import java.util.Arrays;
      * @return arithmetic mean of the dataset.
      */
     public static double mean(double[] data) {
-<span class="fc" id="L15">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
-<span class="fc" id="L16">        double mean = 0;</span>
+<span class="fc" id="L29">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
+<span class="fc" id="L30">        double mean = 0;</span>
 
-<span class="fc bfc" id="L18" title="All 2 branches covered.">        for(double point : data) {</span>
-<span class="fc" id="L19">            mean += point;</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        for(double point : data) {</span>
+<span class="fc" id="L33">            mean += point;</span>
         }
 
-<span class="fc" id="L22">        return mean / data.length;</span>
+<span class="fc" id="L36">        return mean / data.length;</span>
     }
 
 
@@ -30,27 +44,27 @@ import java.util.Arrays;
      * @return The median of the dataset.
      */
     public static double median(double[] data) {
-<span class="fc" id="L33">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
+<span class="fc" id="L47">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
         double median;
 
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if(data.length==1) {</span>
-<span class="fc" id="L37">            median = data[0]; // Then we have the median</span>
-<span class="fc bfc" id="L38" title="All 2 branches covered.">        } else if(data.length==2) {</span>
-<span class="fc" id="L39">            median = (data[0] + data[1]) / 2; // No need to sort here</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if(data.length==1) {</span>
+<span class="fc" id="L51">            median = data[0]; // Then we have the median</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        } else if(data.length==2) {</span>
+<span class="fc" id="L53">            median = (data[0] + data[1]) / 2; // No need to sort here</span>
         } else {
-<span class="fc" id="L41">            double[] sorted = new double[data.length];</span>
-<span class="fc" id="L42">            System.arraycopy(data, 0, sorted, 0, data.length);</span>
-<span class="fc" id="L43">            Arrays.sort(sorted);</span>
-<span class="fc" id="L44">            int index = (int) (data.length / 2);</span>
+<span class="fc" id="L55">            double[] sorted = new double[data.length];</span>
+<span class="fc" id="L56">            System.arraycopy(data, 0, sorted, 0, data.length);</span>
+<span class="fc" id="L57">            Arrays.sort(sorted);</span>
+<span class="fc" id="L58">            int index = (int) (data.length / 2);</span>
 
-<span class="fc bfc" id="L46" title="All 2 branches covered.">            if (data.length % 2 == 0) { // Then we have an even number of entries.</span>
-<span class="fc" id="L47">                median = (sorted[index] + sorted[index - 1]) / 2;</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            if (data.length % 2 == 0) { // Then we have an even number of entries.</span>
+<span class="fc" id="L61">                median = (sorted[index] + sorted[index - 1]) / 2;</span>
             } else {
-<span class="fc" id="L49">                median = sorted[index];</span>
+<span class="fc" id="L63">                median = sorted[index];</span>
             }
         }
 
-<span class="fc" id="L53">        return median;</span>
+<span class="fc" id="L67">        return median;</span>
     }
 
 
@@ -62,14 +76,14 @@ import java.util.Arrays;
      * @return The correlation coefficient for the given datasets.
      */
     public static double determination(double[] y, double[] y_pred) {
-<span class="fc" id="L65">        ArrayErrors.checkSameLength(y, y_pred); // Ensure the arrays are the same length.</span>
+<span class="fc" id="L79">        ArrayErrors.checkSameLength(y, y_pred); // Ensure the arrays are the same length.</span>
 
-<span class="fc" id="L67">        double sst = sst(y);</span>
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if(sst == 0) {</span>
-<span class="nc" id="L69">            throw new ArithmeticException(&quot;Division by zero will occur because sst=0.&quot;);</span>
+<span class="fc" id="L81">        double sst = sst(y);</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if(sst == 0) {</span>
+<span class="nc" id="L83">            throw new ArithmeticException(&quot;Division by zero will occur because sst=0.&quot;);</span>
         }
 
-<span class="fc" id="L72">        return 1-(sse(y, y_pred)/sst(y));</span>
+<span class="fc" id="L86">        return 1-(sse(y, y_pred)/sst(y));</span>
     }
 
 
@@ -81,7 +95,7 @@ import java.util.Arrays;
      * @return The coefficient of determination for the given datasets.
      */
     public static double correlation(double[] y, double[] y_pred) {
-<span class="fc" id="L84">        return Math.sqrt(determination(y, y_pred));</span>
+<span class="fc" id="L98">        return Math.sqrt(determination(y, y_pred));</span>
     }
 
 
@@ -93,15 +107,15 @@ import java.util.Arrays;
      * @return The sum of square differences between two datasets.
      */
     public static double sse(double[] y, double[] y_pred) {
-<span class="fc" id="L96">        double result = 0;</span>
+<span class="fc" id="L110">        double result = 0;</span>
 
-<span class="fc" id="L98">        ArrayErrors.checkSameLength(y, y_pred);</span>
+<span class="fc" id="L112">        ArrayErrors.checkSameLength(y, y_pred);</span>
 
-<span class="fc bfc" id="L100" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
-<span class="fc" id="L101">            result += Math.pow(y[i]-y_pred[i], 2);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
+<span class="fc" id="L115">            result += Math.pow(y[i]-y_pred[i], 2);</span>
         }
 
-<span class="fc" id="L104">        return result;</span>
+<span class="fc" id="L118">        return result;</span>
     }
 
 
@@ -112,14 +126,14 @@ import java.util.Arrays;
      * @return The sum of squares total.
      */
     public static double sst(double[] y) {
-<span class="fc" id="L115">        double mean = mean(y),</span>
-<span class="fc" id="L116">                result = 0;</span>
+<span class="fc" id="L129">        double mean = mean(y),</span>
+<span class="fc" id="L130">                result = 0;</span>
 
-<span class="fc bfc" id="L118" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
-<span class="fc" id="L119">            result += Math.pow(y[i]-mean, 2);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
+<span class="fc" id="L133">            result += Math.pow(y[i]-mean, 2);</span>
         }
 
-<span class="fc" id="L122">        return result;</span>
+<span class="fc" id="L136">        return result;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

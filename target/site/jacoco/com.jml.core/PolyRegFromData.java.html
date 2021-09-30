@@ -39,7 +39,7 @@ import java.util.Scanner;
 <span class="fc" id="L39">                polyRegModel.coefficients = Arrays.stream(coeffStrings)</span>
 <span class="fc" id="L40">                        .mapToDouble(Double::parseDouble)</span>
 <span class="fc" id="L41">                        .toArray();</span>
-                
+
 <span class="fc" id="L43">            } else {</span>
 <span class="nc" id="L44">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>
             }
@@ -51,13 +51,6 @@ import java.util.Scanner;
 <span class="fc" id="L51">        Class&lt;PolynomialRegression&gt; clazz = PolynomialRegression.class;</span>
 
 <span class="fc" id="L53">        return clazz.cast(polyRegModel);</span>
-    }
-
-
-    private static double nextDouble(String content) {
-<span class="nc" id="L58">        scanner = new Scanner(content);</span>
-
-<span class="nc" id="L60">        return scanner.nextDouble();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

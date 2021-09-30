@@ -1,6 +1,8 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
+import com.jml.core.ModelBucket;
+import com.jml.util.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LinearRegressionSaveAndLoadTest {
 
@@ -34,7 +35,10 @@ class LinearRegressionSaveAndLoadTest {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testLinModel1.mdl";
 
         model.compile();
-        double[][] c = model.fit(features, targets);
+
+
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
         double[] initialPredictions = model.predict(tests);
         model.saveModel(filePath);
 
@@ -54,7 +58,9 @@ class LinearRegressionSaveAndLoadTest {
         args.put(LinearRegression.NORMALIZE_KEY, 1.0);
 
         model.compile(args);
-        double[][] c = model.fit(features, targets);
+
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
         double[] initialPredictions = model.predict(tests);
         model.saveModel(filePath);
 
@@ -81,7 +87,9 @@ class LinearRegressionSaveAndLoadTest {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testLinModel3.txt";
 
         model.compile();
-        double[][] c = model.fit(features, targets);
+
+        ModelBucket fitResults = model.fit(features, targets);
+        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
         assertThrows(Exception.class, () -> model.saveModel(filePath));
         assertThrows(Exception.class, () -> Model.load(filePath));
     }

@@ -39,7 +39,7 @@ class PolyRegFromData extends PolynomialRegression {
                 polyRegModel.coefficients = Arrays.stream(coeffStrings)
                         .mapToDouble(Double::parseDouble)
                         .toArray();
-                
+
             } else {
                 throw new IllegalArgumentException("Failed to load model. Unrecognized tag in file.");
             }
@@ -51,12 +51,5 @@ class PolyRegFromData extends PolynomialRegression {
         Class<PolynomialRegression> clazz = PolynomialRegression.class;
 
         return clazz.cast(polyRegModel);
-    }
-
-
-    private static double nextDouble(String content) {
-        scanner = new Scanner(content);
-
-        return scanner.nextDouble();
     }
 }

@@ -1,7 +1,5 @@
 package com.jml.util;
 
-import com.jml.core.Model;
-import com.jml.linear_models.LinearRegression;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

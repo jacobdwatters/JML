@@ -1,7 +1,12 @@
 package com.jml.core;
 
 import com.jml.util.FileManager;
-import java.util.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -40,9 +45,10 @@ public abstract class Model<X, Y> {
      * @param features The features of the training set.
      * @param targets The targets of the training set.
      * @param args A hashtable containing additional arguments in the form <name, value>.
-     * @return Returns details of the fitting / training process.
+     * @return Returns details of the fitting / training process in a {@link ModelBucket}. The
+     * arguments passed may effect what the {@link ModelBucket}
      */
-    public abstract double[][] fit(X features, Y targets, Map<String, Double> args);
+    public abstract ModelBucket fit(X features, Y targets, Map<String, Double> args);
 
 
     /**
@@ -53,9 +59,9 @@ public abstract class Model<X, Y> {
      *
      * @param features The features of the training set.
      * @param targets The targets of the training set.
-     * @return - Returns details of the fitting / training process.
+     * @return Returns details of the fitting / training process in a {@link ModelBucket}.
      */
-    public abstract double[][] fit(X features, Y targets);
+    public abstract ModelBucket fit(X features, Y targets);
 
 
     /**
@@ -107,21 +113,23 @@ public abstract class Model<X, Y> {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 
-        Model model = null;
-        String currentBlock;
-
         String fileContent = FileManager.readFile(filePath);
-        List<String> lines = new ArrayList<String>(),
-        blocks = new ArrayList<String>();
-        Collections.addAll(lines, fileContent.split("\n"));
 
-        while(!lines.isEmpty()) {
-            blocks.add(nextBlock(lines));
+        if(fileContent.equals("")) {
+            return null;
+        } else {
+            List<String> lines = new ArrayList<String>(),
+                    blocks = new ArrayList<String>();
+            Collections.addAll(lines, fileContent.split("\n"));
+
+            while(!lines.isEmpty()) {
+                blocks.add(nextBlock(lines));
+            }
+
+            Class<Model> clazz = Model.class;
+
+            return clazz.cast(ModelFromData.create(blocks));
         }
-
-        Class<Model> clazz = Model.class;
-
-        return clazz.cast(ModelFromData.create(blocks));
     }
 
 

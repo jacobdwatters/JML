@@ -39,5 +39,23 @@ public class Normalize {
 
 <span class="fc" id="L40">        return x.sub(m).scalDiv(x.norm()).getValuesAsDouble()[0];</span>
     }
+
+
+    /**
+     * Normalizes each column of the data by subtracting the mean of that column and dividing by the
+     * L2-norm of that column.
+     *
+     * @param data - data to normalize.
+     * @return The L2-normalized data.
+     */
+    public static double[][] l2Normalize(double[][] data) {
+<span class="nc" id="L52">        Matrix A = new Matrix(data).T();</span>
+
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="nc" id="L55">            A.setCol(l2Normalize(data[i]), i);</span>
+        }
+
+<span class="nc" id="L58">        return A.T().getValuesAsDouble();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,17 +1,17 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
+import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.core.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
-
 import com.jml.util.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
 
-import java.lang.Math;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -45,13 +45,13 @@ public class PolynomialRegression extends Model<double[], double[]> {
      * Key for computation of correlation coefficient. <br>
      * The associated value will indicate weather to compute the correlation coefficient after regression.
      */
-    public static final String CORRELATION_KEY = "R";
+    public static final String CORRELATION_KEY = "r";
 
     /**
      * Key for computation of coefficient of determination. <br>
      * The associated value will indicate weather to compute the coefficient of determination after regression.
      */
-    public static final String DETERMINATION_KEY = "R2";
+    public static final String DETERMINATION_KEY = "r2";
 
     protected int degree = 1; // Defaults to simple linear regression.
     protected int normalization = 0; // Default is no normalization.
@@ -65,6 +65,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
             "Is Compiled: No\n" +
             "Is Trained: No\n"
     );
+
 
     /**
      * Constructs model and prepares for training using default parameters. i.e. the degree of the polynomial will be 1,
@@ -148,33 +149,28 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
-    // TODO: should this return a map instead? Or rather, only the coefficients?
     @Override
-    public double[][] fit(double[] features, double[] targets, Map<String, Double> args) {
+    public ModelBucket fit(double[] features, double[] targets, Map<String, Double> args) {
+
         if(!isCompiled) {
             throw new IllegalStateException("Model must be compiled before it can be fit.");
         }
 
-        int resultRows = 1;
         boolean computeCorrelation = false, computeDetermination = false;
+        Map<String, Object> results = new HashMap<>();
 
         if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
             if(args.containsKey(CORRELATION_KEY)) {
                 computeCorrelation = true;
-                resultRows++;
             }
             if(args.containsKey(DETERMINATION_KEY)) {
                 computeDetermination = true;
-                resultRows++;
             }
         }
 
         if(normalization==1) { // Then use l2 normalization.
             features = Normalize.l2Normalize(features);
         }
-
-
-        double[][] results = new double[resultRows][];
 
         Vector x = new Vector(features);
         Matrix y = (new Vector(targets)).toMatrix();
@@ -184,25 +180,21 @@ public class PolynomialRegression extends Model<double[], double[]> {
         Matrix A = VT.mult(V);
         Vector b = VT.mult(y).toVector();
         coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0];
-        results[0] = coefficients;
+
+        results.put("coefficients", coefficients);
+
         isFit = true;
 
-        /* TODO: The return value should almost certainly be a map. To guarantee that things are in the correct order
-            For an array, we need to check every case except for none. So for n arguments we must check 2^n-1 cases.
-            This is clearly not practical for several arguments. So we should use a map instead.
-         */
-        if(computeCorrelation && computeDetermination) {
-            results[1] = new double[]{Stats.correlation(targets, this.predict(features))};
-            results[2] = new double[]{Stats.determination(targets, this.predict(features))};
-        } else if(computeCorrelation) {
-            results[1] =  new double[]{Stats.correlation(targets, this.predict(features))};
-        } else if(computeDetermination) {
-            results[1] = new double[]{Stats.determination(targets, this.predict(features))};
+        if(computeCorrelation) {
+            results.put("r", Stats.correlation(targets, this.predict(features)));
+        }
+        if(computeDetermination) {
+            results.put("r2", Stats.determination(targets, this.predict(features)));
         }
 
         buildDetails(); // Build the details of the model.
 
-        return results;
+        return new ModelBucket(results);
     }
 
 
@@ -217,7 +209,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[][] fit(double[] features, double[] targets) {
+    public ModelBucket fit(double[] features, double[] targets) {
         return fit(features, targets, null);
     }
 
