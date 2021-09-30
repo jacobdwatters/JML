@@ -28,12 +28,12 @@ class ModelFromData {
 
 <span class="fc bfc" id="L29" title="All 2 branches covered.">        if(modelType.equals(ModelTypes.POLYNOMIAL_REGRESSION.toString())) {</span>
 <span class="fc" id="L30">            model = PolyRegFromData.create(tags, contents);</span>
-<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION.toString())) {</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION.toString())) {</span>
 <span class="fc" id="L32">            model = LinRegFromData.create(tags, contents);</span>
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION_SGD.toString())) {</span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION_SGD.toString())) {</span>
             // TODO:
-<span class="nc bnc" id="L35" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {</span>
-            // TODO:
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {</span>
+<span class="fc" id="L36">            model = MultRegFromData.create(tags, contents);</span>
 <span class="nc bnc" id="L37" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
             // TODO:
 <span class="nc bnc" id="L39" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {</span>

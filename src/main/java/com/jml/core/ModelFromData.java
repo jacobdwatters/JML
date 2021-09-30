@@ -33,7 +33,7 @@ class ModelFromData {
         } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION_SGD.toString())) {
             // TODO:
         } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {
-            // TODO:
+            model = MultRegFromData.create(tags, contents);
         } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {
             // TODO:
         } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {

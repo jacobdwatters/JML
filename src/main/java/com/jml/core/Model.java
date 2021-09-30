@@ -2,6 +2,7 @@ package com.jml.core;
 
 import com.jml.util.FileManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -112,21 +113,23 @@ public abstract class Model<X, Y> {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 
-        Model model = null;
-        String currentBlock;
-
         String fileContent = FileManager.readFile(filePath);
-        List<String> lines = new ArrayList<String>(),
-        blocks = new ArrayList<String>();
-        Collections.addAll(lines, fileContent.split("\n"));
 
-        while(!lines.isEmpty()) {
-            blocks.add(nextBlock(lines));
+        if(fileContent.equals("")) {
+            return null;
+        } else {
+            List<String> lines = new ArrayList<String>(),
+                    blocks = new ArrayList<String>();
+            Collections.addAll(lines, fileContent.split("\n"));
+
+            while(!lines.isEmpty()) {
+                blocks.add(nextBlock(lines));
+            }
+
+            Class<Model> clazz = Model.class;
+
+            return clazz.cast(ModelFromData.create(blocks));
         }
-
-        Class<Model> clazz = Model.class;
-
-        return clazz.cast(ModelFromData.create(blocks));
     }
 
 

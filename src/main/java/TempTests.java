@@ -9,41 +9,18 @@ import java.util.Map;
 
 public class TempTests {
     public static void main(String[] args) {
-        polynomialRegressionExample();
-//        multipleRegressionExample();
-    }
-
-
-    static void polynomialRegressionExample() {
-        double[] features = {1, 2, 3, 4, 5};
-        double[] targets = {0, -7, -20, -39, -64};
-        double[] tests = {-2, -1, 0};
-
-        Model<double[], double[]> model = new PolynomialRegression();
-
-        Map<String, Double> compileArgs = new HashMap<>();
-        compileArgs.put("degree", 2.0);
-
-        model.compile(compileArgs);
-        ModelBucket results = model.fit(features, targets);
-
-        double[] coefficients = results.getDoubleArr("coefficients");
-        double[] predictions = model.predict(tests);
-
-        System.out.println("\n\n" + ArrayUtils.asString(ArrayUtils.round(coefficients, 10)));
-        System.out.println("Pred: " + ArrayUtils.asString(ArrayUtils.round(predictions, 10)) + "\n\n");
+        multipleRegressionExample();
     }
 
 
     static void multipleRegressionExample() {
-        double[][] features = { {2, 2},
-                                {4, 5},
-                                {6, 7}};
+        double[][] features = { {1, 4, -3, 4},
+                                {5, 6, -4, 8},
+                                {9, -1, 11, 12},
+                                {0, 1, 0.6, 1},
+                                {5, 4, 3, 2}};
 
-        double[] targets = {5, 6, 7};
-
-        double[][] tests = {{9, 10},
-                            {1, 8}};
+        double[] targets = {1, 9, -1, 6, 4};
 
 
         Model<double[][], double[]> model = new MultipleLinearRegression();
@@ -52,9 +29,13 @@ public class TempTests {
         ModelBucket results = model.fit(features, targets);
 
         double[] coefficients = results.getDoubleArr("coefficients");
-        double[] predictions = model.predict(tests);
 
+        System.out.println("\n\n" + model);
         System.out.println("\n\n" + ArrayUtils.asString(ArrayUtils.round(coefficients, 10)));
-        System.out.println("Pred: " + ArrayUtils.asString(ArrayUtils.round(predictions, 10)) + "\n\n");
+
+        Model m = Model.load("myModel234.mdl");
+
+        System.out.println("\n\n" + m);
+        System.out.println("\n\n" + ArrayUtils.asString(ArrayUtils.round(coefficients, 10)));
     }
 }

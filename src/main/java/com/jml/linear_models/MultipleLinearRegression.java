@@ -5,6 +5,7 @@ import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.core.Normalize;
 import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
 import com.jml.util.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
@@ -54,6 +55,15 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
 
     protected int normalization = 0; // Default is no normalization.
     protected double[] coefficients;
+
+    // Details of model in human-readable format.
+    private StringBuilder details = new StringBuilder(
+            "Model Details\n" +
+                    "----------------------------\n" +
+                    "Model Type: " + this.MODEL_TYPE+ "\n" +
+                    "Is Compiled: No\n" +
+                    "Is Trained: No\n"
+    );
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -161,6 +171,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
         return new ModelBucket(results);
     }
 
+
     /**
      * Fits or trains the model with the given features and targets.
      *
@@ -212,12 +223,55 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
      */
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub.
+        Block[] blockList;
+
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before it can be saved.");
+        }
+        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(".mdl")) {
+            throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
+        }
+
+        blockList = new Block[3];
+
+        // Construct the blocks for the model file.
+        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);
+        blockList[1] = new Block(LinearModelTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients));
+        blockList[2] = new Block(LinearModelTags.NORMALIZE.toString(), Integer.toString(normalization));
+
+        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);
     }
 
 
-    private void buildDetails() {
-        // TODO: Auto-generated method stub.
+    // Construct details of model
+    protected void buildDetails() {
+        details = new StringBuilder(
+                "Model Details\n" +
+                        "----------------------------\n" +
+                        "Model Type: " + this.MODEL_TYPE+ "\n" +
+                        "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
+                        "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
+        );
+
+
+        if(isCompiled) {
+            details.append("Normalization: " + (normalization==1 ? "Yes" : "No") + "\n");
+        }
+
+
+        if(isFit && coefficients!=null) {
+            details.append("Coefficients: ");
+            details.append(ArrayUtils.asString(coefficients));
+            details.append("\nHyperplane: y = " + coefficients[0] + " + ");
+
+            for(int i=1; i<coefficients.length; i++) {
+                details.append(coefficients[i] + "x_" + i);
+
+                if(i<coefficients.length-1) {
+                    details.append(" + ");
+                }
+            }
+        }
     }
 
 
@@ -240,7 +294,6 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
      */
     @Override
     public String toString() {
-        // TODO: Auto-generated method stub.
-        return "";
+        return details.toString();
     }
 }
