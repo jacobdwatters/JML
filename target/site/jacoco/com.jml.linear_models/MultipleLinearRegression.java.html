@@ -124,8 +124,8 @@ import java.util.Objects;
 <span class="fc" id="L124">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
 <span class="fc" id="L125">        boolean computeCorrelation = false, computeDetermination = false;</span>
 
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        if(!isCompiled) {</span>
-<span class="nc" id="L128">            throw new IllegalStateException(&quot;Model must be compiled before it can be fit.&quot;);</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if(!isCompiled) {</span>
+<span class="fc" id="L128">            throw new IllegalStateException(&quot;Model must be compiled before it can be fit.&quot;);</span>
         }
 
 <span class="pc bpc" id="L131" title="3 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) { // Check for various optional arguments</span>
@@ -197,8 +197,8 @@ import java.util.Objects;
      */
     @Override
     public double[] predict(double[][] features) {
-<span class="pc bpc" id="L200" title="2 of 4 branches missed.">        if(!isFit || !isCompiled) {</span>
-<span class="nc" id="L201">            throw new IllegalStateException(&quot;Model must be compiled and fit before predictions can be made.&quot;);</span>
+<span class="pc bpc" id="L200" title="1 of 4 branches missed.">        if(!isFit || !isCompiled) {</span>
+<span class="fc" id="L201">            throw new IllegalStateException(&quot;Model must be compiled and fit before predictions can be made.&quot;);</span>
         }
 
 <span class="fc" id="L204">        double[] predictions = new double[features.length];</span>
@@ -225,8 +225,8 @@ import java.util.Objects;
     public void saveModel(String filePath) {
         Block[] blockList;
 
-<span class="pc bpc" id="L228" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L229">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L229">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
 <span class="fc bfc" id="L231" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
 <span class="fc" id="L232">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>

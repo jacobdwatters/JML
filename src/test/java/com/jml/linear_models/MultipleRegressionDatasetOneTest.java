@@ -73,4 +73,24 @@ class MultipleRegressionDatasetOneTest {
         assertThrows(Exception.class, () -> Model.load(fileName1));
         assertNull(Model.load(fileName2));
     }
+
+
+    @Test
+    void MultipleRegressionNotCompiledTestCase() {
+        String fileName = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel0.mdl";
+
+        assertThrows(Exception.class, () -> model.fit(features, targets));
+        assertThrows(Exception.class, () -> model.saveModel(fileName));
+        assertThrows(Exception.class, () -> model.predict(tests));
+    }
+
+
+    @Test
+    void MultipleRegressionNotFitTestCase() {
+        String fileName = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel0.mdl";
+        model.compile();
+
+        assertThrows(Exception.class, () -> model.saveModel(fileName));
+        assertThrows(Exception.class, () -> model.predict(tests));
+    }
 }
