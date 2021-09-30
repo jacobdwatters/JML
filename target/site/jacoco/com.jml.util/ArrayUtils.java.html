@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 
 <span class="nc" id="L6">public class ArrayUtils {</span>
 
+
     /**
      * Rounds all numbers in array to n decimal places.
      *
@@ -13,30 +14,80 @@ import java.math.RoundingMode;
      * @return Array with rounded numbers.
      */
     public static double[] round(double[] arr, int n) {
-<span class="fc" id="L16">        double[] result = new double[arr.length];</span>
+<span class="fc" id="L17">        double[] result = new double[arr.length];</span>
         BigDecimal bd;
 
-<span class="fc bfc" id="L19" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L20">            bd = BigDecimal.valueOf(arr[i]).setScale(n, RoundingMode.HALF_UP);</span>
-<span class="fc" id="L21">            result[i] = bd.doubleValue();</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L21">            bd = BigDecimal.valueOf(arr[i]).setScale(n, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L22">            result[i] = bd.doubleValue();</span>
         }
 
-<span class="fc" id="L24">        return result;</span>
+<span class="fc" id="L25">        return result;</span>
     }
 
 
+    /**
+     * Rounds all numbers in array to n decimal places.
+     *
+     * @param arr Array to round.
+     * @param n Number of digits to round to.
+     * @return Array with rounded numbers.
+     */
+    public static double[][] round(double[][] arr, int n) {
+<span class="fc" id="L37">        double[][] result = new double[arr.length][arr[0].length];</span>
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L40">            result[i] = round(arr[i], n);</span>
+        }
+
+<span class="fc" id="L43">        return result;</span>
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
     public static String asString(double[] arr) {
-<span class="fc" id="L29">        String arrAsString = &quot;&quot;;</span>
+<span class="fc" id="L54">        StringBuilder arrAsString = new StringBuilder(&quot;&quot;);</span>
 
-<span class="fc bfc" id="L31" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L32">            arrAsString += arr[i];</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L57">            arrAsString.append(arr[i]);</span>
 
-<span class="fc bfc" id="L34" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
-<span class="fc" id="L35">                arrAsString += &quot;, &quot;;</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
+<span class="fc" id="L60">                arrAsString.append(&quot;, &quot;);</span>
             }
         }
 
-<span class="fc" id="L39">        return arrAsString;</span>
+<span class="fc" id="L64">        return arrAsString.toString();</span>
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString(double[][] arr) {
+<span class="fc" id="L75">        StringBuilder arrAsString = new StringBuilder(&quot;&quot;);</span>
+
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="fc" id="L80">                arrAsString.append(arr[i][j]);</span>
+
+<span class="fc bfc" id="L82" title="All 2 branches covered.">                if(j!=arr.length-1) {</span>
+<span class="fc" id="L83">                    arrAsString.append(&quot;, &quot;);</span>
+                }
+            }
+
+<span class="fc" id="L87">            arrAsString.append(&quot;\n&quot;);</span>
+        }
+
+<span class="fc" id="L90">        return arrAsString.toString();</span>
     }
 
 }

@@ -89,13 +89,12 @@ public class Normalize {
      * @param data - data to normalize.
      * @return The L2-normalized data.
      */
-    public static double[] l2(double[] data) { // TODO: Do we need to subtract mean here? sk-learn does not
+    public static double[] l2(double[] data) {
         Matrix x = new Vector(data, 1);
         double mean = Stats.mean(data);
         Matrix m = new Matrix(1, data.length, mean);
 
-        return x.sub(m).scalDiv(x.norm()).getValuesAsDouble()[0];
-//        return x.scalDiv(x.norm()).getValuesAsDouble()[0];
+        return x.scalDiv(x.norm()).getValuesAsDouble()[0];
     }
 
 
@@ -107,13 +106,13 @@ public class Normalize {
      * @return The L2-normalized data.
      */
     public static double[][] l2(double[][] data) {
-        Matrix A = new Matrix(data).T();
+        double[][] normalization = new double[data.length][data[0].length];
 
         for(int i=0; i< data.length; i++) {
-            A.setCol(l2(data[i]), i);
+            normalization[i] = l2(data[i]);
         }
 
-        return A.T().getValuesAsDouble();
+        return normalization;
     }
 
 

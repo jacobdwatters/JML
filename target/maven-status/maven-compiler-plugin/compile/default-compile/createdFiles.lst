@@ -1,2 +1,2 @@
-com/jml/preprocessing/Normalize.class
-com/jml/core/Stats.class
+com\jml\core\Stats.class
+com\jml\preprocessing\Normalize.class

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Normalize.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.preprocessing</a> &gt; <span class="el_source">Normalize.java</span></div><h1>Normalize.java</h1><pre class="source lang-java linenums">package com.jml.preprocessing;
+
+import com.jml.core.Stats;
+import linalg.Matrix;
+import linalg.Vector;
+
+public class Normalize {
+
+    // Private constructor to hide implicate one.
+<span class="nc" id="L10">    private Normalize() {</span>
+<span class="nc" id="L11">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
+    }
+
+
+    /**
+     * Applies min-max feature scaling to data. This will rescale the data to be in [1, 0].&lt;br&gt;&lt;br&gt;
+     *
+     * Also see {@link #minMaxScale(double[], double, double)}.
+     *
+     * @param data Dataset to apply normalization to.
+     * @return A copy of the dataset that has been normalized using
+     * min-max feature scaling.
+     */
+    public static double[] minMaxScale(double[] data) {
+<span class="fc" id="L25">        return minMaxScale(data, 0, 1);</span>
+    }
+
+
+    /**
+     * Applies min-max feature scaling to data. This will rescale the data to be in [a, b].&lt;br&gt;&lt;br&gt;
+     *
+     * Also see {@link #minMaxScale(double[])}.
+     *
+     * @param data Dataset to apply normalization to.
+     * @param a Minimum value of the rescaled dataset.
+     * @param b Maximum value of the rescaled dataset.
+     * @return A copy of the dataset that has been normalized using
+     * min-max feature scaling.
+     */
+    public static double[] minMaxScale(double[] data, double a, double b) {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if(a &gt;= b) {</span>
+<span class="fc" id="L42">            throw new IllegalArgumentException(&quot;a must be greater than b but got a=&quot; + a  + &quot; and b=&quot; + b);</span>
+        }
+
+<span class="fc" id="L45">        double[] normalization = new double[data.length];</span>
+<span class="fc" id="L46">        double min = Stats.min(data); // Extract the min value.</span>
+<span class="fc" id="L47">        double max = Stats.max(data); // Extract the max value.</span>
+
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if(max==min) { // Then we can not apply this normalization.</span>
+<span class="fc" id="L50">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
+        }
+
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="fc" id="L54">            normalization[i] = (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]</span>
+        }
+
+<span class="fc" id="L57">        return normalization;</span>
+    }
+
+
+    /**
+     * Applies meanNormalize normalization to the data.
+     *
+     * @param data Dataset to apply meanNormalize normalization to.
+     * @return A copy of the dataset which has been normalized using meanNormalize normalization.
+     */
+    public static double[] meanNormalize(double[] data) {
+
+<span class="fc" id="L69">        double[] normalization = new double[data.length];</span>
+<span class="fc" id="L70">        double mean = Stats.mean(data);</span>
+<span class="fc" id="L71">        double min = Stats.min(data);</span>
+<span class="fc" id="L72">        double max = Stats.max(data);</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if(max==min) { // Then we can not apply this normalization.</span>
+<span class="fc" id="L75">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
+        }
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="fc" id="L79">            normalization[i] = (data[i] - mean) / (max-min);</span>
+        }
+
+<span class="fc" id="L82">        return normalization;</span>
+    }
+
+
+    /**
+     * Normalizes the data by subtracting the meanNormalize and dividing by the L2-norm.
+     *
+     * @param data - data to normalize.
+     * @return The L2-normalized data.
+     */
+    public static double[] l2(double[] data) {
+<span class="fc" id="L93">        Matrix x = new Vector(data, 1);</span>
+<span class="fc" id="L94">        double mean = Stats.mean(data);</span>
+<span class="fc" id="L95">        Matrix m = new Matrix(1, data.length, mean);</span>
+
+<span class="fc" id="L97">        return x.scalDiv(x.norm()).getValuesAsDouble()[0];</span>
+    }
+
+
+    /**
+     * Normalizes each column of the data by subtracting the meanNormalize of that column and dividing by the
+     * L2-norm of that column.
+     *
+     * @param data - data to normalize.
+     * @return The L2-normalized data.
+     */
+    public static double[][] l2(double[][] data) {
+<span class="fc" id="L109">        double[][] normalization = new double[data.length][data[0].length];</span>
+
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="fc" id="L112">            normalization[i] = l2(data[i]);</span>
+        }
+
+<span class="fc" id="L115">        return normalization;</span>
+    }
+
+
+    /**
+     * Applies Z-score normalization to the dataset.
+     *
+     * @param data The dataset of interest.
+     * @return A copy of the dataset which has been normalized using Z-score normalization.
+     */
+    public static double[] zScore(double[] data) {
+
+<span class="fc" id="L127">        double[] normalization = new double[data.length];</span>
+<span class="fc" id="L128">        double std = Stats.std(data);</span>
+<span class="fc" id="L129">        double mean = Stats.mean(data);</span>
+
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        for(int i=0; i&lt;data.length; i++) {</span>
+<span class="fc" id="L132">            normalization[i] = (data[i]-mean) / std; // Apply the Z-score normalization to each entry.</span>
+        }
+
+<span class="fc" id="L135">        return normalization;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

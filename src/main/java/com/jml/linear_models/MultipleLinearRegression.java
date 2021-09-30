@@ -65,6 +65,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                     "Is Trained: No\n"
     );
 
+
     /**
      * Constructs model and prepares for training using the given parameters.
      *
