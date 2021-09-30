@@ -43,7 +43,7 @@ public class LinearRegression extends PolynomialRegression {
      * <pre>
      *  - Normalization:
      *      <"normalize", 0> - Default. No normalization is used.
-     *      <"normalize", 1> - Normalizes data by subtracting mean and dividing by the L2-norm before applying regression.
+     *      <"normalize", 1> - Normalizes data by subtracting meanNormalize and dividing by the L2-norm before applying regression.
      * <pre/>
      *
      * @param args A hashtable containing additional arguments in the form <name, value>.

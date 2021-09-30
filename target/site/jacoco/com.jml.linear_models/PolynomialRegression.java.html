@@ -3,10 +3,10 @@
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
-import com.jml.core.Normalize;
+import com.jml.preprocessing.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
-import com.jml.util.Stats;
+import com.jml.core.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
@@ -88,7 +88,7 @@ import java.util.Objects;
      *      &lt;&quot;degree&quot;, n&gt; - where n is the integer degree of polynomial to fit. n=1 is the default value.
      *  - Normalization:
      *      &lt;&quot;normalize&quot;, 0&gt; - Default. No normalization is used.
-     *      &lt;&quot;normalize&quot;, 1&gt; - Normalizes data by subtracting mean and dividing by the L2-norm before applying regression.
+     *      &lt;&quot;normalize&quot;, 1&gt; - Normalizes data by subtracting meanNormalize and dividing by the L2-norm before applying regression.
      * &lt;pre/&gt;
      *
      * @param args A hashtable containing additional arguments in the form &lt;name, value&gt;.
@@ -169,7 +169,7 @@ import java.util.Objects;
         }
 
 <span class="fc bfc" id="L171" title="All 2 branches covered.">        if(normalization==1) { // Then use l2 normalization.</span>
-<span class="fc" id="L172">            features = Normalize.l2Normalize(features);</span>
+<span class="fc" id="L172">            features = Normalize.l2(features);</span>
         }
 
 <span class="fc" id="L175">        Vector x = new Vector(features);</span>

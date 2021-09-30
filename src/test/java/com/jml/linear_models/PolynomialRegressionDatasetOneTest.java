@@ -4,7 +4,7 @@ package com.jml.linear_models;
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.util.ArrayUtils;
-import com.jml.util.Stats;
+import com.jml.core.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

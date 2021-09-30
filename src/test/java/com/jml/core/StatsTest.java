@@ -1,5 +1,6 @@
-package com.jml.util;
+package com.jml.core;
 
+import com.jml.core.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
