@@ -113,7 +113,7 @@ public class Stats {
             throw new ArithmeticException("Division by zero will occur because sst=0.");
         }
 
-        return 1-(sse(y, y_pred)/sst(y));
+        return 1-(sse(y, y_pred)/sst);
     }
 
 
