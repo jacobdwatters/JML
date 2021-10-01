@@ -3,10 +3,10 @@ package com.jml.linear_models;
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
-import com.jml.core.Normalize;
+import com.jml.preprocessing.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
-import com.jml.util.Stats;
+import com.jml.core.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
@@ -65,6 +65,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                     "Is Trained: No\n"
     );
 
+
     /**
      * Constructs model and prepares for training using the given parameters.
      *
@@ -83,7 +84,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
      * <pre>
      *  - Normalization:
      *      <"normalize", 0> - Default. No normalization is used.
-     *      <"normalize", 1> - Normalizes data by subtracting mean and dividing by the L2-norm before applying regression.
+     *      <"normalize", 1> - Normalizes data by subtracting meanNormalize and dividing by the L2-norm before applying regression.
      * </pre>
      * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
      */
@@ -138,7 +139,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
         }
 
         if(normalization==1) { // Then use l2 normalization.
-            features = Normalize.l2Normalize(features);
+            features = Normalize.l2(features);
         }
 
         Matrix y = (new Vector(targets)).toMatrix();

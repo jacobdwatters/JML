@@ -1,1 +1,3 @@
-com\jml\linear_models\MultipleRegressionDatasetOneTest.class
+com\jml\preprocessing\NormalizationTest.class
+com\jml\core\StatsTest.class
+com\jml\preprocessing\NormalizationExceptionTest.class

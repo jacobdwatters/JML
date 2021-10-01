@@ -4,7 +4,7 @@ package com.jml.linear_models;
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.util.ArrayUtils;
-import com.jml.util.Stats;
+import com.jml.core.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -103,8 +103,8 @@ class PolynomialRegressionDatasetOneTest {
     @Test // Defines a test method
     @DisplayName("Testing for degree 2") // define the name of the test which is displayed to the user
     void degreeTwoTestCase() {
-        double[] expected = {51.78236529, 29.56813204, 11.08407582};
-        double[] testingExpected = {32.261676, 51.7823653, 92.4345732, 155.2549327, 253.9108538, 347.4001065};
+        double[] expected = {45.96048699, 24.82244691, 11.08407582};
+        double[] testingExpected = {32.1346199, 45.960487, 81.8670097, 139.9416841, 233.1875242, 322.5954877};
         double r2Expected = 0.5776913;
         double rExpected = 0.7600600;
 

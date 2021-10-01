@@ -3,10 +3,10 @@ package com.jml.linear_models;
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
-import com.jml.core.Normalize;
+import com.jml.preprocessing.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
-import com.jml.util.Stats;
+import com.jml.core.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
@@ -88,7 +88,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      *      <"degree", n> - where n is the integer degree of polynomial to fit. n=1 is the default value.
      *  - Normalization:
      *      <"normalize", 0> - Default. No normalization is used.
-     *      <"normalize", 1> - Normalizes data by subtracting mean and dividing by the L2-norm before applying regression.
+     *      <"normalize", 1> - Normalizes data by subtracting meanNormalize and dividing by the L2-norm before applying regression.
      * <pre/>
      *
      * @param args A hashtable containing additional arguments in the form <name, value>.
@@ -169,7 +169,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
         }
 
         if(normalization==1) { // Then use l2 normalization.
-            features = Normalize.l2Normalize(features);
+            features = Normalize.l2(features);
         }
 
         Vector x = new Vector(features);

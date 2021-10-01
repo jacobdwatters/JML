@@ -1,1 +1,2 @@
-com\jml\core\MultRegFromData.class
+com\jml\core\Stats.class
+com\jml\preprocessing\Normalize.class

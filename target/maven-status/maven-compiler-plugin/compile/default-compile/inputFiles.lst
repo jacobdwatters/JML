@@ -7,8 +7,8 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\optimizers\
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\optimizers\Momentum.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\ModelBucket.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\PolyRegFromData.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Stats.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations\Activation.java
-C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Normalize.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\MultipleLinearRegression.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearModelTags.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\losses\Loss.java
@@ -19,10 +19,10 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\NeuralNetwo
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\Block.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\Perceptron.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\ModelFromData.java
-C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\Stats.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\LinRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\losses\LossFunction.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\MultRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\ArrayUtils.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\ModelTypes.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\layers\Layer.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\preprocessing\Normalize.java

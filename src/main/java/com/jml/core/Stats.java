@@ -1,9 +1,15 @@
-package com.jml.util;
+package com.jml.core;
+
+import com.jml.util.ArrayErrors;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 
+
+/**
+ * The stats class is a utility class to compute various statistical information about datasets.
+ */
 public class Stats {
 
     private Stats() {
@@ -69,6 +75,30 @@ public class Stats {
 
 
     /**
+     * Computes the variance for the data set. This is similar to the mean squared error but the
+     * {@link #sst(double[]) sst} is divided by (n-1) where n is the number of obervations in the dataset.
+     *
+     * @param data Dataset of interest.
+     * @return The variance of the data.
+     */
+    public static double variance(double[] data) {
+        return sst(data)/(data.length-1);
+    }
+
+
+    /**
+     * Computes the standard deviation of the dataset. It is assumed that data contains only a sample of
+     * observations from the true population.
+     *
+     * @param data Dataset of interest
+     * @return The standard deviation of the data.
+     */
+    public static double std(double[] data) {
+        return Math.sqrt(variance(data));
+    }
+
+
+    /**
      * Computes the r<sup>2</sup> value or correlation between two sets of data.
      *
      * @param y Dataset one.
@@ -83,7 +113,7 @@ public class Stats {
             throw new ArithmeticException("Division by zero will occur because sst=0.");
         }
 
-        return 1-(sse(y, y_pred)/sst(y));
+        return 1-(sse(y, y_pred)/sst);
     }
 
 
@@ -134,5 +164,43 @@ public class Stats {
         }
 
         return result;
+    }
+
+
+    /**
+     * Finds the minimum value in a dataset.
+     *
+     * @param data Dataset of interest.
+     * @return The minimum value in data.
+     */
+    public static double min(double[] data) {
+        double minimum = Double.MAX_VALUE;
+
+        for(int i=0; i< data.length; i++) {
+            if(data[i] < minimum) { // Then we have a new minimum
+                minimum = data[i];
+            }
+        }
+
+        return minimum;
+    }
+
+
+    /**
+     * Finds the maximum value in a dataset.
+     *
+     * @param data Dataset of interest.
+     * @return The maximum value in data.
+     */
+    public static double max(double[] data) {
+        double maximum = Double.MIN_VALUE;
+
+        for(int i=0; i< data.length; i++) {
+            if(data[i] > maximum) { // Then we have a new maximum
+                maximum = data[i];
+            }
+        }
+
+        return maximum;
     }
 }
