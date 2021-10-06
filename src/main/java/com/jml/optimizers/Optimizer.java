@@ -1,7 +1,7 @@
-package com.jml.neural_network.optimizers;
+package com.jml.optimizers;
+
 
 abstract class Optimizer {
-
 
     /**
      * Applies specified optimizer rule to x.

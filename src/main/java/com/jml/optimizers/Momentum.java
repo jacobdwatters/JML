@@ -1,4 +1,4 @@
-package com.jml.neural_network.optimizers;
+package com.jml.optimizers;
 
 public class Momentum extends Optimizer {
 
