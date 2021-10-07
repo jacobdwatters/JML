@@ -4,11 +4,13 @@ import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.losses.Function;
+import com.jml.losses.LossFunctions;
 import com.jml.losses.LossGradients;
 import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -21,7 +23,8 @@ import java.util.Map;
  */
 public class LinearRegressionSGD extends Model<double[], double[]> {
     final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.name();
-    protected Matrix w;
+    protected Matrix w; // The parameters of the model.
+    protected boolean isFit = false;
 
 
     /**
@@ -59,19 +62,20 @@ public class LinearRegressionSGD extends Model<double[], double[]> {
      */
     @Override
     public ModelBucket fit(double[] features, double[] targets, Map<String, Double> args) {
+        Map<String, Object> results = new HashMap<>();
 
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));
         Matrix y = new Vector(targets);
-        // Set initial model weights to be random.
-        w = Matrix.randn(X.numCols(), 1, false);
 
-        w = StochasticGradientDescent.optimize(w, X, y, LossGradients.sseLinRegGrad, 0.02, 2000);
+        w = Matrix.randn(X.numCols(), 1, false); // Set initial model weights to be random.
+        w = StochasticGradientDescent.optimize(w, X, y, LossFunctions.sse, 0.05, 3000);
 
-        System.out.println("\n\nw:\n" + w + "\n\n");
+        results.put("coefficients", w.T().getValuesAsDouble()[0]);
 
-        return null;
+        return new ModelBucket(results);
     }
+
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -100,6 +104,13 @@ public class LinearRegressionSGD extends Model<double[], double[]> {
     public double[] predict(double[] features) {
         // TODO: Auto-generated method stub.
         return new double[0];
+    }
+
+
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        // TODO: Auto-generated method stub.
+        return null;
     }
 
 

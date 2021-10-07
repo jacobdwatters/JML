@@ -78,16 +78,16 @@ public abstract class Model<X, Y> {
     public abstract Y predict(X features);
 
 
-//    /**
-//     * Makes a prediction using a model by specifying the parameters of the model.
-//     * Unlike the other predict method, no model needs to be trained to use this method since the parameters provided
-//     * define a model.
-//     *
-//     * @param w Parameters of the model
-//     * @param X Features to make prediction on
-//     * @return prediction on the features using the given model parameters.
-//     */
-//    public abstract Matrix predict(Matrix w, Matrix X);
+    /**
+     * Makes a prediction using a model by specifying the parameters of the model.
+     * Unlike the other predict method, no model needs to be trained to use this method since the parameters provided
+     * define a model.
+     *
+     * @param w Parameters of the model
+     * @param X Features to make prediction on
+     * @return prediction on the features using the given model parameters.
+     */
+    public abstract Matrix predict(Matrix w, Matrix X);
 
 
     /**

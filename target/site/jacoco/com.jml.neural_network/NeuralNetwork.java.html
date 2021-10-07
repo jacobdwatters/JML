@@ -3,10 +3,11 @@
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.neural_network.layers.Layer;
+import linalg.Matrix;
 
 import java.util.Map;
 
-<span class="nc" id="L9">public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {</span>
+<span class="nc" id="L10">public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {</span>
 
 
     private Layer&lt;?, ?&gt; layer;
@@ -19,7 +20,7 @@ import java.util.Map;
     @Override
     public void compile() {
         // TODO: Auto-generated method stub
-<span class="nc" id="L22">    }</span>
+<span class="nc" id="L23">    }</span>
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -30,7 +31,7 @@ import java.util.Map;
     @Override
     public void compile(Map&lt;String, Double&gt; args) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L33">    }</span>
+<span class="nc" id="L34">    }</span>
 
 
     /**
@@ -48,7 +49,7 @@ import java.util.Map;
     @Override
     public ModelBucket fit(double[][] features, double[][] targets, Map&lt;String, Double&gt; args) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L51">        return null;</span>
+<span class="nc" id="L52">        return null;</span>
     }
 
 
@@ -64,7 +65,7 @@ import java.util.Map;
     @Override
     public ModelBucket fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L67">        return null;</span>
+<span class="nc" id="L68">        return null;</span>
     }
 
 
@@ -79,7 +80,14 @@ import java.util.Map;
     @Override
     public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L82">        return new double[0][];</span>
+<span class="nc" id="L83">        return new double[0][];</span>
+    }
+
+
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L90">        return null;</span>
     }
 
 
@@ -90,7 +98,7 @@ import java.util.Map;
      */
     public void add(Layer&lt;?, ?&gt; layer) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L93">    }</span>
+<span class="nc" id="L101">    }</span>
 
 
     /**
@@ -101,7 +109,7 @@ import java.util.Map;
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L104">    }</span>
+<span class="nc" id="L112">    }</span>
 
 
     /**
@@ -113,7 +121,7 @@ import java.util.Map;
     @Override
     public String getDetails() {
         // TODO: Auto-generated method stub
-<span class="nc" id="L116">        return null;</span>
+<span class="nc" id="L124">        return null;</span>
     }
 
 
@@ -125,7 +133,7 @@ import java.util.Map;
     @Override
     public String toString() {
         // TODO: Auto-generated method stub
-<span class="nc" id="L128">        return &quot;&quot;;</span>
+<span class="nc" id="L136">        return &quot;&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

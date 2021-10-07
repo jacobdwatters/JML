@@ -23,8 +23,7 @@ public class LossFunctions {
      * where <code>x<code/> and <code>y<code/> are datasets of length <code>n<code/>,
      * and <code>x<code/> is the actual data and <code>y<code/> is the predicted data.
      */
-    static Function sse = (Matrix w, Matrix X, Matrix y, Model model) -> {
-        // TODO: replace X.mult(w) with model.predict(X, w) so that this loss works for any model.
-        return X.mult(w).sub(y).T().mult(X.mult(w).sub(y));
+    public static Function sse = (Matrix w, Matrix X, Matrix y, Model model) -> {
+        return model.predict(X, w).sub(y).T().mult(model.predict(X, w).sub(y));
     };
 }

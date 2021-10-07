@@ -2,6 +2,7 @@ package com.jml.linear_models;
 
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
+import linalg.Matrix;
 
 import java.util.Map;
 
@@ -82,6 +83,14 @@ public class Perceptron extends Model<double[][], double[][]> {
     @Override
     public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
+        return null;
+    }
+
+
+    // TODO: does it make sense for this to be here?
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        // TODO: Auto-generated method stub.
         return null;
     }
 

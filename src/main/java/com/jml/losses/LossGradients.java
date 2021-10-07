@@ -22,8 +22,26 @@ public class LossGradients {
 
 
     public static Function sseGrad = (Matrix w, Matrix X, Matrix y, Model model) -> {
-        // TODO: Numerically compute gradient
-        return null;
+
+        Matrix grad = new Matrix(w.shape());
+
+        // A diagonal matrix containing the value of h along the diagonal.
+        Matrix H = Matrix.I(w.numRows()).scalMult(h);
+
+        for(int i=0; i<w.numRows(); i++) { // Compute partial derivative for each w_i in w
+
+            Matrix partial = LossFunctions.sse.compute(
+                    w.add(H.getColAsVector(i)), X, y, model).sub(
+                        LossFunctions.sse.compute(w, X, y, model)
+                    ).scalDiv(h);
+
+            // Set the gradient at the given index to be the computed partial derivative.
+            grad.set(partial.getAsDouble(0, 0), i, 0);
+        }
+
+        System.out.println("\n\ngrad:\n" + grad.toString() + "\n\n");
+
+        return grad;
     };
 
 }

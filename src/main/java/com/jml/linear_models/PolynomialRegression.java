@@ -242,6 +242,12 @@ public class PolynomialRegression extends Model<double[], double[]> {
     }
 
 
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        return X.mult(w);
+    }
+
+
     /**
      * Saves a trained model to the specified file path including the name of the file.
      * File path must include the extension .mdl.

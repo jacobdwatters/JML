@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MultipleRegressionDatasetOneTest {
     Model<double[][], double[]> model;
+
     double[][] features;
     double[] targets;
     double[][] tests;

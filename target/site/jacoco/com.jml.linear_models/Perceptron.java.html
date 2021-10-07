@@ -2,6 +2,7 @@
 
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
+import linalg.Matrix;
 
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import java.util.Map;
  *
  * Perceptron is a linear classifier that is analogous to logistic regression using stochastic gradient descent.
  */
-<span class="nc" id="L14">public class Perceptron extends Model&lt;double[][], double[][]&gt; {</span>
+<span class="nc" id="L15">public class Perceptron extends Model&lt;double[][], double[][]&gt; {</span>
 
 
     /**
@@ -22,7 +23,7 @@ import java.util.Map;
     @Override
     public void compile() {
         // TODO: Auto-generated method stub
-<span class="nc" id="L25">    }</span>
+<span class="nc" id="L26">    }</span>
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -33,7 +34,7 @@ import java.util.Map;
     @Override
     public void compile(Map&lt;String, Double&gt; args) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L36">    }</span>
+<span class="nc" id="L37">    }</span>
 
 
     /**
@@ -51,7 +52,7 @@ import java.util.Map;
     @Override
     public ModelBucket fit(double[][] features, double[][] targets, Map&lt;String, Double&gt; args) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L54">        return null;</span>
+<span class="nc" id="L55">        return null;</span>
     }
 
 
@@ -67,7 +68,7 @@ import java.util.Map;
     @Override
     public ModelBucket fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L70">        return null;</span>
+<span class="nc" id="L71">        return null;</span>
     }
 
 
@@ -82,7 +83,15 @@ import java.util.Map;
     @Override
     public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L85">        return null;</span>
+<span class="nc" id="L86">        return null;</span>
+    }
+
+
+    // TODO: does it make sense for this to be here?
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L94">        return null;</span>
     }
 
 
@@ -94,7 +103,7 @@ import java.util.Map;
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L97">    }</span>
+<span class="nc" id="L106">    }</span>
 
 
     /**
@@ -105,7 +114,7 @@ import java.util.Map;
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L108">        return this.toString();</span>
+<span class="nc" id="L117">        return this.toString();</span>
     }
 
     /**
@@ -116,7 +125,7 @@ import java.util.Map;
     @Override
     public String toString() {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L119">        return &quot;&quot;;</span>
+<span class="nc" id="L128">        return &quot;&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

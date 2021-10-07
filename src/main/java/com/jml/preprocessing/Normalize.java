@@ -51,7 +51,7 @@ public class Normalize {
         }
 
         for(int i=0; i< data.length; i++) {
-            normalization[i] = (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]
+            normalization[i] = a + (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]
         }
 
         return normalization;

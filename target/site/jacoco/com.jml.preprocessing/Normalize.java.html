@@ -51,7 +51,7 @@ public class Normalize {
         }
 
 <span class="fc bfc" id="L53" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc" id="L54">            normalization[i] = (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]</span>
+<span class="fc" id="L54">            normalization[i] = a + (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]</span>
         }
 
 <span class="fc" id="L57">        return normalization;</span>

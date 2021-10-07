@@ -242,6 +242,12 @@ import java.util.Objects;
     }
 
 
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+<span class="nc" id="L247">        return X.mult(w);</span>
+    }
+
+
     /**
      * Saves a trained model to the specified file path including the name of the file.
      * File path must include the extension .mdl.
@@ -253,61 +259,61 @@ import java.util.Objects;
         String linOrPolyType;
         Block[] blockList;
 
-<span class="fc bfc" id="L256" title="All 2 branches covered.">        if(!isFit) {</span>
-<span class="fc" id="L257">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L263">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="fc bfc" id="L259" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
-<span class="fc" id="L260">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
+<span class="fc" id="L266">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="fc bfc" id="L263" title="All 2 branches covered.">        if(this instanceof LinearRegression) {</span>
-<span class="fc" id="L264">            blockList = new Block[3];</span>
-<span class="fc" id="L265">            linOrPolyType = ModelTypes.LINEAR_REGRESSION.toString();</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">        if(this instanceof LinearRegression) {</span>
+<span class="fc" id="L270">            blockList = new Block[3];</span>
+<span class="fc" id="L271">            linOrPolyType = ModelTypes.LINEAR_REGRESSION.toString();</span>
         } else {
-<span class="fc" id="L267">            blockList = new Block[4];</span>
-<span class="fc" id="L268">            linOrPolyType = this.MODEL_TYPE;</span>
-<span class="fc" id="L269">            blockList[3] = new Block(LinearModelTags.DEGREE.toString(), Integer.toString(degree));</span>
+<span class="fc" id="L273">            blockList = new Block[4];</span>
+<span class="fc" id="L274">            linOrPolyType = this.MODEL_TYPE;</span>
+<span class="fc" id="L275">            blockList[3] = new Block(LinearModelTags.DEGREE.toString(), Integer.toString(degree));</span>
         }
 
         // Construct the blocks for the model file.
-<span class="fc" id="L273">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), linOrPolyType);</span>
-<span class="fc" id="L274">        blockList[1] = new Block(LinearModelTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients));</span>
-<span class="fc" id="L275">        blockList[2] = new Block(LinearModelTags.NORMALIZE.toString(), Integer.toString(normalization));</span>
+<span class="fc" id="L279">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), linOrPolyType);</span>
+<span class="fc" id="L280">        blockList[1] = new Block(LinearModelTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients));</span>
+<span class="fc" id="L281">        blockList[2] = new Block(LinearModelTags.NORMALIZE.toString(), Integer.toString(normalization));</span>
 
-<span class="fc" id="L277">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
-<span class="fc" id="L278">    }</span>
+<span class="fc" id="L283">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="fc" id="L284">    }</span>
 
 
     // Construct details of model
     protected void buildDetails() {
-<span class="fc" id="L283">        details = new StringBuilder(</span>
+<span class="fc" id="L289">        details = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                 &quot;----------------------------\n&quot; +
                 &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L287" title="1 of 2 branches missed.">                &quot;Is Compiled: &quot; + (isCompiled ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
-<span class="fc bfc" id="L288" title="All 2 branches covered.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">                &quot;Is Compiled: &quot; + (isCompiled ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
                 );
 
 
-<span class="pc bpc" id="L292" title="1 of 2 branches missed.">        if(isCompiled) {</span>
-<span class="fc bfc" id="L293" title="All 2 branches covered.">            details.append(&quot;Normalization: &quot; + (normalization==1 ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;);</span>
-<span class="fc" id="L294">            details.append(&quot;Polynomial Degree: &quot; + degree + &quot;\n&quot;);</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if(isCompiled) {</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">            details.append(&quot;Normalization: &quot; + (normalization==1 ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;);</span>
+<span class="fc" id="L300">            details.append(&quot;Polynomial Degree: &quot; + degree + &quot;\n&quot;);</span>
         }
 
-<span class="pc bpc" id="L297" title="1 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
-<span class="fc" id="L298">            details.append(&quot;Coefficients (low-&gt;high): &quot;);</span>
-<span class="fc" id="L299">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L300">            details.append(&quot;\nPolynomial: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x + &quot;);</span>
+<span class="pc bpc" id="L303" title="1 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
+<span class="fc" id="L304">            details.append(&quot;Coefficients (low-&gt;high): &quot;);</span>
+<span class="fc" id="L305">            details.append(ArrayUtils.asString(coefficients));</span>
+<span class="fc" id="L306">            details.append(&quot;\nPolynomial: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x + &quot;);</span>
 
-<span class="fc bfc" id="L302" title="All 2 branches covered.">            for(int i=2; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L303">                details.append(coefficients[i] + &quot;x^&quot; + i);</span>
+<span class="fc bfc" id="L308" title="All 2 branches covered.">            for(int i=2; i&lt;coefficients.length; i++) {</span>
+<span class="fc" id="L309">                details.append(coefficients[i] + &quot;x^&quot; + i);</span>
 
-<span class="fc bfc" id="L305" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
-<span class="fc" id="L306">                    details.append(&quot; + &quot;);</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
+<span class="fc" id="L312">                    details.append(&quot; + &quot;);</span>
                 }
             }
         }
-<span class="fc" id="L310">    }</span>
+<span class="fc" id="L316">    }</span>
 
 
     /**
@@ -318,7 +324,7 @@ import java.util.Objects;
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L321">       return this.toString();</span>
+<span class="fc" id="L327">       return this.toString();</span>
     }
 
 
@@ -329,7 +335,7 @@ import java.util.Objects;
      */
     @Override
     public String toString() {
-<span class="fc" id="L332">        return details.toString();</span>
+<span class="fc" id="L338">        return details.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

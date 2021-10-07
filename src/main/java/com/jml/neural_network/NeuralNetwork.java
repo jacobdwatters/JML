@@ -3,6 +3,7 @@ package com.jml.neural_network;
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
 import com.jml.neural_network.layers.Layer;
+import linalg.Matrix;
 
 import java.util.Map;
 
@@ -80,6 +81,13 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
         return new double[0][];
+    }
+
+
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        // TODO: Auto-generated method stub.
+        return null;
     }
 
 

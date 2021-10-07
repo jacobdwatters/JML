@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 // TODO: Refactor polynomial regression as a special case of multiple regression
 public class MultipleLinearRegression extends Model<double[][], double[]> {
-    final String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();
+    String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();
 
     protected boolean isFit = false, isCompiled = false;
 
@@ -67,6 +67,11 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                     "Is Compiled: No\n" +
                     "Is Trained: No\n"
     );
+
+
+    void updateModelType(String type) {
+        this.MODEL_TYPE = type;
+    }
 
 
     /**
