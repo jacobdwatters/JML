@@ -56,8 +56,11 @@ import java.util.Objects;
 <span class="fc" id="L56">    protected int normalization = 0; // Default is no normalization.</span>
     protected double[] coefficients;
 
+    // Weights of the model.
+    protected Matrix w;
+
     // Details of model in human-readable format.
-<span class="fc" id="L60">    private StringBuilder details = new StringBuilder(</span>
+<span class="fc" id="L63">    private StringBuilder details = new StringBuilder(</span>
             &quot;Model Details\n&quot; +
                     &quot;----------------------------\n&quot; +
                     &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
@@ -73,8 +76,8 @@ import java.util.Objects;
      */
     @Override
     public void compile() {
-<span class="fc" id="L76">        compile(null);</span>
-<span class="fc" id="L77">    }</span>
+<span class="fc" id="L79">        compile(null);</span>
+<span class="fc" id="L80">    }</span>
 
 
     /**
@@ -90,21 +93,21 @@ import java.util.Objects;
      */
     @Override
     public void compile(Map&lt;String, Double&gt; args) {
-<span class="pc bpc" id="L93" title="3 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) { // Then args is not null and is not empty</span>
-<span class="nc bnc" id="L94" title="All 2 branches missed.">            if(args.containsKey(NORMALIZE_KEY)) {</span>
-<span class="nc" id="L95">                double value = args.get(NORMALIZE_KEY);</span>
+<span class="pc bpc" id="L96" title="3 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) { // Then args is not null and is not empty</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if(args.containsKey(NORMALIZE_KEY)) {</span>
+<span class="nc" id="L98">                double value = args.get(NORMALIZE_KEY);</span>
 
-<span class="nc bnc" id="L97" title="All 4 branches missed.">                if(!(value == 0.0 || value == 1.0)) {</span>
-<span class="nc" id="L98">                    throw new IllegalArgumentException(&quot;Normalization must be 0 or 1 but got &quot; + value);</span>
+<span class="nc bnc" id="L100" title="All 4 branches missed.">                if(!(value == 0.0 || value == 1.0)) {</span>
+<span class="nc" id="L101">                    throw new IllegalArgumentException(&quot;Normalization must be 0 or 1 but got &quot; + value);</span>
                 } else {
-<span class="nc" id="L100">                    this.normalization = (int) value;</span>
+<span class="nc" id="L103">                    this.normalization = (int) value;</span>
                 }
             }
         }
 
-<span class="fc" id="L105">        isCompiled = true; // Set the compiled flag to true.</span>
-<span class="fc" id="L106">        buildDetails(); // Build the details of the model.</span>
-<span class="fc" id="L107">    }</span>
+<span class="fc" id="L108">        isCompiled = true; // Set the compiled flag to true.</span>
+<span class="fc" id="L109">        buildDetails(); // Build the details of the model.</span>
+<span class="fc" id="L110">    }</span>
 
 
     /**
@@ -122,54 +125,57 @@ import java.util.Objects;
     @Override
     public ModelBucket fit(double[][] features, double[] targets, Map&lt;String, Double&gt; args) {
 
-<span class="fc" id="L125">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L126">        boolean computeCorrelation = false, computeDetermination = false;</span>
+<span class="fc" id="L128">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L129">        boolean computeCorrelation = false, computeDetermination = false;</span>
 
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        if(!isCompiled) {</span>
-<span class="fc" id="L129">            throw new IllegalStateException(&quot;Model must be compiled before it can be fit.&quot;);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        if(!isCompiled) {</span>
+<span class="fc" id="L132">            throw new IllegalStateException(&quot;Model must be compiled before it can be fit.&quot;);</span>
         }
 
-<span class="pc bpc" id="L132" title="3 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) { // Check for various optional arguments</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">            if(args.containsKey(CORRELATION_KEY)) {</span>
-<span class="nc" id="L134">                computeCorrelation = true;</span>
+<span class="pc bpc" id="L135" title="3 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) { // Check for various optional arguments</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">            if(args.containsKey(CORRELATION_KEY)) {</span>
+<span class="nc" id="L137">                computeCorrelation = true;</span>
             }
-<span class="nc bnc" id="L136" title="All 2 branches missed.">            if(args.containsKey(DETERMINATION_KEY)) {</span>
-<span class="nc" id="L137">                computeDetermination = true;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if(args.containsKey(DETERMINATION_KEY)) {</span>
+<span class="nc" id="L140">                computeDetermination = true;</span>
             }
         }
 
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if(normalization==1) { // Then use l2 normalization.</span>
-<span class="nc" id="L142">            features = Normalize.l2(features);</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">        if(normalization==1) { // Then use l2 normalization.</span>
+<span class="nc" id="L145">            features = Normalize.l2(features);</span>
         }
 
-<span class="fc" id="L145">        Matrix y = (new Vector(targets)).toMatrix();</span>
-<span class="fc" id="L146">        Matrix V = new Matrix(features);</span>
-<span class="fc" id="L147">        Matrix ones = Matrix.ones(features.length, 1);</span>
-<span class="fc" id="L148">        V = ones.augment(V);</span>
+<span class="fc" id="L148">        Matrix y = (new Vector(targets)).toMatrix();</span>
+<span class="fc" id="L149">        Matrix V = new Matrix(features);</span>
+<span class="fc" id="L150">        Matrix ones = Matrix.ones(features.length, 1);</span>
+<span class="fc" id="L151">        V = ones.augment(V);</span>
 
-<span class="fc" id="L150">        Matrix VT = V.T();</span>
-<span class="fc" id="L151">        Matrix A = VT.mult(V);</span>
-<span class="fc" id="L152">        Vector b = VT.mult(y).toVector();</span>
+<span class="fc" id="L153">        Matrix VT = V.T();</span>
+<span class="fc" id="L154">        Matrix A = VT.mult(V);</span>
+<span class="fc" id="L155">        Vector b = VT.mult(y).toVector();</span>
 
-<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if(A.isSingular()) { // Then we can not explicitly solve Ax=b for a single solution.</span>
-<span class="nc" id="L155">            throw new IllegalArgumentException(&quot;The data resulted in an equation with a singular matrix. &quot; +</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if(A.isSingular()) { // Then we can not explicitly solve Ax=b for a single solution.</span>
+<span class="nc" id="L158">            throw new IllegalArgumentException(&quot;The data resulted in an equation with a singular matrix. &quot; +</span>
                     &quot;Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.&quot;);
         }
 
-<span class="fc" id="L159">        coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0]; // Compute the model parameters</span>
-<span class="fc" id="L160">        results.put(&quot;coefficients&quot;, coefficients);</span>
-<span class="fc" id="L161">        isFit = true;</span>
+<span class="fc" id="L162">        w = Solvers.solve(A, b); // Compute the model parameters</span>
 
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if(computeCorrelation) {</span>
-<span class="nc" id="L164">            results.put(&quot;r&quot;, Stats.correlation(targets, this.predict(features)));</span>
+<span class="fc" id="L164">        this.coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L165">        results.put(&quot;coefficients&quot;, coefficients);</span>
+
+<span class="fc" id="L167">        isFit = true;</span>
+
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if(computeCorrelation) {</span>
+<span class="nc" id="L170">            results.put(&quot;r&quot;, Stats.correlation(targets, this.predict(features)));</span>
         }
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if(computeDetermination) {</span>
-<span class="nc" id="L167">            results.put(&quot;r2&quot;, Stats.determination(targets, this.predict(features)));</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        if(computeDetermination) {</span>
+<span class="nc" id="L173">            results.put(&quot;r2&quot;, Stats.determination(targets, this.predict(features)));</span>
         }
 
-<span class="fc" id="L170">        buildDetails(); // Build the details of the model.</span>
+<span class="fc" id="L176">        buildDetails(); // Build the details of the model.</span>
 
-<span class="fc" id="L172">        return new ModelBucket(results);</span>
+<span class="fc" id="L178">        return new ModelBucket(results);</span>
     }
 
 
@@ -184,7 +190,7 @@ import java.util.Objects;
      */
     @Override
     public ModelBucket fit(double[][] features, double[] targets) {
-<span class="fc" id="L187">        return fit(features, targets, null);</span>
+<span class="fc" id="L193">        return fit(features, targets, null);</span>
     }
 
 
@@ -198,24 +204,19 @@ import java.util.Objects;
      */
     @Override
     public double[] predict(double[][] features) {
-<span class="pc bpc" id="L201" title="1 of 4 branches missed.">        if(!isFit || !isCompiled) {</span>
-<span class="fc" id="L202">            throw new IllegalStateException(&quot;Model must be compiled and fit before predictions can be made.&quot;);</span>
+<span class="pc bpc" id="L207" title="1 of 4 branches missed.">        if(!isFit || !isCompiled) {</span>
+<span class="fc" id="L208">            throw new IllegalStateException(&quot;Model must be compiled and fit before predictions can be made.&quot;);</span>
         }
 
-<span class="fc" id="L205">        double[] predictions = new double[features.length];</span>
+<span class="fc" id="L211">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
 
-<span class="fc bfc" id="L207" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) {</span>
-
-<span class="fc bfc" id="L209" title="All 2 branches covered.">            for (int j = 1; j &lt; coefficients.length; j++) {</span>
-<span class="fc" id="L210">                predictions[i] += coefficients[j]*features[i][j-1];</span>
-            }
-
-<span class="fc" id="L213">            predictions[i] += coefficients[0];</span>
-        }
-
-<span class="fc" id="L216">        return predictions;</span>
+<span class="fc" id="L213">        return X.mult(w).T().getValuesAsDouble()[0];</span>
     }
 
+
+    public Matrix predict(Matrix w, Matrix X) {
+<span class="nc" id="L218">        return X.mult(w);</span>
+    }
 
     /**
      * Saves a trained model to the specified file path.
@@ -226,54 +227,54 @@ import java.util.Objects;
     public void saveModel(String filePath) {
         Block[] blockList;
 
-<span class="fc bfc" id="L229" title="All 2 branches covered.">        if(!isFit) {</span>
-<span class="fc" id="L230">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L231">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
-<span class="fc" id="L233">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
+<span class="fc" id="L234">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="fc" id="L236">        blockList = new Block[3];</span>
+<span class="fc" id="L237">        blockList = new Block[3];</span>
 
         // Construct the blocks for the model file.
-<span class="fc" id="L239">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
-<span class="fc" id="L240">        blockList[1] = new Block(LinearModelTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients));</span>
-<span class="fc" id="L241">        blockList[2] = new Block(LinearModelTags.NORMALIZE.toString(), Integer.toString(normalization));</span>
+<span class="fc" id="L240">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="fc" id="L241">        blockList[1] = new Block(LinearModelTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients));</span>
+<span class="fc" id="L242">        blockList[2] = new Block(LinearModelTags.NORMALIZE.toString(), Integer.toString(normalization));</span>
 
-<span class="fc" id="L243">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
-<span class="fc" id="L244">    }</span>
+<span class="fc" id="L244">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="fc" id="L245">    }</span>
 
 
     // Construct details of model
     protected void buildDetails() {
-<span class="fc" id="L249">        details = new StringBuilder(</span>
+<span class="fc" id="L250">        details = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                         &quot;----------------------------\n&quot; +
                         &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L253" title="1 of 2 branches missed.">                        &quot;Is Compiled: &quot; + (isCompiled ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
-<span class="fc bfc" id="L254" title="All 2 branches covered.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">                        &quot;Is Compiled: &quot; + (isCompiled ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
         );
 
 
-<span class="pc bpc" id="L258" title="1 of 2 branches missed.">        if(isCompiled) {</span>
-<span class="pc bpc" id="L259" title="1 of 2 branches missed.">            details.append(&quot;Normalization: &quot; + (normalization==1 ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;);</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        if(isCompiled) {</span>
+<span class="pc bpc" id="L260" title="1 of 2 branches missed.">            details.append(&quot;Normalization: &quot; + (normalization==1 ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;);</span>
         }
 
 
-<span class="pc bpc" id="L263" title="1 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
-<span class="fc" id="L264">            details.append(&quot;Coefficients: &quot;);</span>
-<span class="fc" id="L265">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L266">            details.append(&quot;\nHyperplane: y = &quot; + coefficients[0] + &quot; + &quot;);</span>
+<span class="pc bpc" id="L264" title="1 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
+<span class="fc" id="L265">            details.append(&quot;Coefficients: &quot;);</span>
+<span class="fc" id="L266">            details.append(ArrayUtils.asString(coefficients));</span>
+<span class="fc" id="L267">            details.append(&quot;\nHyperplane: y = &quot; + coefficients[0] + &quot; + &quot;);</span>
 
-<span class="fc bfc" id="L268" title="All 2 branches covered.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L269">                details.append(coefficients[i] + &quot;x_&quot; + i);</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
+<span class="fc" id="L270">                details.append(coefficients[i] + &quot;x_&quot; + i);</span>
 
-<span class="fc bfc" id="L271" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
-<span class="fc" id="L272">                    details.append(&quot; + &quot;);</span>
+<span class="fc bfc" id="L272" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
+<span class="fc" id="L273">                    details.append(&quot; + &quot;);</span>
                 }
             }
         }
-<span class="fc" id="L276">    }</span>
+<span class="fc" id="L277">    }</span>
 
 
     /**
@@ -284,7 +285,7 @@ import java.util.Objects;
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L287">        return this.toString();</span>
+<span class="fc" id="L288">        return this.toString();</span>
     }
 
 
@@ -295,7 +296,26 @@ import java.util.Objects;
      */
     @Override
     public String toString() {
-<span class="fc" id="L298">        return details.toString();</span>
+<span class="fc" id="L299">        return details.toString();</span>
     }
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L304">        Model model = new MultipleLinearRegression();</span>
+<span class="nc" id="L305">        double[][] features = new double[][] { {1, 4, -3, 4},</span>
+                {5, 6, -4, 8},
+                {9, -1, 11, 12},
+                {0, 1, 0.6, 1},
+                {5, 4, 3, 2}};
+<span class="nc" id="L310">        double[] targets = new double[]{1, 9, -1, 6, 4};</span>
+<span class="nc" id="L311">        double[][] tests = new double[][] {{1, 3, 4, 5},</span>
+                                            {-0.1, 3.5, 2, 6}};
+
+<span class="nc" id="L314">        model.compile();</span>
+<span class="nc" id="L315">        ModelBucket results = model.fit(features, targets);</span>
+
+<span class="nc" id="L317">        double[] actualCoefficients = results.getDoubleArr(&quot;coefficients&quot;);</span>
+<span class="nc" id="L318">        double[] actualPredictions = (double[]) model.predict(tests);</span>
+<span class="nc" id="L319">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

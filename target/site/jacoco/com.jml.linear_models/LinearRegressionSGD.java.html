@@ -2,6 +2,12 @@
 
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
+import com.jml.core.ModelTypes;
+import com.jml.losses.Function;
+import com.jml.losses.LossGradients;
+import com.jml.optimizers.StochasticGradientDescent;
+import linalg.Matrix;
+import linalg.Vector;
 
 import java.util.Map;
 
@@ -13,7 +19,9 @@ import java.util.Map;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-<span class="nc" id="L16">public class LinearRegressionSGD extends Model&lt;double[][], double[]&gt; {</span>
+<span class="nc" id="L22">public class LinearRegressionSGD extends Model&lt;double[], double[]&gt; {</span>
+<span class="nc" id="L23">    final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.name();</span>
+    protected Matrix w;
 
 
     /**
@@ -23,8 +31,8 @@ import java.util.Map;
      */
     @Override
     public void compile() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L34">        compile(null);</span>
+<span class="nc" id="L35">    }</span>
 
     /**
      * Constructs model and prepares for training using the given parameters.
@@ -34,8 +42,8 @@ import java.util.Map;
      */
     @Override
     public void compile(Map&lt;String, Double&gt; args) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L38">    }</span>
+
+<span class="nc" id="L46">    }</span>
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -50,9 +58,19 @@ import java.util.Map;
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[][] features, double[] targets, Map&lt;String, Double&gt; args) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L55">        return null;</span>
+    public ModelBucket fit(double[] features, double[] targets, Map&lt;String, Double&gt; args) {
+
+        // Convert features and targets to matrix representations.
+<span class="nc" id="L64">        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));</span>
+<span class="nc" id="L65">        Matrix y = new Vector(targets);</span>
+        // Set initial model weights to be random.
+<span class="nc" id="L67">        w = Matrix.randn(X.numCols(), 1, false);</span>
+
+<span class="nc" id="L69">        w = StochasticGradientDescent.optimize(w, X, y, LossGradients.sseLinRegGrad, 0.02, 2000);</span>
+
+<span class="nc" id="L71">        System.out.println(&quot;\n\nw:\n&quot; + w + &quot;\n\n&quot;);</span>
+
+<span class="nc" id="L73">        return null;</span>
     }
 
     /**
@@ -65,10 +83,10 @@ import java.util.Map;
      *                                  the specification when the model was compiled.
      */
     @Override
-    public ModelBucket fit(double[][] features, double[] targets) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L70">        return null;</span>
+    public ModelBucket fit(double[] features, double[] targets) {
+<span class="nc" id="L87">        return fit(features, targets, null);</span>
     }
+
 
     /**
      * Uses fitted/trained model to make prediction on single feature.
@@ -79,10 +97,11 @@ import java.util.Map;
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[] predict(double[][] features) {
+    public double[] predict(double[] features) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L84">        return new double[0];</span>
+<span class="nc" id="L102">        return new double[0];</span>
     }
+
 
     /**
      * Saves a trained model to the specified file path.
@@ -92,7 +111,7 @@ import java.util.Map;
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L95">    }</span>
+<span class="nc" id="L114">    }</span>
 
 
     /**
@@ -104,7 +123,7 @@ import java.util.Map;
     @Override
     public String getDetails() {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L107">        return this.toString();</span>
+<span class="nc" id="L126">        return this.toString();</span>
     }
 
 
@@ -116,7 +135,18 @@ import java.util.Map;
     @Override
     public String toString() {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L119">        return &quot;&quot;;</span>
+<span class="nc" id="L138">        return &quot;&quot;;</span>
     }
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L143">        Model&lt;double[], double[]&gt; model = new LinearRegressionSGD();</span>
+
+<span class="nc" id="L145">        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};</span>
+<span class="nc" id="L146">        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};</span>
+
+<span class="nc" id="L148">        model.compile();</span>
+<span class="nc" id="L149">        model.fit(x, y);</span>
+<span class="nc" id="L150">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -2,6 +2,12 @@ package com.jml.linear_models;
 
 import com.jml.core.Model;
 import com.jml.core.ModelBucket;
+import com.jml.core.ModelTypes;
+import com.jml.losses.Function;
+import com.jml.losses.LossGradients;
+import com.jml.optimizers.StochasticGradientDescent;
+import linalg.Matrix;
+import linalg.Vector;
 
 import java.util.Map;
 
@@ -13,7 +19,9 @@ import java.util.Map;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-public class LinearRegressionSGD extends Model<double[][], double[]> {
+public class LinearRegressionSGD extends Model<double[], double[]> {
+    final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.name();
+    protected Matrix w;
 
 
     /**
@@ -23,7 +31,7 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
      */
     @Override
     public void compile() {
-        // TODO: Auto-generated method stub.
+        compile(null);
     }
 
     /**
@@ -34,7 +42,7 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
      */
     @Override
     public void compile(Map<String, Double> args) {
-        // TODO: Auto-generated method stub.
+
     }
 
     /**
@@ -50,8 +58,18 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[][] features, double[] targets, Map<String, Double> args) {
-        // TODO: Auto-generated method stub.
+    public ModelBucket fit(double[] features, double[] targets, Map<String, Double> args) {
+
+        // Convert features and targets to matrix representations.
+        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));
+        Matrix y = new Vector(targets);
+        // Set initial model weights to be random.
+        w = Matrix.randn(X.numCols(), 1, false);
+
+        w = StochasticGradientDescent.optimize(w, X, y, LossGradients.sseLinRegGrad, 0.02, 2000);
+
+        System.out.println("\n\nw:\n" + w + "\n\n");
+
         return null;
     }
 
@@ -65,10 +83,10 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
      *                                  the specification when the model was compiled.
      */
     @Override
-    public ModelBucket fit(double[][] features, double[] targets) {
-        // TODO: Auto-generated method stub.
-        return null;
+    public ModelBucket fit(double[] features, double[] targets) {
+        return fit(features, targets, null);
     }
+
 
     /**
      * Uses fitted/trained model to make prediction on single feature.
@@ -79,10 +97,11 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
      *                                  the specification when the model was compiled.
      */
     @Override
-    public double[] predict(double[][] features) {
+    public double[] predict(double[] features) {
         // TODO: Auto-generated method stub.
         return new double[0];
     }
+
 
     /**
      * Saves a trained model to the specified file path.
@@ -117,5 +136,16 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
     public String toString() {
         // TODO: Auto-generated method stub.
         return "";
+    }
+
+
+    public static void main(String[] args) {
+        Model<double[], double[]> model = new LinearRegressionSGD();
+
+        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};
+        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};
+
+        model.compile();
+        model.fit(x, y);
     }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LossFunctions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.losses</a> &gt; <span class="el_source">LossFunctions.java</span></div><h1>LossFunctions.java</h1><pre class="source lang-java linenums">package com.jml.losses;
+
+import com.jml.core.Model;
+import linalg.Matrix;
+
+/**
+ * This class contains lambda functions for various loss functions including:
+ * &lt;pre&gt;
+ *     - {@link #sse mse}: sum of squared-errors loss.
+ * &lt;/pre&gt;
+ */
+public class LossFunctions {
+
+    // A private constructor to hide the implicit constructor.
+<span class="nc" id="L15">    private LossFunctions() {</span>
+<span class="nc" id="L16">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
+    }
+
+
+    /**
+     * The sum of squared-errors loss function.&lt;br&gt;
+     * That is &lt;code&gt;sse = sum(x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt;)&lt;sup&gt;2&lt;/sup&gt;&lt;/code&gt;
+     * where &lt;code&gt;x&lt;code/&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;code/&gt;,
+     * and &lt;code&gt;x&lt;code/&gt; is the actual data and &lt;code&gt;y&lt;code/&gt; is the predicted data.
+     */
+<span class="nc" id="L26">    static Function sse = (Matrix w, Matrix X, Matrix y, Model model) -&gt; {</span>
+        // TODO: replace X.mult(w) with model.predict(X, w) so that this loss works for any model.
+<span class="nc" id="L28">        return X.mult(w).sub(y).T().mult(X.mult(w).sub(y));</span>
+    };
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

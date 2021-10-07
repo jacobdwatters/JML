@@ -1,16 +1,18 @@
 package com.jml.optimizers;
 
+import com.jml.losses.Function;
+import linalg.Matrix;
+
 public class Momentum extends Optimizer {
 
-    /**
-     * Applies momentum optimizer.
-     *
-     * @param x Value to update.
-     * @return The momentum update rule applied to x.
-     */
     @Override
-    public double optimize(double[][] weights, double[] outputs) {
+    public Matrix optimize(Matrix w, Matrix X, Matrix y, Function lossGrad, int alpha) {
         // TODO: Auto-generated method stub
-        return 0;
+        return null;
+    }
+
+    @Override
+    public Matrix optimize(Matrix w, Matrix X, Matrix y, Function lossGrad, int alpha, int maxIterations) {
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.jml.core;
 
 import com.jml.util.FileManager;
+import linalg.Matrix;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,11 +70,24 @@ public abstract class Model<X, Y> {
      *
      * @throws IllegalArgumentException Thrown if the features are not correctly sized per
      * the specification when the model was compiled.
+     * @throws IllegalStateException Thrown if the model has not been compiled and fit.
      *
      * @param features The features to make predictions on.
      * @return The models predicted labels.
      */
     public abstract Y predict(X features);
+
+
+//    /**
+//     * Makes a prediction using a model by specifying the parameters of the model.
+//     * Unlike the other predict method, no model needs to be trained to use this method since the parameters provided
+//     * define a model.
+//     *
+//     * @param w Parameters of the model
+//     * @param X Features to make prediction on
+//     * @return prediction on the features using the given model parameters.
+//     */
+//    public abstract Matrix predict(Matrix w, Matrix X);
 
 
     /**

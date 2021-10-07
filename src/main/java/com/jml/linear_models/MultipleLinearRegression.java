@@ -56,6 +56,9 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
     protected int normalization = 0; // Default is no normalization.
     protected double[] coefficients;
 
+    // Weights of the model.
+    protected Matrix w;
+
     // Details of model in human-readable format.
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -156,8 +159,11 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                     "Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.");
         }
 
-        coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0]; // Compute the model parameters
+        w = Solvers.solve(A, b); // Compute the model parameters
+
+        this.coefficients = w.T().getValuesAsDouble()[0];
         results.put("coefficients", coefficients);
+
         isFit = true;
 
         if(computeCorrelation) {
@@ -202,20 +208,15 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
             throw new IllegalStateException("Model must be compiled and fit before predictions can be made.");
         }
 
-        double[] predictions = new double[features.length];
+        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
 
-        for(int i=0; i<features.length; i++) {
-
-            for (int j = 1; j < coefficients.length; j++) {
-                predictions[i] += coefficients[j]*features[i][j-1];
-            }
-
-            predictions[i] += coefficients[0];
-        }
-
-        return predictions;
+        return X.mult(w).T().getValuesAsDouble()[0];
     }
 
+
+    public Matrix predict(Matrix w, Matrix X) {
+        return X.mult(w);
+    }
 
     /**
      * Saves a trained model to the specified file path.
@@ -296,5 +297,24 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
     @Override
     public String toString() {
         return details.toString();
+    }
+
+
+    public static void main(String[] args) {
+        Model model = new MultipleLinearRegression();
+        double[][] features = new double[][] { {1, 4, -3, 4},
+                {5, 6, -4, 8},
+                {9, -1, 11, 12},
+                {0, 1, 0.6, 1},
+                {5, 4, 3, 2}};
+        double[] targets = new double[]{1, 9, -1, 6, 4};
+        double[][] tests = new double[][] {{1, 3, 4, 5},
+                                            {-0.1, 3.5, 2, 6}};
+
+        model.compile();
+        ModelBucket results = model.fit(features, targets);
+
+        double[] actualCoefficients = results.getDoubleArr("coefficients");
+        double[] actualPredictions = (double[]) model.predict(tests);
     }
 }

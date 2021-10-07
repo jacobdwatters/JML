@@ -1,7 +1,8 @@
 com\jml\optimizers\StochasticGradientDescent.class
 com\jml\core\Stats.class
-com\jml\losses\Loss.class
+com\jml\losses\LossGradients.class
+com\jml\losses\LossFunctions.class
 com\jml\optimizers\Optimizer.class
+com\jml\losses\Function.class
 com\jml\optimizers\Momentum.class
 com\jml\preprocessing\Normalize.class
-com\jml\losses\LossFunction.class

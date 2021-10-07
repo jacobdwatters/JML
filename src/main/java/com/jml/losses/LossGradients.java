@@ -9,13 +9,21 @@ public class LossGradients {
     private LossGradients() {
         throw new IllegalStateException("Utility class, Can not create instantiated.");
     }
+    static double h = 0.5e-8;
 
 
     /**
-     * Gradient of the {@link LossFunctions#sse sse} function.
+     * Gradient of the {@link LossFunctions#sse sse} function for a Linear, MultiLinear, or polynomial regression model.
      */
-    static Function sseGrad = (Matrix w, Matrix X, Matrix y, Model model) -> {
-        return X.T().mult(X).mult(w).sub(X.T().mult(y));
+    public static Function sseLinRegGrad = (Matrix w, Matrix X, Matrix y, Model model) -> {
+        return (X.T()).mult(X).mult(w).sub(X.T().mult(y));
+    };
+
+
+
+    public static Function sseGrad = (Matrix w, Matrix X, Matrix y, Model model) -> {
+        // TODO: Numerically compute gradient
+        return null;
     };
 
 }
