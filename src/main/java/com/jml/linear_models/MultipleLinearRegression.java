@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * Model for least squares linear regression of multiple variables by least squares.<br><br>
  *
- * MultipleLinearRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x + ... + b<sub>n</sub>x to the datasets by minimizing
+ * MultipleLinearRegression fits a model y = β<sub>0</sub> + β<sub>1</sub>x<sub>1</sub> + ... + β<sub>n</sub>x<sub>n</sub>  to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model.
  */
@@ -219,7 +219,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
     }
 
 
-    public Matrix predict(Matrix w, Matrix X) {
+    public Matrix predict(Matrix X, Matrix w) {
         return X.mult(w);
     }
 

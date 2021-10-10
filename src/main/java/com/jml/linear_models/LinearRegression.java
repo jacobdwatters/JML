@@ -17,12 +17,13 @@ import java.util.Objects;
  * by the model. This is solved explicitly.
  */
 public class LinearRegression extends PolynomialRegression {
-    final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();
+    String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();
     private String details = "Model Details\n" +
             "----------------------------\n" +
             "Model Type: " + this.MODEL_TYPE+ "\n" +
             "Is Compiled: No\n" +
             "Is Trained: No\n";
+
 
     /**
      * Constructs model and prepares for training using default parameters. i.e. no normalization will be used.
@@ -117,11 +118,14 @@ public class LinearRegression extends PolynomialRegression {
                 "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
                 "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
 
+
+
         if(isCompiled) {
             details += "Normalization: " + (normalization==1 ? "Yes" : "No") + "\n";
         }
 
-        if(isFit && coefficients!=null) {
+        if(isFit && w!=null) {
+            coefficients = w.T().getValuesAsDouble()[0];
             details += "Coefficients (low->high): ";
             details += ArrayUtils.asString(coefficients);
             details += "\nLine: y = " + coefficients[0] + " + " + coefficients[1] + "x";

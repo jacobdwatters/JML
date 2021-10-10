@@ -1,23 +1,17 @@
 package com.jml.optimizers;
 
-
 import com.jml.losses.Function;
 import linalg.Matrix;
 
-abstract class Optimizer {
+public abstract class Optimizer {
 
     /**
-     * Applies specified optimizer rule to x.
+     * Applies specified optimizer rule to loss function.
      *
-     * @return The weights which optimize
+     * @param loss The loss function to optimize.
+     * @param X Features of model.
+     * @param y Targets of model.
+     * @return The computed minimum of the loss function.
      */
-    public abstract Matrix optimize(Matrix w, Matrix X, Matrix y, Function lossGrad, int alpha);
-
-
-    /**
-     * Applies specified optimizer rule to x.
-     *
-     * @return The weights which optimize
-     */
-    public abstract Matrix optimize(Matrix w, Matrix X, Matrix y, Function lossGrad, int alpha, int maxIterations);
+    public abstract Matrix optimize(Function loss, Matrix X, Matrix y);
 }

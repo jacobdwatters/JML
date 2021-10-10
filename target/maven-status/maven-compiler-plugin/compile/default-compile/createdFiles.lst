@@ -1,2 +1,3 @@
-com/jml/core/Gradient.class
-com/jml/linear_models/MultipleLinearRegressionSGD.class
+com\jml\optimizers\Scheduler.class
+com\jml\linear_models\MultipleLinearRegressionSGD.class
+com\jml\core\Gradient.class

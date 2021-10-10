@@ -57,6 +57,9 @@ public class PolynomialRegression extends Model<double[], double[]> {
     protected int normalization = 0; // Default is no normalization.
     protected double[] coefficients;
 
+    // Weights of the model
+    Matrix w;
+
     // Details of model in human-readable format.
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -179,7 +182,8 @@ public class PolynomialRegression extends Model<double[], double[]> {
 
         Matrix A = VT.mult(V);
         Vector b = VT.mult(y).toVector();
-        coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0];
+        w = Solvers.solve(A, b);
+        coefficients = w.T().getValuesAsDouble()[0];
 
         results.put("coefficients", coefficients);
 
@@ -294,13 +298,13 @@ public class PolynomialRegression extends Model<double[], double[]> {
                 "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
                 );
 
-
         if(isCompiled) {
             details.append("Normalization: " + (normalization==1 ? "Yes" : "No") + "\n");
             details.append("Polynomial Degree: " + degree + "\n");
         }
 
-        if(isFit && coefficients!=null) {
+        if(isFit && w!=null) {
+            coefficients = w.T().getValuesAsDouble()[0];
             details.append("Coefficients (low->high): ");
             details.append(ArrayUtils.asString(coefficients));
             details.append("\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ");

@@ -29,12 +29,13 @@ public class Gradient {
 
         // A diagonal matrix containing the value of h along the diagonal.
         Matrix H = Matrix.I(w.numRows()).scalMult(h);
+        Matrix functionValue = F.compute(w, X, y, model);
 
         for(int i=0; i<w.numRows(); i++) { // Compute partial derivative for each w_i in w
 
             Matrix partial = F.compute(
                     w.add(H.getColAsVector(i)), X, y, model).sub(
-                    F.compute(w, X, y, model) // TODO: This will always be the same, could simply pass as loss
+                    functionValue
             ).scalDiv(h);
 
             // Set the gradient at the given index to be the computed partial derivative.

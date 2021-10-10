@@ -6,6 +6,7 @@ import com.jml.core.ModelTypes;
 import com.jml.losses.Function;
 import com.jml.losses.LossFunctions;
 import com.jml.losses.LossGradients;
+import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
@@ -17,43 +18,92 @@ import java.util.Map;
 /**
  * Model for least squares linear regression of one variable by stochastic gradient descent.&lt;br&gt;&lt;br&gt;
  *
- * LinearRegressionSGD fits a model y = b&lt;sub&gt;0&lt;/sub&gt; + b&lt;sub&gt;1&lt;/sub&gt;x to the datasets by minimizing
+ * LinearRegressionSGD fits a model y = β&lt;sub&gt;0&lt;/sub&gt; + β&lt;sub&gt;1&lt;/sub&gt;x to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-<span class="nc" id="L24">public class LinearRegressionSGD extends Model&lt;double[], double[]&gt; {</span>
-<span class="nc" id="L25">    final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.name();</span>
-    protected Matrix w; // The parameters of the model.
-<span class="nc" id="L27">    protected boolean isFit = false;</span>
+public class LinearRegressionSGD extends LinearRegression {
+
+<span class="nc" id="L27">    private double learningRate = 0.002;</span>
+<span class="nc" id="L28">    private double threshold = 0.5e-5;</span>
+<span class="nc" id="L29">    private int maxIterations = 1000;</span>
+    private Optimizer SGD;
 
 
     /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @throws IllegalArgumentException If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments.
+     * Creates a {@link LinearRegressionSGD} model. This will use a default learning rate of 0.002.
      */
-    @Override
-    public void compile() {
-<span class="nc" id="L37">        compile(null);</span>
+<span class="nc" id="L36">    public LinearRegressionSGD() {</span>
+<span class="nc" id="L37">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
 <span class="nc" id="L38">    }</span>
 
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @param args A hashtable containing additional arguments in the form &lt;name, value&gt;.
-     * @throws IllegalArgumentException If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile(Map&lt;String, Double&gt; args) {
 
-<span class="nc" id="L49">    }</span>
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     *                  If the loss is less than the specified threshold, gradient descent will stop early.
+     * @param maxIterations Maximum number of iterations to run for during
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+<span class="nc" id="L52">    public LinearRegressionSGD(double learningRate, double threshold, int maxIterations) {</span>
+<span class="nc" id="L53">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L54">        this.learningRate = learningRate;</span>
+<span class="nc" id="L55">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L56">    }</span>
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param maxIterations Maximum number of iterations to run for during
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+<span class="nc" id="L68">    public LinearRegressionSGD(double learningRate, int maxIterations) {</span>
+<span class="nc" id="L69">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L70">        this.learningRate = learningRate;</span>
+<span class="nc" id="L71">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L72">    }</span>
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+<span class="nc" id="L82">    public LinearRegressionSGD(double learningRate) {</span>
+<span class="nc" id="L83">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L84">        this.learningRate = learningRate;</span>
+<span class="nc" id="L85">    }</span>
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
+     *
+     * @param maxIterations Maximum number of iterations to run for during
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+<span class="nc" id="L96">    public LinearRegressionSGD(int maxIterations) {</span>
+<span class="nc" id="L97">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L98">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L99">    }</span>
+
 
     /**
      * Fits or trains the model with the given features and targets.
      *
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
-     * @param args     A hashtable containing additional arguments in the form &lt;name, value&gt;.
      * @return Returns details of the fitting / training process.
      * @throws IllegalArgumentException Can be thrown for the following reasons&lt;br&gt;
      *                                  - If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments. &lt;br&gt;
@@ -61,102 +111,36 @@ import java.util.Map;
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[] features, double[] targets, Map&lt;String, Double&gt; args) {
-<span class="nc" id="L65">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
+    public ModelBucket fit(double[] features, double[] targets) {
+<span class="nc" id="L115">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L116">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
 
         // Convert features and targets to matrix representations.
-<span class="nc" id="L68">        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));</span>
-<span class="nc" id="L69">        Matrix y = new Vector(targets);</span>
+<span class="nc" id="L119">        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));</span>
+<span class="nc" id="L120">        Matrix y = new Vector(targets);</span>
 
-<span class="nc" id="L71">        w = Matrix.randn(X.numCols(), 1, false); // Set initial model weights to be random.</span>
-<span class="nc" id="L72">        w = StochasticGradientDescent.optimize(w, X, y, LossFunctions.sse, 0.05, 3000);</span>
+<span class="nc" id="L122">        w = SGD.optimize(LossFunctions.sse, X, y);</span>
 
-<span class="nc" id="L74">        results.put(&quot;coefficients&quot;, w.T().getValuesAsDouble()[0]);</span>
+<span class="nc" id="L124">        results.put(&quot;coefficients&quot;, w.T().getValuesAsDouble()[0]);</span>
 
-<span class="nc" id="L76">        return new ModelBucket(results);</span>
+        // Update the model details
+<span class="nc" id="L127">        super.isFit=true;</span>
+<span class="nc" id="L128">        buildDetails();</span>
+
+<span class="nc" id="L130">        return new ModelBucket(results);</span>
     }
-
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @return - Returns details of the fitting / training process.
-     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public ModelBucket fit(double[] features, double[] targets) {
-<span class="nc" id="L90">        return fit(features, targets, null);</span>
-    }
-
-
-    /**
-     * Uses fitted/trained model to make prediction on single feature.
-     *
-     * @param features The features to make predictions on.
-     * @return The models predicted labels.
-     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public double[] predict(double[] features) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L105">        return new double[0];</span>
-    }
-
-
-    @Override
-    public Matrix predict(Matrix X, Matrix w) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L112">        return null;</span>
-    }
-
-
-    /**
-     * Saves a trained model to the specified file path.
-     *
-     * @param filePath File path, including extension, to save fitted / trained model to.
-     */
-    @Override
-    public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L124">    }</span>
-
-
-    /**
-     * Forms a string of the important aspects of the model.&lt;br&gt;
-     * same as {@link #toString()}
-     *
-     * @return Details of model as string.
-     */
-    @Override
-    public String getDetails() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L136">        return this.toString();</span>
-    }
-
-
-    /**
-     * Forms a string of the important aspects of the model.
-     *
-     * @return String representation of model.
-     */
-    @Override
-    public String toString() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L148">        return &quot;&quot;;</span>
-    }
-
+    
 
     public static void main(String[] args) {
-<span class="nc" id="L153">        Model&lt;double[], double[]&gt; model = new LinearRegressionSGD();</span>
+<span class="nc" id="L135">        Model&lt;double[], double[]&gt; model = new LinearRegressionSGD(0.02, 1000);</span>
 
-<span class="nc" id="L155">        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};</span>
-<span class="nc" id="L156">        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};</span>
+<span class="nc" id="L137">        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};</span>
+<span class="nc" id="L138">        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};</span>
 
-<span class="nc" id="L158">        model.compile();</span>
-<span class="nc" id="L159">        model.fit(x, y);</span>
-<span class="nc" id="L160">    }</span>
+<span class="nc" id="L140">        model.compile();</span>
+<span class="nc" id="L141">        model.fit(x, y);</span>
+
+<span class="nc" id="L143">        System.out.println(&quot;\n\n&quot; + model.getDetails() + &quot;\n\n&quot;);</span>
+<span class="nc" id="L144">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
