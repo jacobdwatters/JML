@@ -5,6 +5,6 @@ package com.jml.optimizers;
  * to decrease the learning rate according to some rule as the optimizer iterates. This class provides the ability to
  * define a rule to accomplish this.
  */
-public class Scheduler {
-
+public interface Scheduler {
+    public double apply(double learningRate);
 }

@@ -88,6 +88,11 @@ public class StochasticGradientDescent extends Optimizer{
             // w = w - alpha*grad_SSE(w, x, y)
             w = w.sub(Gradient.compute(w, X, y, loss, model).scalMult(learningRate));
             lossHistory.add(loss.compute(w, X, y, model).getAsDouble(0, 0));
+
+            if(scheduler!=null) {
+                scheduler.apply(learningRate); // TODO: will also need to pass loss history for some schedulers rule
+            }
+
             i++;
         }
 

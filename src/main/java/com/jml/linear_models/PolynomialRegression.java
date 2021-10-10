@@ -25,7 +25,7 @@ import java.util.Objects;
  * by the model. This is solved explicitly.
  */
 public class PolynomialRegression extends Model<double[], double[]> {
-    final String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
+    String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();
 
     protected boolean isFit = false, isCompiled = false;
 
@@ -35,17 +35,24 @@ public class PolynomialRegression extends Model<double[], double[]> {
      */
     public static final String DEGREE_KEY = "degree";
 
+    // TODO: Remove normalization responsibility from model classes. It will all happen through the preprocessing package.
     /**
      * Key for use of normalization before regression. <br>
      * The associated value will indicate weather to normalize the features before regression.
      */
     public static final String NORMALIZE_KEY = "normalize";
 
+
+
+    /* TODO: Remove responsibility of metrics like this from all models.
+        This responsibility should be delegated to a dedicated class.
+     */
     /**
      * Key for computation of correlation coefficient. <br>
      * The associated value will indicate weather to compute the correlation coefficient after regression.
      */
     public static final String CORRELATION_KEY = "r";
+
 
     /**
      * Key for computation of coefficient of determination. <br>
