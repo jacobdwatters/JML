@@ -11,14 +11,17 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\PolyRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Stats.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations\Activation.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\MultipleLinearRegression.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\clasifiers\KNearestNeighbors.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearModelTags.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearRegressionSGD.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearRegression.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\PolynomialRegressionSGD.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\layers\Dense.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\NeuralNetwork.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\optimizers\Scheduler.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\Block.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\optimizers\Optimizer.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\clasifiers\LogisticRegression.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\MultipleLinearRegressionSGD.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\Perceptron.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\ModelFromData.java

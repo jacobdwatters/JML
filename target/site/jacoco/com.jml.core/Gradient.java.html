@@ -13,8 +13,43 @@ public class Gradient {
     }
 
 
+//    /**
+//     * Numerically computes the gradient of a loss function for a specified model. This is computed
+//     * using the two point forward difference formula. i.e. f'(x) ~ (f(x+h)-f(x)) / h
+//     *
+//     * @param w Parameters of the model.
+//     * @param X Features of the dataset.
+//     * @param y Targets of the dataset.
+//     * @param F Function to compute gradient of.
+//     * @param model Model to use for gradient computation.
+//     * @return Gradient with respect to w for the specified function.
+//     */
+//    public static Matrix compute(Matrix w, Matrix X, Matrix y, Function F, Model model) {
+//
+//        Matrix grad = new Matrix(w.shape());
+//
+//        // A diagonal matrix containing the value of h along the diagonal.
+//        Matrix H = Matrix.I(w.numRows()).scalMult(h);
+//        Matrix functionValue = F.compute(w, X, y, model);
+//
+//        for(int i=0; i&lt;w.numRows(); i++) { // Compute partial derivative for each w_i in w
+//
+//            Matrix partial = F.compute(
+//                    w.add(H.getColAsVector(i)), X, y, model).sub(
+//                    functionValue
+//            ).scalDiv(h);
+//
+//            // Set the gradient at the given index to be the computed partial derivative.
+//            grad.set(partial.getAsDouble(0, 0), i, 0);
+//        }
+//
+//        return grad;
+//    }
+
+
     /**
-     * Numerically computes the gradient of a loss function for a specified model.
+     * Numerically computes the gradient of a loss function for a specified model. This is computed
+     * using the three point centered difference formula. i.e. f'(x) ~ (f(x+h)-f(x-h)) / 2h
      *
      * @param w Parameters of the model.
      * @param X Features of the dataset.
@@ -25,24 +60,23 @@ public class Gradient {
      */
     public static Matrix compute(Matrix w, Matrix X, Matrix y, Function F, Model model) {
 
-<span class="nc" id="L28">        Matrix grad = new Matrix(w.shape());</span>
+<span class="nc" id="L63">        Matrix grad = new Matrix(w.shape());</span>
 
         // A diagonal matrix containing the value of h along the diagonal.
-<span class="nc" id="L31">        Matrix H = Matrix.I(w.numRows()).scalMult(h);</span>
-<span class="nc" id="L32">        Matrix functionValue = F.compute(w, X, y, model);</span>
+<span class="nc" id="L66">        Matrix H = Matrix.I(w.numRows()).scalMult(h);</span>
+<span class="nc" id="L67">        Matrix functionValue = F.compute(w, X, y, model);</span>
 
-<span class="nc bnc" id="L34" title="All 2 branches missed.">        for(int i=0; i&lt;w.numRows(); i++) { // Compute partial derivative for each w_i in w</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        for(int i=0; i&lt;w.numRows(); i++) { // Compute partial derivative for each w_i in w</span>
 
-<span class="nc" id="L36">            Matrix partial = F.compute(</span>
-<span class="nc" id="L37">                    w.add(H.getColAsVector(i)), X, y, model).sub(</span>
-                    functionValue
-<span class="nc" id="L39">            ).scalDiv(h);</span>
+<span class="nc" id="L71">            Matrix partial = F.compute(w.add(H.getColAsVector(i)), X, y, model).sub(</span>
+<span class="nc" id="L72">                            F.compute(w.sub(H.getColAsVector(i)), X, y, model)</span>
+<span class="nc" id="L73">            ).scalDiv(2*h);</span>
 
             // Set the gradient at the given index to be the computed partial derivative.
-<span class="nc" id="L42">            grad.set(partial.getAsDouble(0, 0), i, 0);</span>
+<span class="nc" id="L76">            grad.set(partial.getAsDouble(0, 0), i, 0);</span>
         }
 
-<span class="nc" id="L45">        return grad;</span>
+<span class="nc" id="L79">        return grad;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

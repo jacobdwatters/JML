@@ -34,7 +34,7 @@ public class LinearRegressionSGD extends LinearRegression {
      * Creates a {@link LinearRegressionSGD} model. This will use a default learning rate of 0.002.
      */
 <span class="nc" id="L36">    public LinearRegressionSGD() {</span>
-<span class="nc" id="L37">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L37">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
 <span class="nc" id="L38">    }</span>
 
 
@@ -50,7 +50,7 @@ public class LinearRegressionSGD extends LinearRegression {
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
 <span class="nc" id="L52">    public LinearRegressionSGD(double learningRate, double threshold, int maxIterations) {</span>
-<span class="nc" id="L53">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L53">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
 <span class="nc" id="L54">        this.learningRate = learningRate;</span>
 <span class="nc" id="L55">        this.maxIterations = maxIterations;</span>
 <span class="nc" id="L56">    }</span>
@@ -66,7 +66,7 @@ public class LinearRegressionSGD extends LinearRegression {
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
 <span class="nc" id="L68">    public LinearRegressionSGD(double learningRate, int maxIterations) {</span>
-<span class="nc" id="L69">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L69">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
 <span class="nc" id="L70">        this.learningRate = learningRate;</span>
 <span class="nc" id="L71">        this.maxIterations = maxIterations;</span>
 <span class="nc" id="L72">    }</span>
@@ -80,7 +80,7 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
 <span class="nc" id="L82">    public LinearRegressionSGD(double learningRate) {</span>
-<span class="nc" id="L83">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L83">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
 <span class="nc" id="L84">        this.learningRate = learningRate;</span>
 <span class="nc" id="L85">    }</span>
 
@@ -94,7 +94,7 @@ public class LinearRegressionSGD extends LinearRegression {
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
 <span class="nc" id="L96">    public LinearRegressionSGD(int maxIterations) {</span>
-<span class="nc" id="L97">        super.updateModelType(ModelTypes.LINEAR_REGRESSION_SGD.toString());</span>
+<span class="nc" id="L97">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
 <span class="nc" id="L98">        this.maxIterations = maxIterations;</span>
 <span class="nc" id="L99">    }</span>
 
@@ -129,18 +129,19 @@ public class LinearRegressionSGD extends LinearRegression {
 
 <span class="nc" id="L130">        return new ModelBucket(results);</span>
     }
-    
+
+
 
     public static void main(String[] args) {
-<span class="nc" id="L135">        Model&lt;double[], double[]&gt; model = new LinearRegressionSGD(0.02, 1000);</span>
+<span class="nc" id="L136">        Model&lt;double[], double[]&gt; model = new LinearRegressionSGD(0.02, 200);</span>
 
-<span class="nc" id="L137">        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};</span>
-<span class="nc" id="L138">        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};</span>
+<span class="nc" id="L138">        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};</span>
+<span class="nc" id="L139">        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};</span>
 
-<span class="nc" id="L140">        model.compile();</span>
-<span class="nc" id="L141">        model.fit(x, y);</span>
+<span class="nc" id="L141">        model.compile();</span>
+<span class="nc" id="L142">        model.fit(x, y);</span>
 
-<span class="nc" id="L143">        System.out.println(&quot;\n\n&quot; + model.getDetails() + &quot;\n\n&quot;);</span>
-<span class="nc" id="L144">    }</span>
+<span class="nc" id="L144">        System.out.println(&quot;\n\n&quot; + model.getDetails() + &quot;\n\n&quot;);</span>
+<span class="nc" id="L145">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -14,7 +14,8 @@ public class Gradient {
 
 
     /**
-     * Numerically computes the gradient of a loss function for a specified model.
+     * Numerically computes the gradient of a loss function for a specified model. This is computed
+     * using the three point centered difference formula. i.e. f'(x) ~ (f(x+h)-f(x-h)) / 2h
      *
      * @param w Parameters of the model.
      * @param X Features of the dataset.
@@ -33,10 +34,9 @@ public class Gradient {
 
         for(int i=0; i<w.numRows(); i++) { // Compute partial derivative for each w_i in w
 
-            Matrix partial = F.compute(
-                    w.add(H.getColAsVector(i)), X, y, model).sub(
-                    functionValue
-            ).scalDiv(h);
+            Matrix partial = F.compute(w.add(H.getColAsVector(i)), X, y, model).sub(
+                            F.compute(w.sub(H.getColAsVector(i)), X, y, model)
+            ).scalDiv(2*h);
 
             // Set the gradient at the given index to be the computed partial derivative.
             grad.set(partial.getAsDouble(0, 0), i, 0);

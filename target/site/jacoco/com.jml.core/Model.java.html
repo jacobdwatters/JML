@@ -18,6 +18,8 @@ import java.util.Map;
  */
 <span class="fc" id="L19">public abstract class Model&lt;X, Y&gt; {</span>
 
+    // TODO: add a get parameters method
+
     /**
      * Constructs model and prepares for training using the given parameters.
      *
@@ -47,7 +49,7 @@ import java.util.Map;
      * @param targets The targets of the training set.
      * @param args A hashtable containing additional arguments in the form &lt;name, value&gt;.
      * @return Returns details of the fitting / training process in a {@link ModelBucket}. The
-     * arguments passed may effect what the {@link ModelBucket}
+     * arguments passed may affect what the {@link ModelBucket}
      */
     public abstract ModelBucket fit(X features, Y targets, Map&lt;String, Double&gt; args);
 
@@ -123,26 +125,26 @@ import java.util.Map;
      * @return Returns a saved trained model from the file path.
      */
     public static Model load(String filePath) {
-<span class="fc bfc" id="L126" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
-<span class="fc" id="L127">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
+<span class="fc" id="L129">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="fc" id="L130">        String fileContent = FileManager.readFile(filePath);</span>
+<span class="fc" id="L132">        String fileContent = FileManager.readFile(filePath);</span>
 
-<span class="fc bfc" id="L132" title="All 2 branches covered.">        if(fileContent.equals(&quot;&quot;)) {</span>
-<span class="fc" id="L133">            return null;</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if(fileContent.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L135">            return null;</span>
         } else {
-<span class="fc" id="L135">            List&lt;String&gt; lines = new ArrayList&lt;String&gt;(),</span>
-<span class="fc" id="L136">                    blocks = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L137">            Collections.addAll(lines, fileContent.split(&quot;\n&quot;));</span>
+<span class="fc" id="L137">            List&lt;String&gt; lines = new ArrayList&lt;String&gt;(),</span>
+<span class="fc" id="L138">                    blocks = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L139">            Collections.addAll(lines, fileContent.split(&quot;\n&quot;));</span>
 
-<span class="fc bfc" id="L139" title="All 2 branches covered.">            while(!lines.isEmpty()) {</span>
-<span class="fc" id="L140">                blocks.add(nextBlock(lines));</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">            while(!lines.isEmpty()) {</span>
+<span class="fc" id="L142">                blocks.add(nextBlock(lines));</span>
             }
 
-<span class="fc" id="L143">            Class&lt;Model&gt; clazz = Model.class;</span>
+<span class="fc" id="L145">            Class&lt;Model&gt; clazz = Model.class;</span>
 
-<span class="fc" id="L145">            return clazz.cast(ModelFromData.create(blocks));</span>
+<span class="fc" id="L147">            return clazz.cast(ModelFromData.create(blocks));</span>
         }
     }
 
@@ -155,31 +157,31 @@ import java.util.Map;
      * @return The string format of the block.
      */
     private static String nextBlock(List&lt;String&gt; lines) {
-<span class="fc" id="L158">        StringBuilder block = new StringBuilder();</span>
-<span class="fc" id="L159">        boolean foundStart = false, blockFound = false;</span>
+<span class="fc" id="L160">        StringBuilder block = new StringBuilder();</span>
+<span class="fc" id="L161">        boolean foundStart = false, blockFound = false;</span>
 
-<span class="fc bfc" id="L161" title="All 2 branches covered.">        while(!blockFound) {</span>
-<span class="fc bfc" id="L162" title="All 4 branches covered.">            if(lines.get(0).matches(&quot;&lt;(.*?)&gt;&quot;) &amp;&amp; lines.get(0).contains(&quot;&lt;\\&quot;)) {</span>
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                if(!foundStart) {</span>
-<span class="nc" id="L164">                    throw new IllegalStateException(&quot;Unable to load model. Parser got stuck in a bad state.&quot;);</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        while(!blockFound) {</span>
+<span class="fc bfc" id="L164" title="All 4 branches covered.">            if(lines.get(0).matches(&quot;&lt;(.*?)&gt;&quot;) &amp;&amp; lines.get(0).contains(&quot;&lt;\\&quot;)) {</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                if(!foundStart) {</span>
+<span class="nc" id="L166">                    throw new IllegalStateException(&quot;Unable to load model. Parser got stuck in a bad state.&quot;);</span>
                 }
 
-<span class="fc" id="L167">                block.append(lines.remove(0)); // Remove line and add it to block</span>
-<span class="fc" id="L168">                block.append(&quot;\n&quot;);</span>
+<span class="fc" id="L169">                block.append(lines.remove(0)); // Remove line and add it to block</span>
+<span class="fc" id="L170">                block.append(&quot;\n&quot;);</span>
 
-<span class="fc" id="L170">                blockFound=true; // This is the end of the block</span>
+<span class="fc" id="L172">                blockFound=true; // This is the end of the block</span>
             }
-<span class="pc bpc" id="L172" title="1 of 4 branches missed.">            else if(lines.get(0).matches(&quot;&lt;(.*?)&gt;&quot;) &amp;&amp; !lines.get(0).contains(&quot;\\&quot;)) { // Then we have the beginning of a block</span>
-<span class="fc" id="L173">                foundStart = true;</span>
-<span class="fc" id="L174">                block.append(lines.remove(0)); // Remove line and add it to block</span>
-<span class="fc" id="L175">                block.append(&quot;\n&quot;);</span>
+<span class="pc bpc" id="L174" title="1 of 4 branches missed.">            else if(lines.get(0).matches(&quot;&lt;(.*?)&gt;&quot;) &amp;&amp; !lines.get(0).contains(&quot;\\&quot;)) { // Then we have the beginning of a block</span>
+<span class="fc" id="L175">                foundStart = true;</span>
+<span class="fc" id="L176">                block.append(lines.remove(0)); // Remove line and add it to block</span>
+<span class="fc" id="L177">                block.append(&quot;\n&quot;);</span>
             } else {
-<span class="fc" id="L177">                block.append(lines.remove(0)); // Remove line and add it to block</span>
-<span class="fc" id="L178">                block.append(&quot;\n&quot;);</span>
+<span class="fc" id="L179">                block.append(lines.remove(0)); // Remove line and add it to block</span>
+<span class="fc" id="L180">                block.append(&quot;\n&quot;);</span>
             }
         }
 
-<span class="fc" id="L182">        return block.toString();</span>
+<span class="fc" id="L184">        return block.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

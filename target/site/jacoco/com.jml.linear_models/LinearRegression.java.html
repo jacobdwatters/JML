@@ -24,9 +24,6 @@ import java.util.Objects;
             &quot;Is Compiled: No\n&quot; +
             &quot;Is Trained: No\n&quot;;
 
-    void updateModelType(String type) {
-<span class="nc" id="L28">        this.MODEL_TYPE = type;</span>
-<span class="nc" id="L29">    }</span>
 
     /**
      * Constructs model and prepares for training using default parameters. i.e. no normalization will be used.
@@ -35,9 +32,9 @@ import java.util.Objects;
      */
     @Override
     public void compile() {
-<span class="fc" id="L38">        super.compile();</span>
-<span class="fc" id="L39">        buildDetails();</span>
-<span class="fc" id="L40">    }</span>
+<span class="fc" id="L35">        super.compile();</span>
+<span class="fc" id="L36">        buildDetails();</span>
+<span class="fc" id="L37">    }</span>
 
 
     /**
@@ -56,15 +53,15 @@ import java.util.Objects;
      */
     @Override
     public void compile(Map&lt;String, Double&gt; args) {
-<span class="pc bpc" id="L59" title="1 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) {</span>
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">            if(args.containsKey(LinearRegression.DEGREE_KEY)) { // Ensure no degree is passed to super class.</span>
-<span class="fc" id="L61">                args.remove(LinearRegression.DEGREE_KEY);</span>
+<span class="pc bpc" id="L56" title="1 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) {</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">            if(args.containsKey(LinearRegression.DEGREE_KEY)) { // Ensure no degree is passed to super class.</span>
+<span class="fc" id="L58">                args.remove(LinearRegression.DEGREE_KEY);</span>
             }
         }
 
-<span class="fc" id="L65">        super.compile(args);</span>
-<span class="fc" id="L66">        buildDetails();</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L62">        super.compile(args);</span>
+<span class="fc" id="L63">        buildDetails();</span>
+<span class="fc" id="L64">    }</span>
 
 
     /**
@@ -79,9 +76,9 @@ import java.util.Objects;
      */
     @Override
     public ModelBucket fit(double[] features, double[] targets) {
-<span class="fc" id="L82">        ModelBucket results = super.fit(features, targets, null);</span>
-<span class="fc" id="L83">        buildDetails();</span>
-<span class="fc" id="L84">        return results;</span>
+<span class="fc" id="L79">        ModelBucket results = super.fit(features, targets, null);</span>
+<span class="fc" id="L80">        buildDetails();</span>
+<span class="fc" id="L81">        return results;</span>
     }
 
 
@@ -106,34 +103,34 @@ import java.util.Objects;
      */
     @Override
     public ModelBucket fit(double[] features, double[] targets, Map&lt;String, Double&gt; args) {
-<span class="nc" id="L109">        ModelBucket result = super.fit(features, targets, args);</span>
-<span class="nc" id="L110">        buildDetails();</span>
-<span class="nc" id="L111">        return result;</span>
+<span class="nc" id="L106">        ModelBucket result = super.fit(features, targets, args);</span>
+<span class="nc" id="L107">        buildDetails();</span>
+<span class="nc" id="L108">        return result;</span>
     }
 
 
     // Construct details of model
     @Override
     protected void buildDetails() {
-<span class="fc" id="L118">        details =&quot;Model Details\n&quot; +</span>
+<span class="fc" id="L115">        details =&quot;Model Details\n&quot; +</span>
                 &quot;----------------------------\n&quot; +
                 &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                &quot;Is Compiled: &quot; + (isCompiled ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
-<span class="fc bfc" id="L122" title="All 2 branches covered.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">                &quot;Is Compiled: &quot; + (isCompiled ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
 
 
 
-<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if(isCompiled) {</span>
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">            details += &quot;Normalization: &quot; + (normalization==1 ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if(isCompiled) {</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">            details += &quot;Normalization: &quot; + (normalization==1 ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
         }
 
-<span class="fc bfc" id="L130" title="All 4 branches covered.">        if(isFit &amp;&amp; w!=null) {</span>
-<span class="fc" id="L131">            coefficients = w.T().getValuesAsDouble()[0];</span>
-<span class="fc" id="L132">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
-<span class="fc" id="L133">            details += ArrayUtils.asString(coefficients);</span>
-<span class="fc" id="L134">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
+<span class="fc bfc" id="L127" title="All 4 branches covered.">        if(isFit &amp;&amp; w!=null) {</span>
+<span class="fc" id="L128">            coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L129">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
+<span class="fc" id="L130">            details += ArrayUtils.asString(coefficients);</span>
+<span class="fc" id="L131">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
         }
-<span class="fc" id="L136">    }</span>
+<span class="fc" id="L133">    }</span>
 
 
     /**
@@ -144,7 +141,7 @@ import java.util.Objects;
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L147">        return this.toString();</span>
+<span class="fc" id="L144">        return this.toString();</span>
     }
 
 
@@ -155,7 +152,7 @@ import java.util.Objects;
      */
     @Override
     public String toString() {
-<span class="fc" id="L158">        return details;</span>
+<span class="fc" id="L155">        return details;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

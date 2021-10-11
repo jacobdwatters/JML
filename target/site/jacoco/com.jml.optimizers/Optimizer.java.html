@@ -5,6 +5,8 @@ import linalg.Matrix;
 
 <span class="nc" id="L6">public abstract class Optimizer {</span>
 
+    static Scheduler scheduler;
+
     /**
      * Applies specified optimizer rule to loss function.
      *
@@ -14,5 +16,22 @@ import linalg.Matrix;
      * @return The computed minimum of the loss function.
      */
     public abstract Matrix optimize(Function loss, Matrix X, Matrix y);
+
+
+    /**
+     * Sets the learning rate scheduler for the optimizer.
+     * @param scheduler The scheduler for the optimizer.
+     */
+    public void setScheduler(Scheduler scheduler) {
+<span class="nc" id="L26">        this.scheduler = scheduler;</span>
+<span class="nc" id="L27">    }</span>
+
+
+    /**
+     *
+     */
+<span class="nc" id="L33">    public static Scheduler stepLearningRate = (double learningRate) -&gt; {</span>
+<span class="nc" id="L34">        return 0;</span>
+    };
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

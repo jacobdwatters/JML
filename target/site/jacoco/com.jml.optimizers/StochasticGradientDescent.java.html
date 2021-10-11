@@ -88,10 +88,15 @@ public class StochasticGradientDescent extends Optimizer{
             // w = w - alpha*grad_SSE(w, x, y)
 <span class="nc" id="L89">            w = w.sub(Gradient.compute(w, X, y, loss, model).scalMult(learningRate));</span>
 <span class="nc" id="L90">            lossHistory.add(loss.compute(w, X, y, model).getAsDouble(0, 0));</span>
-<span class="nc" id="L91">            i++;</span>
+
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if(scheduler!=null) {</span>
+<span class="nc" id="L93">                scheduler.apply(learningRate); // TODO: will also need to pass loss history for some schedulers rule</span>
+            }
+
+<span class="nc" id="L96">            i++;</span>
         }
 
-<span class="nc" id="L94">        return w;</span>
+<span class="nc" id="L99">        return w;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -129,10 +129,11 @@ public class LinearRegressionSGD extends LinearRegression {
 
         return new ModelBucket(results);
     }
-    
+
+
 
     public static void main(String[] args) {
-        Model<double[], double[]> model = new LinearRegressionSGD(0.02, 1000);
+        Model<double[], double[]> model = new LinearRegressionSGD(0.02, 200);
 
         double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};
         double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};
