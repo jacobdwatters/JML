@@ -15,7 +15,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
-     * @param args     A hashtable containing additional arguments in the form <name, value>.
      * @return Returns details of the fitting / training process.
      * @throws IllegalArgumentException Can be thrown for the following reasons<br>
      *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
@@ -44,6 +43,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Matrix predict(Matrix X, Matrix w) {
         // TODO: Auto-generated method stub.
