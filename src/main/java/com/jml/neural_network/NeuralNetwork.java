@@ -12,27 +12,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     private Layer<?, ?> layer;
 
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile() {
-        // TODO: Auto-generated method stub
-    }
-
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @param args A hashtable containing additional arguments in the form <name, value>.
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile(Map<String, Double> args) {
-        // TODO: Auto-generated method stub
-    }
-
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -47,23 +26,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[][] features, double[][] targets, Map<String, Double> args) {
-        // TODO: Auto-generated method stub
-        return null;
-    }
-
-
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @return - Returns details of the fitting / training process.
-     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public ModelBucket fit(double[][] features, double[][] targets) {
+    public NeuralNetwork fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
         return null;
     }
@@ -87,6 +50,16 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public Matrix predict(Matrix X, Matrix w) {
         // TODO: Auto-generated method stub.
+        return null;
+    }
+
+    /**
+     * Gets the parameters of the trained model.
+     *
+     * @return A matrix containing the parameters of the trained model.
+     */
+    @Override
+    public Matrix getParams() {
         return null;
     }
 

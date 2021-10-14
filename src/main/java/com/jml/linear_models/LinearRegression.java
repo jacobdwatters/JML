@@ -1,12 +1,7 @@
 package com.jml.linear_models;
 
-
-import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
-
-import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -26,45 +21,6 @@ public class LinearRegression extends PolynomialRegression {
 
 
     /**
-     * Constructs model and prepares for training using default parameters. i.e. no normalization will be used.
-     *
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile() {
-        super.compile();
-        buildDetails();
-    }
-
-
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * Valid additional args. All others will be ignored.
-     * <pre>
-     *  - Normalization:
-     *      <"normalize", 0> - Default. No normalization is used.
-     *      <"normalize", 1> - Normalizes data by subtracting meanNormalize and dividing by the L2-norm before applying regression.
-     * <pre/>
-     *
-     * @param args A hashtable containing additional arguments in the form <name, value>.
-     * @throws IllegalArgumentException If values in <code>args</code> are invalid of a specified key. Unspecified keys will simply be
-     * ignored and will NOT throw error.
-     */
-    @Override
-    public void compile(Map<String, Double> args) {
-        if(!Objects.isNull(args) && !args.isEmpty()) {
-            if(args.containsKey(LinearRegression.DEGREE_KEY)) { // Ensure no degree is passed to super class.
-                args.remove(LinearRegression.DEGREE_KEY);
-            }
-        }
-
-        super.compile(args);
-        buildDetails();
-    }
-
-
-    /**
      * Fits or trains the model with the given features and targets.
      *
      * @param features The features of the training set.
@@ -75,37 +31,10 @@ public class LinearRegression extends PolynomialRegression {
      *                                  the specification when the model was compiled.
      */
     @Override
-    public ModelBucket fit(double[] features, double[] targets) {
-        ModelBucket results = super.fit(features, targets, null);
+    public LinearRegression fit(double[] features, double[] targets) {
+        super.fit(features, targets);
         buildDetails();
-        return results;
-    }
-
-
-    /**
-     * Fits the model with the given features and targets.
-     *
-     * Valid additional args. All others will be ignored.
-     * <pre>
-     *  - R value (goodness of fit):
-     *      <"fit", 0> - Default. No R value is returned.
-     *      <"fit", 1> - R value of model will be calculated and returned.
-     * <pre/>
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @param args     A hashtable containing additional arguments in the form <name, value>.
-     * @return A Map containing the results of fitting.
-     * @throws IllegalArgumentException Can be thrown for the following reasons<br>
-     *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
-     *                                  - If the features and targets are not correctly sized per the specification when the model was
-     *                                  compiled.
-     */
-    @Override
-    public ModelBucket fit(double[] features, double[] targets, Map<String, Double> args) {
-        ModelBucket result = super.fit(features, targets, args);
-        buildDetails();
-        return result;
+        return this;
     }
 
 
@@ -115,14 +44,7 @@ public class LinearRegression extends PolynomialRegression {
         details ="Model Details\n" +
                 "----------------------------\n" +
                 "Model Type: " + this.MODEL_TYPE+ "\n" +
-                "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
                 "Is Trained: " + (isFit ? "Yes" : "No") + "\n";
-
-
-
-        if(isCompiled) {
-            details += "Normalization: " + (normalization==1 ? "Yes" : "No") + "\n";
-        }
 
         if(isFit && w!=null) {
             coefficients = w.T().getValuesAsDouble()[0];

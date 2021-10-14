@@ -6,7 +6,7 @@ import linalg.Matrix;
 /**
  * This class contains lambda functions for various loss functions including:
  * <pre>
- *     - {@link #sse mse}: sum of squared-errors loss.
+ *     - {@link #sse sse}: sum of squared-errors loss.
  * </pre>
  */
 public class LossFunctions {

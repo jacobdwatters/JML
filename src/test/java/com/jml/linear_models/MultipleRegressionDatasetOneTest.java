@@ -1,7 +1,6 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
-import com.jml.core.ModelBucket;
 import com.jml.util.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,10 +36,8 @@ class MultipleRegressionDatasetOneTest {
 
     @Test
     void MultipleRegressionDatasetOneTestCase() {
-        model.compile();
-        ModelBucket results = model.fit(features, targets);
-
-        double[] actualCoefficients = results.getDoubleArr("coefficients");
+        model.fit(features, targets);
+        double[] actualCoefficients = model.getParams().T().getValuesAsDouble()[0];
         double[] actualPredictions = model.predict(tests);
 
         assertArrayEquals(expectedCoefficients, ArrayUtils.round(actualCoefficients, 7));
@@ -50,8 +47,7 @@ class MultipleRegressionDatasetOneTest {
 
     @Test
     void MultipleRegressionDatasetOneSaveLoadTestCase() {
-        model.compile();
-        ModelBucket results = model.fit(features, targets);
+        model.fit(features, targets);
         String fileName = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel1.mdl";
 
         String expectedDetails = model.getDetails();
@@ -65,8 +61,7 @@ class MultipleRegressionDatasetOneTest {
 
     @Test
     void MultipleRegressionSaveLoadExceptionsTestCase() {
-        model.compile();
-        ModelBucket results = model.fit(features, targets);
+        model.fit(features, targets);
         String fileName1 = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel1.txt";
         String fileName2 = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel0.mdl";
 
@@ -80,7 +75,6 @@ class MultipleRegressionDatasetOneTest {
     void MultipleRegressionNotCompiledTestCase() {
         String fileName = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel0.mdl";
 
-        assertThrows(Exception.class, () -> model.fit(features, targets));
         assertThrows(Exception.class, () -> model.saveModel(fileName));
         assertThrows(Exception.class, () -> model.predict(tests));
     }
@@ -89,7 +83,6 @@ class MultipleRegressionDatasetOneTest {
     @Test
     void MultipleRegressionNotFitTestCase() {
         String fileName = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel0.mdl";
-        model.compile();
 
         assertThrows(Exception.class, () -> model.saveModel(fileName));
         assertThrows(Exception.class, () -> model.predict(tests));

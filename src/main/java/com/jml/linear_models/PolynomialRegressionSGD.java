@@ -1,6 +1,5 @@
 package com.jml.linear_models;
 
-import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
@@ -8,8 +7,6 @@ import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class PolynomialRegressionSGD extends PolynomialRegression {
     private double learningRate = 0.002;
@@ -37,7 +34,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-    public PolynomialRegressionSGD(double learningRate, double threshold, int maxIterations) {
+    public PolynomialRegressionSGD(int degree, double learningRate, double threshold, int maxIterations) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
@@ -99,8 +96,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[] features, double[] targets) {
-        Map<String, Object> results = new HashMap<>();
+    public PolynomialRegressionSGD fit(double[] features, double[] targets) {
         SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
 
         // Convert features and targets to matrix representations.
@@ -109,12 +105,10 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
 
         w = SGD.optimize(LossFunctions.sse, X, y);
 
-        results.put("coefficients", w.T().getValuesAsDouble()[0]);
-
         // Update the model details
         super.isFit=true;
         buildDetails();
 
-        return new ModelBucket(results);
+        return this;
     }
 }

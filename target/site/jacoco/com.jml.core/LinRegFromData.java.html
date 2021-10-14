@@ -2,12 +2,15 @@
 
 import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.LinearRegression;
+import com.jml.util.ArrayUtils;
+import linalg.Matrix;
+import linalg.Vector;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-<span class="fc" id="L10">class LinRegFromData extends LinearRegression {</span>
+<span class="fc" id="L13">class LinRegFromData extends LinearRegression {</span>
     private static Scanner scanner;
 
     /**
@@ -16,37 +19,36 @@ import java.util.Scanner;
      * @return The polynomial regression model specified by the data.
      */
     static Model create(List&lt;String&gt; tags, List&lt;String&gt; contents) {
-<span class="fc" id="L19">        LinRegFromData linRegModel = new LinRegFromData();</span>
-<span class="fc" id="L20">        linRegModel.isCompiled = true; // Since we are loading a pretrained model, set to true.</span>
-<span class="fc" id="L21">        linRegModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
+<span class="fc" id="L22">        LinRegFromData linRegModel = new LinRegFromData();</span>
+<span class="fc" id="L23">        linRegModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
 
-<span class="pc bpc" id="L23" title="1 of 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
+<span class="pc bpc" id="L25" title="1 of 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
             // Get the tag/content pair
-<span class="fc" id="L25">            String tag = tags.remove(0);</span>
-<span class="fc" id="L26">            String content = contents.remove(0);</span>
-<span class="fc" id="L27">            scanner = new Scanner(content);</span>
+<span class="fc" id="L27">            String tag = tags.remove(0);</span>
+<span class="fc" id="L28">            String content = contents.remove(0);</span>
+<span class="fc" id="L29">            scanner = new Scanner(content);</span>
 
-<span class="fc bfc" id="L29" title="All 2 branches covered.">            if(tag.equals(LinearModelTags.NORMALIZE.toString())) {</span>
-<span class="fc" id="L30">                linRegModel.normalization = scanner.nextInt();</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">            if(tag.equals(LinearModelTags.PARAMETERS.toString())) {</span>
+<span class="fc" id="L32">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
 
-<span class="pc bpc" id="L32" title="1 of 2 branches missed.">            } else if(tag.equals(LinearModelTags.COEFFICIENTS.toString())) {</span>
-<span class="fc" id="L33">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
+<span class="fc" id="L34">                linRegModel.coefficients = Arrays.stream(coeffStrings)</span>
+<span class="fc" id="L35">                        .mapToDouble(Double::parseDouble)</span>
+<span class="fc" id="L36">                        .toArray();</span>
 
-<span class="fc" id="L35">                linRegModel.coefficients = Arrays.stream(coeffStrings)</span>
-<span class="fc" id="L36">                        .mapToDouble(Double::parseDouble)</span>
-<span class="fc" id="L37">                        .toArray();</span>
+<span class="fc" id="L38">                linRegModel.w = new Matrix(linRegModel.coefficients.length, 1);</span>
+<span class="fc" id="L39">                linRegModel.w.setCol(linRegModel.coefficients, 0);</span>
 
-<span class="fc" id="L39">            } else {</span>
-<span class="nc" id="L40">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>
+<span class="fc" id="L41">            } else {</span>
+<span class="nc" id="L42">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>
             }
 
-<span class="fc" id="L43">            scanner.close();</span>
-<span class="fc" id="L44">        }</span>
+<span class="fc" id="L45">            scanner.close();</span>
+<span class="fc" id="L46">        }</span>
 
-<span class="fc" id="L46">        linRegModel.buildDetails();</span>
-<span class="fc" id="L47">        Class&lt;LinearRegression&gt; clazz = LinearRegression.class;</span>
+<span class="fc" id="L48">        linRegModel.buildDetails();</span>
+<span class="fc" id="L49">        Class&lt;LinearRegression&gt; clazz = LinearRegression.class;</span>
 
-<span class="fc" id="L49">        return clazz.cast(linRegModel);</span>
+<span class="fc" id="L51">        return clazz.cast(linRegModel);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

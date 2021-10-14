@@ -1,16 +1,12 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
-import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -101,8 +97,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
      * {@inheritDoc}
      */
     @Override
-    public ModelBucket fit(double[][] features, double[] targets) {
-        Map<String, Object> results = new HashMap<>();
+    public MultipleLinearRegressionSGD fit(double[][] features, double[] targets) {
         SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
 
         // Convert features and targets to matrix representations.
@@ -110,14 +105,12 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         Matrix y = new Vector(targets);
 
         w = SGD.optimize(LossFunctions.sse, X, y);
-
         super.coefficients = w.T().getValuesAsDouble()[0];
-        results.put("coefficients", super.coefficients);
 
         super.isFit=true;
         super.buildDetails();
 
-        return new ModelBucket(results);
+        return this;
     }
 
 
@@ -133,9 +126,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
                         {-12, 3}};
         double[] y = {9, 22, 24, 14, 235, -14};
 
-        model.compile();
         model.fit(X, y);
-
         System.out.println("\n\n" + model.getDetails() + "\n\n");
     }
 }

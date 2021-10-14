@@ -1,18 +1,15 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
-import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
-import com.jml.losses.Function;
 import com.jml.losses.LossFunctions;
-import com.jml.losses.LossGradients;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,6 +25,7 @@ public class LinearRegressionSGD extends LinearRegression {
     private double threshold = 0.5e-5;
     private int maxIterations = 1000;
     private Optimizer SGD;
+
 
 
     /**
@@ -111,8 +109,7 @@ public class LinearRegressionSGD extends LinearRegression {
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[] features, double[] targets) {
-        Map<String, Object> results = new HashMap<>();
+    public LinearRegressionSGD fit(double[] features, double[] targets) {
         SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
 
         // Convert features and targets to matrix representations.
@@ -121,26 +118,24 @@ public class LinearRegressionSGD extends LinearRegression {
 
         w = SGD.optimize(LossFunctions.sse, X, y);
 
-        results.put("coefficients", w.T().getValuesAsDouble()[0]);
-
         // Update the model details
         super.isFit=true;
         buildDetails();
 
-        return new ModelBucket(results);
+        return this;
     }
 
 
+    /**
+     * Gets the loss history from training.
+     *
+     * @return The loss of every iteration stored in a List.
+     */
+    public List<Double> getLossHist() {
+        if(!isFit) {
+            throw new IllegalStateException("Model must be trained before the loss history can be computed.");
+        }
 
-    public static void main(String[] args) {
-        Model<double[], double[]> model = new LinearRegressionSGD(0.02, 200);
-
-        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};
-        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};
-
-        model.compile();
-        model.fit(x, y);
-
-        System.out.println("\n\n" + model.getDetails() + "\n\n");
+        return SGD.getLossHist();
     }
 }

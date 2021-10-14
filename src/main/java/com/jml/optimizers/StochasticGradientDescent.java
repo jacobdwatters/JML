@@ -7,6 +7,7 @@ import com.jml.losses.Function;
 import linalg.Matrix;
 import linalg.Vector;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +18,7 @@ import java.util.List;
  */
 public class StochasticGradientDescent extends Optimizer{
 
-    private double threshold = 0.5e-5; // Threshold for stopping optimizer.
-    private int maxIterations = 1500;
-    private double learningRate = 0.2;
-    private Model model;
-
+    // TODO: Add checks to ensure that maxIterations, learningRate, and threshold are non-negative.
 
     /**
      * Creates a Stochastic Gradient Descent optimizer to minimize the specified loss function for a model.
@@ -59,6 +56,15 @@ public class StochasticGradientDescent extends Optimizer{
     }
 
 
+    /**
+     * Creates a Stochastic Gradient Descent optimizer to minimize the specified loss function for a model.
+     *
+     * @param model Model to apply optimization to.
+     * @param learningRate Learning rate of the Stochastic Gradient Descent optimizer.
+     * @param maxIterations Maximum iterations to
+     * @param threshold Threshold for stopping gradient descent. If the loss is less than this value, gradient descent
+     *                  will stop early.
+     */
     public StochasticGradientDescent(Model model, double learningRate, int maxIterations, double threshold) {
         this.model = model;
         this.learningRate = learningRate;
@@ -68,32 +74,42 @@ public class StochasticGradientDescent extends Optimizer{
 
 
     /**
-     * Applies specified optimizer rule to loss function.
+     * Gets the loss history from the optimizer.
      *
-     * @param loss The loss function to optimize.
+     * @return The loss of every iteration stored in a List.
+     */
+    @Override
+    public List<Double> getLossHist() {
+        return this.lossHistory;
+    }
+
+
+    /**
+     * Applies specified optimizer rule to function to compute minimum.
+     *
+     * @param function The function to optimize.
      * @param X Features of model.
      * @param y Targets of model.
-     * @return The computed minimum of the loss function.
+     * @return The computed minimum of the function.
      */
-    public Matrix optimize(Function loss, Matrix X, Matrix y) {
-        List<Double> lossHistory = new ArrayList<>();
+    public Matrix optimize(Function function, Matrix X, Matrix y) {
         Matrix w = Vector.randn(X.numCols(), 1, false);
 
-        lossHistory.add(loss.compute(w, X, y, this.model).getAsDouble(0, 0));
+        lossHistory.add(function.compute(w, X, y, this.model).getAsDouble(0, 0));
 
-        int i=0; // To keep track of how many iterations have been completed.
+        iterations = 0; // Ensure iterations is set to zero before applying optimizer.
 
-        // TODO: Need the loss function so we can compute loss_history[-1] > threshold as a stopping criteria.
-        while(i<maxIterations && lossHistory.get(lossHistory.size()-1) > threshold) {
+        // TODO: Need the function function so we can compute loss_history[-1] > threshold as a stopping criteria.
+        while(iterations<maxIterations && lossHistory.get(lossHistory.size()-1) > threshold) {
             // w = w - alpha*grad_SSE(w, x, y)
-            w = w.sub(Gradient.compute(w, X, y, loss, model).scalMult(learningRate));
-            lossHistory.add(loss.compute(w, X, y, model).getAsDouble(0, 0));
+            w = w.sub(Gradient.compute(w, X, y, function, model).scalMult(learningRate));
+            lossHistory.add(function.compute(w, X, y, model).getAsDouble(0, 0));
 
             if(scheduler!=null) {
-                scheduler.apply(learningRate); // TODO: will also need to pass loss history for some schedulers rule
+                scheduler.apply(this); // TODO: will also need to pass function history for some schedulers rule
             }
 
-            i++;
+            iterations++;
         }
 
         return w;

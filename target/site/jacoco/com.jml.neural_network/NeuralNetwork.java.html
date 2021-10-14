@@ -12,27 +12,6 @@ import java.util.Map;
 
     private Layer&lt;?, ?&gt; layer;
 
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @throws IllegalArgumentException If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile() {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L23">    }</span>
-
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @param args A hashtable containing additional arguments in the form &lt;name, value&gt;.
-     * @throws IllegalArgumentException If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile(Map&lt;String, Double&gt; args) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L34">    }</span>
-
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -47,25 +26,9 @@ import java.util.Map;
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[][] features, double[][] targets, Map&lt;String, Double&gt; args) {
+    public NeuralNetwork fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L52">        return null;</span>
-    }
-
-
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @return - Returns details of the fitting / training process.
-     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public ModelBucket fit(double[][] features, double[][] targets) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L68">        return null;</span>
+<span class="nc" id="L31">        return null;</span>
     }
 
 
@@ -80,14 +43,24 @@ import java.util.Map;
     @Override
     public double[][] predict(double[][] features) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L83">        return new double[0][];</span>
+<span class="nc" id="L46">        return new double[0][];</span>
     }
 
 
     @Override
     public Matrix predict(Matrix X, Matrix w) {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L90">        return null;</span>
+<span class="nc" id="L53">        return null;</span>
+    }
+
+    /**
+     * Gets the parameters of the trained model.
+     *
+     * @return A matrix containing the parameters of the trained model.
+     */
+    @Override
+    public Matrix getParams() {
+<span class="nc" id="L63">        return null;</span>
     }
 
 
@@ -98,7 +71,7 @@ import java.util.Map;
      */
     public void add(Layer&lt;?, ?&gt; layer) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L101">    }</span>
+<span class="nc" id="L74">    }</span>
 
 
     /**
@@ -109,7 +82,7 @@ import java.util.Map;
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L112">    }</span>
+<span class="nc" id="L85">    }</span>
 
 
     /**
@@ -121,7 +94,7 @@ import java.util.Map;
     @Override
     public String getDetails() {
         // TODO: Auto-generated method stub
-<span class="nc" id="L124">        return null;</span>
+<span class="nc" id="L97">        return null;</span>
     }
 
 
@@ -133,7 +106,7 @@ import java.util.Map;
     @Override
     public String toString() {
         // TODO: Auto-generated method stub
-<span class="nc" id="L136">        return &quot;&quot;;</span>
+<span class="nc" id="L109">        return &quot;&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

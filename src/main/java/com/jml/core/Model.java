@@ -18,41 +18,6 @@ import java.util.Map;
  */
 public abstract class Model<X, Y> {
 
-    // TODO: add a get parameters method
-
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
-     */
-    public abstract void compile();
-
-
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
-     * @param args A hashtable containing additional arguments in the form <name, value>.
-     */
-    public abstract void compile(Map<String, Double> args);
-
-
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @throws IllegalArgumentException Can be thrown for the following reasons<br>
-     * - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
-     * - If the features and targets are not correctly sized per the specification when the model was
-     * compiled.
-     *
-     * @param features The features of the training set.
-     * @param targets The targets of the training set.
-     * @param args A hashtable containing additional arguments in the form <name, value>.
-     * @return Returns details of the fitting / training process in a {@link ModelBucket}. The
-     * arguments passed may affect what the {@link ModelBucket}
-     */
-    public abstract ModelBucket fit(X features, Y targets, Map<String, Double> args);
-
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -62,9 +27,9 @@ public abstract class Model<X, Y> {
      *
      * @param features The features of the training set.
      * @param targets The targets of the training set.
-     * @return Returns details of the fitting / training process in a {@link ModelBucket}.
+     * @return This. i.e. the trained model.
      */
-    public abstract ModelBucket fit(X features, Y targets);
+    public abstract Model<X, Y> fit(X features, Y targets);
 
 
     /**
@@ -90,6 +55,14 @@ public abstract class Model<X, Y> {
      * @return prediction on the features using the given model parameters.
      */
     public abstract Matrix predict(Matrix w, Matrix X);
+
+
+    /**
+     * Gets the parameters of the trained model.
+     *
+     * @return A matrix containing the parameters of the trained model.
+     */
+    public abstract Matrix getParams();
 
 
     /**
@@ -125,7 +98,7 @@ public abstract class Model<X, Y> {
      * @return Returns a saved trained model from the file path.
      */
     public static Model load(String filePath) {
-        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(".mdl")) {
+        if(!filePath.endsWith(".mdl")) {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 

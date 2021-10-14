@@ -1,14 +1,10 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
-import com.jml.core.ModelBucket;
 import com.jml.util.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
@@ -35,10 +31,8 @@ class LinearRegressionDatasetOneTest {
         double[] expected = {45.65396403, 2.34259675};
         double[] testingExpected = {42.8428479, 45.6539640, 47.9965608, 50.3391575, 53.0097178, 55.0243510};
 
-        model.compile();
-
-        ModelBucket fitResults = model.fit(features, targets);
-        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
+        model.fit(features, targets);
+        double[] values = ArrayUtils.round(model.getParams().T().getValuesAsDouble()[0], 8);
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);
@@ -52,13 +46,8 @@ class LinearRegressionDatasetOneTest {
         double[] expected = {45.65396403, 2.34259675};
         double[] testingExpected = {42.8428479, 45.6539640, 47.9965608, 50.3391575, 53.0097178, 55.0243510};
 
-        Map<String, Double> arguments = new HashMap<>();
-        arguments.put("degree", 3.0);
-
-        model.compile(arguments); // Attempt to add a degree arguments
-
-        ModelBucket fitResults = model.fit(features, targets);
-        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
+        model.fit(features, targets);
+        double[] values = ArrayUtils.round(model.getParams().T().getValuesAsDouble()[0], 8);
         double[] predictions = ArrayUtils.round(model.predict(tests), 7);
 
         assertArrayEquals(expected, values);

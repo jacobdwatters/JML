@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PolynomialRegressionSGD.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">PolynomialRegressionSGD.java</span></div><h1>PolynomialRegressionSGD.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
 
-import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
@@ -8,22 +7,20 @@ import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class PolynomialRegressionSGD extends PolynomialRegression {
-<span class="nc" id="L15">    private double learningRate = 0.002;</span>
-<span class="nc" id="L16">    private double threshold = 0.5e-5;</span>
-<span class="nc" id="L17">    private int maxIterations = 1000;</span>
+<span class="nc" id="L12">    private double learningRate = 0.002;</span>
+<span class="nc" id="L13">    private double threshold = 0.5e-5;</span>
+<span class="nc" id="L14">    private int maxIterations = 1000;</span>
     private Optimizer SGD;
 
 
     /**
      * Creates a {@link PolynomialRegressionSGD} model. This will use a default learning rate of 0.002.
      */
-<span class="nc" id="L24">    public PolynomialRegressionSGD() {</span>
-<span class="nc" id="L25">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L26">    }</span>
+<span class="nc" id="L21">    public PolynomialRegressionSGD() {</span>
+<span class="nc" id="L22">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L23">    }</span>
 
 
     /**
@@ -37,11 +34,11 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L40">    public PolynomialRegressionSGD(double learningRate, double threshold, int maxIterations) {</span>
-<span class="nc" id="L41">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L42">        this.learningRate = learningRate;</span>
-<span class="nc" id="L43">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L44">    }</span>
+<span class="nc" id="L37">    public PolynomialRegressionSGD(int degree, double learningRate, double threshold, int maxIterations) {</span>
+<span class="nc" id="L38">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L39">        this.learningRate = learningRate;</span>
+<span class="nc" id="L40">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L41">    }</span>
 
 
     /**
@@ -53,11 +50,11 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L56">    public PolynomialRegressionSGD(double learningRate, int maxIterations) {</span>
-<span class="nc" id="L57">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L58">        this.learningRate = learningRate;</span>
-<span class="nc" id="L59">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L60">    }</span>
+<span class="nc" id="L53">    public PolynomialRegressionSGD(double learningRate, int maxIterations) {</span>
+<span class="nc" id="L54">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L55">        this.learningRate = learningRate;</span>
+<span class="nc" id="L56">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L57">    }</span>
 
 
     /**
@@ -67,10 +64,10 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L70">    public PolynomialRegressionSGD(double learningRate) {</span>
-<span class="nc" id="L71">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L72">        this.learningRate = learningRate;</span>
-<span class="nc" id="L73">    }</span>
+<span class="nc" id="L67">    public PolynomialRegressionSGD(double learningRate) {</span>
+<span class="nc" id="L68">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L69">        this.learningRate = learningRate;</span>
+<span class="nc" id="L70">    }</span>
 
 
     /**
@@ -81,10 +78,10 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L84">    public PolynomialRegressionSGD(int maxIterations) {</span>
-<span class="nc" id="L85">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L86">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L87">    }</span>
+<span class="nc" id="L81">    public PolynomialRegressionSGD(int maxIterations) {</span>
+<span class="nc" id="L82">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L83">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L84">    }</span>
 
 
     /**
@@ -99,23 +96,20 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[] features, double[] targets) {
-<span class="nc" id="L103">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L104">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+    public PolynomialRegressionSGD fit(double[] features, double[] targets) {
+<span class="nc" id="L100">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
 
         // Convert features and targets to matrix representations.
-<span class="nc" id="L107">        Matrix X = Matrix.van( new Vector(features), degree+1); // TODO;</span>
-<span class="nc" id="L108">        Matrix y = new Vector(targets);</span>
+<span class="nc" id="L103">        Matrix X = Matrix.van( new Vector(features), degree+1); // TODO;</span>
+<span class="nc" id="L104">        Matrix y = new Vector(targets);</span>
 
-<span class="nc" id="L110">        w = SGD.optimize(LossFunctions.sse, X, y);</span>
-
-<span class="nc" id="L112">        results.put(&quot;coefficients&quot;, w.T().getValuesAsDouble()[0]);</span>
+<span class="nc" id="L106">        w = SGD.optimize(LossFunctions.sse, X, y);</span>
 
         // Update the model details
-<span class="nc" id="L115">        super.isFit=true;</span>
-<span class="nc" id="L116">        buildDetails();</span>
+<span class="nc" id="L109">        super.isFit=true;</span>
+<span class="nc" id="L110">        buildDetails();</span>
 
-<span class="nc" id="L118">        return new ModelBucket(results);</span>
+<span class="nc" id="L112">        return this;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

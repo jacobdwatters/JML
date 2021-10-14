@@ -1,14 +1,10 @@
 package com.jml.linear_models;
 
 import com.jml.core.Model;
-import com.jml.core.ModelBucket;
-import com.jml.util.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,33 +30,7 @@ class LinearRegressionSaveAndLoadTest {
     void SaveAndLoadModelDegree1TestCase() {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testLinModel1.mdl";
 
-        model.compile();
-
-
-        ModelBucket fitResults = model.fit(features, targets);
-        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
-        double[] initialPredictions = model.predict(tests);
-        model.saveModel(filePath);
-
-        loadedModel = Model.load(filePath);
-
-        assertEquals(model.getDetails(), loadedModel.getDetails());
-        assertArrayEquals(initialPredictions, loadedModel.predict(tests));
-    }
-
-
-    @Test // Defines a test method
-    @DisplayName("Checks if model is saved and loaded properly.") // define the name of the test which is displayed to the user
-    void SaveAndLoadModelDegree3TestCase() {
-        String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testLinModel2.mdl";
-
-        Map<String, Double> args = new HashMap<>();
-        args.put(LinearRegression.NORMALIZE_KEY, 1.0);
-
-        model.compile(args);
-
-        ModelBucket fitResults = model.fit(features, targets);
-        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
+        model.fit(features, targets);
         double[] initialPredictions = model.predict(tests);
         model.saveModel(filePath);
 
@@ -76,7 +46,6 @@ class LinearRegressionSaveAndLoadTest {
     void SaveAndModelNotFitExceptionTestCase() {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testLinModel3.mdl";
 
-        model.compile();
         assertThrows(Exception.class, () -> model.saveModel(filePath));
     }
 
@@ -86,10 +55,7 @@ class LinearRegressionSaveAndLoadTest {
     void SaveAndModelIncorrectFileExceptionTestCase() {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testLinModel3.txt";
 
-        model.compile();
-
-        ModelBucket fitResults = model.fit(features, targets);
-        double[] values = ArrayUtils.round(fitResults.getDoubleArr("coefficients"), 8);
+        model.fit(features, targets);
         assertThrows(Exception.class, () -> model.saveModel(filePath));
         assertThrows(Exception.class, () -> Model.load(filePath));
     }
