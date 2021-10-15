@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LinearRegressionSGD.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">LinearRegressionSGD.java</span></div><h1>LinearRegressionSGD.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
 
+
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
+import com.jml.optimizers.Scheduler;
+import com.jml.optimizers.StepLearningRate;
 import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
+import com.jml.util.ValueError;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 
 /**
  * Model for least squares linear regression of one variable by stochastic gradient descent.&lt;br&gt;&lt;br&gt;
  *
- * LinearRegressionSGD fits a model y = β&lt;sub&gt;0&lt;/sub&gt; + β&lt;sub&gt;1&lt;/sub&gt;x to the datasets by minimizing
+ * LinearRegressionSGD fits a model y = b&lt;sub&gt;0&lt;/sub&gt; + b&lt;sub&gt;1&lt;/sub&gt;x to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
 public class LinearRegressionSGD extends LinearRegression {
 
-<span class="nc" id="L24">    private double learningRate = 0.002;</span>
-<span class="nc" id="L25">    private double threshold = 0.5e-5;</span>
-<span class="nc" id="L26">    private int maxIterations = 1000;</span>
+<span class="nc" id="L27">    private double learningRate = 0.002;</span>
+<span class="nc" id="L28">    private double threshold = 0.5e-5;</span>
+<span class="nc" id="L29">    private int maxIterations = 1000;</span>
     private Optimizer SGD;
+    private Scheduler schedule;
 
 
     /**
-     * Creates a {@link LinearRegressionSGD} model. This will use a default learning rate of 0.002.
+     * Creates a {@link LinearRegressionSGD} model.&lt;br&gt;
+     * This will use default settings for gradient descent:
+     * &lt;pre&gt;
+     *    Learning Rate: 0.002
+     *    Threshold: 0.5e-5
+     *    Maximum Iterations: 1000
+     *    Scheduler: None
+     * &lt;pre/&gt;
      */
-<span class="nc" id="L33">    public LinearRegressionSGD() {</span>
-<span class="nc" id="L34">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L35">    }</span>
+<span class="nc" id="L44">    public LinearRegressionSGD() {</span>
+<span class="nc" id="L45">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L46">    }</span>
 
 
     /**
@@ -46,11 +57,32 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L49">    public LinearRegressionSGD(double learningRate, double threshold, int maxIterations) {</span>
-<span class="nc" id="L50">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L51">        this.learningRate = learningRate;</span>
-<span class="nc" id="L52">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L53">    }</span>
+<span class="nc" id="L60">    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {</span>
+<span class="nc" id="L61">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L62">        this.learningRate = learningRate;</span>
+<span class="nc" id="L63">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L64">        this.schedule = schedule;</span>
+<span class="nc" id="L65">        paramCheck();</span>
+<span class="nc" id="L66">    }</span>
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     *                  If the loss is less than the specified threshold, gradient descent will stop early.
+     * @param maxIterations Maximum number of iterations to run for during
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+<span class="nc" id="L80">    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold) {</span>
+<span class="nc" id="L81">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L82">        this.learningRate = learningRate;</span>
+<span class="nc" id="L83">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L84">        paramCheck();</span>
+<span class="nc" id="L85">    }</span>
 
 
     /**
@@ -62,11 +94,12 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L65">    public LinearRegressionSGD(double learningRate, int maxIterations) {</span>
-<span class="nc" id="L66">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L67">        this.learningRate = learningRate;</span>
-<span class="nc" id="L68">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L69">    }</span>
+<span class="nc" id="L97">    public LinearRegressionSGD(double learningRate, int maxIterations) {</span>
+<span class="nc" id="L98">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L99">        this.learningRate = learningRate;</span>
+<span class="nc" id="L100">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L101">        paramCheck();</span>
+<span class="nc" id="L102">    }</span>
 
 
     /**
@@ -76,10 +109,11 @@ public class LinearRegressionSGD extends LinearRegression {
      *
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L79">    public LinearRegressionSGD(double learningRate) {</span>
-<span class="nc" id="L80">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L81">        this.learningRate = learningRate;</span>
-<span class="nc" id="L82">    }</span>
+<span class="nc" id="L112">    public LinearRegressionSGD(double learningRate) {</span>
+<span class="nc" id="L113">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L114">        this.learningRate = learningRate;</span>
+<span class="nc" id="L115">        paramCheck();</span>
+<span class="nc" id="L116">    }</span>
 
 
     /**
@@ -90,10 +124,11 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L93">    public LinearRegressionSGD(int maxIterations) {</span>
-<span class="nc" id="L94">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L95">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L96">    }</span>
+<span class="nc" id="L127">    public LinearRegressionSGD(int maxIterations) {</span>
+<span class="nc" id="L128">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L129">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L130">        paramCheck();</span>
+<span class="nc" id="L131">    }</span>
 
 
     /**
@@ -109,35 +144,43 @@ public class LinearRegressionSGD extends LinearRegression {
      */
     @Override
     public LinearRegressionSGD fit(double[] features, double[] targets) {
-<span class="nc" id="L112">        Map&lt;String, Object&gt; results = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L113">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L147">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L148">        SGD.setScheduler(this.schedule);</span>
 
         // Convert features and targets to matrix representations.
-<span class="nc" id="L116">        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));</span>
-<span class="nc" id="L117">        Matrix y = new Vector(targets);</span>
+<span class="nc" id="L151">        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));</span>
+<span class="nc" id="L152">        Matrix y = new Vector(targets);</span>
 
-<span class="nc" id="L119">        w = SGD.optimize(LossFunctions.sse, X, y);</span>
-
-<span class="nc" id="L121">        results.put(&quot;coefficients&quot;, w.T().getValuesAsDouble()[0]);</span>
+<span class="nc" id="L154">        w = SGD.optimize(LossFunctions.sse, X, y);</span>
 
         // Update the model details
-<span class="nc" id="L124">        super.isFit=true;</span>
-<span class="nc" id="L125">        buildDetails();</span>
+<span class="nc" id="L157">        super.isFit=true;</span>
+<span class="nc" id="L158">        buildDetails();</span>
 
-<span class="nc" id="L127">        return this;</span>
+<span class="nc" id="L160">        return this;</span>
     }
 
 
+    /**
+     * Gets the loss history from training.
+     *
+     * @return The loss of every iteration stored in a List.
+     */
+    public List&lt;Double&gt; getLossHist() {
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L171">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
+        }
 
-    public static void main(String[] args) {
-<span class="nc" id="L133">        Model&lt;double[], double[]&gt; model = new LinearRegressionSGD(0.02, 200);</span>
+<span class="nc" id="L174">        return SGD.getLossHist();</span>
+    }
 
-<span class="nc" id="L135">        double[] x = {0.05, 0.11, 0.15, 0.31, 0.46, 0.52, 0.7, 0.74, 0.82, 0.98, 1.171};</span>
-<span class="nc" id="L136">        double[] y = {0.956, 0.89, 0.832, 0.717, 0.571, 0.539, 0.378, 0.37, 0.306, 0.242, 0.104};</span>
-
-<span class="nc" id="L138">        model.fit(x, y);</span>
-
-<span class="nc" id="L140">        System.out.println(&quot;\n\n&quot; + model.getDetails() + &quot;\n\n&quot;);</span>
-<span class="nc" id="L141">    }</span>
+    private void paramCheck() {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if(!ValueError.isNonNegative(maxIterations))</span>
+<span class="nc" id="L179">            throw new IllegalArgumentException(&quot;maxIterations must be non-negative but got &quot; + maxIterations);</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if(!ValueError.isNonNegative(learningRate))</span>
+<span class="nc" id="L181">            throw new IllegalArgumentException(&quot;learningRate must be non-negative but got &quot; + learningRate);</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if(!ValueError.isNonNegative(threshold))</span>
+<span class="nc" id="L183">            throw new IllegalArgumentException(&quot;threshold must be non-negative but got &quot; + threshold);</span>
+<span class="nc" id="L184">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

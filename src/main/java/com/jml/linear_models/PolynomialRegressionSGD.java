@@ -4,10 +4,19 @@ import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
+import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
 
 
+/**
+ * Model for least squares regression of polynomials using {@link StochasticGradientDescent Stochastic Gradient Descent}.<br><br>
+ *
+ * PolynomialRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x  + b<sub>2</sub>x<sup>2</sup> + ... +
+ * b<sub>n</sub>x<sup>n</sup> to the datasets by minimizing
+ * the residuals of the sum of squares between the values in the target dataset and the values predicted
+ * by the model. This is solved using Stochastic Gradient Descent.
+ */
 public class PolynomialRegressionSGD extends PolynomialRegression {
     private double learningRate = 0.002;
     private double threshold = 0.5e-5;
@@ -38,6 +47,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        paramCheck();
     }
 
 
@@ -54,6 +64,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        paramCheck();
     }
 
 
@@ -67,6 +78,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     public PolynomialRegressionSGD(double learningRate) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
+        paramCheck();
     }
 
 
@@ -81,6 +93,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     public PolynomialRegressionSGD(int maxIterations) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.maxIterations = maxIterations;
+        paramCheck();
     }
 
 
@@ -110,5 +123,15 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         buildDetails();
 
         return this;
+    }
+
+
+    private void paramCheck() {
+        if(!ValueError.isNonNegative(maxIterations))
+            throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations);
+        if(!ValueError.isNonNegative(learningRate))
+            throw new IllegalArgumentException("learningRate must be non-negative but got " + learningRate);
+        if(!ValueError.isNonNegative(threshold))
+            throw new IllegalArgumentException("threshold must be non-negative but got " + threshold);
     }
 }

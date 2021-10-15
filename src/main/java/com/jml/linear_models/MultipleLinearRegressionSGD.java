@@ -5,6 +5,7 @@ import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
+import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -12,7 +13,7 @@ import linalg.Vector;
 /**
  * Model for least squares linear regression of multiple variables by stochastic gradient descent.<br><br>
  *
- * MultipleLinearRegressionSGD fits a model y = β<sub>0</sub> + β<sub>1</sub>x<sub>1</sub> + ... + β<sub>n</sub>x<sub>n</sub>
+ * MultipleLinearRegressionSGD fits a model y = b<sub>0</sub> + b<sub>1</sub>x<sub>1</sub> + ... + b<sub>n</sub>x<sub>n</sub>
  * to the datasets by minimizing the residuals of the sum of squares
  * (i.e. the {@link LossFunctions#sse sum of square errors}) between the values in the
  * target dataset and the values predicted by the model. This is minimized using stochastic gradient descent.
@@ -47,6 +48,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        paramCheck();
     }
 
 
@@ -63,6 +65,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        paramCheck();
     }
 
 
@@ -76,6 +79,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     public MultipleLinearRegressionSGD(double learningRate) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
+        paramCheck();
     }
 
 
@@ -90,6 +94,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     public MultipleLinearRegressionSGD(int maxIterations) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.maxIterations = maxIterations;
+        paramCheck();
     }
 
 
@@ -113,20 +118,12 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         return this;
     }
 
-
-    public static void main(String[] args) {
-        Model<double[][], double[]> model = new MultipleLinearRegressionSGD(0.00001, 5000);
-
-        // Data is from plane f(x_1, x_2) = 1 + 2x_1 + 3x_2
-        double[][] X = {{1, 2},
-                        {5, 3},
-                        {4, 5},
-                        {5, 1},
-                        {120, -2},
-                        {-12, 3}};
-        double[] y = {9, 22, 24, 14, 235, -14};
-
-        model.fit(X, y);
-        System.out.println("\n\n" + model.getDetails() + "\n\n");
+    private void paramCheck() {
+        if(!ValueError.isNonNegative(maxIterations))
+            throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations);
+        if(!ValueError.isNonNegative(learningRate))
+            throw new IllegalArgumentException("learningRate must be non-negative but got " + learningRate);
+        if(!ValueError.isNonNegative(threshold))
+            throw new IllegalArgumentException("threshold must be non-negative but got " + threshold);
     }
 }

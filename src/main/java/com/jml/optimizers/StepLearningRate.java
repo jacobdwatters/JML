@@ -12,7 +12,7 @@ package com.jml.optimizers;
 public class StepLearningRate extends Scheduler {
 
     double stepFactor;
-    double interval;
+    int interval;
 
 
     /**
@@ -30,7 +30,7 @@ public class StepLearningRate extends Scheduler {
      * @param stepFactor Factor to multiply the learning rate by every 10 iterations.
      */
     public StepLearningRate(double stepFactor) {
-        this.stepFactor=stepFactor;
+        this.stepFactor = stepFactor;
     }
 
 
@@ -41,8 +41,8 @@ public class StepLearningRate extends Scheduler {
      * @param interval Specified number of optimizer iterations to apply before applying this
      *                 scheduler rule.
      */
-    public StepLearningRate(double stepFactor, double interval) {
-        this.stepFactor=stepFactor;
+    public StepLearningRate(double stepFactor, int interval) {
+        this.stepFactor = stepFactor;
         this.interval = interval;
     }
 
@@ -56,6 +56,8 @@ public class StepLearningRate extends Scheduler {
     public void apply(Optimizer optm) {
         if(optm.iterations!=0 && optm.iterations%interval == 0) { // Then we apply the StepLearningRate optimizer
             optm.learningRate*=stepFactor;
+
+            System.out.println("\n\n" + optm.learningRate + "\n\n");
         } // Otherwise, do nothing.
     }
 }

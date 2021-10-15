@@ -4,23 +4,32 @@ import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
+import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
 
 
+/**
+ * Model for least squares regression of polynomials using {@link StochasticGradientDescent Stochastic Gradient Descent}.&lt;br&gt;&lt;br&gt;
+ *
+ * PolynomialRegression fits a model y = b&lt;sub&gt;0&lt;/sub&gt; + b&lt;sub&gt;1&lt;/sub&gt;x  + b&lt;sub&gt;2&lt;/sub&gt;x&lt;sup&gt;2&lt;/sup&gt; + ... +
+ * b&lt;sub&gt;n&lt;/sub&gt;x&lt;sup&gt;n&lt;/sup&gt; to the datasets by minimizing
+ * the residuals of the sum of squares between the values in the target dataset and the values predicted
+ * by the model. This is solved using Stochastic Gradient Descent.
+ */
 public class PolynomialRegressionSGD extends PolynomialRegression {
-<span class="nc" id="L12">    private double learningRate = 0.002;</span>
-<span class="nc" id="L13">    private double threshold = 0.5e-5;</span>
-<span class="nc" id="L14">    private int maxIterations = 1000;</span>
+<span class="nc" id="L21">    private double learningRate = 0.002;</span>
+<span class="nc" id="L22">    private double threshold = 0.5e-5;</span>
+<span class="nc" id="L23">    private int maxIterations = 1000;</span>
     private Optimizer SGD;
 
 
     /**
      * Creates a {@link PolynomialRegressionSGD} model. This will use a default learning rate of 0.002.
      */
-<span class="nc" id="L21">    public PolynomialRegressionSGD() {</span>
-<span class="nc" id="L22">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L23">    }</span>
+<span class="nc" id="L30">    public PolynomialRegressionSGD() {</span>
+<span class="nc" id="L31">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L32">    }</span>
 
 
     /**
@@ -34,11 +43,12 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L37">    public PolynomialRegressionSGD(int degree, double learningRate, double threshold, int maxIterations) {</span>
-<span class="nc" id="L38">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L39">        this.learningRate = learningRate;</span>
-<span class="nc" id="L40">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L41">    }</span>
+<span class="nc" id="L46">    public PolynomialRegressionSGD(int degree, double learningRate, double threshold, int maxIterations) {</span>
+<span class="nc" id="L47">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L48">        this.learningRate = learningRate;</span>
+<span class="nc" id="L49">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L50">        paramCheck();</span>
+<span class="nc" id="L51">    }</span>
 
 
     /**
@@ -50,11 +60,12 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L53">    public PolynomialRegressionSGD(double learningRate, int maxIterations) {</span>
-<span class="nc" id="L54">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L55">        this.learningRate = learningRate;</span>
-<span class="nc" id="L56">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L57">    }</span>
+<span class="nc" id="L63">    public PolynomialRegressionSGD(double learningRate, int maxIterations) {</span>
+<span class="nc" id="L64">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L65">        this.learningRate = learningRate;</span>
+<span class="nc" id="L66">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L67">        paramCheck();</span>
+<span class="nc" id="L68">    }</span>
 
 
     /**
@@ -64,10 +75,11 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L67">    public PolynomialRegressionSGD(double learningRate) {</span>
-<span class="nc" id="L68">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L69">        this.learningRate = learningRate;</span>
-<span class="nc" id="L70">    }</span>
+<span class="nc" id="L78">    public PolynomialRegressionSGD(double learningRate) {</span>
+<span class="nc" id="L79">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L80">        this.learningRate = learningRate;</span>
+<span class="nc" id="L81">        paramCheck();</span>
+<span class="nc" id="L82">    }</span>
 
 
     /**
@@ -78,10 +90,11 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L81">    public PolynomialRegressionSGD(int maxIterations) {</span>
-<span class="nc" id="L82">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L83">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L84">    }</span>
+<span class="nc" id="L93">    public PolynomialRegressionSGD(int maxIterations) {</span>
+<span class="nc" id="L94">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L95">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L96">        paramCheck();</span>
+<span class="nc" id="L97">    }</span>
 
 
     /**
@@ -97,19 +110,29 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      */
     @Override
     public PolynomialRegressionSGD fit(double[] features, double[] targets) {
-<span class="nc" id="L100">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L113">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
 
         // Convert features and targets to matrix representations.
-<span class="nc" id="L103">        Matrix X = Matrix.van( new Vector(features), degree+1); // TODO;</span>
-<span class="nc" id="L104">        Matrix y = new Vector(targets);</span>
+<span class="nc" id="L116">        Matrix X = Matrix.van( new Vector(features), degree+1); // TODO;</span>
+<span class="nc" id="L117">        Matrix y = new Vector(targets);</span>
 
-<span class="nc" id="L106">        w = SGD.optimize(LossFunctions.sse, X, y);</span>
+<span class="nc" id="L119">        w = SGD.optimize(LossFunctions.sse, X, y);</span>
 
         // Update the model details
-<span class="nc" id="L109">        super.isFit=true;</span>
-<span class="nc" id="L110">        buildDetails();</span>
+<span class="nc" id="L122">        super.isFit=true;</span>
+<span class="nc" id="L123">        buildDetails();</span>
 
-<span class="nc" id="L112">        return this;</span>
+<span class="nc" id="L125">        return this;</span>
     }
+
+
+    private void paramCheck() {
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if(!ValueError.isNonNegative(maxIterations))</span>
+<span class="nc" id="L131">            throw new IllegalArgumentException(&quot;maxIterations must be non-negative but got &quot; + maxIterations);</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if(!ValueError.isNonNegative(learningRate))</span>
+<span class="nc" id="L133">            throw new IllegalArgumentException(&quot;learningRate must be non-negative but got &quot; + learningRate);</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if(!ValueError.isNonNegative(threshold))</span>
+<span class="nc" id="L135">            throw new IllegalArgumentException(&quot;threshold must be non-negative but got &quot; + threshold);</span>
+<span class="nc" id="L136">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,6 +1,8 @@
 com\jml\optimizers\Scheduler.class
 com\jml\clasifiers\LogisticRegression.class
 com\jml\clasifiers\KNearestNeighbors.class
+com\jml\optimizers\StepLearningRate.class
 com\jml\linear_models\MultipleLinearRegressionSGD.class
+com\jml\util\ValueError.class
 com\jml\linear_models\PolynomialRegressionSGD.class
 com\jml\core\Gradient.class

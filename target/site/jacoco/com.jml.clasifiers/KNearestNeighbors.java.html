@@ -1,6 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KNearestNeighbors.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.clasifiers</a> &gt; <span class="el_source">KNearestNeighbors.java</span></div><h1>KNearestNeighbors.java</h1><pre class="source lang-java linenums">package com.jml.clasifiers;
 
-<span class="nc" id="L3">public class KNearestNeighbors {</span>
+import com.jml.core.Model;
+import linalg.Matrix;
 
+<span class="nc" id="L6">public class KNearestNeighbors&lt;X&gt; extends Model&lt;X, double[]&gt; {</span>
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L10">        Model&lt;double[], double[]&gt; mdl = new KNearestNeighbors();</span>
+<span class="nc" id="L11">    }</span>
+
+
+    /**
+     * Fits or trains the model with the given features and targets.
+     *
+     * @param features The features of the training set.
+     * @param targets  The targets of the training set.
+     * @return This. i.e. the trained model.
+     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
+     *                                  the specification when the model was compiled.
+     */
+    @Override
+    public Model&lt;X, double[]&gt; fit(Object features, double[] targets) {
+<span class="nc" id="L25">        return null;</span>
+    }
+
+    /**
+     * Uses fitted/trained model to make prediction on single feature.
+     *
+     * @param features The features to make predictions on.
+     * @return The models predicted labels.
+     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
+     *                                  the specification when the model was compiled.
+     * @throws IllegalStateException    Thrown if the model has not been compiled and fit.
+     */
+    @Override
+    public double[] predict(X features) {
+<span class="nc" id="L39">        return new double[0];</span>
+    }
+
+    /**
+     * Makes a prediction using a model by specifying the parameters of the model.
+     * Unlike the other predict method, no model needs to be trained to use this method since the parameters provided
+     * define a model.
+     *
+     * @param w Parameters of the model
+     * @param X Features to make prediction on
+     * @return prediction on the features using the given model parameters.
+     */
+    @Override
+    public Matrix predict(Matrix w, Matrix X) {
+<span class="nc" id="L53">        return null;</span>
+    }
+
+    /**
+     * Gets the parameters of the trained model.
+     *
+     * @return A matrix containing the parameters of the trained model.
+     */
+    @Override
+    public Matrix getParams() {
+<span class="nc" id="L63">        return null;</span>
+    }
+
+    /**
+     * Saves a trained model to the specified file path.
+     *
+     * @param filePath File path, including extension, to save fitted / trained model to.
+     */
+    @Override
+    public void saveModel(String filePath) {
+
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Forms a string of the important aspects of the model.&lt;br&gt;
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+<span class="nc" id="L84">        return null;</span>
+    }
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L94">        return null;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

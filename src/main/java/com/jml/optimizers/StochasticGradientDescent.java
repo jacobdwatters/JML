@@ -99,14 +99,13 @@ public class StochasticGradientDescent extends Optimizer{
 
         iterations = 0; // Ensure iterations is set to zero before applying optimizer.
 
-        // TODO: Need the function function so we can compute loss_history[-1] > threshold as a stopping criteria.
         while(iterations<maxIterations && lossHistory.get(lossHistory.size()-1) > threshold) {
             // w = w - alpha*grad_SSE(w, x, y)
             w = w.sub(Gradient.compute(w, X, y, function, model).scalMult(learningRate));
             lossHistory.add(function.compute(w, X, y, model).getAsDouble(0, 0));
 
             if(scheduler!=null) {
-                scheduler.apply(this); // TODO: will also need to pass function history for some schedulers rule
+                scheduler.apply(this);
             }
 
             iterations++;

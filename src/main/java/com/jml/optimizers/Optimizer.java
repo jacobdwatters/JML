@@ -23,7 +23,7 @@ public abstract class Optimizer {
     double learningRate = 0.2; // Learning rate of the optimizer.
     Model model; // Model which the optimizer is working on. This is needed since loss functions depends on a model.
     Scheduler scheduler; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
-    List<Double> lossHistory; // Tracks loss per iteration of the optimizer.
+    List<Double> lossHistory = new ArrayList<>(); // Tracks loss per iteration of the optimizer.
 
 
     /**
