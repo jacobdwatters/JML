@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PolynomialRegression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">PolynomialRegression.java</span></div><h1>PolynomialRegression.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
@@ -18,9 +19,9 @@ import linalg.Vector;
  * by the model. This is solved explicitly.
  */
 public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
-<span class="fc" id="L21">    String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();</span>
+<span class="fc" id="L22">    String MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION.toString();</span>
 
-<span class="fc" id="L23">    protected boolean isFit = false;</span>
+<span class="fc" id="L24">    protected boolean isFit = false;</span>
 
     protected int degree; // Defaults to simple linear regression.
     protected double[] coefficients;
@@ -28,13 +29,21 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
     // Weights of the model
     protected Matrix w;
 
+    // Details of model in human-readable format.
+<span class="fc" id="L33">    private StringBuilder details = new StringBuilder(</span>
+            &quot;Model Details\n&quot; +
+                    &quot;----------------------------\n&quot; +
+                    &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
+                    &quot;Is Trained: No\n&quot;
+    );
+
 
     /**
      * Creates a default polynomial regression model. The default model is a degree one polynomial.
      */
-<span class="fc" id="L35">    public PolynomialRegression() {</span>
-<span class="fc" id="L36">        this.degree = 1;</span>
-<span class="fc" id="L37">    }</span>
+<span class="fc" id="L44">    public PolynomialRegression() {</span>
+<span class="fc" id="L45">        this.degree = 1;</span>
+<span class="fc" id="L46">    }</span>
 
 
     /**
@@ -42,23 +51,13 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
      *
      * @param degree Degree of polynomial to fit data.
      */
-<span class="fc" id="L45">    public PolynomialRegression(int degree) {</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if(degree &lt; 1) {</span>
-<span class="fc" id="L47">            throw new IllegalArgumentException(&quot;Degree must be greater than or equal to 1 but got &quot; + degree);</span>
+<span class="fc" id="L54">    public PolynomialRegression(int degree) {</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if(degree &lt; 1) {</span>
+<span class="fc" id="L56">            throw new IllegalArgumentException(&quot;Degree must be greater than or equal to 1 but got &quot; + degree);</span>
         }
 
-<span class="fc" id="L50">        this.degree = degree;</span>
-<span class="fc" id="L51">    }</span>
-
-
-    // Details of model in human-readable format.
-<span class="fc" id="L55">    private StringBuilder details = new StringBuilder(</span>
-            &quot;Model Details\n&quot; +
-            &quot;----------------------------\n&quot; +
-            &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-            &quot;Is Compiled: No\n&quot; +
-            &quot;Is Trained: No\n&quot;
-    );
+<span class="fc" id="L59">        this.degree = degree;</span>
+<span class="fc" id="L60">    }</span>
 
 
     /**
@@ -68,20 +67,20 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
     public PolynomialRegression fit(double[] features, double[] targets) {
 
 
-<span class="fc" id="L71">        Vector x = new Vector(features);</span>
-<span class="fc" id="L72">        Matrix y = (new Vector(targets)).toMatrix();</span>
-<span class="fc" id="L73">        Matrix V = Matrix.van(x, degree+1);</span>
-<span class="fc" id="L74">        Matrix VT = V.T();</span>
+<span class="fc" id="L70">        Vector x = new Vector(features);</span>
+<span class="fc" id="L71">        Matrix y = (new Vector(targets)).toMatrix();</span>
+<span class="fc" id="L72">        Matrix V = Matrix.van(x, degree+1);</span>
+<span class="fc" id="L73">        Matrix VT = V.T();</span>
 
-<span class="fc" id="L76">        Matrix A = VT.mult(V);</span>
-<span class="fc" id="L77">        Vector b = VT.mult(y).toVector();</span>
-<span class="fc" id="L78">        w = Solvers.solve(A, b);</span>
-<span class="fc" id="L79">        coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L75">        Matrix A = VT.mult(V);</span>
+<span class="fc" id="L76">        Vector b = VT.mult(y).toVector();</span>
+<span class="fc" id="L77">        w = Solvers.solve(A, b);</span>
+<span class="fc" id="L78">        coefficients = w.T().getValuesAsDouble()[0];</span>
 
-<span class="fc" id="L81">        isFit = true;</span>
-<span class="fc" id="L82">        buildDetails(); // Build the details of the model.</span>
+<span class="fc" id="L80">        isFit = true;</span>
+<span class="fc" id="L81">        buildDetails(); // Build the details of the model.</span>
 
-<span class="fc" id="L84">        return this;</span>
+<span class="fc" id="L83">        return this;</span>
     }
 
 
@@ -95,21 +94,21 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
      * @return The models predicted labels.
      */
     public double[] predict(double[] features) {
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        if(!isFit) {</span>
-<span class="fc" id="L99">            throw new IllegalStateException(&quot;Model must be fit before predictions can be made.&quot;);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L98">            throw new IllegalStateException(&quot;Model must be fit before predictions can be made.&quot;);</span>
         }
 
-<span class="fc" id="L102">        double[] predictions = new double[features.length];</span>
-<span class="fc" id="L103">        int position = 0;</span>
+<span class="fc" id="L101">        double[] predictions = new double[features.length];</span>
+<span class="fc" id="L102">        int position = 0;</span>
 
-<span class="fc bfc" id="L105" title="All 2 branches covered.">        for(double feature : features) { // For each feature, compute the prediction.</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">            for (int j = coefficients.length - 1; j &gt;= 0; j--) {</span>
-<span class="fc" id="L107">                predictions[position] += coefficients[j] * Math.pow(feature, j);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        for(double feature : features) { // For each feature, compute the prediction.</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            for (int j = coefficients.length - 1; j &gt;= 0; j--) {</span>
+<span class="fc" id="L106">                predictions[position] += coefficients[j] * Math.pow(feature, j);</span>
             }
-<span class="fc" id="L109">            position++;</span>
+<span class="fc" id="L108">            position++;</span>
         }
 
-<span class="fc" id="L112">        return predictions;</span>
+<span class="fc" id="L111">        return predictions;</span>
     }
 
 
@@ -118,7 +117,7 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
      */
     @Override
     public Matrix predict(Matrix X, Matrix w) {
-<span class="nc" id="L121">        return X.mult(w);</span>
+<span class="nc" id="L120">        return X.mult(w);</span>
     }
 
 
@@ -127,7 +126,7 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
      */
     @Override
     public Matrix getParams() {
-<span class="fc" id="L130">        return this.w;</span>
+<span class="fc" id="L129">        return this.w;</span>
     }
 
 
@@ -142,56 +141,56 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
         String linOrPolyType;
         Block[] blockList;
 
-<span class="fc bfc" id="L145" title="All 2 branches covered.">        if(!isFit) {</span>
-<span class="fc" id="L146">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L145">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="fc bfc" id="L148" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
-<span class="fc" id="L149">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
+<span class="fc" id="L148">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="fc bfc" id="L152" title="All 2 branches covered.">        if(this instanceof LinearRegression) {</span>
-<span class="fc" id="L153">            blockList = new Block[2];</span>
-<span class="fc" id="L154">            linOrPolyType = ModelTypes.LINEAR_REGRESSION.toString();</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if(this instanceof LinearRegression) {</span>
+<span class="fc" id="L152">            blockList = new Block[2];</span>
+<span class="fc" id="L153">            linOrPolyType = ModelTypes.LINEAR_REGRESSION.toString();</span>
         } else {
-<span class="fc" id="L156">            blockList = new Block[3];</span>
-<span class="fc" id="L157">            linOrPolyType = this.MODEL_TYPE;</span>
-<span class="fc" id="L158">            blockList[2] = new Block(LinearModelTags.DEGREE.toString(), Integer.toString(degree));</span>
+<span class="fc" id="L155">            blockList = new Block[3];</span>
+<span class="fc" id="L156">            linOrPolyType = this.MODEL_TYPE;</span>
+<span class="fc" id="L157">            blockList[2] = new Block(LinearModelTags.DEGREE.toString(), Integer.toString(degree));</span>
         }
 
         // Construct the blocks for the model file.
-<span class="fc" id="L162">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), linOrPolyType);</span>
-<span class="fc" id="L163">        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));</span>
+<span class="fc" id="L161">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), linOrPolyType);</span>
+<span class="fc" id="L162">        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));</span>
 
-<span class="fc" id="L165">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
-<span class="fc" id="L166">    }</span>
+<span class="fc" id="L164">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="fc" id="L165">    }</span>
 
 
     // Construct details of model
     protected void buildDetails() {
-<span class="fc" id="L171">        details = new StringBuilder(</span>
+<span class="fc" id="L170">        details = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                 &quot;----------------------------\n&quot; +
                 &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L175" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
                 );
 
-<span class="fc" id="L178">        details.append(&quot;Polynomial Degree: &quot; + degree + &quot;\n&quot;);</span>
+<span class="fc" id="L177">        details.append(&quot;Polynomial Degree: &quot; + degree + &quot;\n&quot;);</span>
 
-<span class="pc bpc" id="L180" title="2 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
-<span class="fc" id="L181">            coefficients = w.T().getValuesAsDouble()[0];</span>
-<span class="fc" id="L182">            details.append(&quot;Coefficients (low-&gt;high): &quot;);</span>
-<span class="fc" id="L183">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L184">            details.append(&quot;\nPolynomial: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x + &quot;);</span>
+<span class="pc bpc" id="L179" title="2 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
+<span class="fc" id="L180">            coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L181">            details.append(&quot;Coefficients (low-&gt;high): &quot;);</span>
+<span class="fc" id="L182">            details.append(ArrayUtils.asString(coefficients));</span>
+<span class="fc" id="L183">            details.append(&quot;\nPolynomial: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x + &quot;);</span>
 
-<span class="fc bfc" id="L186" title="All 2 branches covered.">            for(int i=2; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L187">                details.append(coefficients[i] + &quot;x^&quot; + i);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">            for(int i=2; i&lt;coefficients.length; i++) {</span>
+<span class="fc" id="L186">                details.append(coefficients[i] + &quot;x^&quot; + i);</span>
 
-<span class="fc bfc" id="L189" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
-<span class="fc" id="L190">                    details.append(&quot; + &quot;);</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
+<span class="fc" id="L189">                    details.append(&quot; + &quot;);</span>
                 }
             }
         }
-<span class="fc" id="L194">    }</span>
+<span class="fc" id="L193">    }</span>
 
 
     /**
@@ -202,7 +201,7 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L205">       return this.toString();</span>
+<span class="fc" id="L204">       return this.toString();</span>
     }
 
 
@@ -213,23 +212,23 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
      */
     @Override
     public String toString() {
-<span class="fc" id="L216">        return details.toString();</span>
+<span class="fc" id="L215">        return details.toString();</span>
     }
 
     public static void main(String[] args) {
-<span class="nc" id="L220">        double[] x = {1, 4, 5, 6, 7};</span>
-<span class="nc" id="L221">        double[] y = {3, 4, 5, 6, 10};</span>
+<span class="nc" id="L219">        double[] x = {1, 4, 5, 6, 7};</span>
+<span class="nc" id="L220">        double[] y = {3, 4, 5, 6, 10};</span>
 
-<span class="nc" id="L223">        Model model = new LinearRegression();</span>
-<span class="nc" id="L224">        model.fit(x, y);</span>
+<span class="nc" id="L222">        Model model = new LinearRegression();</span>
+<span class="nc" id="L223">        model.fit(x, y);</span>
 
-<span class="nc" id="L226">        System.out.println(model.getDetails());</span>
-<span class="nc" id="L227">        System.out.println(ArrayUtils.asString(model.getParams().T().getValuesAsDouble()[0]));</span>
+<span class="nc" id="L225">        System.out.println(model.getDetails());</span>
+<span class="nc" id="L226">        System.out.println(ArrayUtils.asString(model.getParams().T().getValuesAsDouble()[0]));</span>
 
-<span class="nc" id="L229">        model.saveModel(&quot;temp.mdl&quot;);</span>
+<span class="nc" id="L228">        model.saveModel(&quot;temp.mdl&quot;);</span>
 
-<span class="nc" id="L231">        Model nmdl = Model.load(&quot;temp.mdl&quot;);</span>
+<span class="nc" id="L230">        Model nmdl = Model.load(&quot;temp.mdl&quot;);</span>
 //        System.out.println(nmdl.getDetails());
-<span class="nc" id="L233">    }</span>
+<span class="nc" id="L232">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

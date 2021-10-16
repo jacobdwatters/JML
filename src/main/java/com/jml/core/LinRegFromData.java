@@ -2,9 +2,7 @@ package com.jml.core;
 
 import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.LinearRegression;
-import com.jml.util.ArrayUtils;
 import linalg.Matrix;
-import linalg.Vector;
 
 import java.util.Arrays;
 import java.util.List;

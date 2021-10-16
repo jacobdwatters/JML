@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArrayUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.util</a> &gt; <span class="el_source">ArrayUtils.java</span></div><h1>ArrayUtils.java</h1><pre class="source lang-java linenums">package com.jml.util;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 
-<span class="nc" id="L6">public class ArrayUtils {</span>
+<span class="nc" id="L8">public class ArrayUtils {</span>
 
 
     /**
@@ -14,15 +16,15 @@ import java.math.RoundingMode;
      * @return Array with rounded numbers.
      */
     public static double[] round(double[] arr, int n) {
-<span class="fc" id="L17">        double[] result = new double[arr.length];</span>
+<span class="fc" id="L19">        double[] result = new double[arr.length];</span>
         BigDecimal bd;
 
-<span class="fc bfc" id="L20" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L21">            bd = BigDecimal.valueOf(arr[i]).setScale(n, RoundingMode.HALF_UP);</span>
-<span class="fc" id="L22">            result[i] = bd.doubleValue();</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L23">            bd = BigDecimal.valueOf(arr[i]).setScale(n, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L24">            result[i] = bd.doubleValue();</span>
         }
 
-<span class="fc" id="L25">        return result;</span>
+<span class="fc" id="L27">        return result;</span>
     }
 
 
@@ -34,13 +36,35 @@ import java.math.RoundingMode;
      * @return Array with rounded numbers.
      */
     public static double[][] round(double[][] arr, int n) {
-<span class="fc" id="L37">        double[][] result = new double[arr.length][arr[0].length];</span>
+<span class="fc" id="L39">        double[][] result = new double[arr.length][arr[0].length];</span>
 
-<span class="fc bfc" id="L39" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L40">            result[i] = round(arr[i], n);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L42">            result[i] = round(arr[i], n);</span>
         }
 
-<span class="fc" id="L43">        return result;</span>
+<span class="fc" id="L45">        return result;</span>
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString(int[] arr) {
+<span class="nc" id="L56">        return asString(toObject(arr));</span>
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString(int[][] arr) {
+<span class="nc" id="L67">        return asString(toObject(arr));</span>
     }
 
 
@@ -51,17 +75,7 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString(double[] arr) {
-<span class="fc" id="L54">        StringBuilder arrAsString = new StringBuilder(&quot;&quot;);</span>
-
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L57">            arrAsString.append(arr[i]);</span>
-
-<span class="fc bfc" id="L59" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
-<span class="fc" id="L60">                arrAsString.append(&quot;, &quot;);</span>
-            }
-        }
-
-<span class="fc" id="L64">        return arrAsString.toString();</span>
+<span class="fc" id="L78">        return asString(toObject(arr));</span>
     }
 
 
@@ -72,23 +86,95 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString(double[][] arr) {
-<span class="fc" id="L75">        StringBuilder arrAsString = new StringBuilder(&quot;&quot;);</span>
+<span class="nc" id="L89">        return asString2D(toObject2D(arr));</span>
+    }
 
 
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc bfc" id="L79" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
-<span class="fc" id="L80">                arrAsString.append(arr[i][j]);</span>
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString(Object[] arr) {
+<span class="fc" id="L100">        StringBuilder arrAsString = new StringBuilder(&quot;&quot;);</span>
 
-<span class="fc bfc" id="L82" title="All 2 branches covered.">                if(j!=arr.length-1) {</span>
-<span class="fc" id="L83">                    arrAsString.append(&quot;, &quot;);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L103">            arrAsString.append(arr[i].toString());</span>
+
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
+<span class="fc" id="L106">                arrAsString.append(&quot;, &quot;);</span>
+            }
+        }
+
+<span class="fc" id="L110">        return arrAsString.toString();</span>
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString2D(Object[][] arr) {
+<span class="nc" id="L121">        StringBuilder arrAsString = new StringBuilder(&quot;&quot;);</span>
+
+
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="nc" id="L126">                arrAsString.append(arr[i][j].toString());</span>
+
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                if(j!=arr[0].length-1) {</span>
+<span class="nc" id="L129">                    arrAsString.append(&quot;, &quot;);</span>
                 }
             }
 
-<span class="fc" id="L87">            arrAsString.append(&quot;\n&quot;);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if(i!=arr.length-1) {</span>
+<span class="nc" id="L134">                arrAsString.append(&quot;;\n&quot;);</span>
+            }
         }
 
-<span class="fc" id="L90">        return arrAsString.toString();</span>
+<span class="nc" id="L138">        return arrAsString.toString();</span>
     }
 
+
+    /**
+     * Converts an array to an Object array.
+     * @return The array as an object array
+     */
+    public static Object[] toObject(Object val) {
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (val instanceof Object[])</span>
+<span class="nc" id="L148">            return (Object[])val;</span>
+<span class="fc" id="L149">        int arrlength = Array.getLength(val);</span>
+<span class="fc" id="L150">        Object[] outputArray = new Object[arrlength];</span>
+
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        for(int i = 0; i &lt; arrlength; ++i){</span>
+<span class="fc" id="L153">            outputArray[i] = Array.get(val, i);</span>
+        }
+
+<span class="fc" id="L156">        return outputArray;</span>
+    }
+
+
+    /**
+     * Converts an array to an Object array.
+     * @return The array as an object array
+     */
+    public static Object[][] toObject2D(Object val) {
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (val instanceof Object[][])</span>
+<span class="nc" id="L166">            return (Object[][])val;</span>
+<span class="nc" id="L167">        int arrlength = Array.getLength(val);</span>
+<span class="nc" id="L168">        int arrlength2 = Array.getLength(Array.get(val, 0));</span>
+<span class="nc" id="L169">        Object[][] outputArray = new Object[arrlength][arrlength2];</span>
+
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        for(int i = 0; i &lt; arrlength; ++i){</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            for(int j=0; j&lt;arrlength2; j++) {</span>
+<span class="nc" id="L173">                outputArray[i][j] = Array.get(Array.get(val, i), j);</span>
+            }
+        }
+
+<span class="nc" id="L177">        return outputArray;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

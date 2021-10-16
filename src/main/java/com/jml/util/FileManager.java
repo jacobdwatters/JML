@@ -18,7 +18,7 @@ public class FileManager {
     /**
      * Writes a string to a file.
      * @param data Raw data to write to file.
-     * @param filePath File path including file extension/
+     * @param filePath File path including file extension
      */
     public static void stringToFile(String data, String filePath) {
 
@@ -32,6 +32,7 @@ public class FileManager {
 
     /**
      * Reads content from a file.
+     * @param filePath File path including file extension of the file to load.
      * @return Raw content of file.
      */
     public static String readFile(String filePath) {

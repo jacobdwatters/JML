@@ -18,7 +18,7 @@ public class FileManager {
     /**
      * Writes a string to a file.
      * @param data Raw data to write to file.
-     * @param filePath File path including file extension/
+     * @param filePath File path including file extension
      */
     public static void stringToFile(String data, String filePath) {
 
@@ -32,19 +32,20 @@ public class FileManager {
 
     /**
      * Reads content from a file.
+     * @param filePath File path including file extension of the file to load.
      * @return Raw content of file.
      */
     public static String readFile(String filePath) {
-<span class="fc" id="L38">        StringBuilder contentBuilder = new StringBuilder();</span>
+<span class="fc" id="L39">        StringBuilder contentBuilder = new StringBuilder();</span>
 
-<span class="fc" id="L40">        try (Stream&lt;String&gt; stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {</span>
-<span class="fc" id="L41">            stream.forEach(s -&gt; contentBuilder.append(s).append(&quot;\n&quot;));</span>
+<span class="fc" id="L41">        try (Stream&lt;String&gt; stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {</span>
+<span class="fc" id="L42">            stream.forEach(s -&gt; contentBuilder.append(s).append(&quot;\n&quot;));</span>
         }
-<span class="fc" id="L43">        catch (IOException e) {</span>
-<span class="fc" id="L44">            System.err.println(&quot;Could not read file &quot; + filePath);</span>
-<span class="fc" id="L45">        }</span>
+<span class="fc" id="L44">        catch (IOException e) {</span>
+<span class="fc" id="L45">            System.err.println(&quot;Could not read file &quot; + filePath);</span>
+<span class="fc" id="L46">        }</span>
 
-<span class="fc" id="L47">        return contentBuilder.toString();</span>
+<span class="fc" id="L48">        return contentBuilder.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,5 +1,6 @@
 package com.jml.linear_models;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
@@ -31,7 +32,6 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
             "Model Details\n" +
                     "----------------------------\n" +
                     "Model Type: " + this.MODEL_TYPE+ "\n" +
-                    "Is Compiled: No\n" +
                     "Is Trained: No\n"
     );
 
@@ -190,5 +190,6 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                                             {-0.1, 3.5, 2, 6}};
 
         model.fit(features, targets);
+        System.out.println(model.toString());
     }
 }

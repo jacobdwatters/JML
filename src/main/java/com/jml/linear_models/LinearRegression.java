@@ -16,7 +16,6 @@ public class LinearRegression extends PolynomialRegression {
     private String details = "Model Details\n" +
             "----------------------------\n" +
             "Model Type: " + this.MODEL_TYPE+ "\n" +
-            "Is Compiled: No\n" +
             "Is Trained: No\n";
 
 

@@ -1,7 +1,9 @@
 package com.jml.util;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 
 public class ArrayUtils {
 
@@ -50,11 +52,55 @@ public class ArrayUtils {
      * @param arr Array of interests.
      * @return The string representation of arr.
      */
+    public static String asString(int[] arr) {
+        return asString(toObject(arr));
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString(int[][] arr) {
+        return asString(toObject(arr));
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
     public static String asString(double[] arr) {
+        return asString(toObject(arr));
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString(double[][] arr) {
+        return asString2D(toObject2D(arr));
+    }
+
+
+    /**
+     * Converts the array to a string.
+     *
+     * @param arr Array of interests.
+     * @return The string representation of arr.
+     */
+    public static String asString(Object[] arr) {
         StringBuilder arrAsString = new StringBuilder("");
 
         for(int i=0; i<arr.length; i++) {
-            arrAsString.append(arr[i]);
+            arrAsString.append(arr[i].toString());
 
             if(i!=arr.length-1) {
                 arrAsString.append(", ");
@@ -71,23 +117,63 @@ public class ArrayUtils {
      * @param arr Array of interests.
      * @return The string representation of arr.
      */
-    public static String asString(double[][] arr) {
+    public static String asString2D(Object[][] arr) {
         StringBuilder arrAsString = new StringBuilder("");
 
 
         for(int i=0; i<arr.length; i++) {
             for(int j=0; j<arr[0].length; j++) {
-                arrAsString.append(arr[i][j]);
+                arrAsString.append(arr[i][j].toString());
 
-                if(j!=arr.length-1) {
+                if(j!=arr[0].length-1) {
                     arrAsString.append(", ");
                 }
             }
 
-            arrAsString.append("\n");
+            if(i!=arr.length-1) {
+                arrAsString.append(";\n");
+            }
         }
 
         return arrAsString.toString();
     }
 
+
+    /**
+     * Converts an array to an Object array.
+     * @return The array as an object array
+     */
+    public static Object[] toObject(Object val) {
+        if (val instanceof Object[])
+            return (Object[])val;
+        int arrlength = Array.getLength(val);
+        Object[] outputArray = new Object[arrlength];
+
+        for(int i = 0; i < arrlength; ++i){
+            outputArray[i] = Array.get(val, i);
+        }
+
+        return outputArray;
+    }
+
+
+    /**
+     * Converts an array to an Object array.
+     * @return The array as an object array
+     */
+    public static Object[][] toObject2D(Object val) {
+        if (val instanceof Object[][])
+            return (Object[][])val;
+        int arrlength = Array.getLength(val);
+        int arrlength2 = Array.getLength(Array.get(val, 0));
+        Object[][] outputArray = new Object[arrlength][arrlength2];
+
+        for(int i = 0; i < arrlength; ++i){
+            for(int j=0; j<arrlength2; j++) {
+                outputArray[i][j] = Array.get(Array.get(val, i), j);
+            }
+        }
+
+        return outputArray;
+    }
 }

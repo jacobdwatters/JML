@@ -16,7 +16,6 @@ import com.jml.util.ArrayUtils;
 <span class="fc" id="L16">    private String details = &quot;Model Details\n&quot; +</span>
             &quot;----------------------------\n&quot; +
             &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-            &quot;Is Compiled: No\n&quot; +
             &quot;Is Trained: No\n&quot;;
 
 
@@ -32,27 +31,27 @@ import com.jml.util.ArrayUtils;
      */
     @Override
     public LinearRegression fit(double[] features, double[] targets) {
-<span class="fc" id="L35">        super.fit(features, targets);</span>
-<span class="fc" id="L36">        buildDetails();</span>
-<span class="fc" id="L37">        return this;</span>
+<span class="fc" id="L34">        super.fit(features, targets);</span>
+<span class="fc" id="L35">        buildDetails();</span>
+<span class="fc" id="L36">        return this;</span>
     }
 
 
     // Construct details of model
     @Override
     protected void buildDetails() {
-<span class="fc" id="L44">        details =&quot;Model Details\n&quot; +</span>
+<span class="fc" id="L43">        details =&quot;Model Details\n&quot; +</span>
                 &quot;----------------------------\n&quot; +
                 &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
 
-<span class="pc bpc" id="L49" title="1 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
-<span class="fc" id="L50">            coefficients = w.T().getValuesAsDouble()[0];</span>
-<span class="fc" id="L51">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
-<span class="fc" id="L52">            details += ArrayUtils.asString(coefficients);</span>
-<span class="fc" id="L53">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
+<span class="pc bpc" id="L48" title="2 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
+<span class="fc" id="L49">            coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L50">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
+<span class="fc" id="L51">            details += ArrayUtils.asString(coefficients);</span>
+<span class="fc" id="L52">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
         }
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L54">    }</span>
 
 
     /**
@@ -63,7 +62,7 @@ import com.jml.util.ArrayUtils;
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L66">        return this.toString();</span>
+<span class="fc" id="L65">        return this.toString();</span>
     }
 
 
@@ -74,7 +73,7 @@ import com.jml.util.ArrayUtils;
      */
     @Override
     public String toString() {
-<span class="fc" id="L77">        return details;</span>
+<span class="fc" id="L76">        return details;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

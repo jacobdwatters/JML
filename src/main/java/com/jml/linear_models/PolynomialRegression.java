@@ -1,5 +1,6 @@
 package com.jml.linear_models;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
@@ -28,6 +29,14 @@ public class PolynomialRegression extends Model<double[], double[]> {
     // Weights of the model
     protected Matrix w;
 
+    // Details of model in human-readable format.
+    private StringBuilder details = new StringBuilder(
+            "Model Details\n" +
+                    "----------------------------\n" +
+                    "Model Type: " + this.MODEL_TYPE+ "\n" +
+                    "Is Trained: No\n"
+    );
+
 
     /**
      * Creates a default polynomial regression model. The default model is a degree one polynomial.
@@ -49,16 +58,6 @@ public class PolynomialRegression extends Model<double[], double[]> {
 
         this.degree = degree;
     }
-
-
-    // Details of model in human-readable format.
-    private StringBuilder details = new StringBuilder(
-            "Model Details\n" +
-            "----------------------------\n" +
-            "Model Type: " + this.MODEL_TYPE+ "\n" +
-            "Is Compiled: No\n" +
-            "Is Trained: No\n"
-    );
 
 
     /**
