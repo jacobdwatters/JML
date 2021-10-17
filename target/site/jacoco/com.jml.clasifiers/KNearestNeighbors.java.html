@@ -9,16 +9,17 @@ import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
+
 public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
 
-<span class="nc" id="L14">    String MODEL_TYPE = ModelTypes.K_NEAREST_NEIGHBORS.toString();</span>
+<span class="nc" id="L15">    String MODEL_TYPE = ModelTypes.K_NEAREST_NEIGHBORS.toString();</span>
     protected int k, p;
     protected Matrix X; // Matrix representation of model features.
     protected Matrix y; // Matrix representation of model targets.
-<span class="nc" id="L18">    protected boolean isFit = false;</span>
+<span class="nc" id="L19">    protected boolean isFit = false;</span>
 
     // Details of model in human-readable format.
-<span class="nc" id="L21">    private StringBuilder details = new StringBuilder(</span>
+<span class="nc" id="L22">    private StringBuilder details = new StringBuilder(</span>
             &quot;Model Details\n&quot; +
                     &quot;----------------------------\n&quot; +
                     &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
@@ -31,35 +32,35 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
      * Creates a KNearestNeighbors model with a default k of 3. That is, the model will consider the three closest
      * neighbors when making class prediction. The default distance metric is euclidean distance.
      */
-<span class="nc" id="L34">    public KNearestNeighbors() {</span>
-<span class="nc" id="L35">        this.k = 3;</span>
-<span class="nc" id="L36">        this.p = 2;</span>
-<span class="nc" id="L37">        buildDetails();</span>
-<span class="nc" id="L38">    }</span>
+<span class="nc" id="L35">    public KNearestNeighbors() {</span>
+<span class="nc" id="L36">        this.k = 3;</span>
+<span class="nc" id="L37">        this.p = 2;</span>
+<span class="nc" id="L38">        buildDetails();</span>
+<span class="nc" id="L39">    }</span>
 
 
     /**
      * Creates a KNearestNeighbors model with a specified k. The default distance metric is euclidean distance.
      * @param k Number of neighbors to consider when making a class prediction.
      */
-<span class="nc" id="L45">    public KNearestNeighbors(int k) {</span>
-<span class="nc" id="L46">        this.k = k;</span>
-<span class="nc" id="L47">        this.p = 2;</span>
-<span class="nc" id="L48">        buildDetails();</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L46">    public KNearestNeighbors(int k) {</span>
+<span class="nc" id="L47">        this.k = k;</span>
+<span class="nc" id="L48">        this.p = 2;</span>
+<span class="nc" id="L49">        buildDetails();</span>
+<span class="nc" id="L50">    }</span>
 
 
     /**
-     * Creates a KNearestNeighbors model with a specified k.
+     * Creates a KNearestNeighbors model with a specified k and power parameter for distance metric.
      * @param k Number of neighbors to consider when making a class prediction.
      * @param p Power parameter of the Minkowski distance i.e. sum( | x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt; | &lt;sup&gt;p&lt;/sup&gt; ) &lt;sup&gt;1/p&lt;/sup&gt;.
      *          If p=2, this is equivalent to the euclidean distance. If p=1 this is equivalent to the manhattan distance.
      */
-<span class="nc" id="L58">    public KNearestNeighbors(int k, int p) {</span>
-<span class="nc" id="L59">        this.k = k;</span>
-<span class="nc" id="L60">        this.p = p;</span>
-<span class="nc" id="L61">        buildDetails();</span>
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L59">    public KNearestNeighbors(int k, int p) {</span>
+<span class="nc" id="L60">        this.k = k;</span>
+<span class="nc" id="L61">        this.p = p;</span>
+<span class="nc" id="L62">        buildDetails();</span>
+<span class="nc" id="L63">    }</span>
 
 
     /**
@@ -74,16 +75,16 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
     @Override
     // TODO: Construct a K-d tree so that the predict method does not need to use a brute force algorithm.
     public Model&lt;double[][], int[]&gt; fit(double[][] features, int[] targets) {
-<span class="nc bnc" id="L77" title="All 2 branches missed.">        if(features.length != targets.length) {</span>
-<span class="nc" id="L78">            throw new IllegalArgumentException(&quot;Number of features does not match the number of targets&quot;);</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if(features.length != targets.length) {</span>
+<span class="nc" id="L79">            throw new IllegalArgumentException(&quot;Number of features does not match the number of targets&quot;);</span>
         }
 
-<span class="nc" id="L81">        X = new Matrix(features);</span>
-<span class="nc" id="L82">        y = new Vector(targets, 1);</span>
-<span class="nc" id="L83">        isFit = true;</span>
-<span class="nc" id="L84">        buildDetails();</span>
+<span class="nc" id="L82">        X = new Matrix(features);</span>
+<span class="nc" id="L83">        y = new Vector(targets, 1);</span>
+<span class="nc" id="L84">        isFit = true;</span>
+<span class="nc" id="L85">        buildDetails();</span>
 
-<span class="nc" id="L86">        return this;</span>
+<span class="nc" id="L87">        return this;</span>
     }
 
 
@@ -97,34 +98,34 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
      * @throws IllegalStateException    Thrown if the model has not been fit.
      */
     public int[] predict(double[][] features) {
-<span class="nc" id="L100">        double[][] distances = new double[features.length][X.numRows()];</span>
-<span class="nc" id="L101">        int[] predictions = new int[features.length];</span>
+<span class="nc" id="L101">        double[][] distances = new double[features.length][X.numRows()];</span>
+<span class="nc" id="L102">        int[] predictions = new int[features.length];</span>
         int[] mindices;
         double[] classes;
 
-<span class="nc" id="L105">        Matrix F = new Matrix(features);</span>
+<span class="nc" id="L106">        Matrix F = new Matrix(features);</span>
         Matrix z;
         Matrix Xtakez; // Holds the result of X-z
 
-<span class="nc bnc" id="L109" title="All 2 branches missed.">        for(int i=0; i&lt;features.length; i++) { // Compute distances</span>
-<span class="nc" id="L110">            z = F.getRowAsVector(i).extend(X.numRows());</span>
-<span class="nc" id="L111">            Xtakez = X.sub(z);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        for(int i=0; i&lt;features.length; i++) { // Compute distances</span>
+<span class="nc" id="L111">            z = F.getRowAsVector(i).extend(X.numRows());</span>
+<span class="nc" id="L112">            Xtakez = X.sub(z);</span>
 
-<span class="nc bnc" id="L113" title="All 2 branches missed.">            for(int j=0; j&lt;X.numRows(); j++) {</span>
-<span class="nc" id="L114">                distances[i][j] = Xtakez.getRowAsVector(j).norm(p).re;</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            for(int j=0; j&lt;X.numRows(); j++) {</span>
+<span class="nc" id="L115">                distances[i][j] = Xtakez.getRowAsVector(j).norm(p).re;</span>
             }
 
-<span class="nc" id="L117">            mindices = Stats.minIndices(distances[i], this.k);</span>
-<span class="nc" id="L118">            classes = new double[mindices.length];</span>
+<span class="nc" id="L118">            mindices = Stats.minIndices(distances[i], this.k);</span>
+<span class="nc" id="L119">            classes = new double[mindices.length];</span>
 
-<span class="nc bnc" id="L120" title="All 2 branches missed.">            for(int j=0; j&lt;classes.length; j++) {</span>
-<span class="nc" id="L121">                classes[j] = (int) y.getAsDouble(0, mindices[j]);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">            for(int j=0; j&lt;classes.length; j++) {</span>
+<span class="nc" id="L122">                classes[j] = (int) y.getAsDouble(0, mindices[j]);</span>
             }
 
-<span class="nc" id="L124">            predictions[i] = (int) Stats.mode(classes);</span>
+<span class="nc" id="L125">            predictions[i] = (int) Stats.mode(classes);</span>
         }
 
-<span class="nc" id="L127">        return predictions;</span>
+<span class="nc" id="L128">        return predictions;</span>
     }
 
 
@@ -140,7 +141,7 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
     // TODO: F need to be [X|y](that is features and targets of the training set) and X needs to be the features to make a prediction on.
     @Override
     public Matrix predict(Matrix X, Matrix F) {
-<span class="nc" id="L143">        return new Vector(predict(X.getValuesAsDouble()));</span>
+<span class="nc" id="L144">        return new Vector(predict(X.getValuesAsDouble()));</span>
     }
 
 
@@ -153,7 +154,7 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
      */
     @Override
     public Matrix getParams() {
-<span class="nc" id="L156">        return X;</span>
+<span class="nc" id="L157">        return X;</span>
     }
 
 
@@ -166,36 +167,36 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
     public void saveModel(String filePath) {
         Block[] blockList;
 
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L170">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L171">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="nc bnc" id="L172" title="All 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
-<span class="nc" id="L173">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
+<span class="nc" id="L174">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="nc" id="L176">        blockList = new Block[4];</span>
+<span class="nc" id="L177">        blockList = new Block[4];</span>
 
         // Construct the blocks for the model file.
-<span class="nc" id="L179">        blockList[0] = new Block(ClassifierTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
-<span class="nc" id="L180">        blockList[1] = new Block(ClassifierTags.K.toString(), Integer.toString(this.k));</span>
-<span class="nc" id="L181">        blockList[2] = new Block(ClassifierTags.FEATURES.toString(), ArrayUtils.asString(X.getValuesAsDouble()));</span>
-<span class="nc" id="L182">        blockList[3] = new Block(ClassifierTags.CLASSES.toString(), ArrayUtils.asString(y.getValuesAsDouble()));</span>
+<span class="nc" id="L180">        blockList[0] = new Block(ClassifierTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="nc" id="L181">        blockList[1] = new Block(ClassifierTags.K.toString(), Integer.toString(this.k));</span>
+<span class="nc" id="L182">        blockList[2] = new Block(ClassifierTags.FEATURES.toString(), ArrayUtils.asString(X.getValuesAsDouble()));</span>
+<span class="nc" id="L183">        blockList[3] = new Block(ClassifierTags.CLASSES.toString(), ArrayUtils.asString(y.getValuesAsDouble()));</span>
 
-<span class="nc" id="L184">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
-<span class="nc" id="L185">    }</span>
+<span class="nc" id="L185">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="nc" id="L186">    }</span>
 
 
     // Construct details of model
     protected void buildDetails() {
-<span class="nc" id="L190">        details = new StringBuilder(</span>
+<span class="nc" id="L191">        details = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                         &quot;----------------------------\n&quot; +
                         &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="nc bnc" id="L194" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
                         &quot;k-neighbors: &quot; + k + &quot;\n&quot; +
                         &quot;distance parameter: &quot; + p
         );
-<span class="nc" id="L198">    }</span>
+<span class="nc" id="L199">    }</span>
 
 
     /**
@@ -206,7 +207,7 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L209">        return details.toString();</span>
+<span class="nc" id="L210">        return details.toString();</span>
     }
 
 
@@ -217,7 +218,7 @@ public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
      */
     @Override
     public String toString() {
-<span class="nc" id="L220">        return getDetails();</span>
+<span class="nc" id="L221">        return getDetails();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

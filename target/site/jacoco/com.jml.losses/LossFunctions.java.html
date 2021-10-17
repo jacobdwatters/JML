@@ -23,8 +23,8 @@ public class LossFunctions {
      * where &lt;code&gt;x&lt;code/&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;code/&gt;,
      * and &lt;code&gt;x&lt;code/&gt; is the actual data and &lt;code&gt;y&lt;code/&gt; is the predicted data.
      */
-<span class="nc" id="L26">    public static Function sse = (Matrix w, Matrix X, Matrix y, Model model) -&gt; {</span>
-<span class="nc" id="L27">        return model.predict(X, w).sub(y).T().mult(model.predict(X, w).sub(y));</span>
+<span class="fc" id="L26">    public static Function sse = (Matrix w, Matrix X, Matrix y, Model model) -&gt; {</span>
+<span class="fc" id="L27">        return model.predict(X, w).sub(y).T().mult(model.predict(X, w).sub(y));</span>
     };
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

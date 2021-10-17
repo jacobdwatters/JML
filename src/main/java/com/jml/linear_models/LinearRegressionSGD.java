@@ -1,18 +1,14 @@
 package com.jml.linear_models;
 
 
-import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StepLearningRate;
 import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 import linalg.Vector;
 import com.jml.util.ValueError;
-
-import java.util.List;
 
 
 /**
@@ -24,11 +20,11 @@ import java.util.List;
  */
 public class LinearRegressionSGD extends LinearRegression {
 
-    private double learningRate = 0.002;
-    private double threshold = 0.5e-5;
-    private int maxIterations = 1000;
-    private Optimizer SGD;
-    private Scheduler schedule;
+    protected double learningRate = 0.002;
+    protected double threshold = 0.5e-5;
+    protected int maxIterations = 1000;
+    protected Optimizer SGD;
+    protected Scheduler schedule;
 
 
     /**
@@ -55,12 +51,14 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
+     * @param schedule Learning rate scheduler.
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
     public LinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {
         super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        this.threshold = threshold;
         this.schedule = schedule;
         paramCheck();
     }
@@ -81,6 +79,7 @@ public class LinearRegressionSGD extends LinearRegression {
         super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        this.threshold = threshold;
         paramCheck();
     }
 
@@ -166,12 +165,12 @@ public class LinearRegressionSGD extends LinearRegression {
      *
      * @return The loss of every iteration stored in a List.
      */
-    public List<Double> getLossHist() {
+    public double[] getLossHist() {
         if(!isFit) {
             throw new IllegalStateException("Model must be trained before the loss history can be computed.");
         }
 
-        return SGD.getLossHist();
+        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
     }
 
     private void paramCheck() {

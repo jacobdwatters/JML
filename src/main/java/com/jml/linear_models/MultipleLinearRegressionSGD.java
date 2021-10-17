@@ -4,6 +4,7 @@ import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
+import com.jml.optimizers.Scheduler;
 import com.jml.optimizers.StochasticGradientDescent;
 import com.jml.util.ValueError;
 import linalg.Matrix;
@@ -20,10 +21,12 @@ import linalg.Vector;
  */
 public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 
-    private double learningRate = 0.002;
-    private double threshold = 0.5e-5;
-    private int maxIterations = 1000;
+    protected double learningRate = 0.002;
+    protected double threshold = 0.5e-5;
+    protected int maxIterations = 1000;
     private Optimizer SGD;
+    protected Scheduler schedule;
+
 
     /**
      * Creates a {@link MultipleLinearRegressionSGD} model.  This will use a default learning rate of 0.002.
@@ -39,15 +42,38 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
+     * @param maxIterations Maximum number of iterations to run for during.
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     *                  If the loss is less than the specified threshold, gradient descent will stop early.
+     * @param schedule Learning rate scheduler.
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+    public MultipleLinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {
+        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
+        this.learningRate = learningRate;
+        this.maxIterations = maxIterations;
+        this.threshold = threshold;
+        this.schedule = schedule;
+        paramCheck();
+    }
+
+
+    /**
+     *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
      * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-    public MultipleLinearRegressionSGD(double learningRate, double threshold, int maxIterations) {
+    public MultipleLinearRegressionSGD(double learningRate, int maxIterations, double threshold) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        this.threshold = threshold;
         paramCheck();
     }
 
@@ -104,6 +130,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     @Override
     public MultipleLinearRegressionSGD fit(double[][] features, double[] targets) {
         SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
+        SGD.setScheduler(this.schedule);
 
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
@@ -117,6 +144,16 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 
         return this;
     }
+
+
+    public double[] getLossHist() {
+        if(!isFit) {
+            throw new IllegalStateException("Model must be trained before the loss history can be computed.");
+        }
+
+        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
+    }
+
 
     private void paramCheck() {
         if(!ValueError.isNonNegative(maxIterations))

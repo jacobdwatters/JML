@@ -3,6 +3,7 @@ package com.jml.linear_models;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
+import com.jml.optimizers.Scheduler;
 import com.jml.optimizers.StochasticGradientDescent;
 import com.jml.util.ValueError;
 import linalg.Matrix;
@@ -18,10 +19,11 @@ import linalg.Vector;
  * by the model. This is solved using Stochastic Gradient Descent.
  */
 public class PolynomialRegressionSGD extends PolynomialRegression {
-    private double learningRate = 0.002;
-    private double threshold = 0.5e-5;
-    private int maxIterations = 1000;
+    protected double learningRate = 0.002;
+    protected double threshold = 0.5e-5;
+    protected int maxIterations = 1000;
     private Optimizer SGD;
+    protected Scheduler schedule;
 
 
     /**
@@ -29,6 +31,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      */
     public PolynomialRegressionSGD() {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
+        this.degree = 1;
     }
 
 
@@ -37,16 +40,43 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
+     * @param degree Degree of the polynomial to fit.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     *                  If the loss is less than the specified threshold, gradient descent will stop early.
+     * @param maxIterations Maximum number of iterations to run for during
+     * @param schedule Learning rate scheduler to apply during gradient descent.
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+    public PolynomialRegressionSGD(int degree, double learningRate, int maxIterations, double threshold, Scheduler schedule) {
+        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
+        this.learningRate = learningRate;
+        this.maxIterations = maxIterations;
+        this.threshold = threshold;
+        this.degree = degree;
+        this.schedule = schedule;
+        paramCheck();
+    }
+
+
+    /**
+     *  Creates a {@link PolynomialRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
+     *
+     * @param degree Degree of the polynomial to fit.
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
      * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-    public PolynomialRegressionSGD(int degree, double learningRate, double threshold, int maxIterations) {
+    public PolynomialRegressionSGD(int degree, double learningRate, int maxIterations, double threshold) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        this.threshold = threshold;
+        this.degree = degree;
         paramCheck();
     }
 
@@ -56,14 +86,16 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
+     * @param degree Degree of the polynomial to fit.
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-    public PolynomialRegressionSGD(double learningRate, int maxIterations) {
+    public PolynomialRegressionSGD(int degree, double learningRate, int maxIterations) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
+        this.degree = degree;
         paramCheck();
     }
 
@@ -73,26 +105,27 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
+     * @param degree Degree of the polynomial to fit.
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-    public PolynomialRegressionSGD(double learningRate) {
+    public PolynomialRegressionSGD(int degree, double learningRate) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
+        this.degree = degree;
         paramCheck();
     }
 
 
     /**
      *  Creates a {@link PolynomialRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
-     *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will fit a
+     *  polynomial of the specified degree using gradient descent.
      *
-     * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param degree Degree of the polynomial to fit.
      */
-    public PolynomialRegressionSGD(int maxIterations) {
+    public PolynomialRegressionSGD(int degree) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
-        this.maxIterations = maxIterations;
+        this.degree = degree;
         paramCheck();
     }
 
@@ -111,9 +144,10 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     @Override
     public PolynomialRegressionSGD fit(double[] features, double[] targets) {
         SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
+        SGD.setScheduler(this.schedule);
 
         // Convert features and targets to matrix representations.
-        Matrix X = Matrix.van( new Vector(features), degree+1); // TODO;
+        Matrix X = Matrix.van( new Vector(features), degree+1);
         Matrix y = new Vector(targets);
 
         w = SGD.optimize(LossFunctions.sse, X, y);
@@ -123,6 +157,20 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         buildDetails();
 
         return this;
+    }
+
+
+    /**
+     * Gets the loss history from training.
+     *
+     * @return The loss of every iteration stored in a List.
+     */
+    public double[] getLossHist() {
+        if(!isFit) {
+            throw new IllegalStateException("Model must be trained before the loss history can be computed.");
+        }
+
+        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
     }
 
 
