@@ -109,6 +109,10 @@ public class Stats {
      * @return The variance of the data.
      */
     public static double variance(double[] data) {
+        if(data.length < 2) {
+            throw new IllegalArgumentException("Variance requires at least two data points.");
+        }
+
         return sst(data)/(data.length-1);
     }
 
@@ -121,7 +125,7 @@ public class Stats {
      * @return The standard deviation of the data.
      */
     public static double std(double[] data) {
-        return Math.sqrt(variance(data));
+        return Math.sqrt(sst(data)/data.length);
     }
 
 

@@ -56,8 +56,6 @@ public class StepLearningRate extends Scheduler {
     public void apply(Optimizer optm) {
         if(optm.iterations!=0 && optm.iterations%interval == 0) { // Then we apply the StepLearningRate optimizer
             optm.learningRate*=stepFactor;
-
-            System.out.println("\n\n" + optm.learningRate + "\n\n");
         } // Otherwise, do nothing.
     }
 }

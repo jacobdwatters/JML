@@ -9,6 +9,7 @@ import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
+
 public class KNearestNeighbors extends Model<double[][], int[]> {
 
     String MODEL_TYPE = ModelTypes.K_NEAREST_NEIGHBORS.toString();
