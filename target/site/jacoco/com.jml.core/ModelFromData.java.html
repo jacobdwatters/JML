@@ -32,11 +32,11 @@ class ModelFromData {
 <span class="fc bfc" id="L32" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION.toString())) {</span>
 <span class="fc" id="L33">            model = LinRegFromData.create(tags, contents);</span>
 
-<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {</span>
 <span class="fc" id="L36">            model = MultRegFromData.create(tags, contents);</span>
 
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.K_NEAREST_NEIGHBORS.toString())){</span>
-<span class="nc" id="L39">            model = KnnFromData.create(tags, contents);</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.K_NEAREST_NEIGHBORS.toString())){</span>
+<span class="fc" id="L39">            model = KnnFromData.create(tags, contents);</span>
 
 <span class="nc bnc" id="L41" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
             // TODO:

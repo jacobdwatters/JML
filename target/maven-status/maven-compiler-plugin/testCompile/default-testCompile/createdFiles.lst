@@ -1,4 +1,5 @@
 com\jml\linear_models\LinRegSGDTest.class
 com\jml\linear_models\PolyRegTest.class
 com\jml\optimizers\StepLearningRateTest.class
+com\jml\classifiers\KnnTest.class
 com\jml\linear_models\MultRegSGDTest.class
