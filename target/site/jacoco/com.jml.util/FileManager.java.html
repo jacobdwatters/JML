@@ -57,7 +57,7 @@ public class FileManager {
      * @return The CSV file contents as a 2D array of Strings
      */
     public static String[][] readCSVtoString(String filePath) {
-        Scanner sc;
+<span class="fc" id="L60">        Scanner sc = null;</span>
         String[] arr;
 <span class="fc" id="L62">        String[][] csv= null;</span>
 
@@ -76,12 +76,16 @@ public class FileManager {
             }
 
 
-<span class="fc" id="L79">        } catch (FileNotFoundException e) {</span>
-<span class="fc" id="L80">            System.err.println(&quot;Error: Must pass file names as commandline arguments or provide a list of file names in FileList.txt&quot;);</span>
-<span class="fc" id="L81">            e.printStackTrace();</span>
-<span class="fc" id="L82">        }</span>
+<span class="nc" id="L79">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L80">            System.err.println(&quot;Error: Must pass file names as commandline arguments or provide a list of file names in FileList.txt&quot;);</span>
+<span class="nc" id="L81">            e.printStackTrace();</span>
+        } finally {
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            if(sc != null) {</span>
+<span class="fc" id="L84">                sc.close();</span>
+            }
+        }
 
-<span class="fc" id="L84">        return csv;</span>
+<span class="fc" id="L88">        return csv;</span>
     }
 
 
@@ -92,8 +96,8 @@ public class FileManager {
      * @return The CSV file contents as a 2D array of doubles
      */
     public static double[][] readCSVtoDouble(String filePath) {
-<span class="nc" id="L95">        String[][] fileContent = readCSVtoString(filePath);</span>
-<span class="nc" id="L96">        return ArrayUtils.toDouble(fileContent);</span>
+<span class="nc" id="L99">        String[][] fileContent = readCSVtoString(filePath);</span>
+<span class="nc" id="L100">        return ArrayUtils.toDouble(fileContent);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

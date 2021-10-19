@@ -80,7 +80,9 @@ public class FileManager {
             System.err.println("Error: Must pass file names as commandline arguments or provide a list of file names in FileList.txt");
             e.printStackTrace();
         } finally {
-            sc.close();
+            if(sc != null) {
+                sc.close();
+            }
         }
 
         return csv;
