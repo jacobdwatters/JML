@@ -1,7 +1,8 @@
-com\jml\preprocessing\Encode.class
+com\jml\core\DataLoader.class
 com\jml\optimizers\Scheduler.class
 com\jml\clasifiers\LogisticRegression.class
 com\jml\clasifiers\KNearestNeighbors.class
+com\jml\preprocessing\Encoder.class
 com\jml\optimizers\StepLearningRate.class
 com\jml\linear_models\MultipleLinearRegressionSGD.class
 com\jml\core\Block.class

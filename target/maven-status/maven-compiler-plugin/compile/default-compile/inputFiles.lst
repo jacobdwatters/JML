@@ -6,6 +6,7 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\PolynomialRe
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\losses\LossGradients.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\ArrayErrors.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\optimizers\StochasticGradientDescent.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\DataLoader.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\PolyRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Stats.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\ValueError.java
@@ -33,7 +34,7 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\MultRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\ArrayUtils.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Gradient.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\ModelTypes.java
-C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\preprocessing\Encode.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Block.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\preprocessing\Encoder.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\layers\Layer.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\preprocessing\Normalize.java

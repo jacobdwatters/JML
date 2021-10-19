@@ -228,7 +228,7 @@ public class Stats {
         int mindex = -1;
 
         for(int i=0; i< data.length; i++) {
-            if(data[i] <= minimum) { // Then we have a new minimum
+            if(data[i] < minimum) { // Then we have a new minimum
                 minimum = data[i];
                 mindex = i;
             }

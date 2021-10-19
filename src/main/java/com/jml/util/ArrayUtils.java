@@ -3,7 +3,6 @@ package com.jml.util;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
 
 public class ArrayUtils {
 
@@ -175,5 +174,43 @@ public class ArrayUtils {
         }
 
         return outputArray;
+    }
+
+
+    /**
+     * Converts a String array to an array of doubles.<br>
+     * Also see {@link #toDouble(String[][])} for 2D arrays.
+     *
+     * @param arr Array to convert to doubles.
+     * @return Content of arr in a double array.
+     */
+    public static double[] toDouble(String[] arr) {
+        double[] arrAsDouble = new double[arr.length];
+
+        for(int i=0; i<arr.length; i++) {
+            arrAsDouble[i] = Double.valueOf(arr[i]);
+        }
+
+        return arrAsDouble;
+    }
+
+
+    /**
+     * Converts a String array to an array of doubles.<br>
+     * Also see {@link #toDouble(String[])} for 1D arrays.
+     *
+     * @param arr Array to convert to doubles.
+     * @return Content of arr in a double array.
+     */
+    public static double[][] toDouble(String[][] arr) {
+        double[][] arrAsDouble = new double[arr.length][arr[0].length];
+
+        for(int i=0; i<arr.length; i++) {
+            for(int j=0; j<arr[0].length; j++) {
+                arrAsDouble[i][j] = Double.valueOf(arr[i][j]);
+            }
+        }
+
+        return arrAsDouble;
     }
 }

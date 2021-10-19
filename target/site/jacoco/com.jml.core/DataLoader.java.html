@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.core</a> &gt; <span class="el_source">DataLoader.java</span></div><h1>DataLoader.java</h1><pre class="source lang-java linenums">package com.jml.core;
+
+
+import com.jml.clasifiers.KNearestNeighbors;
+import com.jml.preprocessing.Encoder;
+import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The DataLoader class contains several methods to load data for models.
+ */
+public class DataLoader {
+
+<span class="nc" id="L17">    private DataLoader() {</span>
+<span class="nc" id="L18">        throw new IllegalStateException(&quot;Utility class. Cannot be instantiated.&quot;);</span>
+    }
+
+
+    /**
+     * Loads targets and features from a csv file. &lt;br&gt;&lt;br&gt;
+     *
+     * The csv file is assumed to have one data sample per row. The last
+     * column is assumed to be the target column, while all other columns are feature columns. If you wish to specify
+     * what column indices contain targets vs features see {@link #loadFeaturesAndTargets(String, int[], int[])}.
+     *
+     * @param filePath The path, including the extension, of the csv file containing the targets and features.
+     * @return An array list of length two containing the features and targets of the dataset in that order.
+     */
+    public static List&lt;String[][]&gt; loadFeaturesAndTargets(String filePath) {
+<span class="fc" id="L33">        List&lt;String[][]&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L34">        String[][] content = FileManager.readCSVtoString(filePath);</span>
+
+<span class="fc" id="L36">        String[][] features = new String[content.length][content[0].length-1];</span>
+<span class="fc" id="L37">        String[][] targets = new String[content.length][1];</span>
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for(int i=0; i&lt; content.length; i++) {</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">            for(int j=0; j&lt; content[0].length-1; j++) {</span>
+<span class="fc" id="L41">                features[i][j] = content[i][j];</span>
+            }
+
+<span class="fc" id="L44">            targets[i][0] = content[i][content[0].length-1];</span>
+        }
+
+<span class="fc" id="L47">        data.add(features);</span>
+<span class="fc" id="L48">        data.add(targets);</span>
+
+<span class="fc" id="L50">        return data;</span>
+    }
+
+
+    /**
+     * Loads targets and features from a csv file.&lt;br&gt;&lt;br&gt;
+     *
+     * The csv file is assumed to have one data sample per row. Each column is either a feature or a target.
+     * Also see {@link #loadFeaturesAndTargets(String)}
+     *
+     * @param filePath The path, including the extension, of the csv file containing the targets and features.
+     * @param featureColumns Indices of columns containing features.
+     * @param targetColumns Indices of columns containing targets.
+     * @return An array list of length two containing the features and targets of the dataset in that order.
+     */
+    public static List&lt;String[][]&gt; loadFeaturesAndTargets(String filePath, int[] featureColumns, int[] targetColumns) {
+<span class="nc" id="L66">        List&lt;String[][]&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L67">        String[][] content = FileManager.readCSVtoString(filePath);</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if(featureColumns.length + targetColumns.length != content[0].length) {</span>
+<span class="nc" id="L70">            throw new IllegalArgumentException(&quot;Total number of passed feature and target columns must match &quot;</span>
+            + &quot;the number of columns in the file. However, got (&quot; + featureColumns.length + &quot;, &quot; + targetColumns.length +
+                    &quot;) and total columns in the csv file &quot; + content[0].length);
+        }
+
+<span class="nc" id="L75">        String[][] features = new String[content.length][featureColumns.length];</span>
+<span class="nc" id="L76">        String[][] targets = new String[content.length][targetColumns.length];</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for(int j : featureColumns) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">            for(int i=0; i&lt; content.length; i++) {</span>
+<span class="nc" id="L80">                features[i][j] = content[i][j];</span>
+            }
+        }
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        for(int j : targetColumns) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            for(int i=0; i&lt; content.length; i++) {</span>
+<span class="nc" id="L86">                targets[i][j] = content[i][j];</span>
+            }
+        }
+
+<span class="nc" id="L90">        data.add(features);</span>
+<span class="nc" id="L91">        data.add(targets);</span>
+
+<span class="nc" id="L93">        return data;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

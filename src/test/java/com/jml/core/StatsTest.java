@@ -125,7 +125,7 @@ public class StatsTest {
         int minIndex1 = 14;
         int minIndex2 = 0;
         int minIndex3 = 0;
-        int minIndex4 = 3;
+        int minIndex4 = 0;
 
         assertEquals(minIndex1, Stats.minIndex(dataset1));
         assertEquals(minIndex2, Stats.minIndex(dataset2));

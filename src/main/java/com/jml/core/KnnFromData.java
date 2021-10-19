@@ -35,6 +35,9 @@ class KnnFromData extends KNearestNeighbors {
             if(tag.equals(ClassifierTags.K.toString())) {
                 knnModel.k = scanner.nextInt();
 
+            } else if(tag.equals(ClassifierTags.P.toString())) {
+                knnModel.p = scanner.nextInt();
+
             } else if(tag.equals(ClassifierTags.FEATURES.toString())) {
                 List<double[]> features = new ArrayList<>();
                 String[] sample = new String[0];

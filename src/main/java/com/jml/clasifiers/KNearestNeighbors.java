@@ -26,7 +26,7 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
                     "Is Trained: No"
     );
 
-
+    // TODO: Add checks for k and p > 0.
 
     /**
      * Creates a KNearestNeighbors model with a default k of 3. That is, the model will consider the three closest
@@ -174,13 +174,14 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 
-        blockList = new Block[4];
+        blockList = new Block[5];
 
         // Construct the blocks for the model file.
         blockList[0] = new Block(ClassifierTags.MODEL_TYPE.toString(), this.MODEL_TYPE);
         blockList[1] = new Block(ClassifierTags.K.toString(), Integer.toString(this.k));
-        blockList[2] = new Block(ClassifierTags.FEATURES.toString(), ArrayUtils.asString(X.getValuesAsDouble()));
-        blockList[3] = new Block(ClassifierTags.CLASSES.toString(), ArrayUtils.asString(y.getValuesAsDouble()));
+        blockList[2] = new Block(ClassifierTags.P.toString(), Integer.toString(this.p));
+        blockList[3] = new Block(ClassifierTags.FEATURES.toString(), ArrayUtils.asString(X.getValuesAsDouble()));
+        blockList[4] = new Block(ClassifierTags.CLASSES.toString(), ArrayUtils.asString(y.getValuesAsDouble()));
 
         FileManager.stringToFile(Block.buildFileContent(blockList), filePath);
     }
