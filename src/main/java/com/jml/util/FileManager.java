@@ -77,8 +77,7 @@ public class FileManager {
 
 
         } catch (FileNotFoundException e) {
-            System.err.println("Error: Must pass file names as commandline arguments or provide a list of file names in FileList.txt");
-            e.printStackTrace();
+            System.err.println("Error: Could not read file " + filePath);
         } finally {
             if(sc != null) {
                 sc.close();

@@ -77,15 +77,14 @@ public class FileManager {
 
 
 <span class="nc" id="L79">        } catch (FileNotFoundException e) {</span>
-<span class="nc" id="L80">            System.err.println(&quot;Error: Must pass file names as commandline arguments or provide a list of file names in FileList.txt&quot;);</span>
-<span class="nc" id="L81">            e.printStackTrace();</span>
+<span class="nc" id="L80">            System.err.println(&quot;Error: Could not read file &quot; + filePath);</span>
         } finally {
-<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            if(sc != null) {</span>
-<span class="fc" id="L84">                sc.close();</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">            if(sc != null) {</span>
+<span class="fc" id="L83">                sc.close();</span>
             }
         }
 
-<span class="fc" id="L88">        return csv;</span>
+<span class="fc" id="L87">        return csv;</span>
     }
 
 
@@ -96,8 +95,8 @@ public class FileManager {
      * @return The CSV file contents as a 2D array of doubles
      */
     public static double[][] readCSVtoDouble(String filePath) {
-<span class="nc" id="L99">        String[][] fileContent = readCSVtoString(filePath);</span>
-<span class="nc" id="L100">        return ArrayUtils.toDouble(fileContent);</span>
+<span class="nc" id="L98">        String[][] fileContent = readCSVtoString(filePath);</span>
+<span class="nc" id="L99">        return ArrayUtils.toDouble(fileContent);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
