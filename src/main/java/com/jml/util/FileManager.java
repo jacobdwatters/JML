@@ -57,7 +57,7 @@ public class FileManager {
      * @return The CSV file contents as a 2D array of Strings
      */
     public static String[][] readCSVtoString(String filePath) {
-        Scanner sc;
+        Scanner sc = null;
         String[] arr;
         String[][] csv= null;
 
@@ -79,6 +79,8 @@ public class FileManager {
         } catch (FileNotFoundException e) {
             System.err.println("Error: Must pass file names as commandline arguments or provide a list of file names in FileList.txt");
             e.printStackTrace();
+        } finally {
+            sc.close();
         }
 
         return csv;
