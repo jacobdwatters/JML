@@ -5,12 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PolynomialRegressionSaveAndLoadTest {
+class PolynomialRegressionSaveAndLoadTest {
 
     Model<double[], double[]> model;
     Model<double[], double[]> loadedModel;
@@ -32,7 +29,6 @@ public class PolynomialRegressionSaveAndLoadTest {
     void SaveAndLoadModelDegree1TestCase() {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testPolyModel1.mdl";
 
-        model.compile();
         model.fit(features, targets);
         double[] initialPredictions = model.predict(tests);
         model.saveModel(filePath);
@@ -49,11 +45,7 @@ public class PolynomialRegressionSaveAndLoadTest {
     void SaveAndLoadModelDegree3TestCase() {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testPolyModel2.mdl";
 
-        Map<String, Double> args = new HashMap<>();
-        args.put(PolynomialRegression.DEGREE_KEY, 3.0);
-        args.put(PolynomialRegression.NORMALIZE_KEY, 1.0);
-
-        model.compile(args);
+        model = new PolynomialRegression(3);
         model.fit(features, targets);
         double[] initialPredictions = model.predict(tests);
         model.saveModel(filePath);
@@ -70,10 +62,7 @@ public class PolynomialRegressionSaveAndLoadTest {
     void SaveAndModelNotFitExceptionTestCase() {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testPolyModel3.mdl";
 
-        Map<String, Double> args = new HashMap<>();
-        args.put(PolynomialRegression.DEGREE_KEY, 10.0);
-
-        model.compile(args);
+        model = new PolynomialRegression(3);
         assertThrows(Exception.class, () -> model.saveModel(filePath));
     }
 
@@ -83,10 +72,7 @@ public class PolynomialRegressionSaveAndLoadTest {
     void SaveAndModelIncorrectFileExceptionTestCase() {
         String filePath = "./src/test/java/com/jml/linear_models/test_model_files/testPolyModel3.txt";
 
-        Map<String, Double> args = new HashMap<>();
-        args.put(PolynomialRegression.DEGREE_KEY, 2.0);
-
-        model.compile(args);
+        model = new PolynomialRegression(2);
         model.fit(features, targets);
         assertThrows(Exception.class, () -> model.saveModel(filePath));
         assertThrows(Exception.class, () -> Model.load(filePath));

@@ -2,6 +2,7 @@ package com.jml.core;
 
 import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.LinearRegression;
+import linalg.Matrix;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +18,6 @@ class LinRegFromData extends LinearRegression {
      */
     static Model create(List<String> tags, List<String> contents) {
         LinRegFromData linRegModel = new LinRegFromData();
-        linRegModel.isCompiled = true; // Since we are loading a pretrained model, set to true.
         linRegModel.isFit = true; // Since we are loading a pretrained model, set to true.
 
         while(!tags.isEmpty() && !contents.isEmpty()) {
@@ -26,15 +26,15 @@ class LinRegFromData extends LinearRegression {
             String content = contents.remove(0);
             scanner = new Scanner(content);
 
-            if(tag.equals(LinearModelTags.NORMALIZE.toString())) {
-                linRegModel.normalization = scanner.nextInt();
-
-            } else if(tag.equals(LinearModelTags.COEFFICIENTS.toString())) {
+            if(tag.equals(LinearModelTags.PARAMETERS.toString())) {
                 String[] coeffStrings = content.split(",");
 
                 linRegModel.coefficients = Arrays.stream(coeffStrings)
                         .mapToDouble(Double::parseDouble)
                         .toArray();
+
+                linRegModel.w = new Matrix(linRegModel.coefficients.length, 1);
+                linRegModel.w.setCol(linRegModel.coefficients, 0);
 
             } else {
                 throw new IllegalArgumentException("Failed to load model. Unrecognized tag in file.");

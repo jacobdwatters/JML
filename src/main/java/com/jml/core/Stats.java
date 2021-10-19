@@ -4,7 +4,7 @@ import com.jml.util.ArrayErrors;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
+import java.util.*;
 
 
 /**
@@ -75,6 +75,33 @@ public class Stats {
 
 
     /**
+     * Computes the mode of a dataset.
+     *
+     * @param data Dataset to compute the mode of.
+     * @return The mode of the dataset.
+     */
+    public static double mode(double[] data) {
+        double mode = 0;
+        int maxCount = 0, i, j;
+
+        for (i = 0; i < data.length; ++i) {
+            int count = 0;
+            for (j = 0; j < data.length; ++j) {
+                if (data[j] == data[i])
+                    ++count;
+            }
+
+            if (count > maxCount) {
+                maxCount = count;
+                mode = data[i];
+            }
+        }
+
+       return mode;
+    }
+
+
+    /**
      * Computes the variance for the data set. This is similar to the mean squared error but the
      * {@link #sst(double[]) sst} is divided by (n-1) where n is the number of obervations in the dataset.
      *
@@ -82,6 +109,10 @@ public class Stats {
      * @return The variance of the data.
      */
     public static double variance(double[] data) {
+        if(data.length < 2) {
+            throw new IllegalArgumentException("Variance requires at least two data points.");
+        }
+
         return sst(data)/(data.length-1);
     }
 
@@ -94,7 +125,7 @@ public class Stats {
      * @return The standard deviation of the data.
      */
     public static double std(double[] data) {
-        return Math.sqrt(variance(data));
+        return Math.sqrt(sst(data)/data.length);
     }
 
 
@@ -183,6 +214,78 @@ public class Stats {
         }
 
         return minimum;
+    }
+
+
+    /**
+     * Finds index of minimum value in an array.
+     *
+     * @param data The array to find index of minimum.
+     * @return The index of the entry with the smallest value.
+     */
+    public static int minIndex(double[] data) {
+        double minimum = Double.MAX_VALUE;
+        int mindex = -1;
+
+        for(int i=0; i< data.length; i++) {
+            if(data[i] < minimum) { // Then we have a new minimum
+                minimum = data[i];
+                mindex = i;
+            }
+        }
+
+        return mindex;
+    }
+
+
+
+    /**
+     * Finds indices of the k smallest values in an array.
+     *
+     * @param data The array to find indices of the smallest values.
+     * @return An array of length k containing the indices of the k smallest values.
+     */
+    public static int[] minIndices(double[] data, int k) {
+        if(k>data.length) {
+            throw new IllegalArgumentException("k can not be greater than the length of the array but got k=" + k +
+                    " and an array length of " + data.length);
+        }
+
+        int[] mindices = new int[k];
+
+        Map<Integer, Double> hm = new HashMap<>();
+
+        for(int i=0; i<data.length; i++) { // Fill hashmap
+            hm.put(i, data[i]);
+        }
+
+        // --------------------------------------- SORT HASHMAP --------------------------------
+        List<Map.Entry<Integer, Double> > list =
+                new LinkedList<Map.Entry<Integer, Double> >(hm.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Double> >() {
+            public int compare(Map.Entry<Integer, Double> o1,
+                               Map.Entry<Integer, Double> o2)
+            {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        // put data from sorted list to hashmap
+        HashMap<Integer, Double> sorted = new LinkedHashMap<Integer, Double>();
+        for (Map.Entry<Integer, Double> aa : list) {
+            sorted.put(aa.getKey(), aa.getValue());
+        }
+        // -------------------------------------------------------------------------------------
+
+        Object[] keys = sorted.keySet().toArray();
+
+        for(int i=0; i<k && i<keys.length; i++) {
+            mindices[i] = (int) keys[i];
+        }
+
+        return mindices;
     }
 
 

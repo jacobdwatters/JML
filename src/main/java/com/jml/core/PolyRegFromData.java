@@ -2,6 +2,8 @@ package com.jml.core;
 
 import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.PolynomialRegression;
+import linalg.Matrix;
+import linalg.Vector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,6 @@ class PolyRegFromData extends PolynomialRegression {
      */
     static Model create(List<String> tags, List<String> contents) {
         PolyRegFromData polyRegModel = new PolyRegFromData();
-        polyRegModel.isCompiled = true; // Since we are loading a pretrained model, set to true.
         polyRegModel.isFit = true; // Since we are loading a pretrained model, set to true.
 
         while(!tags.isEmpty() && !contents.isEmpty()) {
@@ -30,15 +31,15 @@ class PolyRegFromData extends PolynomialRegression {
             if(tag.equals(LinearModelTags.DEGREE.toString())) {
                 polyRegModel.degree = scanner.nextInt();
 
-            } else if(tag.equals(LinearModelTags.NORMALIZE.toString())) {
-                polyRegModel.normalization = scanner.nextInt();
-
-            } else if(tag.equals(LinearModelTags.COEFFICIENTS.toString())) {
+            } else if(tag.equals(LinearModelTags.PARAMETERS.toString())) {
                 String[] coeffStrings = content.split(",");
 
                 polyRegModel.coefficients = Arrays.stream(coeffStrings)
                         .mapToDouble(Double::parseDouble)
                         .toArray();
+
+                polyRegModel.w = new Matrix( polyRegModel.coefficients.length, 1);
+                polyRegModel.w.setCol( polyRegModel.coefficients, 0);
 
             } else {
                 throw new IllegalArgumentException("Failed to load model. Unrecognized tag in file.");

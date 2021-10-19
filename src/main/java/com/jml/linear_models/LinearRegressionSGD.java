@@ -1,9 +1,14 @@
 package com.jml.linear_models;
 
-import com.jml.core.Model;
-import com.jml.core.ModelBucket;
 
-import java.util.Map;
+import com.jml.core.ModelTypes;
+import com.jml.losses.LossFunctions;
+import com.jml.optimizers.Optimizer;
+import com.jml.optimizers.Scheduler;
+import com.jml.optimizers.StochasticGradientDescent;
+import linalg.Matrix;
+import linalg.Vector;
+import com.jml.util.ValueError;
 
 
 /**
@@ -13,36 +18,123 @@ import java.util.Map;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is using stochastic gradient descent.
  */
-public class LinearRegressionSGD extends Model<double[][], double[]> {
+public class LinearRegressionSGD extends LinearRegression {
+
+    protected double learningRate = 0.002;
+    protected double threshold = 0.5e-5;
+    protected int maxIterations = 1000;
+    protected Optimizer SGD;
+    protected Scheduler schedule;
 
 
     /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     * Creates a {@link LinearRegressionSGD} model.<br>
+     * This will use default settings for gradient descent:
+     * <pre>
+     *    Learning Rate: 0.002
+     *    Threshold: 0.5e-5
+     *    Maximum Iterations: 1000
+     *    Scheduler: None
+     * <pre/>
      */
-    @Override
-    public void compile() {
-        // TODO: Auto-generated method stub.
+    public LinearRegressionSGD() {
+        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
     }
 
+
     /**
-     * Constructs model and prepares for training using the given parameters.
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
-     * @param args A hashtable containing additional arguments in the form <name, value>.
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     *                  If the loss is less than the specified threshold, gradient descent will stop early.
+     * @param maxIterations Maximum number of iterations to run for during
+     * @param schedule Learning rate scheduler.
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-    @Override
-    public void compile(Map<String, Double> args) {
-        // TODO: Auto-generated method stub.
+    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {
+        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
+        this.learningRate = learningRate;
+        this.maxIterations = maxIterations;
+        this.threshold = threshold;
+        this.schedule = schedule;
+        paramCheck();
     }
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     *                  If the loss is less than the specified threshold, gradient descent will stop early.
+     * @param maxIterations Maximum number of iterations to run for during
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold) {
+        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
+        this.learningRate = learningRate;
+        this.maxIterations = maxIterations;
+        this.threshold = threshold;
+        paramCheck();
+    }
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param maxIterations Maximum number of iterations to run for during
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+    public LinearRegressionSGD(double learningRate, int maxIterations) {
+        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
+        this.learningRate = learningRate;
+        this.maxIterations = maxIterations;
+        paramCheck();
+    }
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
+     *
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+    public LinearRegressionSGD(double learningRate) {
+        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
+        this.learningRate = learningRate;
+        paramCheck();
+    }
+
+
+    /**
+     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
+     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
+     *
+     * @param maxIterations Maximum number of iterations to run for during
+     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     */
+    public LinearRegressionSGD(int maxIterations) {
+        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
+        this.maxIterations = maxIterations;
+        paramCheck();
+    }
+
 
     /**
      * Fits or trains the model with the given features and targets.
      *
      * @param features The features of the training set.
      * @param targets  The targets of the training set.
-     * @param args     A hashtable containing additional arguments in the form <name, value>.
      * @return Returns details of the fitting / training process.
      * @throws IllegalArgumentException Can be thrown for the following reasons<br>
      *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
@@ -50,72 +142,43 @@ public class LinearRegressionSGD extends Model<double[][], double[]> {
      *                                  compiled.
      */
     @Override
-    public ModelBucket fit(double[][] features, double[] targets, Map<String, Double> args) {
-        // TODO: Auto-generated method stub.
-        return null;
-    }
+    public LinearRegressionSGD fit(double[] features, double[] targets) {
+        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
+        SGD.setScheduler(this.schedule);
 
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @return - Returns details of the fitting / training process.
-     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public ModelBucket fit(double[][] features, double[] targets) {
-        // TODO: Auto-generated method stub.
-        return null;
-    }
+        // Convert features and targets to matrix representations.
+        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));
+        Matrix y = new Vector(targets);
 
-    /**
-     * Uses fitted/trained model to make prediction on single feature.
-     *
-     * @param features The features to make predictions on.
-     * @return The models predicted labels.
-     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public double[] predict(double[][] features) {
-        // TODO: Auto-generated method stub.
-        return new double[0];
-    }
+        w = SGD.optimize(LossFunctions.sse, X, y);
 
-    /**
-     * Saves a trained model to the specified file path.
-     *
-     * @param filePath File path, including extension, to save fitted / trained model to.
-     */
-    @Override
-    public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub.
+        // Update the model details
+        super.isFit=true;
+        buildDetails();
+
+        return this;
     }
 
 
     /**
-     * Forms a string of the important aspects of the model.<br>
-     * same as {@link #toString()}
+     * Gets the loss history from training.
      *
-     * @return Details of model as string.
+     * @return The loss of every iteration stored in a List.
      */
-    @Override
-    public String getDetails() {
-        // TODO: Auto-generated method stub.
-        return this.toString();
+    public double[] getLossHist() {
+        if(!isFit) {
+            throw new IllegalStateException("Model must be trained before the loss history can be computed.");
+        }
+
+        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
     }
 
-
-    /**
-     * Forms a string of the important aspects of the model.
-     *
-     * @return String representation of model.
-     */
-    @Override
-    public String toString() {
-        // TODO: Auto-generated method stub.
-        return "";
+    private void paramCheck() {
+        if(!ValueError.isNonNegative(maxIterations))
+            throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations);
+        if(!ValueError.isNonNegative(learningRate))
+            throw new IllegalArgumentException("learningRate must be non-negative but got " + learningRate);
+        if(!ValueError.isNonNegative(threshold))
+            throw new IllegalArgumentException("threshold must be non-negative but got " + threshold);
     }
 }

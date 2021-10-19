@@ -1,146 +1,46 @@
 package com.jml.linear_models;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
-import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
-import com.jml.preprocessing.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
-import com.jml.core.Stats;
 import linalg.Matrix;
 import linalg.Solvers;
 import linalg.Vector;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 
 /**
  * Model for least squares linear regression of multiple variables by least squares.<br><br>
  *
- * MultipleLinearRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x + ... + b<sub>n</sub>x to the datasets by minimizing
+ * MultipleLinearRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x<sub>1</sub> + ... + b<sub>n</sub>x<sub>n</sub>  to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model.
  */
 // TODO: Refactor polynomial regression as a special case of multiple regression
 public class MultipleLinearRegression extends Model<double[][], double[]> {
-    final String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();
+    String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();
 
-    protected boolean isFit = false, isCompiled = false;
-
-    /**
-     * Key for the degree of the polynomial. <br>
-     * The associated value will be the degree for the polynomial used in regression.
-     */
-    public static final String DEGREE_KEY = "degree";
-
-    /**
-     * Key for use of normalization before regression. <br>
-     * The associated value will indicate weather to normalize the features before regression.
-     */
-    public static final String NORMALIZE_KEY = "normalize";
-
-    /**
-     * Key for computation of correlation coefficient. <br>
-     * The associated value will indicate weather to compute the correlation coefficient after regression.
-     */
-    public static final String CORRELATION_KEY = "r";
-
-    /**
-     * Key for computation of coefficient of determination. <br>
-     * The associated value will indicate weather to compute the coefficient of determination after regression.
-     */
-    public static final String DETERMINATION_KEY = "r2";
-
-    protected int normalization = 0; // Default is no normalization.
+    protected boolean isFit = false;
     protected double[] coefficients;
+
+    // Weights of the model.
+    protected Matrix w;
 
     // Details of model in human-readable format.
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
                     "----------------------------\n" +
                     "Model Type: " + this.MODEL_TYPE+ "\n" +
-                    "Is Compiled: No\n" +
                     "Is Trained: No\n"
     );
 
 
     /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
+     * {@inheritDoc}
      */
     @Override
-    public void compile() {
-        compile(null);
-    }
-
-
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * @param args A hashtable containing additional arguments in the form <name, value>.
-     * <pre>
-     *  - Normalization:
-     *      <"normalize", 0> - Default. No normalization is used.
-     *      <"normalize", 1> - Normalizes data by subtracting meanNormalize and dividing by the L2-norm before applying regression.
-     * </pre>
-     * @throws IllegalArgumentException If key, value pairs in <code>args</code> are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile(Map<String, Double> args) {
-        if(!Objects.isNull(args) && !args.isEmpty()) { // Then args is not null and is not empty
-            if(args.containsKey(NORMALIZE_KEY)) {
-                double value = args.get(NORMALIZE_KEY);
-
-                if(!(value == 0.0 || value == 1.0)) {
-                    throw new IllegalArgumentException("Normalization must be 0 or 1 but got " + value);
-                } else {
-                    this.normalization = (int) value;
-                }
-            }
-        }
-
-        isCompiled = true; // Set the compiled flag to true.
-        buildDetails(); // Build the details of the model.
-    }
-
-
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @param args     A hashtable containing additional arguments in the form <name, value>.
-     * @return Returns details of the fitting / training process.
-     * @throws IllegalArgumentException Can be thrown for the following reasons<br>
-     *                                  - If key, value pairs in <code>args</code> are unspecified or invalid arguments. <br>
-     *                                  - If the features and targets are not correctly sized per the specification when the model was
-     *                                  compiled.
-     */
-    @Override
-    public ModelBucket fit(double[][] features, double[] targets, Map<String, Double> args) {
-
-        Map<String, Object> results = new HashMap<>();
-        boolean computeCorrelation = false, computeDetermination = false;
-
-        if(!isCompiled) {
-            throw new IllegalStateException("Model must be compiled before it can be fit.");
-        }
-
-        if(!Objects.isNull(args) && !args.isEmpty()) { // Check for various optional arguments
-            if(args.containsKey(CORRELATION_KEY)) {
-                computeCorrelation = true;
-            }
-            if(args.containsKey(DETERMINATION_KEY)) {
-                computeDetermination = true;
-            }
-        }
-
-        if(normalization==1) { // Then use l2 normalization.
-            features = Normalize.l2(features);
-        }
+    public MultipleLinearRegression fit(double[][] features, double[] targets) {
 
         Matrix y = (new Vector(targets)).toMatrix();
         Matrix V = new Matrix(features);
@@ -156,35 +56,14 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                     "Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.");
         }
 
-        coefficients = Solvers.solve(A, b).T().getValuesAsDouble()[0]; // Compute the model parameters
-        results.put("coefficients", coefficients);
+        w = Solvers.solve(A, b); // Compute the model parameters
+
+        this.coefficients = w.T().getValuesAsDouble()[0];
+
         isFit = true;
-
-        if(computeCorrelation) {
-            results.put("r", Stats.correlation(targets, this.predict(features)));
-        }
-        if(computeDetermination) {
-            results.put("r2", Stats.determination(targets, this.predict(features)));
-        }
-
         buildDetails(); // Build the details of the model.
 
-        return new ModelBucket(results);
-    }
-
-
-    /**
-     * Fits or trains the model with the given features and targets.
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @return Returns details of the fitting / training process in a {@link ModelBucket}.
-     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
-     *                                  the specification when the model was compiled.
-     */
-    @Override
-    public ModelBucket fit(double[][] features, double[] targets) {
-        return fit(features, targets, null);
+        return this;
     }
 
 
@@ -198,22 +77,30 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
      */
     @Override
     public double[] predict(double[][] features) {
-        if(!isFit || !isCompiled) {
-            throw new IllegalStateException("Model must be compiled and fit before predictions can be made.");
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before predictions can be made.");
         }
 
-        double[] predictions = new double[features.length];
+        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
 
-        for(int i=0; i<features.length; i++) {
+        return X.mult(w).T().getValuesAsDouble()[0];
+    }
 
-            for (int j = 1; j < coefficients.length; j++) {
-                predictions[i] += coefficients[j]*features[i][j-1];
-            }
 
-            predictions[i] += coefficients[0];
-        }
+    /**
+     * {@inheritDoc}
+     */
+    public Matrix predict(Matrix X, Matrix w) {
+        return X.mult(w);
+    }
 
-        return predictions;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Matrix getParams() {
+        return this.w;
     }
 
 
@@ -233,12 +120,11 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 
-        blockList = new Block[3];
+        blockList = new Block[2];
 
         // Construct the blocks for the model file.
         blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);
-        blockList[1] = new Block(LinearModelTags.COEFFICIENTS.toString(), ArrayUtils.asString(this.coefficients));
-        blockList[2] = new Block(LinearModelTags.NORMALIZE.toString(), Integer.toString(normalization));
+        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));
 
         FileManager.stringToFile(Block.buildFileContent(blockList), filePath);
     }
@@ -250,15 +136,8 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                 "Model Details\n" +
                         "----------------------------\n" +
                         "Model Type: " + this.MODEL_TYPE+ "\n" +
-                        "Is Compiled: " + (isCompiled ? "Yes" : "No") + "\n" +
                         "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
         );
-
-
-        if(isCompiled) {
-            details.append("Normalization: " + (normalization==1 ? "Yes" : "No") + "\n");
-        }
-
 
         if(isFit && coefficients!=null) {
             details.append("Coefficients: ");
@@ -296,5 +175,21 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
     @Override
     public String toString() {
         return details.toString();
+    }
+
+
+    public static void main(String[] args) {
+        Model model = new MultipleLinearRegression();
+        double[][] features = new double[][] { {1, 4, -3, 4},
+                {5, 6, -4, 8},
+                {9, -1, 11, 12},
+                {0, 1, 0.6, 1},
+                {5, 4, 3, 2}};
+        double[] targets = new double[]{1, 9, -1, 6, 4};
+        double[][] tests = new double[][] {{1, 3, 4, 5},
+                                            {-0.1, 3.5, 2, 6}};
+
+        model.fit(features, targets);
+        System.out.println(model.toString());
     }
 }

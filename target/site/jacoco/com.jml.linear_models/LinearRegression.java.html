@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LinearRegression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">LinearRegression.java</span></div><h1>LinearRegression.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
 
-
-import com.jml.core.ModelBucket;
 import com.jml.core.ModelTypes;
 import com.jml.util.ArrayUtils;
-
-import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -16,51 +11,12 @@ import java.util.Objects;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is solved explicitly.
  */
-<span class="fc" id="L19">public class LinearRegression extends PolynomialRegression {</span>
-<span class="fc" id="L20">    final String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();</span>
-<span class="fc" id="L21">    private String details = &quot;Model Details\n&quot; +</span>
+<span class="fc" id="L14">public class LinearRegression extends PolynomialRegression {</span>
+<span class="fc" id="L15">    String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();</span>
+<span class="fc" id="L16">    private String details = &quot;Model Details\n&quot; +</span>
             &quot;----------------------------\n&quot; +
             &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-            &quot;Is Compiled: No\n&quot; +
             &quot;Is Trained: No\n&quot;;
-
-    /**
-     * Constructs model and prepares for training using default parameters. i.e. no normalization will be used.
-     *
-     * @throws IllegalArgumentException If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments.
-     */
-    @Override
-    public void compile() {
-<span class="fc" id="L34">        super.compile();</span>
-<span class="fc" id="L35">        buildDetails();</span>
-<span class="fc" id="L36">    }</span>
-
-
-    /**
-     * Constructs model and prepares for training using the given parameters.
-     *
-     * Valid additional args. All others will be ignored.
-     * &lt;pre&gt;
-     *  - Normalization:
-     *      &lt;&quot;normalize&quot;, 0&gt; - Default. No normalization is used.
-     *      &lt;&quot;normalize&quot;, 1&gt; - Normalizes data by subtracting meanNormalize and dividing by the L2-norm before applying regression.
-     * &lt;pre/&gt;
-     *
-     * @param args A hashtable containing additional arguments in the form &lt;name, value&gt;.
-     * @throws IllegalArgumentException If values in &lt;code&gt;args&lt;/code&gt; are invalid of a specified key. Unspecified keys will simply be
-     * ignored and will NOT throw error.
-     */
-    @Override
-    public void compile(Map&lt;String, Double&gt; args) {
-<span class="pc bpc" id="L55" title="1 of 4 branches missed.">        if(!Objects.isNull(args) &amp;&amp; !args.isEmpty()) {</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">            if(args.containsKey(LinearRegression.DEGREE_KEY)) { // Ensure no degree is passed to super class.</span>
-<span class="fc" id="L57">                args.remove(LinearRegression.DEGREE_KEY);</span>
-            }
-        }
-
-<span class="fc" id="L61">        super.compile(args);</span>
-<span class="fc" id="L62">        buildDetails();</span>
-<span class="fc" id="L63">    }</span>
 
 
     /**
@@ -74,59 +30,28 @@ import java.util.Objects;
      *                                  the specification when the model was compiled.
      */
     @Override
-    public ModelBucket fit(double[] features, double[] targets) {
-<span class="fc" id="L78">        ModelBucket results = super.fit(features, targets, null);</span>
-<span class="fc" id="L79">        buildDetails();</span>
-<span class="fc" id="L80">        return results;</span>
-    }
-
-
-    /**
-     * Fits the model with the given features and targets.
-     *
-     * Valid additional args. All others will be ignored.
-     * &lt;pre&gt;
-     *  - R value (goodness of fit):
-     *      &lt;&quot;fit&quot;, 0&gt; - Default. No R value is returned.
-     *      &lt;&quot;fit&quot;, 1&gt; - R value of model will be calculated and returned.
-     * &lt;pre/&gt;
-     *
-     * @param features The features of the training set.
-     * @param targets  The targets of the training set.
-     * @param args     A hashtable containing additional arguments in the form &lt;name, value&gt;.
-     * @return A Map containing the results of fitting.
-     * @throws IllegalArgumentException Can be thrown for the following reasons&lt;br&gt;
-     *                                  - If key, value pairs in &lt;code&gt;args&lt;/code&gt; are unspecified or invalid arguments. &lt;br&gt;
-     *                                  - If the features and targets are not correctly sized per the specification when the model was
-     *                                  compiled.
-     */
-    @Override
-    public ModelBucket fit(double[] features, double[] targets, Map&lt;String, Double&gt; args) {
-<span class="nc" id="L105">        ModelBucket result = super.fit(features, targets, args);</span>
-<span class="nc" id="L106">        buildDetails();</span>
-<span class="nc" id="L107">        return result;</span>
+    public LinearRegression fit(double[] features, double[] targets) {
+<span class="fc" id="L34">        super.fit(features, targets);</span>
+<span class="fc" id="L35">        buildDetails();</span>
+<span class="fc" id="L36">        return this;</span>
     }
 
 
     // Construct details of model
     @Override
     protected void buildDetails() {
-<span class="fc" id="L114">        details =&quot;Model Details\n&quot; +</span>
+<span class="fc" id="L43">        details =&quot;Model Details\n&quot; +</span>
                 &quot;----------------------------\n&quot; +
                 &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                &quot;Is Compiled: &quot; + (isCompiled ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
-<span class="fc bfc" id="L118" title="All 2 branches covered.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
 
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if(isCompiled) {</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">            details += &quot;Normalization: &quot; + (normalization==1 ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
+<span class="pc bpc" id="L48" title="2 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
+<span class="fc" id="L49">            coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L50">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
+<span class="fc" id="L51">            details += ArrayUtils.asString(coefficients);</span>
+<span class="fc" id="L52">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
         }
-
-<span class="pc bpc" id="L124" title="1 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
-<span class="fc" id="L125">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
-<span class="fc" id="L126">            details += ArrayUtils.asString(coefficients);</span>
-<span class="fc" id="L127">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
-        }
-<span class="fc" id="L129">    }</span>
+<span class="fc" id="L54">    }</span>
 
 
     /**
@@ -137,7 +62,7 @@ import java.util.Objects;
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L140">        return this.toString();</span>
+<span class="fc" id="L65">        return this.toString();</span>
     }
 
 
@@ -148,7 +73,7 @@ import java.util.Objects;
      */
     @Override
     public String toString() {
-<span class="fc" id="L151">        return details;</span>
+<span class="fc" id="L76">        return details;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

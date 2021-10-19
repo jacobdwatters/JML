@@ -1,3 +1,5 @@
-com\jml\preprocessing\NormalizationTest.class
-com\jml\core\StatsTest.class
-com\jml\preprocessing\NormalizationExceptionTest.class
+com\jml\linear_models\LinRegSGDTest.class
+com\jml\linear_models\PolyRegTest.class
+com\jml\optimizers\StepLearningRateTest.class
+com\jml\classifiers\KnnTest.class
+com\jml\linear_models\MultRegSGDTest.class

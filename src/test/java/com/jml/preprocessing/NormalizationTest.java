@@ -1,6 +1,6 @@
 package com.jml.preprocessing;
 
-import com.jml.core.Stats;
+
 import com.jml.util.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,8 +61,8 @@ class NormalizationTest {
 
     @Test
     void minMaxABScaleNormalizeTestCase() {
-        expectedOne = new double[]{0.0, 1.0, 2.0, 3.0, 4.0};
-        expectedTwo = new double[]{0.7805208165341515, 0.8567472320558939, 0.0, 2.0};
+        expectedOne = new double[]{3.0, 4.0, 5.0, 6.0, 7.0};
+        expectedTwo = new double[]{-0.2194791834658485, -0.14325276794410613, -1.0, 1.0};
 
         assertArrayEquals(expectedOne, Normalize.minMaxScale(dataOne, 3, 7));
         assertArrayEquals(expectedTwo, Normalize.minMaxScale(dataTwo, -1, 1));

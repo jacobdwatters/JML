@@ -2,19 +2,19 @@
 
 import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.MultipleLinearRegression;
-import com.jml.util.ArrayUtils;
+import linalg.Matrix;
+import linalg.Vector;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-<span class="fc" id="L11">class MultRegFromData extends MultipleLinearRegression {</span>
+<span class="fc" id="L12">class MultRegFromData extends MultipleLinearRegression {</span>
 
     private static Scanner scanner;
 
     static Model create(List&lt;String&gt; tags, List&lt;String&gt; contents) {
-<span class="fc" id="L16">        MultRegFromData multRegModel = new MultRegFromData();</span>
-<span class="fc" id="L17">        multRegModel.isCompiled = true; // Since we are loading a pretrained model, set to true.</span>
+<span class="fc" id="L17">        MultRegFromData multRegModel = new MultRegFromData();</span>
 <span class="fc" id="L18">        multRegModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
 
 <span class="pc bpc" id="L20" title="1 of 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
@@ -23,15 +23,15 @@ import java.util.Scanner;
 <span class="fc" id="L23">            String content = contents.remove(0);</span>
 <span class="fc" id="L24">            scanner = new Scanner(content);</span>
 
-<span class="fc bfc" id="L26" title="All 2 branches covered.">            if(tag.equals(LinearModelTags.NORMALIZE.toString())) {</span>
-<span class="fc" id="L27">                multRegModel.normalization = scanner.nextInt();</span>
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">            if(tag.equals(LinearModelTags.PARAMETERS.toString())) {</span>
+<span class="fc" id="L27">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
 
-<span class="pc bpc" id="L29" title="1 of 2 branches missed.">            } else if(tag.equals(LinearModelTags.COEFFICIENTS.toString())) {</span>
-<span class="fc" id="L30">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
+<span class="fc" id="L29">                multRegModel.coefficients = Arrays.stream(coeffStrings)</span>
+<span class="fc" id="L30">                        .mapToDouble(Double::parseDouble)</span>
+<span class="fc" id="L31">                        .toArray();</span>
 
-<span class="fc" id="L32">                multRegModel.coefficients = Arrays.stream(coeffStrings)</span>
-<span class="fc" id="L33">                        .mapToDouble(Double::parseDouble)</span>
-<span class="fc" id="L34">                        .toArray();</span>
+<span class="fc" id="L33">                multRegModel.w = new Matrix(multRegModel.coefficients.length, 1);</span>
+<span class="fc" id="L34">                multRegModel.w.setCol(multRegModel.coefficients, 0);</span>
 
 <span class="fc" id="L36">            } else {</span>
 <span class="nc" id="L37">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>

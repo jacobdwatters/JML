@@ -28,12 +28,16 @@ class ModelFromData {
 
         if(modelType.equals(ModelTypes.POLYNOMIAL_REGRESSION.toString())) {
             model = PolyRegFromData.create(tags, contents);
+
         } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION.toString())) {
             model = LinRegFromData.create(tags, contents);
-        } else if(modelType.equals(ModelTypes.LINEAR_REGRESSION_SGD.toString())) {
-            // TODO:
+
         } else if(modelType.equals(ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString())) {
             model = MultRegFromData.create(tags, contents);
+
+        } else if(modelType.equals(ModelTypes.K_NEAREST_NEIGHBORS.toString())){
+            model = KnnFromData.create(tags, contents);
+
         } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {
             // TODO:
         } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {

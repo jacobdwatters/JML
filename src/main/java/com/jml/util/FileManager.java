@@ -1,11 +1,12 @@
 package com.jml.util;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
 
@@ -18,7 +19,7 @@ public class FileManager {
     /**
      * Writes a string to a file.
      * @param data Raw data to write to file.
-     * @param filePath File path including file extension/
+     * @param filePath File path including file extension
      */
     public static void stringToFile(String data, String filePath) {
 
@@ -32,6 +33,7 @@ public class FileManager {
 
     /**
      * Reads content from a file.
+     * @param filePath File path including file extension of the file to load.
      * @return Raw content of file.
      */
     public static String readFile(String filePath) {
@@ -45,5 +47,55 @@ public class FileManager {
         }
 
         return contentBuilder.toString();
+    }
+
+
+    /**
+     * Reads a CSV (comma seperated value) file into a 2D array of String.
+     *
+     * @param filePath File name including the extension. The extension must be .csv
+     * @return The CSV file contents as a 2D array of Strings
+     */
+    public static String[][] readCSVtoString(String filePath) {
+        Scanner sc = null;
+        String[] arr;
+        String[][] csv= null;
+
+        try {
+            sc = new Scanner(new File(filePath));
+            List<String> lines = new ArrayList<>();
+            while (sc.hasNextLine()) {
+                lines.add(sc.nextLine());
+            }
+
+            arr = lines.toArray(new String[0]);
+            csv = new String[arr.length][arr[0].split(",").length];
+
+            for(int i = 0; i < arr.length; i++) {
+                csv[i] = arr[i].split(",");
+            }
+
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Error: Could not read file " + filePath);
+        } finally {
+            if(sc != null) {
+                sc.close();
+            }
+        }
+
+        return csv;
+    }
+
+
+    /**
+     * Reads a CSV (comma seperated value) file into a 2D array of doubles.
+     *
+     * @param filePath File name including the extension. The extension must be .csv
+     * @return The CSV file contents as a 2D array of doubles
+     */
+    public static double[][] readCSVtoDouble(String filePath) {
+        String[][] fileContent = readCSVtoString(filePath);
+        return ArrayUtils.toDouble(fileContent);
     }
 }

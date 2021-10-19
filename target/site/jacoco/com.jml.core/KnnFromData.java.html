@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KnnFromData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.core</a> &gt; <span class="el_source">KnnFromData.java</span></div><h1>KnnFromData.java</h1><pre class="source lang-java linenums">package com.jml.core;
+
+import com.jml.clasifiers.ClassifierTags;
+import com.jml.clasifiers.KNearestNeighbors;
+import com.jml.linear_models.LinearModelTags;
+import com.jml.linear_models.LinearRegression;
+import com.jml.util.ArrayUtils;
+import linalg.Matrix;
+import linalg.Vector;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+
+<span class="fc" id="L17">class KnnFromData extends KNearestNeighbors {</span>
+    private static Scanner scanner;
+
+    /**
+     * Creates a polynomial regression model from data.
+     *
+     * @return The polynomial regression model specified by the data.
+     */
+    static Model create(List&lt;String&gt; tags, List&lt;String&gt; contents) {
+<span class="fc" id="L26">        KnnFromData knnModel = new KnnFromData();</span>
+<span class="fc" id="L27">        knnModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
+
+<span class="pc bpc" id="L29" title="1 of 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
+            // Get the tag/content pair
+<span class="fc" id="L31">            String tag = tags.remove(0);</span>
+<span class="fc" id="L32">            String content = contents.remove(0);</span>
+<span class="fc" id="L33">            scanner = new Scanner(content);</span>
+
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            if(tag.equals(ClassifierTags.K.toString())) {</span>
+<span class="fc" id="L36">                knnModel.k = scanner.nextInt();</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            } else if(tag.equals(ClassifierTags.P.toString())) {</span>
+<span class="fc" id="L39">                knnModel.p = scanner.nextInt();</span>
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            } else if(tag.equals(ClassifierTags.FEATURES.toString())) {</span>
+<span class="fc" id="L42">                List&lt;double[]&gt; features = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L43">                String[] sample = new String[0];</span>
+
+<span class="fc" id="L45">                sample = scanner.nextLine().split(&quot;;&quot;);</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">                for(int i=0; i&lt; sample.length; i++) {</span>
+<span class="fc" id="L48">                    features.add(Arrays.stream(sample[i].split(&quot;,&quot;))</span>
+<span class="fc" id="L49">                            .mapToDouble(Double::parseDouble)</span>
+<span class="fc" id="L50">                            .toArray());</span>
+                }
+
+<span class="fc" id="L53">                double[][] featureArray = new double[features.size()][sample.length];</span>
+
+<span class="fc bfc" id="L55" title="All 2 branches covered.">                for(int i=0; i&lt;featureArray.length; i++) {</span>
+<span class="fc" id="L56">                    featureArray[i] = features.get(i);</span>
+                }
+
+<span class="fc" id="L59">                knnModel.X = new Matrix(featureArray);</span>
+
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">            } else if(tag.equals(ClassifierTags.CLASSES.toString())) {</span>
+<span class="fc" id="L62">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
+
+<span class="fc" id="L64">                knnModel.y = new Vector(Arrays.stream(coeffStrings)</span>
+<span class="fc" id="L65">                        .mapToDouble(Double::parseDouble)</span>
+<span class="fc" id="L66">                        .toArray(), 1);</span>
+<span class="fc" id="L67">            } else {</span>
+<span class="nc" id="L68">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>
+            }
+
+<span class="fc" id="L71">            scanner.close();</span>
+<span class="fc" id="L72">        }</span>
+
+<span class="fc" id="L74">        knnModel.buildDetails();</span>
+<span class="fc" id="L75">        Class&lt;KNearestNeighbors&gt; clazz = KNearestNeighbors.class;</span>
+
+<span class="fc" id="L77">        return clazz.cast(knnModel);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
