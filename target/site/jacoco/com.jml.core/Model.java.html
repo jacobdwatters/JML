@@ -50,11 +50,11 @@ import java.util.Map;
      * Unlike the other predict method, no model needs to be trained to use this method since the parameters provided
      * define a model.
      *
-     * @param w Parameters of the model
-     * @param X Features to make prediction on
+     * @param X Features to make prediction on.
+     * @param w Parameters of the model.
      * @return prediction on the features using the given model parameters.
      */
-    public abstract Matrix predict(Matrix w, Matrix X);
+    public abstract Matrix predict(Matrix X, Matrix w);
 
 
     /**

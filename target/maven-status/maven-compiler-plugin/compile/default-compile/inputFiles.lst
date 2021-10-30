@@ -3,9 +3,9 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Model.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\FileManager.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\PolynomialRegression.java
-C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\losses\LossGradients.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\ArrayErrors.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\optimizers\StochasticGradientDescent.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\clasifiers\KDTree.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\DataLoader.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\PolyRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Stats.java
