@@ -16,7 +16,7 @@ import java.util.List;
  * a model. The loss function is dependent on the features and targets of the training dataset so these must be passed to
  * the optimize method.
  */
-public class StochasticGradientDescent extends Optimizer{
+public class StochasticGradientDescent extends Optimizer {
 
     // TODO: Add checks to ensure that maxIterations, learningRate, and threshold are non-negative.
 
@@ -93,16 +93,18 @@ public class StochasticGradientDescent extends Optimizer{
      * @return The computed minimum of the function.
      */
     public Matrix optimize(Function function, Matrix X, Matrix y) {
-        Matrix w = Vector.randn(X.numCols(), 1, false);
 
-        lossHistory.add(function.compute(w, X, y, this.model).getAsDouble(0, 0));
+        Matrix w = Vector.randn(X.numCols(), 1, false); // Initial weights.
+        Matrix yPred = this.model.predict(X, w);
 
+        lossHistory.add(function.compute(y, yPred).getAsDouble(0, 0));
         iterations = 0; // Ensure iterations is set to zero before applying optimizer.
 
         while(iterations<maxIterations && lossHistory.get(lossHistory.size()-1) > threshold) {
             // w = w - alpha*grad_SSE(w, x, y)
             w = w.sub(Gradient.compute(w, X, y, function, model).scalMult(learningRate));
-            lossHistory.add(function.compute(w, X, y, model).getAsDouble(0, 0));
+            yPred = this.model.predict(X, w);
+            lossHistory.add(function.compute(y,yPred).getAsDouble(0, 0));
 
             if(scheduler!=null) {
                 scheduler.apply(this);

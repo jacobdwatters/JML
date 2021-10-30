@@ -31,7 +31,7 @@ public class Stats {
      * @param data Dataset to compute mean of.
      * @return arithmetic mean of the dataset.
      */
-    public static double mean(double[] data) {
+    public static double mean(double... data) {
 <span class="fc" id="L35">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
 <span class="fc" id="L36">        double mean = 0;</span>
 
@@ -49,7 +49,7 @@ public class Stats {
      * @param data Dataset to compute median of.
      * @return The median of the dataset.
      */
-    public static double median(double[] data) {
+    public static double median(double... data) {
 <span class="fc" id="L53">        ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty</span>
         double median;
 
@@ -80,7 +80,7 @@ public class Stats {
      * @param data Dataset to compute the mode of.
      * @return The mode of the dataset.
      */
-    public static double mode(double[] data) {
+    public static double mode(double... data) {
 <span class="fc" id="L84">        double mode = 0;</span>
 <span class="fc" id="L85">        int maxCount = 0, i, j;</span>
 
@@ -108,7 +108,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The variance of the data.
      */
-    public static double variance(double[] data) {
+    public static double variance(double... data) {
 <span class="fc bfc" id="L112" title="All 2 branches covered.">        if(data.length &lt; 2) {</span>
 <span class="fc" id="L113">            throw new IllegalArgumentException(&quot;Variance requires at least two data points.&quot;);</span>
         }
@@ -124,7 +124,7 @@ public class Stats {
      * @param data Dataset of interest
      * @return The standard deviation of the data.
      */
-    public static double std(double[] data) {
+    public static double std(double... data) {
 <span class="fc" id="L128">        return Math.sqrt(sst(data)/data.length);</span>
     }
 
@@ -186,7 +186,7 @@ public class Stats {
      * @param y Dataset in question.
      * @return The sum of squares total.
      */
-    public static double sst(double[] y) {
+    public static double sst(double... y) {
 <span class="fc" id="L190">        double mean = mean(y),</span>
 <span class="fc" id="L191">                result = 0;</span>
 
@@ -204,7 +204,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The minimum value in data.
      */
-    public static double min(double[] data) {
+    public static double min(double... data) {
 <span class="fc" id="L208">        double minimum = Double.MAX_VALUE;</span>
 
 <span class="fc bfc" id="L210" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
@@ -295,7 +295,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The maximum value in data.
      */
-    public static double max(double[] data) {
+    public static double max(double... data) {
 <span class="fc" id="L299">        double maximum = Double.MIN_VALUE;</span>
 
 <span class="fc bfc" id="L301" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>

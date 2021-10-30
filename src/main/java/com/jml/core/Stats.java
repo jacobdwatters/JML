@@ -31,7 +31,7 @@ public class Stats {
      * @param data Dataset to compute mean of.
      * @return arithmetic mean of the dataset.
      */
-    public static double mean(double[] data) {
+    public static double mean(double... data) {
         ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty
         double mean = 0;
 
@@ -49,7 +49,7 @@ public class Stats {
      * @param data Dataset to compute median of.
      * @return The median of the dataset.
      */
-    public static double median(double[] data) {
+    public static double median(double... data) {
         ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty
         double median;
 
@@ -80,7 +80,7 @@ public class Stats {
      * @param data Dataset to compute the mode of.
      * @return The mode of the dataset.
      */
-    public static double mode(double[] data) {
+    public static double mode(double... data) {
         double mode = 0;
         int maxCount = 0, i, j;
 
@@ -108,7 +108,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The variance of the data.
      */
-    public static double variance(double[] data) {
+    public static double variance(double... data) {
         if(data.length < 2) {
             throw new IllegalArgumentException("Variance requires at least two data points.");
         }
@@ -124,7 +124,7 @@ public class Stats {
      * @param data Dataset of interest
      * @return The standard deviation of the data.
      */
-    public static double std(double[] data) {
+    public static double std(double... data) {
         return Math.sqrt(sst(data)/data.length);
     }
 
@@ -186,7 +186,7 @@ public class Stats {
      * @param y Dataset in question.
      * @return The sum of squares total.
      */
-    public static double sst(double[] y) {
+    public static double sst(double... y) {
         double mean = mean(y),
                 result = 0;
 
@@ -204,7 +204,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The minimum value in data.
      */
-    public static double min(double[] data) {
+    public static double min(double... data) {
         double minimum = Double.MAX_VALUE;
 
         for(int i=0; i< data.length; i++) {
@@ -295,7 +295,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The maximum value in data.
      */
-    public static double max(double[] data) {
+    public static double max(double... data) {
         double maximum = Double.MIN_VALUE;
 
         for(int i=0; i< data.length; i++) {

@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.github.jacobdwatters</groupId>
             <artifactId>Java-Linear-Algebra</artifactId>
-            <version>faf48ffaa4</version>
+            <version>e8825917fb</version>
         </dependency>
 
         <dependency>
