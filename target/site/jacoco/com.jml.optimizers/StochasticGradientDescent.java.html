@@ -7,9 +7,8 @@ import com.jml.losses.Function;
 import linalg.Matrix;
 import linalg.Vector;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * The Stochastic Gradient Descent optimizer. This optimizer minimizes a loss function with respect to the parameters of
@@ -25,9 +24,9 @@ public class StochasticGradientDescent extends Optimizer {
      *
      * @param model Model to apply optimization to.
      */
-<span class="nc" id="L28">    public StochasticGradientDescent(Model model) {</span>
-<span class="nc" id="L29">        this.model = model;</span>
-<span class="nc" id="L30">    }</span>
+<span class="nc" id="L27">    public StochasticGradientDescent(Model model) {</span>
+<span class="nc" id="L28">        this.model = model;</span>
+<span class="nc" id="L29">    }</span>
 
 
     /**
@@ -36,10 +35,10 @@ public class StochasticGradientDescent extends Optimizer {
      * @param model Model to apply optimization to.
      * @param learningRate Learning rate of the Stochastic Gradient Descent optimizer.
      */
-<span class="fc" id="L39">    public StochasticGradientDescent(Model model, double learningRate) {</span>
-<span class="fc" id="L40">        this.model = model;</span>
-<span class="fc" id="L41">        this.learningRate = learningRate;</span>
-<span class="fc" id="L42">    }</span>
+<span class="fc" id="L38">    public StochasticGradientDescent(Model model, double learningRate) {</span>
+<span class="fc" id="L39">        this.model = model;</span>
+<span class="fc" id="L40">        this.learningRate = learningRate;</span>
+<span class="fc" id="L41">    }</span>
 
 
     /**
@@ -49,11 +48,11 @@ public class StochasticGradientDescent extends Optimizer {
      * @param learningRate Learning rate of the Stochastic Gradient Descent optimizer.
      * @param maxIterations Maximum iterations to
      */
-<span class="nc" id="L52">    public StochasticGradientDescent(Model model, double learningRate, int maxIterations) {</span>
-<span class="nc" id="L53">        this.model = model;</span>
-<span class="nc" id="L54">        this.learningRate = learningRate;</span>
-<span class="nc" id="L55">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L56">    }</span>
+<span class="nc" id="L51">    public StochasticGradientDescent(Model model, double learningRate, int maxIterations) {</span>
+<span class="nc" id="L52">        this.model = model;</span>
+<span class="nc" id="L53">        this.learningRate = learningRate;</span>
+<span class="nc" id="L54">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L55">    }</span>
 
 
     /**
@@ -65,12 +64,12 @@ public class StochasticGradientDescent extends Optimizer {
      * @param threshold Threshold for stopping gradient descent. If the loss is less than this value, gradient descent
      *                  will stop early.
      */
-<span class="fc" id="L68">    public StochasticGradientDescent(Model model, double learningRate, int maxIterations, double threshold) {</span>
-<span class="fc" id="L69">        this.model = model;</span>
-<span class="fc" id="L70">        this.learningRate = learningRate;</span>
-<span class="fc" id="L71">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L72">        this.threshold = threshold;</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L67">    public StochasticGradientDescent(Model model, double learningRate, int maxIterations, double threshold) {</span>
+<span class="fc" id="L68">        this.model = model;</span>
+<span class="fc" id="L69">        this.learningRate = learningRate;</span>
+<span class="fc" id="L70">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L71">        this.threshold = threshold;</span>
+<span class="fc" id="L72">    }</span>
 
 
     /**
@@ -80,7 +79,7 @@ public class StochasticGradientDescent extends Optimizer {
      */
     @Override
     public List&lt;Double&gt; getLossHist() {
-<span class="fc" id="L83">        return this.lossHistory;</span>
+<span class="fc" id="L82">        return this.lossHistory;</span>
     }
 
 
@@ -94,26 +93,26 @@ public class StochasticGradientDescent extends Optimizer {
      */
     public Matrix optimize(Function function, Matrix X, Matrix y) {
 
-<span class="fc" id="L97">        Matrix w = Vector.randn(X.numCols(), 1, false); // Initial weights.</span>
-<span class="fc" id="L98">        Matrix yPred = this.model.predict(X, w);</span>
+<span class="fc" id="L96">        Matrix w = Vector.randn(X.numCols(), 1, false); // Initial weights.</span>
+<span class="fc" id="L97">        Matrix yPred = this.model.predict(X, w);</span>
 
-<span class="fc" id="L100">        lossHistory.add(function.compute(y, yPred).getAsDouble(0, 0));</span>
-<span class="fc" id="L101">        iterations = 0; // Ensure iterations is set to zero before applying optimizer.</span>
+<span class="fc" id="L99">        lossHistory.add(function.compute(y, yPred).getAsDouble(0, 0));</span>
+<span class="fc" id="L100">        iterations = 0; // Ensure iterations is set to zero before applying optimizer.</span>
 
-<span class="pc bpc" id="L103" title="1 of 4 branches missed.">        while(iterations&lt;maxIterations &amp;&amp; lossHistory.get(lossHistory.size()-1) &gt; threshold) {</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        while(iterations&lt;maxIterations &amp;&amp; lossHistory.get(lossHistory.size()-1) &gt; threshold) {</span>
             // w = w - alpha*grad_SSE(w, x, y)
-<span class="fc" id="L105">            w = w.sub(Gradient.compute(w, X, y, function, model).scalMult(learningRate));</span>
-<span class="fc" id="L106">            yPred = this.model.predict(X, w);</span>
-<span class="fc" id="L107">            lossHistory.add(function.compute(y,yPred).getAsDouble(0, 0));</span>
+<span class="fc" id="L104">            w = w.sub(Gradient.compute(w, X, y, function, model).scalMult(learningRate));</span>
+<span class="fc" id="L105">            yPred = this.model.predict(X, w);</span>
+<span class="fc" id="L106">            lossHistory.add(function.compute(y,yPred).getAsDouble(0, 0));</span>
 
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            if(scheduler!=null) {</span>
-<span class="nc" id="L110">                scheduler.apply(this);</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">            if(scheduler!=null) {</span>
+<span class="nc" id="L109">                scheduler.apply(this);</span>
             }
 
-<span class="fc" id="L113">            iterations++;</span>
+<span class="fc" id="L112">            iterations++;</span>
         }
 
-<span class="fc" id="L116">        return w;</span>
+<span class="fc" id="L115">        return w;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

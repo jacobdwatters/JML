@@ -14,6 +14,7 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\MultipleLinearRegression.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\clasifiers\KNearestNeighbors.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearModelTags.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\layers\Dropout.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearRegressionSGD.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearRegression.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\PolynomialRegressionSGD.java
@@ -34,6 +35,7 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\MultRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\ArrayUtils.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Gradient.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\ModelTypes.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\LogRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Block.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\preprocessing\Encoder.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\layers\Layer.java

@@ -1,12 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogisticRegression.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.clasifiers</a> &gt; <span class="el_source">LogisticRegression.java</span></div><h1>LogisticRegression.java</h1><pre class="source lang-java linenums">package com.jml.clasifiers;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
+import com.jml.core.ModelTypes;
+import com.jml.linear_models.LinearModelTags;
+import com.jml.losses.LossFunctions;
+import com.jml.optimizers.Optimizer;
+import com.jml.optimizers.Scheduler;
+import com.jml.optimizers.StochasticGradientDescent;
+import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
-<span class="nc" id="L7">public class LogisticRegression extends Model&lt;double[][], double[]&gt; {</span>
+public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
 
+<span class="nc" id="L18">    protected boolean isFit = false;</span>
+
+<span class="nc" id="L20">    protected String MODEL_TYPE = ModelTypes.LOGISTIC_REGRESSION.toString();</span>
     protected Matrix w;
+    protected double[] coefficients;
+
+    // Variables for optimization.
+<span class="nc" id="L25">    protected double learningRate = 0.002;</span>
+<span class="nc" id="L26">    protected double threshold = 0.5e-5;</span>
+<span class="nc" id="L27">    protected int maxIterations = 1000;</span>
+    private Optimizer SGD;
+    protected Scheduler schedule;
+
+    // Details of model in human-readable format.
+<span class="nc" id="L32">    private StringBuilder details = new StringBuilder(</span>
+            &quot;Model Details\n&quot; +
+                    &quot;----------------------------\n&quot; +
+                    &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
+                    &quot;Is Trained: No\n&quot;
+    );
+
+
+<span class="nc" id="L40">    public LogisticRegression() {</span>
+<span class="nc" id="L41">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L42">    }</span>
+
+
+    /**
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
+     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * learning rate, max iterations, threshold, and schedule.
+     *
+     * @param learningRate Learning rate to use during optimization.
+     * @param maxIterations Maximum iterations to run optimizer for.
+     * @param threshold Threshold for stopping the optimizer. If the loss becomes less than this value, the optimizer
+     *                  will stop early.
+     * @param schedule learning rate scheduler for optimization.
+     */
+<span class="nc" id="L56">    public LogisticRegression(double learningRate, int maxIterations, double threshold, Scheduler schedule) {</span>
+<span class="nc" id="L57">        this.learningRate = learningRate;</span>
+<span class="nc" id="L58">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L59">        this.threshold = threshold;</span>
+<span class="nc" id="L60">        this.schedule = schedule;</span>
+<span class="nc" id="L61">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L62">        SGD.setScheduler(this.schedule);</span>
+<span class="nc" id="L63">    }</span>
+
+
+<span class="nc" id="L66">    public LogisticRegression(double learningRate, int maxIterations, double threshold) {</span>
+<span class="nc" id="L67">        this.learningRate = learningRate;</span>
+<span class="nc" id="L68">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L69">        this.threshold = threshold;</span>
+<span class="nc" id="L70">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L71">    }</span>
+
+
+<span class="nc" id="L74">    public LogisticRegression(double learningRate, int maxIterations) {</span>
+<span class="nc" id="L75">        this.learningRate = learningRate;</span>
+<span class="nc" id="L76">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L77">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L78">    }</span>
+
+
+<span class="nc" id="L81">    public LogisticRegression(double learningRate) {</span>
+<span class="nc" id="L82">        this.learningRate = learningRate;</span>
+<span class="nc" id="L83">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="nc" id="L84">    }</span>
+
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -19,8 +95,17 @@ import linalg.Vector;
      */
     @Override
     public Model&lt;double[][], double[]&gt; fit(double[][] features, double[] targets) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L23">        return null;</span>
+        // Convert features and targets to matrix representations.
+<span class="nc" id="L99">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
+<span class="nc" id="L100">        Matrix y = new Vector(targets);</span>
+
+<span class="nc" id="L102">        w = SGD.optimize(LossFunctions.binCrossEntropy, X, y); // Apply optimizer to the loss function</span>
+<span class="nc" id="L103">        this.coefficients = w.T().getValuesAsDouble()[0];</span>
+
+<span class="nc" id="L105">        isFit=true;</span>
+<span class="nc" id="L106">        buildDetails();</span>
+
+<span class="nc" id="L108">        return this;</span>
     }
 
     /**
@@ -34,15 +119,19 @@ import linalg.Vector;
      */
     @Override
     public double[] predict(double[][] features) {
-<span class="nc" id="L37">        Matrix predictions = new Vector(features.length);</span>
-<span class="nc" id="L38">        Matrix X = new Matrix(features);</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L123">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+        }
 
-<span class="nc bnc" id="L40" title="All 2 branches missed.">        for(int i=0; i&lt;X.numRows(); i++) {</span>
-<span class="nc" id="L41">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
+<span class="nc" id="L126">        Matrix predictions = new Vector(features.length);</span>
+<span class="nc" id="L127">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        for(int i=0; i&lt;X.numRows(); i++) { // Apply the fitted logistic function to all features of X.</span>
+<span class="nc" id="L130">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
                     i, 0);
         }
 
-<span class="nc" id="L45">        return predictions.T().getValuesAsDouble()[0];</span>
+<span class="nc" id="L134">        return predictions.T().getValuesAsDouble()[0];</span>
     }
 
 
@@ -58,14 +147,14 @@ import linalg.Vector;
     @Override
     public Matrix predict(Matrix X, Matrix w) { // TODO: Currently only supports binary classification.
 
-<span class="nc" id="L61">        Matrix predictions = new Vector(X.numRows());</span>
+<span class="nc" id="L150">        Matrix predictions = new Vector(X.numRows());</span>
 
-<span class="nc bnc" id="L63" title="All 2 branches missed.">        for(int i=0; i&lt;X.numRows(); i++) {</span>
-<span class="nc" id="L64">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        for(int i=0; i&lt;X.numRows(); i++) {</span>
+<span class="nc" id="L153">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
                     i, 0);
         }
 
-<span class="nc" id="L68">        return predictions;</span>
+<span class="nc" id="L157">        return predictions;</span>
     }
 
 
@@ -76,8 +165,25 @@ import linalg.Vector;
      */
     @Override
     public Matrix getParams() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L80">        return null;</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L169">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+        }
+
+<span class="nc" id="L172">        return this.w;</span>
+    }
+
+
+    /**
+     * Gets the loss history from the optimizer.
+     * @return Returns the loss for each iteration of the optimization algorithm in an array. The index of the array
+     * corresponds to the iteration the loss was computed for.
+     */
+    public double[] getLossHist() {
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L183">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
+        }
+
+<span class="nc" id="L186">        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();</span>
     }
 
 
@@ -88,8 +194,49 @@ import linalg.Vector;
      */
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L92">    }</span>
+        Block[] blockList;
+
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L200">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+        }
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
+<span class="nc" id="L203">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+        }
+
+<span class="nc" id="L206">        blockList = new Block[2];</span>
+
+        // Construct the blocks for the model file.
+<span class="nc" id="L209">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="nc" id="L210">        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));</span>
+
+<span class="nc" id="L212">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="nc" id="L213">    }</span>
+
+
+    public void buildDetails() {
+<span class="nc" id="L217">        details = new StringBuilder(</span>
+                &quot;Model Details\n&quot; +
+                        &quot;----------------------------\n&quot; +
+                        &quot;Model Type: &quot; + this.MODEL_TYPE + &quot;\n&quot; +
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+        );
+
+<span class="nc bnc" id="L224" title="All 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
+<span class="nc" id="L225">            details.append(&quot;Coefficients: &quot;);</span>
+<span class="nc" id="L226">            details.append(ArrayUtils.asString(coefficients));</span>
+<span class="nc" id="L227">            details.append(&quot;\nlogistic curve: y = 1 / [1+e^-{&quot; + coefficients[0] + &quot; + &quot;);</span>
+
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
+<span class="nc" id="L230">                details.append(coefficients[i] + &quot;*x_&quot; + i);</span>
+
+<span class="nc bnc" id="L232" title="All 2 branches missed.">                if(i&lt;coefficients.length-1) {</span>
+<span class="nc" id="L233">                    details.append(&quot; + &quot;);</span>
+                }
+            }
+
+<span class="nc" id="L237">            details.append(&quot;}]&quot;);</span>
+        }
+<span class="nc" id="L239">    }</span>
 
 
     /**
@@ -100,8 +247,7 @@ import linalg.Vector;
      */
     @Override
     public String getDetails() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L104">        return null;</span>
+<span class="nc" id="L250">        return details.toString();</span>
     }
 
 
@@ -112,7 +258,26 @@ import linalg.Vector;
      */
     @Override
     public String toString() {
-<span class="nc" id="L115">        return null;</span>
+<span class="nc" id="L261">        return getDetails();</span>
     }
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L266">        double[][] features = {{4}, {5}, {6}, {7}, {-1}, {0}, {2}};</span>
+<span class="nc" id="L267">        double[] targets = {1, 1, 1, 1, 0, 0, 0};</span>
+
+<span class="nc" id="L269">        double[][] test = {{3}, {3.5}, {4.8}};</span>
+
+<span class="nc" id="L271">        LogisticRegression logreg = new LogisticRegression(0.8, 10000);</span>
+<span class="nc" id="L272">        logreg.fit(features, targets);</span>
+
+<span class="nc" id="L274">        System.out.println(&quot;\n\n&quot; + logreg.getDetails() + &quot;\n&quot;);</span>
+<span class="nc" id="L275">        System.out.println(&quot;\n\n&quot; + ArrayUtils.asString(logreg.predict(test)) + &quot;\n&quot;);</span>
+<span class="nc" id="L276">        logreg.saveModel(&quot;temp.mdl&quot;);</span>
+
+<span class="nc" id="L278">        Model&lt;double[][], double[]&gt; logFromFile = Model.load(&quot;temp.mdl&quot;);</span>
+<span class="nc" id="L279">        System.out.println(&quot;\n\n&quot; + logFromFile.getDetails() + &quot;\n&quot;);</span>
+<span class="nc" id="L280">        System.out.println(&quot;\n\n&quot; + ArrayUtils.asString(logFromFile.predict(test)) + &quot;\n&quot;);</span>
+<span class="nc" id="L281">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

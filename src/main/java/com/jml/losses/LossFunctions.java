@@ -1,9 +1,6 @@
 package com.jml.losses;
 
-import com.jml.clasifiers.LogisticRegression;
-import com.jml.core.Model;
 import linalg.Matrix;
-import linalg.Vector;
 
 /**
  * This class contains lambda functions for various loss functions including:
@@ -20,19 +17,12 @@ public class LossFunctions {
         throw new IllegalStateException("Utility class, Can not create instantiated.");
     }
 
-    /* TODO: Replace model parameter with predictions parameter. Then these losses can be computed without needing
-        to specify a model. Also, then the weight matrix and the feature matrix do not need to be passed as parameters */
 
     /**
      * The sum of mean squared-errors loss function.<br>
      * That is <code>mse = (1/n)sum(x<sub>i</sub> - y<sub>i</sub>)<sup>2</sup></code>
      * where <code>x<code/> and <code>y<code/> are datasets of length <code>n<code/>,
      * and <code>x<code/> is the actual data and <code>y<code/> is the predicted data.
-     *
-     * @param w
-     * @param X
-     * @param y
-     * @param model
      */
     public static Function mse = (Matrix y, Matrix yPred) -> {
         return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());
@@ -44,12 +34,6 @@ public class LossFunctions {
      * That is <code>sse = sum(x<sub>i</sub> - y<sub>i</sub>)<sup>2</sup></code>
      * where <code>x<code/> and <code>y<code/> are datasets of length <code>n<code/>,
      * and <code>x<code/> is the actual data and <code>y<code/> is the predicted data.
-     *
-     *
-     * @param w
-     * @param X
-     * @param y
-     * @param model
      */
     public static Function sse = (Matrix y, Matrix yPred) -> {
         return yPred.sub(y).T().mult(yPred.sub(y));
@@ -58,11 +42,8 @@ public class LossFunctions {
 
     /**
      * The binary cross-entropy loss function.
-     *
-     * @param w
-     * @param X
-     * @param y
-     * @param model
+     * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
+     * appropriate.
      */
     public static Function binCrossEntropy = (Matrix y, Matrix yPred) -> {
         double eps = 1e-15;
@@ -96,11 +77,6 @@ public class LossFunctions {
      * the cross-entropy loss function.
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
      * appropriate.
-     *
-     * @param w
-     * @param X
-     * @param y
-     * @param model
      */
     public static Function crossEntropy = (Matrix y, Matrix yPred) -> {
         double eps = 1e-15;

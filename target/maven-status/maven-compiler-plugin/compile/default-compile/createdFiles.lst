@@ -7,10 +7,11 @@ com\jml\preprocessing\Encoder.class
 com\jml\optimizers\StepLearningRate.class
 com\jml\linear_models\MultipleLinearRegressionSGD.class
 com\jml\core\Block.class
-com\jml\core\Stats$1.class
+com\jml\neural_network\layers\Dropout.class
 com\jml\util\ValueError.class
 com\jml\linear_models\PolynomialRegressionSGD.class
 com\jml\clasifiers\ClassifierTags.class
 com\jml\clasifiers\KDTree.class
 com\jml\core\KnnFromData.class
 com\jml\core\Gradient.class
+com\jml\core\LogRegFromData.class

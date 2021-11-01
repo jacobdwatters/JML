@@ -4,11 +4,23 @@ import com.jml.core.Stats;
 import linalg.Matrix;
 import linalg.Vector;
 
+
+/**
+ * Contains methods for normalizing data. These include
+ * &lt;pre&gt;
+ *     - {@link #minMaxScale(double[]) min-max scaling in (0, 1)}
+ *     - {@link #minMaxScale(double[], double, double) min-max scaling in (a, b)}
+ *     - {@link #meanNormalize(double[]) mean normalization}
+ *     - {@link #l2(double[])  l2 normalization}
+ *     - {@link #l1(double[])  l1 normalization}
+ *     - {@link #zScore(double[]) Z-score normalization}
+ * &lt;/pre&gt;
+ */
 public class Normalize {
 
     // Private constructor to hide implicate one.
-<span class="nc" id="L10">    private Normalize() {</span>
-<span class="nc" id="L11">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
+<span class="nc" id="L22">    private Normalize() {</span>
+<span class="nc" id="L23">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
     }
 
 
@@ -22,7 +34,7 @@ public class Normalize {
      * min-max feature scaling.
      */
     public static double[] minMaxScale(double[] data) {
-<span class="fc" id="L25">        return minMaxScale(data, 0, 1);</span>
+<span class="nc" id="L37">        return minMaxScale(data, 0, 1);</span>
     }
 
 
@@ -38,23 +50,23 @@ public class Normalize {
      * min-max feature scaling.
      */
     public static double[] minMaxScale(double[] data, double a, double b) {
-<span class="fc bfc" id="L41" title="All 2 branches covered.">        if(a &gt;= b) {</span>
-<span class="fc" id="L42">            throw new IllegalArgumentException(&quot;a must be greater than b but got a=&quot; + a  + &quot; and b=&quot; + b);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(a &gt;= b) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;a must be greater than b but got a=&quot; + a  + &quot; and b=&quot; + b);</span>
         }
 
-<span class="fc" id="L45">        double[] normalization = new double[data.length];</span>
-<span class="fc" id="L46">        double min = Stats.min(data); // Extract the min value.</span>
-<span class="fc" id="L47">        double max = Stats.max(data); // Extract the max value.</span>
+<span class="nc" id="L57">        double[] normalization = new double[data.length];</span>
+<span class="nc" id="L58">        double min = Stats.min(data); // Extract the min value.</span>
+<span class="nc" id="L59">        double max = Stats.max(data); // Extract the max value.</span>
 
-<span class="fc bfc" id="L49" title="All 2 branches covered.">        if(max==min) { // Then we can not apply this normalization.</span>
-<span class="fc" id="L50">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if(max==min) { // Then we can not apply this normalization.</span>
+<span class="nc" id="L62">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
         }
 
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc" id="L54">            normalization[i] = a + (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="nc" id="L66">            normalization[i] = a + (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]</span>
         }
 
-<span class="fc" id="L57">        return normalization;</span>
+<span class="nc" id="L69">        return normalization;</span>
     }
 
 
@@ -66,53 +78,68 @@ public class Normalize {
      */
     public static double[] meanNormalize(double[] data) {
 
-<span class="fc" id="L69">        double[] normalization = new double[data.length];</span>
-<span class="fc" id="L70">        double mean = Stats.mean(data);</span>
-<span class="fc" id="L71">        double min = Stats.min(data);</span>
-<span class="fc" id="L72">        double max = Stats.max(data);</span>
+<span class="nc" id="L81">        double[] normalization = new double[data.length];</span>
+<span class="nc" id="L82">        double mean = Stats.mean(data);</span>
+<span class="nc" id="L83">        double min = Stats.min(data);</span>
+<span class="nc" id="L84">        double max = Stats.max(data);</span>
 
-<span class="fc bfc" id="L74" title="All 2 branches covered.">        if(max==min) { // Then we can not apply this normalization.</span>
-<span class="fc" id="L75">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if(max==min) { // Then we can not apply this normalization.</span>
+<span class="nc" id="L87">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
         }
 
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc" id="L79">            normalization[i] = (data[i] - mean) / (max-min);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="nc" id="L91">            normalization[i] = (data[i] - mean) / (max-min);</span>
         }
 
-<span class="fc" id="L82">        return normalization;</span>
+<span class="nc" id="L94">        return normalization;</span>
     }
 
 
     /**
-     * Normalizes the data by subtracting the meanNormalize and dividing by the L2-norm.
+     * Normalizes the data by subtracting the mean and dividing by the L1-norm.
+     *
+     * @param data - data to normalize.
+     * @return The L1-normalized data.
+     */
+    public static double[] l1(double[] data) {
+<span class="nc" id="L105">        Matrix x = new Vector(data, 1);</span>
+<span class="nc" id="L106">        double mean = Stats.mean(data);</span>
+<span class="nc" id="L107">        Matrix m = new Matrix(1, data.length, mean);</span>
+
+<span class="nc" id="L109">        return x.scalDiv(x.norm(1)).getValuesAsDouble()[0];</span>
+    }
+
+
+    /**
+     * Normalizes the data by subtracting the mean and dividing by the L2-norm.
      *
      * @param data - data to normalize.
      * @return The L2-normalized data.
      */
     public static double[] l2(double[] data) {
-<span class="fc" id="L93">        Matrix x = new Vector(data, 1);</span>
-<span class="fc" id="L94">        double mean = Stats.mean(data);</span>
-<span class="fc" id="L95">        Matrix m = new Matrix(1, data.length, mean);</span>
+<span class="nc" id="L120">        Matrix x = new Vector(data, 1);</span>
+<span class="nc" id="L121">        double mean = Stats.mean(data);</span>
+<span class="nc" id="L122">        Matrix m = new Matrix(1, data.length, mean);</span>
 
-<span class="fc" id="L97">        return x.scalDiv(x.norm()).getValuesAsDouble()[0];</span>
+<span class="nc" id="L124">        return x.scalDiv(x.norm()).getValuesAsDouble()[0];</span>
     }
 
 
     /**
-     * Normalizes each column of the data by subtracting the meanNormalize of that column and dividing by the
+     * Normalizes each column of the data by subtracting the mean of that column and dividing by the
      * L2-norm of that column.
      *
      * @param data - data to normalize.
      * @return The L2-normalized data.
      */
     public static double[][] l2(double[][] data) {
-<span class="fc" id="L109">        double[][] normalization = new double[data.length][data[0].length];</span>
+<span class="nc" id="L136">        double[][] normalization = new double[data.length][data[0].length];</span>
 
-<span class="fc bfc" id="L111" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc" id="L112">            normalization[i] = l2(data[i]);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="nc" id="L139">            normalization[i] = l2(data[i]);</span>
         }
 
-<span class="fc" id="L115">        return normalization;</span>
+<span class="nc" id="L142">        return normalization;</span>
     }
 
 
@@ -124,15 +151,15 @@ public class Normalize {
      */
     public static double[] zScore(double[] data) {
 
-<span class="fc" id="L127">        double[] normalization = new double[data.length];</span>
-<span class="fc" id="L128">        double std = Stats.std(data);</span>
-<span class="fc" id="L129">        double mean = Stats.mean(data);</span>
+<span class="nc" id="L154">        double[] normalization = new double[data.length];</span>
+<span class="nc" id="L155">        double std = Stats.std(data);</span>
+<span class="nc" id="L156">        double mean = Stats.mean(data);</span>
 
-<span class="fc bfc" id="L131" title="All 2 branches covered.">        for(int i=0; i&lt;data.length; i++) {</span>
-<span class="fc" id="L132">            normalization[i] = (data[i]-mean) / std; // Apply the Z-score normalization to each entry.</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        for(int i=0; i&lt;data.length; i++) {</span>
+<span class="nc" id="L159">            normalization[i] = (data[i]-mean) / std; // Apply the Z-score normalization to each entry.</span>
         }
 
-<span class="fc" id="L135">        return normalization;</span>
+<span class="nc" id="L162">        return normalization;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

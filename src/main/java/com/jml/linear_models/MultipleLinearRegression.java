@@ -116,7 +116,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
         if(!isFit) {
             throw new IllegalStateException("Model must be fit before it can be saved.");
         }
-        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(".mdl")) {
+        if(!filePath.endsWith(".mdl")) {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 

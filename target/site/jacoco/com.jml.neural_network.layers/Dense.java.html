@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Dense.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.layers</a> &gt; <span class="el_source">Dense.java</span></div><h1>Dense.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.layers;
 
-public class Dense extends Layer&lt;Integer, Integer&gt; {
+import com.jml.neural_network.activations.Activation;
+import linalg.Matrix;
+import linalg.Vector;
+
+
+/**
+ * A standard dense or fully connected neural network layer.
+ * This layer applies a linear transform &lt;code&gt;y=Ax+b&lt;/code&gt; onto the inputs x.
+ */
+public class Dense implements Layer {
+
+<span class="nc" id="L14">    public int inDim = -1; // Size of the input.</span>
+    public int outDim; // Size of the output.
+    public Activation activation; // Activation function for the layer.
+
+    Matrix values; // Node values for the layer
+    Matrix weights; // Weights for the layer.
+    double bias;
+
+
+    /**
+     * Constructs a dense layer for a neural network.&lt;br&gt;
+     * &lt;b&gt;&lt;u&gt;Note&lt;/b&gt;&lt;/u&gt;: this constructor infers the input dimension from the
+     * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
+     * layer use {@link #Dense(int, int, Activation)} to specify the input dimension.
+     *
+     * @param outDim Layer output dimension.
+     * @param activation Activation function for layer.
+     */
+<span class="nc" id="L32">    public Dense(int outDim, Activation activation) {</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
+<span class="nc" id="L34">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
+        }
+
+<span class="nc" id="L37">        this.outDim = outDim;</span>
+<span class="nc" id="L38">        this.activation = activation;</span>
+<span class="nc" id="L39">    }</span>
+
 
     /**
      * Constructs a dense layer for a neural network.
@@ -9,9 +46,72 @@ public class Dense extends Layer&lt;Integer, Integer&gt; {
      * @param outDim Layer output dimension.
      * @param activation Activation function for layer.
      */
-    public Dense(int inDim, int outDim, String activation) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L14">        super(inDim, outDim, activation);</span>
-<span class="nc" id="L15">    }</span>
+<span class="nc" id="L49">    public Dense(int inDim, int outDim, Activation activation) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
+        }
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(inDim&lt;=0) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Expecting inDim to be positive but got &quot; + inDim);</span>
+        }
+
+<span class="nc" id="L57">        this.inDim = inDim;</span>
+<span class="nc" id="L58">        this.outDim = outDim;</span>
+<span class="nc" id="L59">        this.activation = activation;</span>
+
+<span class="nc" id="L61">        this.values = new Vector(this.outDim);</span>
+<span class="nc" id="L62">        this.weights = new Matrix(this.outDim, this.inDim);</span>
+<span class="nc" id="L63">    }</span>
+
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param inputs Input values for the layer.
+     */
+    @Override
+    public Matrix forward(Matrix inputs) {
+<span class="nc" id="L73">        values = inputs.mult(weights).add(bias);</span>
+<span class="nc" id="L74">        return values;</span>
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getInDim() {
+<span class="nc" id="L83">        return this.inDim;</span>
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getOutDim() {
+<span class="nc" id="L92">        return this.inDim;</span>
+    }
+
+
+    /**
+     * Updates the input dimension for the layer. &lt;br&gt;
+     * &lt;b&gt;&lt;u&gt;WARNING:&lt;/u&gt;&lt;/b&gt; This will zero any weight values the layer may currently be holding.
+     *
+     * @param inDim New input size for the layer.
+     */
+    @Override
+    public void updateInDim(int inDim) {
+<span class="nc" id="L104">        this.inDim = inDim;</span>
+<span class="nc" id="L105">        this.weights = new Matrix(this.outDim, this.inDim);</span>
+<span class="nc" id="L106">    }</span>
+
+
+    /**
+     * Gets the weights of this layer.
+     * @return Returns the weights of this layer in a 2D array.
+     */
+    public double[][] getWeights() {
+<span class="nc" id="L114">        return this.weights.getValuesAsDouble();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -7,9 +7,8 @@ import com.jml.losses.Function;
 import linalg.Matrix;
 import linalg.Vector;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * The Stochastic Gradient Descent optimizer. This optimizer minimizes a loss function with respect to the parameters of

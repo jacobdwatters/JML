@@ -1,6 +1,5 @@
 package com.jml.linear_models;
 
-import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.Optimizer;
@@ -136,7 +135,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
         Matrix y = new Vector(targets);
 
-        w = SGD.optimize(LossFunctions.sse, X, y);
+        w = SGD.optimize(LossFunctions.sse, X, y); // Apply optimizer to the loss function
         super.coefficients = w.T().getValuesAsDouble()[0];
 
         super.isFit=true;
@@ -146,6 +145,11 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     }
 
 
+    /**
+     * Gets the loss history from the optimizer.
+     * @return Returns the loss for each iteration of the optimization algorithm in an array. The index of the array
+     * corresponds to the iteration the loss was computed for.
+     */
     public double[] getLossHist() {
         if(!isFit) {
             throw new IllegalStateException("Model must be trained before the loss history can be computed.");
