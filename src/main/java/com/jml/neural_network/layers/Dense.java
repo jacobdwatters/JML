@@ -17,7 +17,8 @@ public class Dense implements Layer {
 
     Matrix values; // Node values for the layer
     Matrix weights; // Weights for the layer.
-    double bias;
+    Matrix biasWeights; // Bias weights for the layer.
+    Matrix bias;
 
 
     /**
@@ -36,6 +37,9 @@ public class Dense implements Layer {
 
         this.outDim = outDim;
         this.activation = activation;
+
+        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones
+        this.biasWeights = new Matrix(); // TODO: What does this need to look like?
     }
 
 
@@ -59,7 +63,10 @@ public class Dense implements Layer {
         this.activation = activation;
 
         this.values = new Vector(this.outDim);
-        this.weights = new Matrix(this.outDim, this.inDim);
+        this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
+
+        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones
+        this.biasWeights = new Matrix(); // TODO: What does this need to look like?
     }
 
 
@@ -70,7 +77,8 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        values = inputs.mult(weights).add(bias);
+        // values = activation.apply(weights.mult(inputs) + biasWeights.mult(bias));
+        values = activation.apply(weights.mult(inputs));
         return values;
     }
 
@@ -89,7 +97,7 @@ public class Dense implements Layer {
      */
     @Override
     public int getOutDim() {
-        return this.inDim;
+        return this.outDim;
     }
 
 
@@ -102,7 +110,7 @@ public class Dense implements Layer {
     @Override
     public void updateInDim(int inDim) {
         this.inDim = inDim;
-        this.weights = new Matrix(this.outDim, this.inDim);
+        this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
     }
 
 
@@ -110,7 +118,14 @@ public class Dense implements Layer {
      * Gets the weights of this layer.
      * @return Returns the weights of this layer in a 2D array.
      */
-    public double[][] getWeights() {
-        return this.weights.getValuesAsDouble();
+    @Override
+    public Matrix getWeights() {
+        return this.weights;
+    }
+
+
+    @Override
+    public Matrix getValues() {
+        return this.values;
     }
 }

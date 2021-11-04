@@ -1,7 +1,8 @@
 package com.jml.neural_network.layers;
 
-import com.jml.neural_network.activations.Activation;
+import com.jml.core.Stats;
 import linalg.Matrix;
+import linalg.Vector;
 
 
 /**
@@ -16,6 +17,9 @@ public class Dropout implements Layer {
      */
     double p;
     int inDim = -1; // Input size for the layer. The output size will be the same.
+
+    // TODO: is this needed? We will just pass through the values zeroing some
+    Matrix values; // Holds node values for layer.
 
     /**
      * Constructs a dropout layer for a neural network.<br>
@@ -39,27 +43,50 @@ public class Dropout implements Layer {
     public Dropout(int inDim, double p) {
         this.inDim = inDim;
         this.p = p;
+        this.values = new Vector(this.inDim);
     }
 
+
     /**
-     * Feeds the inputs through the layer.
+     * Feeds the inputs through the layer. Each input will be scaled by <code>1/(1-p)</code>
+     * and have a probability, <code>p</code>, of being zeroed or "dropped."
      *
      * @param inputs Input values for the layer
      * @return The result of the layer applied to the values.
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        // TODO: AUto-generated method stub.
-        return null;
+        if(inputs.numRows()!=inDim && inputs.numCols()!=1) {
+            throw new IllegalArgumentException("Invalid input shape of " + inputs.shape() + ". " +
+                    "Expecting input shape of " + inDim + "x" + 1);
+        }
+
+        values = new Matrix(inputs.shape());
+
+        for(int i=0; i<values.numRows(); i++) {
+            if(Stats.genRandBoolean(this.p)) {
+                values.set(0, i, 1); // Then zero entry.
+            }
+        }
+
+        return values.scalDiv(1-p);
     }
 
 
+    /**
+     * {@inheritDoc}
+     * @return The input dimension for this layer.
+     */
     @Override
     public int getInDim() {
         return this.inDim;
     }
 
 
+    /**
+     * {@inheritDoc}
+     * @return The output dimension for this layer.
+     */
     @Override
     public int getOutDim() {
         return this.inDim;
@@ -75,5 +102,24 @@ public class Dropout implements Layer {
     @Override
     public void updateInDim(int inDim) {
         this.inDim = inDim;
+        this.values = new Vector(this.inDim);
+    }
+
+
+    /**
+     * Gets the weights for the layer.
+     * @return Null Since dropout layers have no weights.
+     */
+    public Matrix getWeights() {
+        return null;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * @return The values of this layer
+     */
+    public Matrix getValues() {
+        return this.values;
     }
 }

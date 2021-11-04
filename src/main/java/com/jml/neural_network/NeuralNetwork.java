@@ -2,16 +2,25 @@ package com.jml.neural_network;
 
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
+import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Layer;
 import com.jml.optimizers.Optimizer;
+import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
     private List<Layer> layers;
+    protected double learningRate;
+    protected double threshold;
+    protected int epochs;
+    protected int batchSize;
+    protected Optimizer optim;
 
 
     /**
@@ -22,11 +31,13 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param batchSize The batch size to use during training.
      * @param threshold The threshold for the loss to stop early. If the loss drops below this threshold before the
      *                  specified number of epochs has been reached, the training will stop early.
-     * @param optim The {@link com.jml.optimizers.Optimizer optimizer} to use during training. If you wish to define a
-     *              {@link com.jml.optimizers.Scheduler scheduler}, it must be defined as part of the optimizer.
      */
-    public NeuralNetwork(double learningRate, double epochs, double batchSize, double threshold, Optimizer optim) {
-        // TODO: Auto-generated method stub
+    public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {
+        this.learningRate = learningRate;
+        this.epochs = epochs;
+        this.batchSize = batchSize;
+        this.threshold = threshold;
+        layers = new ArrayList<Layer>();
     }
 
     /**
@@ -52,8 +63,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * The forward pass computes the values for each layer based on an input.
      */
     protected Matrix feedForward(Matrix inputs) {
-        Matrix currentInput = new Matrix(inputs); // TODO: Rename the variable. Since it is really the output of the model
-
+        Matrix currentInput = new Matrix(inputs);
         for(Layer layer : layers) { // Feeds the input through all layers.
             currentInput = layer.forward(currentInput);
         }
@@ -103,6 +113,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public Matrix getParams() {
+        // TODO: Implementation: will need a 'public Matrix[] getParams()' or 'public Matrix getParams(int layerIndex)'
         return null;
     }
 
@@ -125,13 +136,12 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             } else {
                 if(layer.getInDim() != layers.get(layers.size()-1).getOutDim()) {
                     throw new IllegalArgumentException("Layers input dimension of " + layer.getInDim() +
-                            " is inconsistent with the previous layers output dimension of " + layers.get(layers.size()-1).getOutDim() + "." +
-                            " Layers input dimension must match the output dimension of the previous layer.");
+                            "\nis inconsistent with the previous layers output dimension of " + layers.get(layers.size()-1).getOutDim() + "." +
+                            "\nLayers input dimension must match the output dimension of the previous layer.");
                 }
-
             }
-
         }
+
 
         layers.add(layer);
     }
@@ -170,5 +180,17 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     public String toString() {
         // TODO: Auto-generated method stub
         return "";
+    }
+
+
+    public static void main(String[] args) {
+        NeuralNetwork nn = new NeuralNetwork(0.02, 100, 1, 0.5e-5);
+
+        Matrix input = new Matrix(new double[][]{{0}, {1}});
+
+        nn.add(new Dense(2, 3, Activations.sigmoid));
+        nn.add(new Dense(1, Activations.sigmoid));
+
+        System.out.println(nn.feedForward(input));
     }
 }

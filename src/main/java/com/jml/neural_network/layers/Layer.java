@@ -9,7 +9,7 @@ public interface Layer {
      * @param inputs Input values for the layer
      * @return The result of the layer applied to the values.
      */
-    public abstract Matrix forward(Matrix inputs);
+    Matrix forward(Matrix inputs);
 
     /**
      * Updates the input dimension for the layer. <br>
@@ -17,19 +17,27 @@ public interface Layer {
      *
      * @param inDim New input size for the layer.
      */
-    public abstract void updateInDim(int inDim);
+    void updateInDim(int inDim);
 
     /**
      * Gets the input dimension for this layer.
      *
      * @return The input dimension of this layer.
      */
-    public abstract int getInDim();
+    int getInDim();
 
     /**
      * Gets the output dimension for this layer.
      *
      * @return The output dimension of this layer.
      */
-    public abstract int getOutDim();
+    int getOutDim();
+
+    Matrix getWeights();
+
+    /**
+     * Gets the node values for this layer.
+     * @return The node values of this layer in a matrix.
+     */
+    Matrix getValues();
 }

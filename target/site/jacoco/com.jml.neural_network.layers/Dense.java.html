@@ -17,7 +17,8 @@ public class Dense implements Layer {
 
     Matrix values; // Node values for the layer
     Matrix weights; // Weights for the layer.
-    double bias;
+    Matrix biasWeights; // Bias weights for the layer.
+    Matrix bias;
 
 
     /**
@@ -29,14 +30,17 @@ public class Dense implements Layer {
      * @param outDim Layer output dimension.
      * @param activation Activation function for layer.
      */
-<span class="nc" id="L32">    public Dense(int outDim, Activation activation) {</span>
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
-<span class="nc" id="L34">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
+<span class="nc" id="L33">    public Dense(int outDim, Activation activation) {</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
+<span class="nc" id="L35">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
         }
 
-<span class="nc" id="L37">        this.outDim = outDim;</span>
-<span class="nc" id="L38">        this.activation = activation;</span>
-<span class="nc" id="L39">    }</span>
+<span class="nc" id="L38">        this.outDim = outDim;</span>
+<span class="nc" id="L39">        this.activation = activation;</span>
+
+<span class="nc" id="L41">        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones</span>
+<span class="nc" id="L42">        this.biasWeights = new Matrix(); // TODO: What does this need to look like?</span>
+<span class="nc" id="L43">    }</span>
 
 
     /**
@@ -46,21 +50,24 @@ public class Dense implements Layer {
      * @param outDim Layer output dimension.
      * @param activation Activation function for layer.
      */
-<span class="nc" id="L49">    public Dense(int inDim, int outDim, Activation activation) {</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
-<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
+<span class="nc" id="L53">    public Dense(int inDim, int outDim, Activation activation) {</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
+<span class="nc" id="L55">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
         }
-<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(inDim&lt;=0) {</span>
-<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Expecting inDim to be positive but got &quot; + inDim);</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if(inDim&lt;=0) {</span>
+<span class="nc" id="L58">            throw new IllegalArgumentException(&quot;Expecting inDim to be positive but got &quot; + inDim);</span>
         }
 
-<span class="nc" id="L57">        this.inDim = inDim;</span>
-<span class="nc" id="L58">        this.outDim = outDim;</span>
-<span class="nc" id="L59">        this.activation = activation;</span>
+<span class="nc" id="L61">        this.inDim = inDim;</span>
+<span class="nc" id="L62">        this.outDim = outDim;</span>
+<span class="nc" id="L63">        this.activation = activation;</span>
 
-<span class="nc" id="L61">        this.values = new Vector(this.outDim);</span>
-<span class="nc" id="L62">        this.weights = new Matrix(this.outDim, this.inDim);</span>
-<span class="nc" id="L63">    }</span>
+<span class="nc" id="L65">        this.values = new Vector(this.outDim);</span>
+<span class="nc" id="L66">        this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights</span>
+
+<span class="nc" id="L68">        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones</span>
+<span class="nc" id="L69">        this.biasWeights = new Matrix(); // TODO: What does this need to look like?</span>
+<span class="nc" id="L70">    }</span>
 
 
     /**
@@ -70,8 +77,9 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-<span class="nc" id="L73">        values = inputs.mult(weights).add(bias);</span>
-<span class="nc" id="L74">        return values;</span>
+        // values = activation.apply(weights.mult(inputs) + biasWeights.mult(bias));
+<span class="nc" id="L81">        values = activation.apply(weights.mult(inputs));</span>
+<span class="nc" id="L82">        return values;</span>
     }
 
 
@@ -80,7 +88,7 @@ public class Dense implements Layer {
      */
     @Override
     public int getInDim() {
-<span class="nc" id="L83">        return this.inDim;</span>
+<span class="nc" id="L91">        return this.inDim;</span>
     }
 
 
@@ -89,7 +97,7 @@ public class Dense implements Layer {
      */
     @Override
     public int getOutDim() {
-<span class="nc" id="L92">        return this.inDim;</span>
+<span class="nc" id="L100">        return this.outDim;</span>
     }
 
 
@@ -101,17 +109,24 @@ public class Dense implements Layer {
      */
     @Override
     public void updateInDim(int inDim) {
-<span class="nc" id="L104">        this.inDim = inDim;</span>
-<span class="nc" id="L105">        this.weights = new Matrix(this.outDim, this.inDim);</span>
-<span class="nc" id="L106">    }</span>
+<span class="nc" id="L112">        this.inDim = inDim;</span>
+<span class="nc" id="L113">        this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights</span>
+<span class="nc" id="L114">    }</span>
 
 
     /**
      * Gets the weights of this layer.
      * @return Returns the weights of this layer in a 2D array.
      */
-    public double[][] getWeights() {
-<span class="nc" id="L114">        return this.weights.getValuesAsDouble();</span>
+    @Override
+    public Matrix getWeights() {
+<span class="nc" id="L123">        return this.weights;</span>
+    }
+
+
+    @Override
+    public Matrix getValues() {
+<span class="nc" id="L129">        return this.values;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

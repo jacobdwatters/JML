@@ -12,10 +12,11 @@ import java.util.*;
  */
 public class Stats {
 
+    private static SplittableRandom random = new SplittableRandom();
+
     private Stats() {
         throw new IllegalStateException("Utility Class.");
     }
-
 
     public static double round(double value, int decimals) {
         double result;
@@ -305,5 +306,21 @@ public class Stats {
         }
 
         return maximum;
+    }
+
+
+    /**
+     * Generates a random boolean with a specified probability of being true.
+     *
+     * @param p Probability of being true. Must be in range [0, 1].
+     * @return Returns a random boolean with probability <code>p</code> of being true.
+     * @throws IllegalArgumentException if <code>p</code> is not in range [0, 1].
+     */
+    public static boolean genRandBoolean(double p) {
+        if(p<0 || p>1) {
+            throw new IllegalArgumentException("probability must be between 0 and 1 inclusive but got " + p + ".");
+        }
+
+        return random.nextDouble() < p;
     }
 }
