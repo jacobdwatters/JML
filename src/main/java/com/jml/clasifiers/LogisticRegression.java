@@ -13,6 +13,12 @@ import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
+
+/**
+ * A logistic regression model. Supports binary classification for multiple features. <br>
+ * Fits a logistic function f(x)=1/[ 1+e<sup>-w^Tx</sup> ] to a dataset by minimizing the
+ * {@link com.jml.losses.LossFunctions#binCrossEntropy binary cross-entropy function}.
+ */
 public class LogisticRegression extends Model<double[][], double[]> {
 
     protected boolean isFit = false;
@@ -37,6 +43,11 @@ public class LogisticRegression extends Model<double[][], double[]> {
     );
 
 
+    /**
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
+     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * learning rate. Defaults to a learning rate of 0.002, 1000 max iterations and a threshold of 0.5e-5.
+     */
     public LogisticRegression() {
         SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
     }
@@ -63,6 +74,16 @@ public class LogisticRegression extends Model<double[][], double[]> {
     }
 
 
+    /**
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
+     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * learning rate, max iterations, and threshold.
+     *
+     * @param learningRate Learning rate to use during optimization.
+     * @param maxIterations Maximum iterations to run optimizer for.
+     * @param threshold Threshold for stopping the optimizer. If the loss becomes less than this value, the optimizer
+     *                  will stop early.
+     */
     public LogisticRegression(double learningRate, int maxIterations, double threshold) {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
@@ -71,6 +92,14 @@ public class LogisticRegression extends Model<double[][], double[]> {
     }
 
 
+    /**
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
+     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * learning rate, max iterations. Defaults to a threshold of 0.5e-5.
+     *
+     * @param learningRate Learning rate to use during optimization.
+     * @param maxIterations Maximum iterations to run optimizer for.
+     */
     public LogisticRegression(double learningRate, int maxIterations) {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
@@ -78,6 +107,13 @@ public class LogisticRegression extends Model<double[][], double[]> {
     }
 
 
+    /**
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
+     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * learning rate. Defaults to 1000 max iterations and a threshold of 0.5e-5.
+     *
+     * @param learningRate Learning rate to use during optimization.
+     */
     public LogisticRegression(double learningRate) {
         this.learningRate = learningRate;
         SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
@@ -213,7 +249,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
     }
 
 
-    public void buildDetails() {
+    protected void buildDetails() {
         details = new StringBuilder(
                 "Model Details\n" +
                         "----------------------------\n" +

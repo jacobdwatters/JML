@@ -34,7 +34,7 @@ public class Normalize {
      * min-max feature scaling.
      */
     public static double[] minMaxScale(double[] data) {
-<span class="fc" id="L37">        return minMaxScale(data, 0, 1);</span>
+<span class="nc" id="L37">        return minMaxScale(data, 0, 1);</span>
     }
 
 
@@ -50,23 +50,23 @@ public class Normalize {
      * min-max feature scaling.
      */
     public static double[] minMaxScale(double[] data, double a, double b) {
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        if(a &gt;= b) {</span>
-<span class="fc" id="L54">            throw new IllegalArgumentException(&quot;a must be greater than b but got a=&quot; + a  + &quot; and b=&quot; + b);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(a &gt;= b) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;a must be greater than b but got a=&quot; + a  + &quot; and b=&quot; + b);</span>
         }
 
-<span class="fc" id="L57">        double[] normalization = new double[data.length];</span>
-<span class="fc" id="L58">        double min = Stats.min(data); // Extract the min value.</span>
-<span class="fc" id="L59">        double max = Stats.max(data); // Extract the max value.</span>
+<span class="nc" id="L57">        double[] normalization = new double[data.length];</span>
+<span class="nc" id="L58">        double min = Stats.min(data); // Extract the min value.</span>
+<span class="nc" id="L59">        double max = Stats.max(data); // Extract the max value.</span>
 
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        if(max==min) { // Then we can not apply this normalization.</span>
-<span class="fc" id="L62">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if(max==min) { // Then we can not apply this normalization.</span>
+<span class="nc" id="L62">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
         }
 
-<span class="fc bfc" id="L65" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc" id="L66">            normalization[i] = a + (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="nc" id="L66">            normalization[i] = a + (data[i] - min)*(b-a)/(max-min); // Formula for min-max scaling in [a, b]</span>
         }
 
-<span class="fc" id="L69">        return normalization;</span>
+<span class="nc" id="L69">        return normalization;</span>
     }
 
 
@@ -78,20 +78,20 @@ public class Normalize {
      */
     public static double[] meanNormalize(double[] data) {
 
-<span class="fc" id="L81">        double[] normalization = new double[data.length];</span>
-<span class="fc" id="L82">        double mean = Stats.mean(data);</span>
-<span class="fc" id="L83">        double min = Stats.min(data);</span>
-<span class="fc" id="L84">        double max = Stats.max(data);</span>
+<span class="nc" id="L81">        double[] normalization = new double[data.length];</span>
+<span class="nc" id="L82">        double mean = Stats.mean(data);</span>
+<span class="nc" id="L83">        double min = Stats.min(data);</span>
+<span class="nc" id="L84">        double max = Stats.max(data);</span>
 
-<span class="fc bfc" id="L86" title="All 2 branches covered.">        if(max==min) { // Then we can not apply this normalization.</span>
-<span class="fc" id="L87">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if(max==min) { // Then we can not apply this normalization.</span>
+<span class="nc" id="L87">            throw new ArithmeticException(&quot;max=min in the data which will cause division by zero.&quot;);</span>
         }
 
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc" id="L91">            normalization[i] = (data[i] - mean) / (max-min);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="nc" id="L91">            normalization[i] = (data[i] - mean) / (max-min);</span>
         }
 
-<span class="fc" id="L94">        return normalization;</span>
+<span class="nc" id="L94">        return normalization;</span>
     }
 
 
@@ -117,11 +117,11 @@ public class Normalize {
      * @return The L2-normalized data.
      */
     public static double[] l2(double[] data) {
-<span class="fc" id="L120">        Matrix x = new Vector(data, 1);</span>
-<span class="fc" id="L121">        double mean = Stats.mean(data);</span>
-<span class="fc" id="L122">        Matrix m = new Matrix(1, data.length, mean);</span>
+<span class="nc" id="L120">        Matrix x = new Vector(data, 1);</span>
+<span class="nc" id="L121">        double mean = Stats.mean(data);</span>
+<span class="nc" id="L122">        Matrix m = new Matrix(1, data.length, mean);</span>
 
-<span class="fc" id="L124">        return x.scalDiv(x.norm()).getValuesAsDouble()[0];</span>
+<span class="nc" id="L124">        return x.scalDiv(x.norm()).getValuesAsDouble()[0];</span>
     }
 
 
@@ -133,13 +133,13 @@ public class Normalize {
      * @return The L2-normalized data.
      */
     public static double[][] l2(double[][] data) {
-<span class="fc" id="L136">        double[][] normalization = new double[data.length][data[0].length];</span>
+<span class="nc" id="L136">        double[][] normalization = new double[data.length][data[0].length];</span>
 
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc" id="L139">            normalization[i] = l2(data[i]);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="nc" id="L139">            normalization[i] = l2(data[i]);</span>
         }
 
-<span class="fc" id="L142">        return normalization;</span>
+<span class="nc" id="L142">        return normalization;</span>
     }
 
 
@@ -151,15 +151,37 @@ public class Normalize {
      */
     public static double[] zScore(double[] data) {
 
-<span class="fc" id="L154">        double[] normalization = new double[data.length];</span>
-<span class="fc" id="L155">        double std = Stats.std(data);</span>
-<span class="fc" id="L156">        double mean = Stats.mean(data);</span>
+<span class="nc" id="L154">        double[] normalization = new double[data.length];</span>
+<span class="nc" id="L155">        double std = Stats.std(data);</span>
+<span class="nc" id="L156">        double mean = Stats.mean(data);</span>
 
-<span class="fc bfc" id="L158" title="All 2 branches covered.">        for(int i=0; i&lt;data.length; i++) {</span>
-<span class="fc" id="L159">            normalization[i] = (data[i]-mean) / std; // Apply the Z-score normalization to each entry.</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        for(int i=0; i&lt;data.length; i++) {</span>
+<span class="nc" id="L159">            normalization[i] = (data[i]-mean) / std; // Apply the Z-score normalization to each entry.</span>
         }
 
-<span class="fc" id="L162">        return normalization;</span>
+<span class="nc" id="L162">        return normalization;</span>
+    }
+
+
+    /**
+     * Applies Z-score normalization to the dataset.
+     *
+     * @param data The dataset of interest.
+     * @return A copy of the dataset which has been normalized using Z-score normalization.
+     */
+    public static double[][] zScore(double[][] data) {
+
+        // TODO: Should this normalize each feature? So the columns, not the rows.
+
+        // TODO: In order to scale validation data, we need to know the mean and standard deviation of the training data.
+        //  So there should be a Normalize object which will be &quot;fit&quot; to the data. Then the same scaling can be applied to the validation.
+<span class="nc" id="L178">        double[][] normalization = new double[data.length][data[0].length];</span>
+
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        for(int i=0; i&lt;data.length; i++) {</span>
+<span class="nc" id="L181">            normalization[i] = zScore(data[i]); // Apply the Z-score normalization to each entry.</span>
+        }
+
+<span class="nc" id="L184">        return normalization;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

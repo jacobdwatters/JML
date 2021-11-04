@@ -161,4 +161,26 @@ public class Normalize {
 
         return normalization;
     }
+
+
+    /**
+     * Applies Z-score normalization to the dataset.
+     *
+     * @param data The dataset of interest.
+     * @return A copy of the dataset which has been normalized using Z-score normalization.
+     */
+    public static double[][] zScore(double[][] data) {
+
+        // TODO: Should this normalize each feature? So the columns, not the rows.
+
+        // TODO: In order to scale validation data, we need to know the mean and standard deviation of the training data.
+        //  So there should be a Normalize object which will be "fit" to the data. Then the same scaling can be applied to the validation.
+        double[][] normalization = new double[data.length][data[0].length];
+
+        for(int i=0; i<data.length; i++) {
+            normalization[i] = zScore(data[i]); // Apply the Z-score normalization to each entry.
+        }
+
+        return normalization;
+    }
 }

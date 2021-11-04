@@ -10,6 +10,11 @@ import linalg.Matrix;
 import linalg.Vector;
 
 
+/**
+ * K Nearest Neighbors (KNN) model. This model classifies data samples based on the K nearest training samples.
+ * The distance metric to determine the nearest samples is by default Euclidean distance. However, other Minkowski distance
+ * metrics can be used instead.
+ */
 public class KNearestNeighbors extends Model<double[][], int[]> {
 
     String MODEL_TYPE = ModelTypes.K_NEAREST_NEIGHBORS.toString();
