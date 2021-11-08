@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gradient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.core</a> &gt; <span class="el_source">Gradient.java</span></div><h1>Gradient.java</h1><pre class="source lang-java linenums">package com.jml.core;
 
 import com.jml.losses.Function;
-import com.jml.losses.LossFunctions;
 import linalg.Matrix;
 
+/**
+ * Allows for computation of the gradient of a function. Functions are assumed to be dependent on a matrix w.
+ */
 public class Gradient {
 
-<span class="fc" id="L9">    private static double h = 0.5e-8;</span>
+<span class="fc" id="L11">    private static double eps = 0.5e-8;</span>
 
-<span class="nc" id="L11">    private Gradient() {</span>
-<span class="nc" id="L12">        throw new IllegalStateException(&quot;Utility method cannot be instantiated.&quot;);</span>
+<span class="nc" id="L13">    private Gradient() {</span>
+<span class="nc" id="L14">        throw new IllegalStateException(&quot;Utility method cannot be instantiated.&quot;);</span>
     }
 
 
@@ -26,23 +28,24 @@ public class Gradient {
      */
     public static Matrix compute(Matrix w, Matrix X, Matrix y, Function F, Model model) {
 
-<span class="fc" id="L29">        Matrix grad = new Matrix(w.shape());</span>
+<span class="fc" id="L31">        Matrix grad = new Matrix(w.shape());</span>
+        Matrix yPred1, yPred2; // Predictions using weights adjusted by +eps and -eps respectively.
 
         // A diagonal matrix containing the value of h along the diagonal.
-<span class="fc" id="L32">        Matrix H = Matrix.I(w.numRows()).scalMult(h);</span>
-<span class="fc" id="L33">        Matrix functionValue = F.compute(w, X, y, model);</span>
+<span class="fc" id="L35">        Matrix H = Matrix.I(w.numRows()).scalMult(eps);</span>
+<span class="fc" id="L36">        Matrix functionValue = F.compute(y, model.predict(X, w));</span>
 
-<span class="fc bfc" id="L35" title="All 2 branches covered.">        for(int i=0; i&lt;w.numRows(); i++) { // Compute partial derivative for each w_i in w</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        for(int i=0; i&lt;w.numRows(); i++) { // Compute partial derivative of F with respect to each w_i in w</span>
+<span class="fc" id="L39">            yPred1 = F.compute(y, model.predict(X, w.add(H.getColAsVector(i))));</span>
+<span class="fc" id="L40">            yPred2 = F.compute(y, model.predict(X, w.sub(H.getColAsVector(i))));</span>
 
-<span class="fc" id="L37">            Matrix partial = F.compute(w.add(H.getColAsVector(i)), X, y, model).sub(</span>
-<span class="fc" id="L38">                            F.compute(w.sub(H.getColAsVector(i)), X, y, model)</span>
-<span class="fc" id="L39">            ).scalDiv(2*h);</span>
+<span class="fc" id="L42">            Matrix partial = yPred1.sub(yPred2).scalDiv(2*eps);</span>
 
             // Set the gradient at the given index to be the computed partial derivative.
-<span class="fc" id="L42">            grad.set(partial.getAsDouble(0, 0), i, 0);</span>
+<span class="fc" id="L45">            grad.set(partial.getAsDouble(0, 0), i, 0);</span>
         }
 
-<span class="fc" id="L45">        return grad;</span>
+<span class="fc" id="L48">        return grad;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

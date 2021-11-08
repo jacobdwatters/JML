@@ -1,14 +1,2 @@
-com\jml\core\DataLoader.class
-com\jml\optimizers\Scheduler.class
-com\jml\clasifiers\LogisticRegression.class
-com\jml\clasifiers\KNearestNeighbors.class
-com\jml\preprocessing\Encoder.class
-com\jml\optimizers\StepLearningRate.class
-com\jml\linear_models\MultipleLinearRegressionSGD.class
-com\jml\core\Block.class
-com\jml\core\Stats$1.class
-com\jml\util\ValueError.class
-com\jml\linear_models\PolynomialRegressionSGD.class
-com\jml\clasifiers\ClassifierTags.class
-com\jml\core\KnnFromData.class
-com\jml\core\Gradient.class
+com\jml\neural_network\activations\Activations.class
+com\jml\core\Metrics.class

@@ -3,18 +3,21 @@ package com.jml.losses;
 import com.jml.core.Model;
 import linalg.Matrix;
 
+
+/**
+ * Functional Interface for a loss function. A loss function takes two parameters y and yPred. The loss function
+ * is defined to be a function L such that L(y, yPred) >= 0.
+ */
 public interface Function {
 
     /**
-     * Evaluates a function which takes features and targets for a model and weights as parameters.
+     * Evaluates a loss function which takes features and targets for a model and weights as parameters.
      *
-     * @param weights Weights for the model.
-     * @param X Features of the model.
-     * @param y Targets of the model.
-     * @param model Model of interest.
+     * @param y True values.
+     * @param yPred Expected values.
      * @return The loss between the expected and actual data values.
      */
-    Matrix compute(Matrix weights, Matrix X, Matrix y, Model model);
+    Matrix compute(Matrix y, Matrix yPred);
 }
 
 

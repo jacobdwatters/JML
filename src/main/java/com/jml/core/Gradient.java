@@ -1,12 +1,14 @@
 package com.jml.core;
 
 import com.jml.losses.Function;
-import com.jml.losses.LossFunctions;
 import linalg.Matrix;
 
+/**
+ * Allows for computation of the gradient of a function. Functions are assumed to be dependent on a matrix w.
+ */
 public class Gradient {
 
-    private static double h = 0.5e-8;
+    private static double eps = 0.5e-8;
 
     private Gradient() {
         throw new IllegalStateException("Utility method cannot be instantiated.");
@@ -27,16 +29,17 @@ public class Gradient {
     public static Matrix compute(Matrix w, Matrix X, Matrix y, Function F, Model model) {
 
         Matrix grad = new Matrix(w.shape());
+        Matrix yPred1, yPred2; // Predictions using weights adjusted by +eps and -eps respectively.
 
         // A diagonal matrix containing the value of h along the diagonal.
-        Matrix H = Matrix.I(w.numRows()).scalMult(h);
-        Matrix functionValue = F.compute(w, X, y, model);
+        Matrix H = Matrix.I(w.numRows()).scalMult(eps);
+        Matrix functionValue = F.compute(y, model.predict(X, w));
 
-        for(int i=0; i<w.numRows(); i++) { // Compute partial derivative for each w_i in w
+        for(int i=0; i<w.numRows(); i++) { // Compute partial derivative of F with respect to each w_i in w
+            yPred1 = F.compute(y, model.predict(X, w.add(H.getColAsVector(i))));
+            yPred2 = F.compute(y, model.predict(X, w.sub(H.getColAsVector(i))));
 
-            Matrix partial = F.compute(w.add(H.getColAsVector(i)), X, y, model).sub(
-                            F.compute(w.sub(H.getColAsVector(i)), X, y, model)
-            ).scalDiv(2*h);
+            Matrix partial = yPred1.sub(yPred2).scalDiv(2*eps);
 
             // Set the gradient at the given index to be the computed partial derivative.
             grad.set(partial.getAsDouble(0, 0), i, 0);

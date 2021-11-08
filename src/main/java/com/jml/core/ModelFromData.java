@@ -38,6 +38,9 @@ class ModelFromData {
         } else if(modelType.equals(ModelTypes.K_NEAREST_NEIGHBORS.toString())){
             model = KnnFromData.create(tags, contents);
 
+        } else if(modelType.equals(ModelTypes.LOGISTIC_REGRESSION.toString())) {
+            model = LogRegFromData.create(tags, contents);
+
         } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {
             // TODO:
         } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {

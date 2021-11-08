@@ -42,7 +42,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
     @Override
     public MultipleLinearRegression fit(double[][] features, double[] targets) {
 
-        Matrix y = (new Vector(targets)).toMatrix();
+        Matrix y = new Vector(targets);
         Matrix V = new Matrix(features);
         Matrix ones = Matrix.ones(features.length, 1);
         V = ones.augment(V);
@@ -116,7 +116,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
         if(!isFit) {
             throw new IllegalStateException("Model must be fit before it can be saved.");
         }
-        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(".mdl")) {
+        if(!filePath.endsWith(".mdl")) {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 
@@ -181,10 +181,10 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
     public static void main(String[] args) {
         Model model = new MultipleLinearRegression();
         double[][] features = new double[][] { {1, 4, -3, 4},
-                {5, 6, -4, 8},
-                {9, -1, 11, 12},
-                {0, 1, 0.6, 1},
-                {5, 4, 3, 2}};
+                                                {5, 6, -4, 8},
+                                                {9, -1, 11, 12},
+                                                {0, 1, 0.6, 1},
+                                                {5, 4, 3, 2}};
         double[] targets = new double[]{1, 9, -1, 6, 4};
         double[][] tests = new double[][] {{1, 3, 4, 5},
                                             {-0.1, 3.5, 2, 6}};

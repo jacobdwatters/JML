@@ -1,9 +1,5 @@
 package com.jml.core;
 
-
-import com.jml.clasifiers.KNearestNeighbors;
-import com.jml.preprocessing.Encoder;
-import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 
 import java.util.ArrayList;

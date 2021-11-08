@@ -1,21 +1,43 @@
 package com.jml.neural_network.layers;
 
-public abstract class Layer<E, F> {
+import linalg.Matrix;
 
-    E inDim = null;
-    F outDim = null;
-    String activation = null;
+public interface Layer {
+    /**
+     * Feeds the inputs through the layer.
+     *
+     * @param inputs Input values for the layer
+     * @return The result of the layer applied to the values.
+     */
+    Matrix forward(Matrix inputs);
 
     /**
-     * Constructs a layer for a neural network.
+     * Updates the input dimension for the layer. <br>
+     * <b><u>WARNING:</u></b> This will zero any weight values the layer may currently be holding.
      *
-     * @param inDim Layer input dimension.
-     * @param outDim Layer output dimension.
-     * @param activation Activation function for layer.
+     * @param inDim New input size for the layer.
      */
-    protected Layer(E inDim, F outDim, String activation) {
-        this.inDim = inDim;
-        this.outDim = outDim;
-        this.activation = activation;
-    }
+    void updateInDim(int inDim);
+
+    /**
+     * Gets the input dimension for this layer.
+     *
+     * @return The input dimension of this layer.
+     */
+    int getInDim();
+
+    /**
+     * Gets the output dimension for this layer.
+     *
+     * @return The output dimension of this layer.
+     */
+    int getOutDim();
+
+    Matrix getWeights();
+
+    /**
+     * Gets the node values for this layer.
+     * @return The node values of this layer in a matrix.
+     */
+    Matrix getValues();
 }

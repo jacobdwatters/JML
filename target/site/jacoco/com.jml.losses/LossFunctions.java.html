@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LossFunctions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.losses</a> &gt; <span class="el_source">LossFunctions.java</span></div><h1>LossFunctions.java</h1><pre class="source lang-java linenums">package com.jml.losses;
 
-import com.jml.core.Model;
 import linalg.Matrix;
 
 /**
  * This class contains lambda functions for various loss functions including:
  * &lt;pre&gt;
- *     - {@link #sse sse}: sum of squared-errors loss.
+ *     - {@link #sse}: sum of squared-errors loss.
+ *     - {@link #binCrossEntropy}: binary cross-entropy loss (Cross-entropy for two classes).
+ *     - {@link #crossEntropy}: cross-entropy loss (For multiple classes).
  * &lt;/pre&gt;
  */
 public class LossFunctions {
 
     // A private constructor to hide the implicit constructor.
-<span class="nc" id="L15">    private LossFunctions() {</span>
-<span class="nc" id="L16">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
+<span class="nc" id="L16">    private LossFunctions() {</span>
+<span class="nc" id="L17">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
     }
+
+
+    /**
+     * The sum of mean squared-errors loss function.&lt;br&gt;
+     * That is &lt;code&gt;mse = (1/n)sum(x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt;)&lt;sup&gt;2&lt;/sup&gt;&lt;/code&gt;
+     * where &lt;code&gt;x&lt;code/&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;code/&gt;,
+     * and &lt;code&gt;x&lt;code/&gt; is the actual data and &lt;code&gt;y&lt;code/&gt; is the predicted data.
+     */
+<span class="fc" id="L27">    public static Function mse = (Matrix y, Matrix yPred) -&gt; {</span>
+<span class="nc" id="L28">        return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());</span>
+    };
 
 
     /**
@@ -23,8 +35,71 @@ public class LossFunctions {
      * where &lt;code&gt;x&lt;code/&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;code/&gt;,
      * and &lt;code&gt;x&lt;code/&gt; is the actual data and &lt;code&gt;y&lt;code/&gt; is the predicted data.
      */
-<span class="fc" id="L26">    public static Function sse = (Matrix w, Matrix X, Matrix y, Model model) -&gt; {</span>
-<span class="fc" id="L27">        return model.predict(X, w).sub(y).T().mult(model.predict(X, w).sub(y));</span>
+<span class="fc" id="L38">    public static Function sse = (Matrix y, Matrix yPred) -&gt; {</span>
+<span class="fc" id="L39">        return yPred.sub(y).T().mult(yPred.sub(y));</span>
+    };
+
+
+    /**
+     * The binary cross-entropy loss function.
+     * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be &quot;very close&quot; to 0 or 1 if
+     * appropriate.
+     */
+<span class="fc" id="L48">    public static Function binCrossEntropy = (Matrix y, Matrix yPred) -&gt; {</span>
+<span class="nc" id="L49">        double eps = 1e-15;</span>
+<span class="nc" id="L50">        double loss = 0;</span>
+<span class="nc" id="L51">        Matrix result = new Matrix(1);</span>
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(yPred.numCols() &gt; 2) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Predictions seem to have more than two classes. Consider &quot; +</span>
+                    &quot;crossEntropy() for multiple classes.&quot;);
+        }
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
+            // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if(yPred.getAsDouble(i, 0)==0) {</span>
+<span class="nc" id="L61">                yPred.set(eps, i,  0);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
+<span class="nc" id="L63">                yPred.set(1-eps, i,  0);</span>
+            }
+
+<span class="nc" id="L66">            loss += y.getAsDouble(i, 0)*Math.log(yPred.getAsDouble(i, 0))</span>
+<span class="nc" id="L67">                    + (1-y.getAsDouble(i, 0))*Math.log(1-yPred.getAsDouble(i, 0));</span>
+        }
+
+<span class="nc" id="L70">        result.set(-loss/yPred.numRows(), 0,0);</span>
+
+<span class="nc" id="L72">        return result;</span>
+    };
+
+
+    /**
+     * the cross-entropy loss function.
+     * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be &quot;very close&quot; to 0 or 1 if
+     * appropriate.
+     */
+<span class="fc" id="L81">    public static Function crossEntropy = (Matrix y, Matrix yPred) -&gt; {</span>
+<span class="nc" id="L82">        double eps = 1e-15;</span>
+<span class="nc" id="L83">        double loss = 0;</span>
+<span class="nc" id="L84">        Matrix result = new Matrix(1);</span>
+        // y contains the actual labels as a one-hot vector.
+
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            for(int j=0; j&lt;yPred.numCols(); j++) {</span>
+                // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                if(yPred.getAsDouble(i, j)==0) {</span>
+<span class="nc" id="L91">                    yPred.set(eps, i,  j);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                } else if(yPred.getAsDouble(i, j)==1) {</span>
+<span class="nc" id="L93">                    yPred.set(1-eps, i,  j);</span>
+                }
+
+<span class="nc" id="L96">                loss += y.getAsDouble(i, j)*Math.log(yPred.getAsDouble(i, j));</span>
+            }
+        }
+
+<span class="nc" id="L100">        result.set(-loss/yPred.numRows(), 0,0);</span>
+
+<span class="nc" id="L102">        return result;</span>
     };
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -12,10 +12,11 @@ import java.util.*;
  */
 public class Stats {
 
+    private static SplittableRandom random = new SplittableRandom();
+
     private Stats() {
         throw new IllegalStateException("Utility Class.");
     }
-
 
     public static double round(double value, int decimals) {
         double result;
@@ -31,7 +32,7 @@ public class Stats {
      * @param data Dataset to compute mean of.
      * @return arithmetic mean of the dataset.
      */
-    public static double mean(double[] data) {
+    public static double mean(double... data) {
         ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty
         double mean = 0;
 
@@ -49,7 +50,7 @@ public class Stats {
      * @param data Dataset to compute median of.
      * @return The median of the dataset.
      */
-    public static double median(double[] data) {
+    public static double median(double... data) {
         ArrayErrors.checkNotEmpty(data); // Ensure the array is not empty
         double median;
 
@@ -80,7 +81,7 @@ public class Stats {
      * @param data Dataset to compute the mode of.
      * @return The mode of the dataset.
      */
-    public static double mode(double[] data) {
+    public static double mode(double... data) {
         double mode = 0;
         int maxCount = 0, i, j;
 
@@ -108,7 +109,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The variance of the data.
      */
-    public static double variance(double[] data) {
+    public static double variance(double... data) {
         if(data.length < 2) {
             throw new IllegalArgumentException("Variance requires at least two data points.");
         }
@@ -124,7 +125,7 @@ public class Stats {
      * @param data Dataset of interest
      * @return The standard deviation of the data.
      */
-    public static double std(double[] data) {
+    public static double std(double... data) {
         return Math.sqrt(sst(data)/data.length);
     }
 
@@ -186,7 +187,7 @@ public class Stats {
      * @param y Dataset in question.
      * @return The sum of squares total.
      */
-    public static double sst(double[] y) {
+    public static double sst(double... y) {
         double mean = mean(y),
                 result = 0;
 
@@ -204,7 +205,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The minimum value in data.
      */
-    public static double min(double[] data) {
+    public static double min(double... data) {
         double minimum = Double.MAX_VALUE;
 
         for(int i=0; i< data.length; i++) {
@@ -295,7 +296,7 @@ public class Stats {
      * @param data Dataset of interest.
      * @return The maximum value in data.
      */
-    public static double max(double[] data) {
+    public static double max(double... data) {
         double maximum = Double.MIN_VALUE;
 
         for(int i=0; i< data.length; i++) {
@@ -305,5 +306,21 @@ public class Stats {
         }
 
         return maximum;
+    }
+
+
+    /**
+     * Generates a random boolean with a specified probability of being true.
+     *
+     * @param p Probability of being true. Must be in range [0, 1].
+     * @return Returns a random boolean with probability <code>p</code> of being true.
+     * @throws IllegalArgumentException if <code>p</code> is not in range [0, 1].
+     */
+    public static boolean genRandBoolean(double p) {
+        if(p<0 || p>1) {
+            throw new IllegalArgumentException("probability must be between 0 and 1 inclusive but got " + p + ".");
+        }
+
+        return random.nextDouble() < p;
     }
 }

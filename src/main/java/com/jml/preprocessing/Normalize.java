@@ -4,6 +4,18 @@ import com.jml.core.Stats;
 import linalg.Matrix;
 import linalg.Vector;
 
+
+/**
+ * Contains methods for normalizing data. These include
+ * <pre>
+ *     - {@link #minMaxScale(double[]) min-max scaling in (0, 1)}
+ *     - {@link #minMaxScale(double[], double, double) min-max scaling in (a, b)}
+ *     - {@link #meanNormalize(double[]) mean normalization}
+ *     - {@link #l2(double[])  l2 normalization}
+ *     - {@link #l1(double[])  l1 normalization}
+ *     - {@link #zScore(double[]) Z-score normalization}
+ * </pre>
+ */
 public class Normalize {
 
     // Private constructor to hide implicate one.
@@ -84,7 +96,22 @@ public class Normalize {
 
 
     /**
-     * Normalizes the data by subtracting the meanNormalize and dividing by the L2-norm.
+     * Normalizes the data by subtracting the mean and dividing by the L1-norm.
+     *
+     * @param data - data to normalize.
+     * @return The L1-normalized data.
+     */
+    public static double[] l1(double[] data) {
+        Matrix x = new Vector(data, 1);
+        double mean = Stats.mean(data);
+        Matrix m = new Matrix(1, data.length, mean);
+
+        return x.scalDiv(x.norm(1)).getValuesAsDouble()[0];
+    }
+
+
+    /**
+     * Normalizes the data by subtracting the mean and dividing by the L2-norm.
      *
      * @param data - data to normalize.
      * @return The L2-normalized data.
@@ -99,7 +126,7 @@ public class Normalize {
 
 
     /**
-     * Normalizes each column of the data by subtracting the meanNormalize of that column and dividing by the
+     * Normalizes each column of the data by subtracting the mean of that column and dividing by the
      * L2-norm of that column.
      *
      * @param data - data to normalize.
@@ -130,6 +157,28 @@ public class Normalize {
 
         for(int i=0; i<data.length; i++) {
             normalization[i] = (data[i]-mean) / std; // Apply the Z-score normalization to each entry.
+        }
+
+        return normalization;
+    }
+
+
+    /**
+     * Applies Z-score normalization to the dataset.
+     *
+     * @param data The dataset of interest.
+     * @return A copy of the dataset which has been normalized using Z-score normalization.
+     */
+    public static double[][] zScore(double[][] data) {
+
+        // TODO: Should this normalize each feature? So the columns, not the rows.
+
+        // TODO: In order to scale validation data, we need to know the mean and standard deviation of the training data.
+        //  So there should be a Normalize object which will be "fit" to the data. Then the same scaling can be applied to the validation.
+        double[][] normalization = new double[data.length][data[0].length];
+
+        for(int i=0; i<data.length; i++) {
+            normalization[i] = zScore(data[i]); // Apply the Z-score normalization to each entry.
         }
 
         return normalization;
