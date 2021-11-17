@@ -6,59 +6,61 @@ import java.util.Map;
 
 
 /**
- * Contains methods to encode classes or targets to numerical values.
+ * Contains methods to encode classes or targets to numerical values. This allows labels to be used as targets when
+ * {@link com.jml.core.Model#fit(Object, Object) fitting} a {@link com.jml.core.Model Model}.
  */
 public class Encoder {
 
     // Hide default constructor.
-<span class="nc" id="L14">    private Encoder() {throw new IllegalStateException(&quot;Cannot instantiate utility class.&quot;);}</span>
+<span class="nc" id="L15">    private Encoder() {throw new IllegalStateException(&quot;Cannot instantiate utility class.&quot;);}</span>
 
     // TODO: Add Encoding object that hold a map which shows what class became what value. That way the value can be decoded.
 
 
     /**
-     * Encodes a list of classes as values between 0 t0 (n-1) classes. &lt;br&gt;&lt;br&gt;
-     * Labels will be sorted alphabetically before encoding. This guarantees a consistent method of encoding so that
+     * Encodes a list of classes as values between 0 to (n-1) classes. &lt;br&gt;&lt;br&gt;
+     * Labels will be sorted lexicographically before encoding. This guarantees a consistent method of encoding so that
      * the encoded labels can be decoded.
      *
      * @param labels Labels of a dataset.
      * @return An integer array containing the encoding of each label.
      */
     public static int[] encodeClasses(int[] labels) {
-<span class="nc" id="L28">        String[] labelsAsStr = Arrays.toString(labels)</span>
-<span class="nc" id="L29">                .replaceAll(&quot;\\s+&quot;, &quot;&quot;)</span>
-<span class="nc" id="L30">                .split(&quot;,&quot;);</span>
-<span class="nc" id="L31">        return encodeClasses(labelsAsStr);</span>
+<span class="nc" id="L29">        String[] labelsAsStr = Arrays.toString(labels)</span>
+<span class="nc" id="L30">                .replaceAll(&quot;\\s+&quot;, &quot;&quot;)</span>
+<span class="nc" id="L31">                .split(&quot;,&quot;);</span>
+<span class="nc" id="L32">        return encodeClasses(labelsAsStr);</span>
     }
 
 
     /**
-     * Encodes a list of classes as values between 0 t0 (n-1) classes.&lt;br&gt;&lt;br&gt;
-     * Labels will be sorted alphabetically before encoding. This guarantees a consistent method of encoding so that
+     * Encodes a list of classes as values between 0 to (n-1) classes.&lt;br&gt;&lt;br&gt;
+     * Labels will be sorted lexicographically before encoding. This guarantees a consistent method of encoding so that
      * the encoded labels can be decoded.
      *
      * @param labels Labels of a dataset.
      * @return An integer array containing the encoding of each label.
      */
     public static int[] encodeClasses(String[] labels) {
-<span class="fc" id="L44">        int[] encodedLabels = new int[labels.length];</span>
-<span class="fc" id="L45">        Map&lt;String, Integer&gt; encodings = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L46">        Arrays.sort(labels);</span>
+<span class="fc" id="L45">        int[] encodedLabels = new int[labels.length];</span>
+<span class="fc" id="L46">        Map&lt;String, Integer&gt; encodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L47">        String[] sortedLabels = labels.clone();</span>
+<span class="fc" id="L48">        Arrays.sort(sortedLabels);</span>
 
-<span class="fc" id="L48">        int classNum = 0;</span>
+<span class="fc" id="L50">        int classNum = 0;</span>
 
-<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (String label : labels) { // Find unique labels</span>
-<span class="fc bfc" id="L51" title="All 2 branches covered.">            if (!encodings.containsKey(label)) {</span>
-<span class="fc" id="L52">                encodings.put(label, classNum);</span>
-<span class="fc" id="L53">                classNum++;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (String label : sortedLabels) { // Find unique labels</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            if (!encodings.containsKey(label)) {</span>
+<span class="fc" id="L54">                encodings.put(label, classNum);</span>
+<span class="fc" id="L55">                classNum++;</span>
             }
         }
 
-<span class="fc bfc" id="L57" title="All 2 branches covered.">        for(int i=0; i&lt;labels.length; i++) { // set class for each unique label.</span>
-<span class="fc" id="L58">            encodedLabels[i] = encodings.get(labels[i]);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for(int i=0; i&lt;labels.length; i++) { // set class for each unique label.</span>
+<span class="fc" id="L60">            encodedLabels[i] = encodings.get(labels[i]);</span>
         }
 
-<span class="fc" id="L61">        return encodedLabels;</span>
+<span class="fc" id="L63">        return encodedLabels;</span>
     }
 
 
@@ -73,17 +75,17 @@ public class Encoder {
      * @return An integer array containing the encoding of each label.
      */
     public static int[] encodeClasses(String[][] labels) {
-<span class="fc" id="L76">        String[] flat = new String[labels.length* labels[0].length];</span>
-<span class="fc" id="L77">        int k=0;</span>
+<span class="fc" id="L78">        String[] flat = new String[labels.length* labels[0].length];</span>
+<span class="fc" id="L79">        int k=0;</span>
 
-<span class="fc bfc" id="L79" title="All 2 branches covered.">        for(int i=0; i&lt;labels.length; i++) { // Flatten the array.</span>
-<span class="fc bfc" id="L80" title="All 2 branches covered.">            for(int j=0; j&lt;labels[0].length; j++) {</span>
-<span class="fc" id="L81">                flat[k] = labels[i][j];</span>
-<span class="fc" id="L82">                k++;</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for(int i=0; i&lt;labels.length; i++) { // Flatten the array.</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            for(int j=0; j&lt;labels[0].length; j++) {</span>
+<span class="fc" id="L83">                flat[k] = labels[i][j];</span>
+<span class="fc" id="L84">                k++;</span>
             }
         }
 
-<span class="fc" id="L86">        return encodeClasses(flat);</span>
+<span class="fc" id="L88">        return encodeClasses(flat);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

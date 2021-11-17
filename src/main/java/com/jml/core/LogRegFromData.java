@@ -2,7 +2,6 @@ package com.jml.core;
 
 import com.jml.clasifiers.LogisticRegression;
 import com.jml.linear_models.LinearModelTags;
-import com.jml.linear_models.MultipleLinearRegression;
 import linalg.Matrix;
 
 import java.util.Arrays;

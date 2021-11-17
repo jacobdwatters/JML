@@ -10,41 +10,41 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-<span class="nc" id="L13">class MultRegFromData extends MultipleLinearRegression {</span>
+<span class="fc" id="L13">class MultRegFromData extends MultipleLinearRegression {</span>
 
     private static Scanner scanner;
 
     static Model create(List&lt;String&gt; tags, List&lt;String&gt; contents) {
-<span class="nc" id="L18">        MultRegFromData multRegModel = new MultRegFromData();</span>
-<span class="nc" id="L19">        multRegModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
+<span class="fc" id="L18">        MultRegFromData multRegModel = new MultRegFromData();</span>
+<span class="fc" id="L19">        multRegModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
 
-<span class="nc bnc" id="L21" title="All 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
+<span class="pc bpc" id="L21" title="1 of 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
             // Get the tag/content pair
-<span class="nc" id="L23">            String tag = tags.remove(0);</span>
-<span class="nc" id="L24">            String content = contents.remove(0);</span>
-<span class="nc" id="L25">            scanner = new Scanner(content);</span>
+<span class="fc" id="L23">            String tag = tags.remove(0);</span>
+<span class="fc" id="L24">            String content = contents.remove(0);</span>
+<span class="fc" id="L25">            scanner = new Scanner(content);</span>
 
-<span class="nc bnc" id="L27" title="All 2 branches missed.">            if(tag.equals(LinearModelTags.PARAMETERS.toString())) {</span>
-<span class="nc" id="L28">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">            if(tag.equals(LinearModelTags.PARAMETERS.toString())) {</span>
+<span class="fc" id="L28">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
 
-<span class="nc" id="L30">                multRegModel.coefficients = Arrays.stream(coeffStrings)</span>
-<span class="nc" id="L31">                        .mapToDouble(Double::parseDouble)</span>
-<span class="nc" id="L32">                        .toArray();</span>
+<span class="fc" id="L30">                multRegModel.coefficients = Arrays.stream(coeffStrings)</span>
+<span class="fc" id="L31">                        .mapToDouble(Double::parseDouble)</span>
+<span class="fc" id="L32">                        .toArray();</span>
 
-<span class="nc" id="L34">                multRegModel.w = new Matrix(multRegModel.coefficients.length, 1);</span>
-<span class="nc" id="L35">                multRegModel.w.setCol(multRegModel.coefficients, 0);</span>
+<span class="fc" id="L34">                multRegModel.w = new Matrix(multRegModel.coefficients.length, 1);</span>
+<span class="fc" id="L35">                multRegModel.w.setCol(multRegModel.coefficients, 0);</span>
 
-<span class="nc" id="L37">            } else {</span>
+<span class="fc" id="L37">            } else {</span>
 <span class="nc" id="L38">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>
             }
 
-<span class="nc" id="L41">            scanner.close();</span>
-<span class="nc" id="L42">        }</span>
+<span class="fc" id="L41">            scanner.close();</span>
+<span class="fc" id="L42">        }</span>
 
-<span class="nc" id="L44">        multRegModel.buildDetails();</span>
-<span class="nc" id="L45">        Class&lt;MultipleLinearRegression&gt; clazz = MultipleLinearRegression.class;</span>
+<span class="fc" id="L44">        multRegModel.buildDetails();</span>
+<span class="fc" id="L45">        Class&lt;MultipleLinearRegression&gt; clazz = MultipleLinearRegression.class;</span>
 
-<span class="nc" id="L47">        return clazz.cast(multRegModel);</span>
+<span class="fc" id="L47">        return clazz.cast(multRegModel);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

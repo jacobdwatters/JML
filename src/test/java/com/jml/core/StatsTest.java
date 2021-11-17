@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class StatsTest {
+class StatsTest {
     double[] dataset1, dataset2, dataset3, dataset4;
 
 

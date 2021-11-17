@@ -1,2 +1,7 @@
 com\jml\neural_network\activations\Activations.class
+com\jml\classifiers\LogisticRegression.class
+com\jml\classifiers\KDTree.class
+com\jml\classifiers\ClassifierTags.class
+com\jml\classifiers\KDTree$PointNode.class
 com\jml\core\Metrics.class
+com\jml\classifiers\KNearestNeighbors.class

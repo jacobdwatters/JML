@@ -2,10 +2,15 @@
 
 import linalg.Matrix;
 
+
+/**
+ * This class contains several activation functions for use in a neural network. The activation functions are lambdas
+ * that implement the {@link com.jml.neural_network.activations.Activation} functional interface.
+ */
 public class Activations {
 
-<span class="nc" id="L7">    private Activations() {</span>
-<span class="nc" id="L8">        throw new IllegalStateException(&quot;Cannot instantiate utility class.&quot;);</span>
+<span class="nc" id="L12">    private Activations() {</span>
+<span class="nc" id="L13">        throw new IllegalStateException(&quot;Cannot instantiate utility class.&quot;);</span>
     }
 
     /**
@@ -15,18 +20,27 @@ public class Activations {
      * @param data Data to apply the activation function to.
      * @return The image of the data under the activation function.
      */
-<span class="nc" id="L18">    public static Activation sigmoid = (Matrix data) -&gt; {</span>
-<span class="nc" id="L19">        Matrix result = new Matrix(data.shape());</span>
+<span class="nc" id="L23">    public static Activation sigmoid = (Matrix data) -&gt; {</span>
+<span class="nc" id="L24">        Matrix result = new Matrix(data.shape());</span>
         double value;
 
-<span class="nc bnc" id="L22" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="nc bnc" id="L23" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="nc" id="L24">                value = 1 / (1+Math.exp(-data.get(i, j).re));</span>
-<span class="nc" id="L25">                result.set(value, i, j);</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="nc" id="L29">                value = 1 / (1+Math.exp(-data.get(i, j).re));</span>
+<span class="nc" id="L30">                result.set(value, i, j);</span>
             }
         }
 
-<span class="nc" id="L29">        return result;</span>
+<span class="nc" id="L34">        return result;</span>
+    };
+
+
+    /**
+     * Applies a linear activation. When used on a layer for a neural network
+     * this is equivalent to having no activation resulting in a linear layer.
+     */
+<span class="nc" id="L42">    public static Activation linear = (Matrix data) -&gt; {</span>
+<span class="nc" id="L43">        return new Matrix(data);</span>
     };
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
