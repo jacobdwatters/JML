@@ -12,11 +12,13 @@ import linalg.Vector;
  */
 public class Dropout implements Layer {
 
+<span class="nc" id="L15">    public final String LAYER_TYPE = &quot;Dropout&quot;;</span>
+
     /**
      * Probability of element being zeroed.
      */
     double p;
-<span class="nc" id="L19">    int inDim = -1; // Input size for the layer. The output size will be the same.</span>
+<span class="nc" id="L21">    int inDim = -1; // Input size for the layer. The output size will be the same.</span>
 
     // TODO: is this needed? We will just pass through the values zeroing some
     Matrix values; // Holds node values for layer.
@@ -29,9 +31,9 @@ public class Dropout implements Layer {
      *
      * @param p The probability of an element being zeroed.
      */
-<span class="nc" id="L32">    public Dropout(double p) {</span>
-<span class="nc" id="L33">        this.p = p;</span>
-<span class="nc" id="L34">    }</span>
+<span class="nc" id="L34">    public Dropout(double p) {</span>
+<span class="nc" id="L35">        this.p = p;</span>
+<span class="nc" id="L36">    }</span>
 
 
     /**
@@ -40,11 +42,11 @@ public class Dropout implements Layer {
      * @param inDim Input dimension of the layer.
      * @param p The probability of an element being zeroed.
      */
-<span class="nc" id="L43">    public Dropout(int inDim, double p) {</span>
-<span class="nc" id="L44">        this.inDim = inDim;</span>
-<span class="nc" id="L45">        this.p = p;</span>
-<span class="nc" id="L46">        this.values = new Vector(this.inDim);</span>
-<span class="nc" id="L47">    }</span>
+<span class="nc" id="L45">    public Dropout(int inDim, double p) {</span>
+<span class="nc" id="L46">        this.inDim = inDim;</span>
+<span class="nc" id="L47">        this.p = p;</span>
+<span class="nc" id="L48">        this.values = new Vector(this.inDim);</span>
+<span class="nc" id="L49">    }</span>
 
 
     /**
@@ -56,20 +58,22 @@ public class Dropout implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-<span class="nc bnc" id="L59" title="All 4 branches missed.">        if(inputs.numRows()!=inDim &amp;&amp; inputs.numCols()!=1) {</span>
-<span class="nc" id="L60">            throw new IllegalArgumentException(&quot;Invalid input shape of &quot; + inputs.shape() + &quot;. &quot; +</span>
+<span class="nc bnc" id="L61" title="All 4 branches missed.">        if(inputs.numRows()!=inDim &amp;&amp; inputs.numCols()!=1) {</span>
+<span class="nc" id="L62">            throw new IllegalArgumentException(&quot;Invalid input shape of &quot; + inputs.shape() + &quot;. &quot; +</span>
                     &quot;Expecting input shape of &quot; + inDim + &quot;x&quot; + 1);
         }
 
-<span class="nc" id="L64">        values = new Matrix(inputs.shape());</span>
+<span class="nc" id="L66">        values = inputs.copy();</span>
 
-<span class="nc bnc" id="L66" title="All 2 branches missed.">        for(int i=0; i&lt;values.numRows(); i++) {</span>
-<span class="nc bnc" id="L67" title="All 2 branches missed.">            if(Stats.genRandBoolean(this.p)) {</span>
-<span class="nc" id="L68">                values.set(0, i, 1); // Then zero entry.</span>
+
+        // TODO: This needs to be changed to be a mask. That is, it should be the same elements dropped for forward and backward
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        for(int i=0; i&lt;values.numRows(); i++) {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            if(Stats.genRandBoolean(this.p)) {</span>
+<span class="nc" id="L72">                values.set(0, i, 0); // Then zero entry.</span>
             }
         }
 
-<span class="nc" id="L72">        return values.scalDiv(1-p);</span>
+<span class="nc" id="L76">        return values.scalDiv(1-p);</span>
     }
 
 
@@ -79,7 +83,7 @@ public class Dropout implements Layer {
      */
     @Override
     public int getInDim() {
-<span class="nc" id="L82">        return this.inDim;</span>
+<span class="nc" id="L86">        return this.inDim;</span>
     }
 
 
@@ -89,7 +93,7 @@ public class Dropout implements Layer {
      */
     @Override
     public int getOutDim() {
-<span class="nc" id="L92">        return this.inDim;</span>
+<span class="nc" id="L96">        return this.inDim;</span>
     }
 
 
@@ -101,26 +105,47 @@ public class Dropout implements Layer {
      */
     @Override
     public void updateInDim(int inDim) {
-<span class="nc" id="L104">        this.inDim = inDim;</span>
-<span class="nc" id="L105">        this.values = new Vector(this.inDim);</span>
-<span class="nc" id="L106">    }</span>
+<span class="nc" id="L108">        this.inDim = inDim;</span>
+<span class="nc" id="L109">        this.values = new Vector(this.inDim);</span>
+<span class="nc" id="L110">    }</span>
 
 
     /**
      * Gets the weights for the layer.
      * @return Null Since dropout layers have no weights.
      */
+    @Override
     public Matrix getWeights() {
-<span class="nc" id="L114">        return null;</span>
+<span class="nc" id="L119">        return null;</span>
     }
+
+
+    /**
+     * Does nothing. No weights to set.
+     * @param w New weights
+     */
+    @Override
+<span class="nc" id="L128">    public void setWeights(Matrix w) {}</span>
 
 
     /**
      * {@inheritDoc}
      * @return The values of this layer
      */
+    @Override
     public Matrix getValues() {
-<span class="nc" id="L123">        return this.values;</span>
+<span class="nc" id="L137">        return this.values;</span>
+    }
+
+
+    /**
+     * Gets the details of this layer as a String.
+     *
+     * @return The details of this layer as a String.
+     */
+    @Override
+    public String getDetails() {
+<span class="nc" id="L148">        return &quot;Type: &quot; + this.LAYER_TYPE + &quot;,\tInput size: &quot; + this.inDim + &quot;,\tOutput size: &quot; + this.inDim + &quot;, \tTrainable Parameters: &quot; + 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

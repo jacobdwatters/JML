@@ -121,6 +121,14 @@ public class Dropout implements Layer {
 
 
     /**
+     * Does nothing. No weights to set.
+     * @param w New weights
+     */
+    @Override
+    public void setWeights(Matrix w) {}
+
+
+    /**
      * {@inheritDoc}
      * @return The values of this layer
      */
@@ -137,6 +145,6 @@ public class Dropout implements Layer {
      */
     @Override
     public String getDetails() {
-        return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ",\tTrainable Parameters: " + 0;
+        return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
     }
 }

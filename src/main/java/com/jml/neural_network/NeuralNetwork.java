@@ -29,6 +29,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected Optimizer optim;
 
     protected boolean isFit = false;
+    List<Double> lossHist = new ArrayList<>();
 
     private Matrix[] dxUpdates;
 
@@ -74,9 +75,41 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
-        dxUpdates = new Matrix[layers.size()];
+        dxUpdates = new Matrix[layers.size()]; // Weight updates
+        for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
+            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
+        }
 
-        return null;
+        Matrix feature = new Matrix(features);
+        Matrix target = new Matrix(targets);
+        Matrix input;
+        Matrix output;
+        Matrix predictions;
+
+        for(int i=0; i<epochs; i++) {
+            for(int j=0; j<feature.numRows(); j++) {
+                for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) {
+                    input = feature.getRowAsVector(j+k).T();
+                    output = feedForward(input);
+                    back(target.getRowAsVector(j+k).T(), output, input);
+                }
+
+                applyUpdates();
+            }
+
+            predictions = new Matrix(this.predict(features));
+//            System.out.println("Epoch: " + (i+1) + ", loss = " + LossFunctions.mse.compute(predictions, target));
+            lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re);
+
+            if(lossHist.get(lossHist.size()-1) < threshold) {
+                System.out.println("Stopping Early...");
+                break; // Then stop training
+            }
+        }
+
+        isFit=true;
+        buildDetails();
+        return this;
     }
 
 
@@ -84,8 +117,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * Computes the forward pass of the neural network.<br>
      * The forward pass computes the values for each layer based on an input.
      */
-    protected Matrix feedForward(Matrix inputs) {
-        Matrix currentInput = new Matrix(inputs);
+    protected Matrix feedForward(Matrix input) {
+        Matrix currentInput = new Matrix(input);
         for(Layer layer : layers) { // Feeds the input through all layers.
             currentInput = layer.forward(currentInput);
         }
@@ -105,85 +138,56 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected void back(Matrix target, Matrix output, Matrix input) {
         // TODO: Auto-generated method stub
 
-        /*
-        double[][] error = Matrix.subtract(currentTarget, outputValues);	// Error of output layer
-		double[][] hiddenError;
-
-        // Gradient Descent
-        deltaHidden2OutputWeights =	Matrix.add(deltaHidden2OutputWeights,
-                Matrix.multiply(
-                        Matrix.scalMultiply(
-                                Matrix.elementMultiply(
-                                        sigmoidSlope(outputValues), error
-                                ),
-                                learningRate
-                        ),
-                        Matrix.transpose(hiddenValues[hiddenValues.length-1])
-                )
-         );
-
-         hiddenError = Matrix.multiply(Matrix.transpose(hidden2OutputWeights), error);	// Error of hidden layer
-
-         for(int i = deltaHiddenWeights.length-1; i >= 0; i--) {
-            deltaHiddenWeights[i] =	Matrix.add(deltaHiddenWeights[i],
-                    Matrix.multiply(
-                            Matrix.scalMultiply(
-                                    Matrix.elementMultiply(
-                                            sigmoidSlope(hiddenValues[i+1]), hiddenError
-                                    ),
-                                    learningRate
-                            ),
-                            Matrix.transpose(hiddenValues[i])
-                    )
-                );
-
-             hiddenError = Matrix.multiply(Matrix.transpose(hiddenWeights[hiddenWeights.length-1-i]), hiddenError);
-          }
-
-          deltaInput2HiddenWeights = Matrix.add(deltaInput2HiddenWeights,
-					Matrix.multiply(
-							Matrix.scalMultiply(
-									Matrix.elementMultiply(
-											sigmoidSlope(hiddenValues[0]), hiddenError
-									),
-									learningRate
-							),
-							Matrix.transpose(inputValues)
-					)
-				);
-         */
-
         Activation sigDx = Activations.sigmoidSlope;
-        Matrix dx; // Jacobian matrix. i.e. the matrix of partial derivatives.
-        Layer layer;
         Matrix error = target.sub(output);
 
-        // TODO: need separate dx for each layer.
-        dx = new Matrix(layers.get(layers.size()-1).getWeights().shape()); // TODO: this is temp
-        dx = dx.add(sigDx.apply(layers.get(layers.size()-1).getValues())
-                .elemMult(error)
-                .scalMult(learningRate)
-                .mult(layers.get(layers.size()-2).getValues().T()));
-
-        error = layers.get(layers.size()-1).getWeights().T().mult(error);
-
-        for(int i=layers.size()-2; i>=1; i--) {
-            dx = new Matrix(layers.get(layers.size()-1).getWeights().shape()); // TODO: this is temp
-            dx = dx.add(sigDx.apply(layers.get(i).getValues())
+        if(layers.size()>1) {
+            // TODO: need separate dx for each layer.
+            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1].add(sigDx.apply(layers.get(layers.size()-1).getValues())
                     .elemMult(error)
                     .scalMult(learningRate)
-                    .mult(layers.get(i-1).getValues().T()));
+                    .mult(layers.get(layers.size()-2).getValues().T()));
 
-            error = layers.get(i).getWeights().T().mult(error);
+            error = layers.get(layers.size()-1).getWeights().T().mult(error);
+
+            for(int i=layers.size()-2; i>=1; i--) {
+                dxUpdates[i] = dxUpdates[i].add(sigDx.apply(layers.get(i).getValues())
+                        .elemMult(error)
+                        .scalMult(learningRate)
+                        .mult(layers.get(i-1).getValues().T()));
+
+                error = layers.get(i).getWeights().T().mult(error);
+            }
+
+            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())
+                    .elemMult(error)
+                    .scalMult(learningRate)
+                    .mult(input.T()));
+        }
+        else { // Then there are no hidden layers.
+            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())
+                    .elemMult(error)
+                    .scalMult(learningRate)
+                    .mult(input.T()));
+        }
+    }
+
+
+    /**
+     * Applies weight updates to each layer.
+     */
+    private void applyUpdates() {
+        for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
+            layers.get(i).setWeights(dxUpdates[i].scalDiv(batchSize).add(layers.get(i).getWeights()));
         }
 
-        dx = new Matrix(layers.get(0).getWeights().shape()); // TODO: this is temp
-        dx = dx.add(sigDx.apply(layers.get(0).getValues())
-                .elemMult(error)
-                .scalMult(learningRate)
-                .mult(input.T()));
+        resetDx();
+    }
 
-        // TODO: Input
+    private void resetDx() {
+        for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
+            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
+        }
     }
 
 
@@ -318,17 +322,19 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     public static void main(String[] args) {
 
-        double[][] X = {{0, 1},
-                        {1, 2}};
+        double[][] X = {{0, 0},
+                        {0, 1},
+                        {1, 0},
+                        {1, 1}};
+        double[][] Y = {{0}, {1}, {1}, {0}};
 
-        NeuralNetwork nn = new NeuralNetwork(0.02, 100, 1, 0.5e-5);
-        nn.add(new Dense(2, 3, Activations.sigmoid));
+        NeuralNetwork nn = new NeuralNetwork(0.1, 1000, 4, 0.5e-5);
+        nn.add(new Dense(2, 20, Activations.sigmoid));
+        nn.add(new Dense(20, Activations.sigmoid));
         nn.add(new Dense(1, Activations.sigmoid));
         System.out.println(nn.getDetails());
 
-        Matrix target = new Matrix(new double[][]{{1}});
-        Matrix input = new Matrix(new double[][]{{0}, {1}});
-        Matrix output = nn.feedForward(input);
-        nn.back(target, output, input);
+        nn.fit(X, Y);
+        System.out.println(Arrays.deepToString(nn.predict(X)));
     }
 }

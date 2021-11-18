@@ -79,7 +79,7 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        values = activation.apply(weights.mult(inputs));
+        values = activation.apply(weights.mult(inputs)); // TODO: Add bias
         return values;
     }
 
@@ -126,6 +126,11 @@ public class Dense implements Layer {
     }
 
 
+    @Override
+    public void setWeights(Matrix w) {
+        this.weights = w.copy();
+    }
+
     /**
      * {@inheritDoc}
      * @return The values of this layer
@@ -144,7 +149,7 @@ public class Dense implements Layer {
     @Override
     public String getDetails() {
         StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
-                + inDim + ",\tOutput size: " + outDim + ",\tTrainable Parameters: " + paramCount);
+                + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount);
         return details.toString();
     }
 }
