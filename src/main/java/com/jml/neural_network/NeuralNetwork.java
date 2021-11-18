@@ -2,12 +2,15 @@ package com.jml.neural_network;
 
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
+import com.jml.losses.LossFunctions;
+import com.jml.neural_network.activations.Activation;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.Layer;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
+import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -27,6 +30,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected boolean isFit = false;
 
+    private Matrix[] dxUpdates;
+
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
                     "----------------------------\n" +
@@ -44,6 +49,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param threshold The threshold for the loss to stop early. If the loss drops below this threshold before the
      *                  specified number of epochs has been reached, the training will stop early.
      */
+    // TODO: Will ned to take optimizer as parameter. Take this as a string?
     public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {
         this.learningRate = learningRate;
         this.epochs = epochs;
@@ -68,6 +74,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
+        dxUpdates = new Matrix[layers.size()];
+
         return null;
     }
 
@@ -90,18 +98,92 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * Computes the backward pass of the neural network and updates weights.
      * The backwards pass updates the weights of each layer in an attempt to decrease the loss of the forward pass.
      * This is done by back-propagation and gradient descent.
+     *
+     * @param target Target for the neural network. i.e. the expected or desired output for the given input sample.
+     * @param output Output of the neural network. i.e. the result of the feed forward operation.
      */
-    protected void back() {
+    protected void back(Matrix target, Matrix output, Matrix input) {
         // TODO: Auto-generated method stub
 
-        Matrix deltaWeights;
+        /*
+        double[][] error = Matrix.subtract(currentTarget, outputValues);	// Error of output layer
+		double[][] hiddenError;
 
-        for(int i=layers.size()-1; i>=0; i--) {
-            deltaWeights = new Matrix(layers.get(i).getWeights().shape());
+        // Gradient Descent
+        deltaHidden2OutputWeights =	Matrix.add(deltaHidden2OutputWeights,
+                Matrix.multiply(
+                        Matrix.scalMultiply(
+                                Matrix.elementMultiply(
+                                        sigmoidSlope(outputValues), error
+                                ),
+                                learningRate
+                        ),
+                        Matrix.transpose(hiddenValues[hiddenValues.length-1])
+                )
+         );
 
-            // TODO:
+         hiddenError = Matrix.multiply(Matrix.transpose(hidden2OutputWeights), error);	// Error of hidden layer
+
+         for(int i = deltaHiddenWeights.length-1; i >= 0; i--) {
+            deltaHiddenWeights[i] =	Matrix.add(deltaHiddenWeights[i],
+                    Matrix.multiply(
+                            Matrix.scalMultiply(
+                                    Matrix.elementMultiply(
+                                            sigmoidSlope(hiddenValues[i+1]), hiddenError
+                                    ),
+                                    learningRate
+                            ),
+                            Matrix.transpose(hiddenValues[i])
+                    )
+                );
+
+             hiddenError = Matrix.multiply(Matrix.transpose(hiddenWeights[hiddenWeights.length-1-i]), hiddenError);
+          }
+
+          deltaInput2HiddenWeights = Matrix.add(deltaInput2HiddenWeights,
+					Matrix.multiply(
+							Matrix.scalMultiply(
+									Matrix.elementMultiply(
+											sigmoidSlope(hiddenValues[0]), hiddenError
+									),
+									learningRate
+							),
+							Matrix.transpose(inputValues)
+					)
+				);
+         */
+
+        Activation sigDx = Activations.sigmoidSlope;
+        Matrix dx; // Jacobian matrix. i.e. the matrix of partial derivatives.
+        Layer layer;
+        Matrix error = target.sub(output);
+
+        // TODO: need separate dx for each layer.
+        dx = new Matrix(layers.get(layers.size()-1).getWeights().shape()); // TODO: this is temp
+        dx = dx.add(sigDx.apply(layers.get(layers.size()-1).getValues())
+                .elemMult(error)
+                .scalMult(learningRate)
+                .mult(layers.get(layers.size()-2).getValues().T()));
+
+        error = layers.get(layers.size()-1).getWeights().T().mult(error);
+
+        for(int i=layers.size()-2; i>=1; i--) {
+            dx = new Matrix(layers.get(layers.size()-1).getWeights().shape()); // TODO: this is temp
+            dx = dx.add(sigDx.apply(layers.get(i).getValues())
+                    .elemMult(error)
+                    .scalMult(learningRate)
+                    .mult(layers.get(i-1).getValues().T()));
+
+            error = layers.get(i).getWeights().T().mult(error);
         }
 
+        dx = new Matrix(layers.get(0).getWeights().shape()); // TODO: this is temp
+        dx = dx.add(sigDx.apply(layers.get(0).getValues())
+                .elemMult(error)
+                .scalMult(learningRate)
+                .mult(input.T()));
+
+        // TODO: Input
     }
 
 
@@ -131,6 +213,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public Matrix predict(Matrix X, Matrix w) {
         // TODO: Auto-generated method stub.
+        // TODO: This would have to be a prediction for a specific layer. Does this make sense to be here?
+        // Answer, probably not
         return null;
     }
 
@@ -194,6 +278,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                         "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
         );
 
+        details.append("Learning Rate: " + this.learningRate + "\n");
+        details.append("Batch Size: " + this.batchSize + "\n");
+
         if(!layers.isEmpty()) {
             details.append("Layers (" + layers.size() + "):\n" + "------------\n");
 
@@ -203,9 +290,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 layerCount++;
             }
         }
-
-        details.append("Learning Rate: " + this.learningRate + "\n");
-        details.append("Batch Size: " + this.batchSize + "\n");
     }
 
 
@@ -233,18 +317,18 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
 
     public static void main(String[] args) {
-        NeuralNetwork nn = new NeuralNetwork(0.02, 100, 1, 0.5e-5);
-
-        Matrix input = new Matrix(new double[][]{{0}, {1}});
-        Matrix input2 = new Matrix(new double[][]{{1}, {2}});
 
         double[][] X = {{0, 1},
                         {1, 2}};
 
+        NeuralNetwork nn = new NeuralNetwork(0.02, 100, 1, 0.5e-5);
         nn.add(new Dense(2, 3, Activations.sigmoid));
-        nn.add(new Dropout(3));
         nn.add(new Dense(1, Activations.sigmoid));
-
         System.out.println(nn.getDetails());
+
+        Matrix target = new Matrix(new double[][]{{1}});
+        Matrix input = new Matrix(new double[][]{{0}, {1}});
+        Matrix output = nn.feedForward(input);
+        nn.back(target, output, input);
     }
 }

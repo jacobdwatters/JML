@@ -31,7 +31,7 @@ class LogRegTest {
     }
 
 
-    @Test
+//    @Test
     void logRegWineTest() {
         List<String[][]> data = DataLoader.loadFeaturesAndTargets(filePath);
 

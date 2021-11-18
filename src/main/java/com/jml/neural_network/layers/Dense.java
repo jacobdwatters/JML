@@ -14,6 +14,7 @@ public class Dense implements Layer {
     public int inDim = -1; // Size of the input.
     public int outDim; // Size of the output.
     public Activation activation; // Activation function for the layer.
+    protected int paramCount;
 
     Matrix values; // Node values for the layer
     Matrix weights; // Weights for the layer.
@@ -61,6 +62,7 @@ public class Dense implements Layer {
         this.inDim = inDim;
         this.outDim = outDim;
         this.activation = activation;
+        this.paramCount = inDim*outDim*2;
 
         this.values = new Vector(this.outDim);
         this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
@@ -77,7 +79,7 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        values = activation.apply(weights.mult(inputs).add(biasWeights.mult(bias)));
+        values = activation.apply(weights.mult(inputs));
         return values;
     }
 
@@ -110,6 +112,7 @@ public class Dense implements Layer {
     public void updateInDim(int inDim) {
         this.inDim = inDim;
         this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
+        this.paramCount = inDim*outDim*2;
     }
 
 
@@ -140,6 +143,8 @@ public class Dense implements Layer {
      */
     @Override
     public String getDetails() {
-        return "Type: " + this.LAYER_TYPE + ", Input size: " + this.inDim + ", Output size: " + this.outDim;
+        StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
+                + inDim + ",\tOutput size: " + outDim + ",\tTrainable Parameters: " + paramCount);
+        return details.toString();
     }
 }
