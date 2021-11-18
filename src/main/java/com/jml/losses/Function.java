@@ -1,6 +1,5 @@
 package com.jml.losses;
 
-import com.jml.core.Model;
 import linalg.Matrix;
 
 

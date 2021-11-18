@@ -46,30 +46,30 @@ public class LossFunctions {
      * appropriate.
      */
 <span class="fc" id="L48">    public static Function binCrossEntropy = (Matrix y, Matrix yPred) -&gt; {</span>
-<span class="nc" id="L49">        double eps = 1e-15;</span>
-<span class="nc" id="L50">        double loss = 0;</span>
-<span class="nc" id="L51">        Matrix result = new Matrix(1);</span>
+<span class="fc" id="L49">        double eps = 1e-15;</span>
+<span class="fc" id="L50">        double loss = 0;</span>
+<span class="fc" id="L51">        Matrix result = new Matrix(1);</span>
 
-<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(yPred.numCols() &gt; 2) {</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if(yPred.numCols() &gt; 2) {</span>
 <span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Predictions seem to have more than two classes. Consider &quot; +</span>
                     &quot;crossEntropy() for multiple classes.&quot;);
         }
 
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
             // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
-<span class="nc bnc" id="L60" title="All 2 branches missed.">            if(yPred.getAsDouble(i, 0)==0) {</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">            if(yPred.getAsDouble(i, 0)==0) {</span>
 <span class="nc" id="L61">                yPred.set(eps, i,  0);</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
 <span class="nc" id="L63">                yPred.set(1-eps, i,  0);</span>
             }
 
-<span class="nc" id="L66">            loss += y.getAsDouble(i, 0)*Math.log(yPred.getAsDouble(i, 0))</span>
-<span class="nc" id="L67">                    + (1-y.getAsDouble(i, 0))*Math.log(1-yPred.getAsDouble(i, 0));</span>
+<span class="fc" id="L66">            loss += y.getAsDouble(i, 0)*Math.log(yPred.getAsDouble(i, 0))</span>
+<span class="fc" id="L67">                    + (1-y.getAsDouble(i, 0))*Math.log(1-yPred.getAsDouble(i, 0));</span>
         }
 
-<span class="nc" id="L70">        result.set(-loss/yPred.numRows(), 0,0);</span>
+<span class="fc" id="L70">        result.set(-loss/yPred.numRows(), 0,0);</span>
 
-<span class="nc" id="L72">        return result;</span>
+<span class="fc" id="L72">        return result;</span>
     };
 
 

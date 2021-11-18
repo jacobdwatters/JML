@@ -26,6 +26,7 @@ public class Gradient {
      * @param model Model to use for gradient computation.
      * @return Gradient with respect to w for the specified function.
      */
+    // TODO: Only take function,
     public static Matrix compute(Matrix w, Matrix X, Matrix y, Function F, Model model) {
 
         Matrix grad = new Matrix(w.shape());

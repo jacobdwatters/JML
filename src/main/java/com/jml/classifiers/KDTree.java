@@ -1,4 +1,4 @@
-package com.jml.clasifiers;
+package com.jml.classifiers;
 
 import java.util.ArrayList;
 import java.util.List;

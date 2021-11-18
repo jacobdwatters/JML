@@ -35,9 +35,13 @@ public interface Layer {
 
     Matrix getWeights();
 
+    void setWeights(Matrix w);
+
     /**
      * Gets the node values for this layer.
      * @return The node values of this layer in a matrix.
      */
     Matrix getValues();
+
+    String getDetails();
 }

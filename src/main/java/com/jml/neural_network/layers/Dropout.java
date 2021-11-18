@@ -12,6 +12,8 @@ import linalg.Vector;
  */
 public class Dropout implements Layer {
 
+    public final String LAYER_TYPE = "Dropout";
+
     /**
      * Probability of element being zeroed.
      */
@@ -61,11 +63,13 @@ public class Dropout implements Layer {
                     "Expecting input shape of " + inDim + "x" + 1);
         }
 
-        values = new Matrix(inputs.shape());
+        values = inputs.copy();
 
+
+        // TODO: This needs to be changed to be a mask. That is, it should be the same elements dropped for forward and backward
         for(int i=0; i<values.numRows(); i++) {
             if(Stats.genRandBoolean(this.p)) {
-                values.set(0, i, 1); // Then zero entry.
+                values.set(0, i, 0); // Then zero entry.
             }
         }
 
@@ -110,16 +114,37 @@ public class Dropout implements Layer {
      * Gets the weights for the layer.
      * @return Null Since dropout layers have no weights.
      */
+    @Override
     public Matrix getWeights() {
         return null;
     }
 
 
     /**
+     * Does nothing. No weights to set.
+     * @param w New weights
+     */
+    @Override
+    public void setWeights(Matrix w) {}
+
+
+    /**
      * {@inheritDoc}
      * @return The values of this layer
      */
+    @Override
     public Matrix getValues() {
         return this.values;
+    }
+
+
+    /**
+     * Gets the details of this layer as a String.
+     *
+     * @return The details of this layer as a String.
+     */
+    @Override
+    public String getDetails() {
+        return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
     }
 }

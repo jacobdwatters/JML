@@ -6,7 +6,8 @@ import java.util.Map;
 
 
 /**
- * Contains methods to encode classes or targets to numerical values.
+ * Contains methods to encode classes or targets to numerical values. This allows labels to be used as targets when
+ * {@link com.jml.core.Model#fit(Object, Object) fitting} a {@link com.jml.core.Model Model}.
  */
 public class Encoder {
 
@@ -17,8 +18,8 @@ public class Encoder {
 
 
     /**
-     * Encodes a list of classes as values between 0 t0 (n-1) classes. <br><br>
-     * Labels will be sorted alphabetically before encoding. This guarantees a consistent method of encoding so that
+     * Encodes a list of classes as values between 0 to (n-1) classes. <br><br>
+     * Labels will be sorted lexicographically before encoding. This guarantees a consistent method of encoding so that
      * the encoded labels can be decoded.
      *
      * @param labels Labels of a dataset.
@@ -33,8 +34,8 @@ public class Encoder {
 
 
     /**
-     * Encodes a list of classes as values between 0 t0 (n-1) classes.<br><br>
-     * Labels will be sorted alphabetically before encoding. This guarantees a consistent method of encoding so that
+     * Encodes a list of classes as values between 0 to (n-1) classes.<br><br>
+     * Labels will be sorted lexicographically before encoding. This guarantees a consistent method of encoding so that
      * the encoded labels can be decoded.
      *
      * @param labels Labels of a dataset.
@@ -43,11 +44,12 @@ public class Encoder {
     public static int[] encodeClasses(String[] labels) {
         int[] encodedLabels = new int[labels.length];
         Map<String, Integer> encodings = new HashMap<>();
-        Arrays.sort(labels);
+        String[] sortedLabels = labels.clone();
+        Arrays.sort(sortedLabels);
 
         int classNum = 0;
 
-        for (String label : labels) { // Find unique labels
+        for (String label : sortedLabels) { // Find unique labels
             if (!encodings.containsKey(label)) {
                 encodings.put(label, classNum);
                 classNum++;

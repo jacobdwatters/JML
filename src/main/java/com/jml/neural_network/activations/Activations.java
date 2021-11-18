@@ -2,6 +2,11 @@ package com.jml.neural_network.activations;
 
 import linalg.Matrix;
 
+
+/**
+ * This class contains several activation functions for use in a neural network. The activation functions are lambdas
+ * that implement the {@link com.jml.neural_network.activations.Activation} functional interface.
+ */
 public class Activations {
 
     private Activations() {
@@ -27,5 +32,33 @@ public class Activations {
         }
 
         return result;
+    };
+
+
+    /**
+     * Computes the derivative of the sigmoid function evaluated at each element of the data matrix.
+     */
+    public static Activation sigmoidSlope = (Matrix data) -> {
+        Matrix result = new Matrix(data.shape());
+        double value, exp;
+
+        for(int i=0; i<data.numRows(); i++) {
+            for(int j=0; j<data.numCols(); j++) {
+                exp = Math.exp(-data.get(i, j).re);
+                value = exp / Math.pow(1+exp, 2);
+                result.set(value, i, j);
+            }
+        }
+
+        return result;
+    };
+
+
+    /**
+     * Applies a linear activation. When used on a layer for a neural network
+     * this is equivalent to having no activation resulting in a linear layer.
+     */
+    public static Activation linear = (Matrix data) -> {
+        return new Matrix(data);
     };
 }

@@ -10,10 +10,11 @@ import linalg.Vector;
  * This layer applies a linear transform <code>y=Ax+b</code> onto the inputs x.
  */
 public class Dense implements Layer {
-
+    public final String LAYER_TYPE = "Dense";
     public int inDim = -1; // Size of the input.
     public int outDim; // Size of the output.
     public Activation activation; // Activation function for the layer.
+    protected int paramCount;
 
     Matrix values; // Node values for the layer
     Matrix weights; // Weights for the layer.
@@ -38,7 +39,7 @@ public class Dense implements Layer {
         this.outDim = outDim;
         this.activation = activation;
 
-        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones
+        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones?
         this.biasWeights = new Matrix(); // TODO: What does this need to look like?
     }
 
@@ -61,12 +62,13 @@ public class Dense implements Layer {
         this.inDim = inDim;
         this.outDim = outDim;
         this.activation = activation;
+        this.paramCount = inDim*outDim*2;
 
         this.values = new Vector(this.outDim);
         this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
 
-        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones
-        this.biasWeights = new Matrix(); // TODO: What does this need to look like?
+        this.bias = Matrix.ones(this.outDim, 1);
+        this.biasWeights = Matrix.random(this.outDim, this.inDim);; // TODO: What does this need to look like?
     }
 
 
@@ -77,8 +79,7 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        // values = activation.apply(weights.mult(inputs) + biasWeights.mult(bias));
-        values = activation.apply(weights.mult(inputs));
+        values = activation.apply(weights.mult(inputs)); // TODO: Add bias
         return values;
     }
 
@@ -111,6 +112,7 @@ public class Dense implements Layer {
     public void updateInDim(int inDim) {
         this.inDim = inDim;
         this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
+        this.paramCount = inDim*outDim*2;
     }
 
 
@@ -125,7 +127,29 @@ public class Dense implements Layer {
 
 
     @Override
+    public void setWeights(Matrix w) {
+        this.weights = w.copy();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return The values of this layer
+     */
+    @Override
     public Matrix getValues() {
         return this.values;
+    }
+
+
+    /**
+     * Gets the details of this layer as a String.
+     *
+     * @return The details of this layer as a String.
+     */
+    @Override
+    public String getDetails() {
+        StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
+                + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount);
+        return details.toString();
     }
 }

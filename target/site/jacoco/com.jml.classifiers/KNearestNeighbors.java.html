@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KNearestNeighbors.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.classifiers</a> &gt; <span class="el_source">KNearestNeighbors.java</span></div><h1>KNearestNeighbors.java</h1><pre class="source lang-java linenums">package com.jml.classifiers;
+
+import com.jml.core.Model;
+import com.jml.core.ModelTypes;
+import com.jml.core.Stats;
+import com.jml.core.Block;
+import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
+import linalg.Matrix;
+import linalg.Vector;
+
+
+/**
+ * K Nearest Neighbors (KNN) model. This model classifies data samples based on the K nearest training samples.
+ * The distance metric to determine the nearest samples is by default Euclidean distance. However, other Minkowski distance
+ * metrics can be used instead.
+ */
+public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
+
+<span class="pc" id="L20">    String MODEL_TYPE = ModelTypes.K_NEAREST_NEIGHBORS.toString();</span>
+    protected int k, p;
+    protected Matrix X; // Matrix representation of model features.
+    protected Matrix y; // Matrix representation of model targets.
+<span class="pc" id="L24">    protected boolean isFit = false;</span>
+
+    // Details of model in human-readable format.
+<span class="pc" id="L27">    private StringBuilder details = new StringBuilder(</span>
+            &quot;Model Details\n&quot; +
+                    &quot;----------------------------\n&quot; +
+                    &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
+                    &quot;Is Trained: No&quot;
+    );
+
+    // TODO: Add checks for k and p &gt; 0.
+
+    /**
+     * Creates a KNearestNeighbors model with a default k of 3. That is, the model will consider the three closest
+     * neighbors when making class prediction. The default distance metric is euclidean distance.
+     */
+<span class="nc" id="L40">    public KNearestNeighbors() {</span>
+<span class="nc" id="L41">        this.k = 3;</span>
+<span class="nc" id="L42">        this.p = 2;</span>
+<span class="nc" id="L43">        buildDetails();</span>
+<span class="nc" id="L44">    }</span>
+
+
+    /**
+     * Creates a KNearestNeighbors model with a specified k. The default distance metric is euclidean distance.
+     * @param k Number of neighbors to consider when making a class prediction.
+     */
+<span class="fc" id="L51">    public KNearestNeighbors(int k) {</span>
+<span class="fc" id="L52">        this.k = k;</span>
+<span class="fc" id="L53">        this.p = 2;</span>
+<span class="fc" id="L54">        buildDetails();</span>
+<span class="fc" id="L55">    }</span>
+
+
+    /**
+     * Creates a KNearestNeighbors model with a specified k and power parameter for distance metric.
+     * @param k Number of neighbors to consider when making a class prediction.
+     * @param p Power parameter of the Minkowski distance i.e. sum( | x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt; | &lt;sup&gt;p&lt;/sup&gt; ) &lt;sup&gt;1/p&lt;/sup&gt;.
+     *          If p=2, this is equivalent to the euclidean distance. If p=1 this is equivalent to the manhattan distance.
+     */
+<span class="fc" id="L64">    public KNearestNeighbors(int k, int p) {</span>
+<span class="fc" id="L65">        this.k = k;</span>
+<span class="fc" id="L66">        this.p = p;</span>
+<span class="fc" id="L67">        buildDetails();</span>
+<span class="fc" id="L68">    }</span>
+
+
+    /**
+     * Fits or trains the model with the given features and targets.
+     *
+     * @param features The features of the training set.
+     * @param targets  The targets of the training set.
+     * @return This. i.e. the trained model.
+     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
+     *                                  the specification when the model was compiled.
+     */
+    @Override
+    // TODO: Construct a K-d tree so that the predict method does not need to use a brute force algorithm.
+    public Model&lt;double[][], int[]&gt; fit(double[][] features, int[] targets) {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if(features.length != targets.length) {</span>
+<span class="fc" id="L84">            throw new IllegalArgumentException(&quot;Number of features does not match the number of targets&quot;);</span>
+        }
+
+<span class="fc" id="L87">        X = new Matrix(features);</span>
+<span class="fc" id="L88">        y = new Vector(targets, 1);</span>
+<span class="fc" id="L89">        isFit = true;</span>
+<span class="fc" id="L90">        buildDetails();</span>
+
+<span class="fc" id="L92">        return this;</span>
+    }
+
+
+    /**
+     * Uses fitted/trained model to make prediction on single feature.
+     *
+     * @param features The features to make predictions on.
+     * @return The models predicted labels.
+     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
+     *                                  the specification when the model was compiled.
+     * @throws IllegalStateException    Thrown if the model has not been fit.
+     */
+    public int[] predict(double[][] features) {
+<span class="fc" id="L106">        double[][] distances = new double[features.length][X.numRows()];</span>
+<span class="fc" id="L107">        int[] predictions = new int[features.length];</span>
+        int[] mindices;
+        double[] classes;
+
+<span class="fc" id="L111">        Matrix F = new Matrix(features);</span>
+        Matrix z;
+        Matrix Xtakez; // Holds the result of X-z
+
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) { // Compute distances</span>
+<span class="fc" id="L116">            z = F.getRowAsVector(i).extend(X.numRows());</span>
+<span class="fc" id="L117">            Xtakez = X.sub(z);</span>
+
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            for(int j=0; j&lt;X.numRows(); j++) {</span>
+<span class="fc" id="L120">                distances[i][j] = Xtakez.getRowAsVector(j).norm(p).re;</span>
+            }
+
+<span class="fc" id="L123">            mindices = Stats.minIndices(distances[i], this.k);</span>
+<span class="fc" id="L124">            classes = new double[mindices.length];</span>
+
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            for(int j=0; j&lt;classes.length; j++) {</span>
+<span class="fc" id="L127">                classes[j] = (int) y.getAsDouble(0, mindices[j]);</span>
+            }
+
+<span class="fc" id="L130">            predictions[i] = (int) Stats.mode(classes);</span>
+        }
+
+<span class="fc" id="L133">        return predictions;</span>
+    }
+
+
+    /**
+     * Makes a prediction using a model by specifying the parameters of the model.
+     * Unlike the other predict method, no model needs to be trained to use this method since the parameters provided
+     * define a model.
+     *
+     * @param X Features to make prediction on.
+     * @param F The parameters of the Model. In the case of KNN, there are no parameters and so this will be ignored.
+     * @return prediction on the features using the given model parameters.
+     */
+    // TODO: F need to be [X|y](that is features and targets of the training set) and X needs to be the features to make a prediction on.
+    @Override
+    public Matrix predict(Matrix X, Matrix F) {
+<span class="nc" id="L149">        return new Vector(predict(X.getValuesAsDouble()));</span>
+    }
+
+
+    /**
+     * Gets the parameters of the trained model.
+     * Note that for a KNearestNeighbors model, there are no parameters to return.
+     *
+     * @return Features of model since there are no parameters in a KNearestNeighbors model. If model has not been fit,
+     * returns null.
+     */
+    @Override
+    public Matrix getParams() {
+<span class="nc" id="L162">        return X;</span>
+    }
+
+
+    /**
+     * Saves a trained model to the specified file path.
+     *
+     * @param filePath File path, including extension, to save fitted / trained model to.
+     */
+    @Override
+    public void saveModel(String filePath) {
+        Block[] blockList;
+
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L176">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+        }
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
+<span class="fc" id="L179">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+        }
+
+<span class="fc" id="L182">        blockList = new Block[5];</span>
+
+        // Construct the blocks for the model file.
+<span class="fc" id="L185">        blockList[0] = new Block(ClassifierTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="fc" id="L186">        blockList[1] = new Block(ClassifierTags.K.toString(), Integer.toString(this.k));</span>
+<span class="fc" id="L187">        blockList[2] = new Block(ClassifierTags.P.toString(), Integer.toString(this.p));</span>
+<span class="fc" id="L188">        blockList[3] = new Block(ClassifierTags.FEATURES.toString(), ArrayUtils.asString(X.getValuesAsDouble()));</span>
+<span class="fc" id="L189">        blockList[4] = new Block(ClassifierTags.CLASSES.toString(), ArrayUtils.asString(y.getValuesAsDouble()));</span>
+
+<span class="fc" id="L191">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="fc" id="L192">    }</span>
+
+
+    // Construct details of model
+    protected void buildDetails() {
+<span class="fc" id="L197">        details = new StringBuilder(</span>
+                &quot;Model Details\n&quot; +
+                        &quot;----------------------------\n&quot; +
+                        &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
+<span class="fc bfc" id="L201" title="All 2 branches covered.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot; +</span>
+                        &quot;k-neighbors: &quot; + k + &quot;\n&quot; +
+                        &quot;distance parameter: &quot; + p
+        );
+<span class="fc" id="L205">    }</span>
+
+
+    /**
+     * Forms a string of the important aspects of the model.&lt;br&gt;
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String getDetails() {
+<span class="fc" id="L216">        return details.toString();</span>
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L227">        return getDetails();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

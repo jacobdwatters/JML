@@ -1,4 +1,4 @@
-package com.jml.clasifiers;
+package com.jml.classifiers;
 
 import com.jml.core.Block;
 import com.jml.core.Model;

@@ -1,6 +1,5 @@
 package com.jml.classifiers;
 
-import com.jml.clasifiers.KNearestNeighbors;
 import com.jml.core.DataLoader;
 import com.jml.core.Model;
 import com.jml.preprocessing.Encoder;
@@ -39,7 +38,6 @@ class KnnTest {
 
         KNearestNeighbors knn = new KNearestNeighbors(1);
         knn.fit(features, classes);
-
 
         double[][] tests = {{7.6, 7.1}};
         int[] predictions = knn.predict(tests);
