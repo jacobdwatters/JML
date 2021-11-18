@@ -40,4 +40,6 @@ public interface Layer {
      * @return The node values of this layer in a matrix.
      */
     Matrix getValues();
+
+    String getDetails();
 }

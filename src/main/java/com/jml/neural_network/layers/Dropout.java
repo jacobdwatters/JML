@@ -12,6 +12,8 @@ import linalg.Vector;
  */
 public class Dropout implements Layer {
 
+    public final String LAYER_TYPE = "Dropout";
+
     /**
      * Probability of element being zeroed.
      */
@@ -110,6 +112,7 @@ public class Dropout implements Layer {
      * Gets the weights for the layer.
      * @return Null Since dropout layers have no weights.
      */
+    @Override
     public Matrix getWeights() {
         return null;
     }
@@ -119,7 +122,19 @@ public class Dropout implements Layer {
      * {@inheritDoc}
      * @return The values of this layer
      */
+    @Override
     public Matrix getValues() {
         return this.values;
+    }
+
+
+    /**
+     * Gets the details of this layer as a String.
+     *
+     * @return The details of this layer as a String.
+     */
+    @Override
+    public String getDetails() {
+        return "Type: " + this.LAYER_TYPE + ", Input size: " + this.inDim + ", Output size: " + this.inDim;
     }
 }

@@ -4,12 +4,15 @@ import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
+import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.Layer;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.StochasticGradientDescent;
 import linalg.Matrix;
+import linalg.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NeuralNetwork extends Model<double[][], double[][]> {
@@ -21,6 +24,15 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected int epochs;
     protected int batchSize;
     protected Optimizer optim;
+
+    protected boolean isFit = false;
+
+    private StringBuilder details = new StringBuilder(
+            "Model Details\n" +
+                    "----------------------------\n" +
+                    "Model Type: " + this.MODEL_TYPE+ "\n" +
+                    "Is Trained: No\n"
+    );
 
 
     /**
@@ -38,6 +50,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.batchSize = batchSize;
         this.threshold = threshold;
         layers = new ArrayList<Layer>();
+
+        buildDetails();
     }
 
     /**
@@ -79,6 +93,15 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     protected void back() {
         // TODO: Auto-generated method stub
+
+        Matrix deltaWeights;
+
+        for(int i=layers.size()-1; i>=0; i--) {
+            deltaWeights = new Matrix(layers.get(i).getWeights().shape());
+
+            // TODO:
+        }
+
     }
 
 
@@ -92,8 +115,13 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public double[][] predict(double[][] features) {
-        // TODO: Auto-generated method stub
-        return new double[0][];
+        double[][] results = new double[features.length][layers.get(layers.size()-1).getOutDim()];
+
+        for(int i=0; i<features.length; i++) {
+            results[i] = feedForward(new Vector(features[i])).T().getValuesAsDouble()[0];
+        }
+
+        return results;
     }
 
 
@@ -142,8 +170,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             }
         }
 
-
         layers.add(layer);
+        buildDetails();
     }
 
 
@@ -158,6 +186,29 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     }
 
 
+    protected void buildDetails() {
+        details = new StringBuilder(
+                "Model Details\n" +
+                        "----------------------------\n" +
+                        "Model Type: " + this.MODEL_TYPE+ "\n" +
+                        "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
+        );
+
+        if(!layers.isEmpty()) {
+            details.append("Layers (" + layers.size() + "):\n" + "------------\n");
+
+            int layerCount = 1;
+            for(Layer layer : this.layers) {
+                details.append("\t" + layerCount + "\t" + layer.getDetails() + "\n");
+                layerCount++;
+            }
+        }
+
+        details.append("Learning Rate: " + this.learningRate + "\n");
+        details.append("Batch Size: " + this.batchSize + "\n");
+    }
+
+
     /**
      * Forms a string of the important aspects of the model.<br>
      * same as {@link #toString()}
@@ -166,8 +217,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public String getDetails() {
-        // TODO: Auto-generated method stub
-        return null;
+        return this.details.toString();
     }
 
 
@@ -178,8 +228,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public String toString() {
-        // TODO: Auto-generated method stub
-        return "";
+        return getDetails();
     }
 
 
@@ -187,10 +236,15 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         NeuralNetwork nn = new NeuralNetwork(0.02, 100, 1, 0.5e-5);
 
         Matrix input = new Matrix(new double[][]{{0}, {1}});
+        Matrix input2 = new Matrix(new double[][]{{1}, {2}});
+
+        double[][] X = {{0, 1},
+                        {1, 2}};
 
         nn.add(new Dense(2, 3, Activations.sigmoid));
+        nn.add(new Dropout(3));
         nn.add(new Dense(1, Activations.sigmoid));
 
-        System.out.println(nn.feedForward(input));
+        System.out.println(nn.getDetails());
     }
 }
