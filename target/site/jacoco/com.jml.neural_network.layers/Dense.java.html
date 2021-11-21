@@ -156,8 +156,15 @@ public class Dense implements Layer {
     @Override
     public String getDetails() {
 <span class="nc" id="L158">        StringBuilder details = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
-                + inDim + &quot;,\tOutput size: &quot; + outDim + &quot;, \tTrainable Parameters: &quot; + paramCount);
-<span class="nc" id="L160">        return details.toString();</span>
+                + inDim + &quot;,\tOutput size: &quot; + outDim + &quot;, \tTrainable Parameters: &quot; + paramCount +
+<span class="nc" id="L160">                &quot;,\tActivation: &quot; + activation.getName());</span>
+<span class="nc" id="L161">        return details.toString();</span>
+    }
+
+
+    @Override
+    public Activation getActivation() {
+<span class="nc" id="L167">        return this.activation;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

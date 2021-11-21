@@ -156,7 +156,14 @@ public class Dense implements Layer {
     @Override
     public String getDetails() {
         StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
-                + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount);
+                + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount +
+                ",\tActivation: " + activation.getName());
         return details.toString();
+    }
+
+
+    @Override
+    public Activation getActivation() {
+        return this.activation;
     }
 }

@@ -1,5 +1,6 @@
 package com.jml.neural_network.layers;
 
+import com.jml.neural_network.activations.Activation;
 import linalg.Matrix;
 
 public interface Layer {
@@ -48,4 +49,6 @@ public interface Layer {
     Matrix getBias();
 
     String getDetails();
+
+    Activation getActivation();
 }

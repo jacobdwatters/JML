@@ -13,9 +13,9 @@ java-machine-learning,com.jml.linear_models,PolynomialRegression,76,340,3,21,9,6
 java-machine-learning,com.jml.linear_models,LinearRegression,1,78,3,3,0,16,3,5,0,5
 java-machine-learning,com.jml.linear_models,LinearModelTags,0,21,0,0,0,2,0,1,0,1
 java-machine-learning,com.jml.linear_models,PolynomialRegressionSGD,26,226,1,7,6,54,2,11,1,8
-java-machine-learning,com.jml.neural_network,NeuralNetwork,877,0,36,0,131,0,33,0,15,0
-java-machine-learning,com.jml.neural_network.layers,Dropout,119,0,8,0,28,0,16,0,12,0
-java-machine-learning,com.jml.neural_network.layers,Dense,178,0,6,0,38,0,15,0,12,0
+java-machine-learning,com.jml.neural_network,NeuralNetwork,709,0,36,0,113,0,32,0,14,0
+java-machine-learning,com.jml.neural_network.layers,Dropout,121,0,8,0,29,0,17,0,13,0
+java-machine-learning,com.jml.neural_network.layers,Dense,184,0,6,0,40,0,16,0,13,0
 java-machine-learning,com.jml.core,Metrics,91,0,12,0,16,0,9,0,3,0
 java-machine-learning,com.jml.core,Gradient,7,73,0,2,2,10,1,3,1,2
 java-machine-learning,com.jml.core,LogRegFromData,5,75,2,4,1,20,2,3,0,2
@@ -31,10 +31,11 @@ java-machine-learning,com.jml.core,ModelBucket,0,146,6,18,0,38,6,13,0,7
 java-machine-learning,com.jml.core,ModelTypes,0,63,0,0,0,4,0,1,0,1
 java-machine-learning,com.jml.core,Model,5,135,2,16,1,28,2,10,0,3
 java-machine-learning,com.jml.core,PolyRegFromData,5,85,2,6,1,22,2,4,0,2
+java-machine-learning,com.jml.neural_network.activations,Relu,104,0,12,0,18,0,10,0,4,0
+java-machine-learning,com.jml.neural_network.activations,Sigmoid,96,0,8,0,14,0,8,0,4,0
+java-machine-learning,com.jml.neural_network.activations,Activations,12,0,0,0,3,0,2,0,2,0
 java-machine-learning,com.jml.preprocessing,Normalize,33,212,0,16,6,38,2,15,2,7
 java-machine-learning,com.jml.preprocessing,Encoder,18,104,0,10,5,19,2,7,2,2
-java-machine-learning,com.jml.neural_network.activations,Sigmoid,86,0,8,0,15,0,9,0,5,0
-java-machine-learning,com.jml.neural_network.activations,Activations,105,0,8,0,19,0,9,0,5,0
 java-machine-learning,com.jml.losses,LossFunctions,115,93,11,5,18,16,10,4,3,3
 java-machine-learning,com.jml.losses,LossGradients,24,0,0,0,5,0,3,0,3,0
 java-machine-learning,com.jml.util,ArrayUtils,39,256,4,28,9,45,7,22,4,9
