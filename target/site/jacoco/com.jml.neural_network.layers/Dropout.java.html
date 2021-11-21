@@ -127,6 +127,8 @@ public class Dropout implements Layer {
     @Override
 <span class="nc" id="L128">    public void setWeights(Matrix w) {}</span>
 
+    @Override
+<span class="nc" id="L131">    public void setBias(Matrix b) {}</span>
 
     /**
      * {@inheritDoc}
@@ -134,9 +136,13 @@ public class Dropout implements Layer {
      */
     @Override
     public Matrix getValues() {
-<span class="nc" id="L137">        return this.values;</span>
+<span class="nc" id="L139">        return this.values;</span>
     }
 
+    @Override
+    public Matrix getBias() {
+<span class="nc" id="L144">        return null;</span>
+    }
 
     /**
      * Gets the details of this layer as a String.
@@ -145,7 +151,7 @@ public class Dropout implements Layer {
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L148">        return &quot;Type: &quot; + this.LAYER_TYPE + &quot;,\tInput size: &quot; + this.inDim + &quot;,\tOutput size: &quot; + this.inDim + &quot;, \tTrainable Parameters: &quot; + 0;</span>
+<span class="nc" id="L154">        return &quot;Type: &quot; + this.LAYER_TYPE + &quot;,\tInput size: &quot; + this.inDim + &quot;,\tOutput size: &quot; + this.inDim + &quot;, \tTrainable Parameters: &quot; + 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

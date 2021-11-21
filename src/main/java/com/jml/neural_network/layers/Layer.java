@@ -37,11 +37,15 @@ public interface Layer {
 
     void setWeights(Matrix w);
 
+    void setBias(Matrix b);
+
     /**
      * Gets the node values for this layer.
      * @return The node values of this layer in a matrix.
      */
     Matrix getValues();
+
+    Matrix getBias();
 
     String getDetails();
 }

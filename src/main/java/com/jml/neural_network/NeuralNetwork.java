@@ -32,6 +32,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     List<Double> lossHist = new ArrayList<>();
 
     private Matrix[] dxUpdates;
+    private Matrix[] dxBiasUpdates;
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -76,9 +77,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     public NeuralNetwork fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
         dxUpdates = new Matrix[layers.size()]; // Weight updates
-        for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
-            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
-        }
+        dxBiasUpdates = new Matrix[layers.size()];
+
+        resetDx();
 
         Matrix feature = new Matrix(features);
         Matrix target = new Matrix(targets);
@@ -98,7 +99,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             }
 
             predictions = new Matrix(this.predict(features));
-//            System.out.println("Epoch: " + (i+1) + ", loss = " + LossFunctions.mse.compute(predictions, target));
             lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re);
 
             if(lossHist.get(lossHist.size()-1) < threshold) {
@@ -109,6 +109,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         isFit=true;
         buildDetails();
+
         return this;
     }
 
@@ -136,39 +137,62 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param output Output of the neural network. i.e. the result of the feed forward operation.
      */
     protected void back(Matrix target, Matrix output, Matrix input) {
-        // TODO: Auto-generated method stub
 
         Activation sigDx = Activations.sigmoidSlope;
         Matrix error = target.sub(output);
 
+        // TODO: Update bias terms as well.
         if(layers.size()>1) {
-            // TODO: need separate dx for each layer.
-            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1].add(sigDx.apply(layers.get(layers.size()-1).getValues())
+            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1]
+                    .add(sigDx.apply(layers.get(layers.size()-1).getValues())
                     .elemMult(error)
                     .scalMult(learningRate)
                     .mult(layers.get(layers.size()-2).getValues().T()));
 
+            dxBiasUpdates[dxBiasUpdates.length-1] = dxBiasUpdates[dxBiasUpdates.length-1]
+                    .add(sigDx.apply(layers.get(layers.size()-1).getBias())
+                    .elemMult(error)
+                    .scalMult(learningRate));
+
             error = layers.get(layers.size()-1).getWeights().T().mult(error);
 
             for(int i=layers.size()-2; i>=1; i--) {
-                dxUpdates[i] = dxUpdates[i].add(sigDx.apply(layers.get(i).getValues())
+                dxUpdates[i] = dxUpdates[i]
+                        .add(sigDx.apply(layers.get(i).getValues())
                         .elemMult(error)
                         .scalMult(learningRate)
                         .mult(layers.get(i-1).getValues().T()));
 
+                dxBiasUpdates[i] = dxBiasUpdates[i]
+                        .add(sigDx.apply(layers.get(i).getBias())
+                        .elemMult(error)
+                        .scalMult(learningRate));
+
                 error = layers.get(i).getWeights().T().mult(error);
             }
 
-            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())
+            dxUpdates[0] = dxUpdates[0]
+                    .add(sigDx.apply(layers.get(0).getValues())
                     .elemMult(error)
                     .scalMult(learningRate)
                     .mult(input.T()));
+
+            dxBiasUpdates[0] = dxBiasUpdates[0]
+                    .add(sigDx.apply(layers.get(0).getBias())
+                    .elemMult(error)
+                    .scalMult(learningRate));
         }
         else { // Then there are no hidden layers.
-            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())
+            dxUpdates[0] = dxUpdates[0]
+                    .add(sigDx.apply(layers.get(0).getValues())
                     .elemMult(error)
                     .scalMult(learningRate)
                     .mult(input.T()));
+
+            dxBiasUpdates[0] = dxBiasUpdates[0]
+                    .add(sigDx.apply(layers.get(0).getBias())
+                    .elemMult(error)
+                    .scalMult(learningRate));
         }
     }
 
@@ -179,14 +203,16 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     private void applyUpdates() {
         for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
             layers.get(i).setWeights(dxUpdates[i].scalDiv(batchSize).add(layers.get(i).getWeights()));
+            layers.get(i).setBias(dxBiasUpdates[i].scalDiv(batchSize).add(layers.get(i).getBias()));
         }
 
-        resetDx();
+        resetDx(); // Reset dx's for next epoch.
     }
 
     private void resetDx() {
         for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
             dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
+            dxBiasUpdates[i] = new Vector(layers.get(i).getOutDim());
         }
     }
 

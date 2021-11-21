@@ -127,6 +127,8 @@ public class Dropout implements Layer {
     @Override
     public void setWeights(Matrix w) {}
 
+    @Override
+    public void setBias(Matrix b) {}
 
     /**
      * {@inheritDoc}
@@ -137,6 +139,10 @@ public class Dropout implements Layer {
         return this.values;
     }
 
+    @Override
+    public Matrix getBias() {
+        return null;
+    }
 
     /**
      * Gets the details of this layer as a String.

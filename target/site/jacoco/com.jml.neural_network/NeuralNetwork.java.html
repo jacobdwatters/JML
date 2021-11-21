@@ -32,8 +32,9 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
 <span class="nc" id="L32">    List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
 
     private Matrix[] dxUpdates;
+    private Matrix[] dxBiasUpdates;
 
-<span class="nc" id="L36">    private StringBuilder details = new StringBuilder(</span>
+<span class="nc" id="L37">    private StringBuilder details = new StringBuilder(</span>
             &quot;Model Details\n&quot; +
                     &quot;----------------------------\n&quot; +
                     &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
@@ -51,15 +52,15 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
      *                  specified number of epochs has been reached, the training will stop early.
      */
     // TODO: Will ned to take optimizer as parameter. Take this as a string?
-<span class="nc" id="L54">    public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {</span>
-<span class="nc" id="L55">        this.learningRate = learningRate;</span>
-<span class="nc" id="L56">        this.epochs = epochs;</span>
-<span class="nc" id="L57">        this.batchSize = batchSize;</span>
-<span class="nc" id="L58">        this.threshold = threshold;</span>
-<span class="nc" id="L59">        layers = new ArrayList&lt;Layer&gt;();</span>
+<span class="nc" id="L55">    public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {</span>
+<span class="nc" id="L56">        this.learningRate = learningRate;</span>
+<span class="nc" id="L57">        this.epochs = epochs;</span>
+<span class="nc" id="L58">        this.batchSize = batchSize;</span>
+<span class="nc" id="L59">        this.threshold = threshold;</span>
+<span class="nc" id="L60">        layers = new ArrayList&lt;Layer&gt;();</span>
 
-<span class="nc" id="L61">        buildDetails();</span>
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L62">        buildDetails();</span>
+<span class="nc" id="L63">    }</span>
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -75,30 +76,29 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L78">        dxUpdates = new Matrix[layers.size()]; // Weight updates</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">        for(int i=0; i&lt;dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.</span>
-<span class="nc" id="L80">            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());</span>
-        }
+<span class="nc" id="L79">        dxUpdates = new Matrix[layers.size()]; // Weight updates</span>
+<span class="nc" id="L80">        dxBiasUpdates = new Matrix[layers.size()];</span>
 
-<span class="nc" id="L83">        Matrix feature = new Matrix(features);</span>
-<span class="nc" id="L84">        Matrix target = new Matrix(targets);</span>
+<span class="nc" id="L82">        resetDx();</span>
+
+<span class="nc" id="L84">        Matrix feature = new Matrix(features);</span>
+<span class="nc" id="L85">        Matrix target = new Matrix(targets);</span>
         Matrix input;
         Matrix output;
         Matrix predictions;
 
-<span class="nc bnc" id="L89" title="All 2 branches missed.">        for(int i=0; i&lt;epochs; i++) {</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">            for(int j=0; j&lt;feature.numRows(); j++) {</span>
-<span class="nc bnc" id="L91" title="All 4 branches missed.">                for(int k=0; k&lt;batchSize &amp;&amp; (j+k)&lt;feature.numRows(); k++) {</span>
-<span class="nc" id="L92">                    input = feature.getRowAsVector(j+k).T();</span>
-<span class="nc" id="L93">                    output = feedForward(input);</span>
-<span class="nc" id="L94">                    back(target.getRowAsVector(j+k).T(), output, input);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        for(int i=0; i&lt;epochs; i++) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            for(int j=0; j&lt;feature.numRows(); j++) {</span>
+<span class="nc bnc" id="L92" title="All 4 branches missed.">                for(int k=0; k&lt;batchSize &amp;&amp; (j+k)&lt;feature.numRows(); k++) {</span>
+<span class="nc" id="L93">                    input = feature.getRowAsVector(j+k).T();</span>
+<span class="nc" id="L94">                    output = feedForward(input);</span>
+<span class="nc" id="L95">                    back(target.getRowAsVector(j+k).T(), output, input);</span>
                 }
 
-<span class="nc" id="L97">                applyUpdates();</span>
+<span class="nc" id="L98">                applyUpdates();</span>
             }
 
-<span class="nc" id="L100">            predictions = new Matrix(this.predict(features));</span>
-//            System.out.println(&quot;Epoch: &quot; + (i+1) + &quot;, loss = &quot; + LossFunctions.mse.compute(predictions, target));
+<span class="nc" id="L101">            predictions = new Matrix(this.predict(features));</span>
 <span class="nc" id="L102">            lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re);</span>
 
 <span class="nc bnc" id="L104" title="All 2 branches missed.">            if(lossHist.get(lossHist.size()-1) &lt; threshold) {</span>
@@ -107,7 +107,10 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
             }
         }
 
-<span class="nc" id="L110">        return this;</span>
+<span class="nc" id="L110">        isFit=true;</span>
+<span class="nc" id="L111">        buildDetails();</span>
+
+<span class="nc" id="L113">        return this;</span>
     }
 
 
@@ -116,12 +119,12 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
      * The forward pass computes the values for each layer based on an input.
      */
     protected Matrix feedForward(Matrix input) {
-<span class="nc" id="L119">        Matrix currentInput = new Matrix(input);</span>
-<span class="nc bnc" id="L120" title="All 2 branches missed.">        for(Layer layer : layers) { // Feeds the input through all layers.</span>
-<span class="nc" id="L121">            currentInput = layer.forward(currentInput);</span>
-<span class="nc" id="L122">        }</span>
+<span class="nc" id="L122">        Matrix currentInput = new Matrix(input);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for(Layer layer : layers) { // Feeds the input through all layers.</span>
+<span class="nc" id="L124">            currentInput = layer.forward(currentInput);</span>
+<span class="nc" id="L125">        }</span>
 
-<span class="nc" id="L124">        return currentInput;</span>
+<span class="nc" id="L127">        return currentInput;</span>
     }
 
 
@@ -134,59 +137,84 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
      * @param output Output of the neural network. i.e. the result of the feed forward operation.
      */
     protected void back(Matrix target, Matrix output, Matrix input) {
-        // TODO: Auto-generated method stub
 
-<span class="nc" id="L139">        Activation sigDx = Activations.sigmoidSlope;</span>
-<span class="nc" id="L140">        Matrix error = target.sub(output);</span>
+<span class="nc" id="L141">        Activation sigDx = Activations.sigmoidSlope;</span>
+<span class="nc" id="L142">        Matrix error = target.sub(output);</span>
 
-<span class="nc bnc" id="L142" title="All 2 branches missed.">        if(layers.size()&gt;1) {</span>
-            // TODO: need separate dx for each layer.
-<span class="nc" id="L144">            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1].add(sigDx.apply(layers.get(layers.size()-1).getValues())</span>
-<span class="nc" id="L145">                    .elemMult(error)</span>
-<span class="nc" id="L146">                    .scalMult(learningRate)</span>
-<span class="nc" id="L147">                    .mult(layers.get(layers.size()-2).getValues().T()));</span>
+        // TODO: Update bias terms as well.
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if(layers.size()&gt;1) {</span>
+<span class="nc" id="L146">            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1]</span>
+<span class="nc" id="L147">                    .add(sigDx.apply(layers.get(layers.size()-1).getValues())</span>
+<span class="nc" id="L148">                    .elemMult(error)</span>
+<span class="nc" id="L149">                    .scalMult(learningRate)</span>
+<span class="nc" id="L150">                    .mult(layers.get(layers.size()-2).getValues().T()));</span>
 
-<span class="nc" id="L149">            error = layers.get(layers.size()-1).getWeights().T().mult(error);</span>
+<span class="nc" id="L152">            dxBiasUpdates[dxBiasUpdates.length-1] = dxBiasUpdates[dxBiasUpdates.length-1]</span>
+<span class="nc" id="L153">                    .add(sigDx.apply(layers.get(layers.size()-1).getBias())</span>
+<span class="nc" id="L154">                    .elemMult(error)</span>
+<span class="nc" id="L155">                    .scalMult(learningRate));</span>
 
-<span class="nc bnc" id="L151" title="All 2 branches missed.">            for(int i=layers.size()-2; i&gt;=1; i--) {</span>
-<span class="nc" id="L152">                dxUpdates[i] = dxUpdates[i].add(sigDx.apply(layers.get(i).getValues())</span>
-<span class="nc" id="L153">                        .elemMult(error)</span>
-<span class="nc" id="L154">                        .scalMult(learningRate)</span>
-<span class="nc" id="L155">                        .mult(layers.get(i-1).getValues().T()));</span>
+<span class="nc" id="L157">            error = layers.get(layers.size()-1).getWeights().T().mult(error);</span>
 
-<span class="nc" id="L157">                error = layers.get(i).getWeights().T().mult(error);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">            for(int i=layers.size()-2; i&gt;=1; i--) {</span>
+<span class="nc" id="L160">                dxUpdates[i] = dxUpdates[i]</span>
+<span class="nc" id="L161">                        .add(sigDx.apply(layers.get(i).getValues())</span>
+<span class="nc" id="L162">                        .elemMult(error)</span>
+<span class="nc" id="L163">                        .scalMult(learningRate)</span>
+<span class="nc" id="L164">                        .mult(layers.get(i-1).getValues().T()));</span>
+
+<span class="nc" id="L166">                dxBiasUpdates[i] = dxBiasUpdates[i]</span>
+<span class="nc" id="L167">                        .add(sigDx.apply(layers.get(i).getBias())</span>
+<span class="nc" id="L168">                        .elemMult(error)</span>
+<span class="nc" id="L169">                        .scalMult(learningRate));</span>
+
+<span class="nc" id="L171">                error = layers.get(i).getWeights().T().mult(error);</span>
             }
 
-<span class="nc" id="L160">            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())</span>
-<span class="nc" id="L161">                    .elemMult(error)</span>
-<span class="nc" id="L162">                    .scalMult(learningRate)</span>
-<span class="nc" id="L163">                    .mult(input.T()));</span>
+<span class="nc" id="L174">            dxUpdates[0] = dxUpdates[0]</span>
+<span class="nc" id="L175">                    .add(sigDx.apply(layers.get(0).getValues())</span>
+<span class="nc" id="L176">                    .elemMult(error)</span>
+<span class="nc" id="L177">                    .scalMult(learningRate)</span>
+<span class="nc" id="L178">                    .mult(input.T()));</span>
+
+<span class="nc" id="L180">            dxBiasUpdates[0] = dxBiasUpdates[0]</span>
+<span class="nc" id="L181">                    .add(sigDx.apply(layers.get(0).getBias())</span>
+<span class="nc" id="L182">                    .elemMult(error)</span>
+<span class="nc" id="L183">                    .scalMult(learningRate));</span>
         }
         else { // Then there are no hidden layers.
-<span class="nc" id="L166">            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())</span>
-<span class="nc" id="L167">                    .elemMult(error)</span>
-<span class="nc" id="L168">                    .scalMult(learningRate)</span>
-<span class="nc" id="L169">                    .mult(input.T()));</span>
+<span class="nc" id="L186">            dxUpdates[0] = dxUpdates[0]</span>
+<span class="nc" id="L187">                    .add(sigDx.apply(layers.get(0).getValues())</span>
+<span class="nc" id="L188">                    .elemMult(error)</span>
+<span class="nc" id="L189">                    .scalMult(learningRate)</span>
+<span class="nc" id="L190">                    .mult(input.T()));</span>
+
+<span class="nc" id="L192">            dxBiasUpdates[0] = dxBiasUpdates[0]</span>
+<span class="nc" id="L193">                    .add(sigDx.apply(layers.get(0).getBias())</span>
+<span class="nc" id="L194">                    .elemMult(error)</span>
+<span class="nc" id="L195">                    .scalMult(learningRate));</span>
         }
-<span class="nc" id="L171">    }</span>
+<span class="nc" id="L197">    }</span>
 
 
     /**
      * Applies weight updates to each layer.
      */
     private void applyUpdates() {
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        for(int i=0; i&lt;layers.size(); i++) { // Update the weights for each layer.</span>
-<span class="nc" id="L179">            layers.get(i).setWeights(dxUpdates[i].scalDiv(batchSize).add(layers.get(i).getWeights()));</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        for(int i=0; i&lt;layers.size(); i++) { // Update the weights for each layer.</span>
+<span class="nc" id="L205">            layers.get(i).setWeights(dxUpdates[i].scalDiv(batchSize).add(layers.get(i).getWeights()));</span>
+<span class="nc" id="L206">            layers.get(i).setBias(dxBiasUpdates[i].scalDiv(batchSize).add(layers.get(i).getBias()));</span>
         }
 
-<span class="nc" id="L182">        resetDx();</span>
-<span class="nc" id="L183">    }</span>
+<span class="nc" id="L209">        resetDx(); // Reset dx's for next epoch.</span>
+<span class="nc" id="L210">    }</span>
 
     private void resetDx() {
-<span class="nc bnc" id="L186" title="All 2 branches missed.">        for(int i=0; i&lt;dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.</span>
-<span class="nc" id="L187">            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        for(int i=0; i&lt;dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.</span>
+<span class="nc" id="L214">            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());</span>
+<span class="nc" id="L215">            dxBiasUpdates[i] = new Vector(layers.get(i).getOutDim());</span>
         }
-<span class="nc" id="L189">    }</span>
+<span class="nc" id="L217">    }</span>
 
 
     /**
@@ -199,13 +227,13 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
      */
     @Override
     public double[][] predict(double[][] features) {
-<span class="nc" id="L202">        double[][] results = new double[features.length][layers.get(layers.size()-1).getOutDim()];</span>
+<span class="nc" id="L230">        double[][] results = new double[features.length][layers.get(layers.size()-1).getOutDim()];</span>
 
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        for(int i=0; i&lt;features.length; i++) {</span>
-<span class="nc" id="L205">            results[i] = feedForward(new Vector(features[i])).T().getValuesAsDouble()[0];</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        for(int i=0; i&lt;features.length; i++) {</span>
+<span class="nc" id="L233">            results[i] = feedForward(new Vector(features[i])).T().getValuesAsDouble()[0];</span>
         }
 
-<span class="nc" id="L208">        return results;</span>
+<span class="nc" id="L236">        return results;</span>
     }
 
 
@@ -217,7 +245,7 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
         // TODO: Auto-generated method stub.
         // TODO: This would have to be a prediction for a specific layer. Does this make sense to be here?
         // Answer, probably not
-<span class="nc" id="L220">        return null;</span>
+<span class="nc" id="L248">        return null;</span>
     }
 
     /**
@@ -228,7 +256,7 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
     @Override
     public Matrix getParams() {
         // TODO: Implementation: will need a 'public Matrix[] getParams()' or 'public Matrix getParams(int layerIndex)'
-<span class="nc" id="L231">        return null;</span>
+<span class="nc" id="L259">        return null;</span>
     }
 
 
@@ -238,27 +266,27 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
      * @param layer Layer to add to the neural network.
      */
     public void add(Layer layer) {
-<span class="nc bnc" id="L241" title="All 2 branches missed.">        if(layers.size() == 0) { // Then this is the first layer and the input dimension must be defined</span>
-<span class="nc bnc" id="L242" title="All 2 branches missed.">            if(layer.getInDim() == -1) {</span>
-<span class="nc" id="L243">                throw new IllegalArgumentException(&quot;First layer must have input dimension defined.&quot;);</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">        if(layers.size() == 0) { // Then this is the first layer and the input dimension must be defined</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">            if(layer.getInDim() == -1) {</span>
+<span class="nc" id="L271">                throw new IllegalArgumentException(&quot;First layer must have input dimension defined.&quot;);</span>
             }
 
         } else { // Then this is not the first layer.
-<span class="nc bnc" id="L247" title="All 2 branches missed.">            if(layer.getInDim() == -1) { // Then the input dimension is to be inferred from the previous layer.</span>
-<span class="nc" id="L248">                layer.updateInDim(layers.get(layers.size()-1).getOutDim()); // Infer the input dimension from previous layer</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">            if(layer.getInDim() == -1) { // Then the input dimension is to be inferred from the previous layer.</span>
+<span class="nc" id="L276">                layer.updateInDim(layers.get(layers.size()-1).getOutDim()); // Infer the input dimension from previous layer</span>
 
             } else {
-<span class="nc bnc" id="L251" title="All 2 branches missed.">                if(layer.getInDim() != layers.get(layers.size()-1).getOutDim()) {</span>
-<span class="nc" id="L252">                    throw new IllegalArgumentException(&quot;Layers input dimension of &quot; + layer.getInDim() +</span>
-<span class="nc" id="L253">                            &quot;\nis inconsistent with the previous layers output dimension of &quot; + layers.get(layers.size()-1).getOutDim() + &quot;.&quot; +</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">                if(layer.getInDim() != layers.get(layers.size()-1).getOutDim()) {</span>
+<span class="nc" id="L280">                    throw new IllegalArgumentException(&quot;Layers input dimension of &quot; + layer.getInDim() +</span>
+<span class="nc" id="L281">                            &quot;\nis inconsistent with the previous layers output dimension of &quot; + layers.get(layers.size()-1).getOutDim() + &quot;.&quot; +</span>
                             &quot;\nLayers input dimension must match the output dimension of the previous layer.&quot;);
                 }
             }
         }
 
-<span class="nc" id="L259">        layers.add(layer);</span>
-<span class="nc" id="L260">        buildDetails();</span>
-<span class="nc" id="L261">    }</span>
+<span class="nc" id="L287">        layers.add(layer);</span>
+<span class="nc" id="L288">        buildDetails();</span>
+<span class="nc" id="L289">    }</span>
 
 
     /**
@@ -269,30 +297,30 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
-<span class="nc" id="L272">    }</span>
+<span class="nc" id="L300">    }</span>
 
 
     protected void buildDetails() {
-<span class="nc" id="L276">        details = new StringBuilder(</span>
+<span class="nc" id="L304">        details = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                         &quot;----------------------------\n&quot; +
                         &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="nc bnc" id="L280" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
         );
 
-<span class="nc" id="L283">        details.append(&quot;Learning Rate: &quot; + this.learningRate + &quot;\n&quot;);</span>
-<span class="nc" id="L284">        details.append(&quot;Batch Size: &quot; + this.batchSize + &quot;\n&quot;);</span>
+<span class="nc" id="L311">        details.append(&quot;Learning Rate: &quot; + this.learningRate + &quot;\n&quot;);</span>
+<span class="nc" id="L312">        details.append(&quot;Batch Size: &quot; + this.batchSize + &quot;\n&quot;);</span>
 
-<span class="nc bnc" id="L286" title="All 2 branches missed.">        if(!layers.isEmpty()) {</span>
-<span class="nc" id="L287">            details.append(&quot;Layers (&quot; + layers.size() + &quot;):\n&quot; + &quot;------------\n&quot;);</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">        if(!layers.isEmpty()) {</span>
+<span class="nc" id="L315">            details.append(&quot;Layers (&quot; + layers.size() + &quot;):\n&quot; + &quot;------------\n&quot;);</span>
 
-<span class="nc" id="L289">            int layerCount = 1;</span>
-<span class="nc bnc" id="L290" title="All 2 branches missed.">            for(Layer layer : this.layers) {</span>
-<span class="nc" id="L291">                details.append(&quot;\t&quot; + layerCount + &quot;\t&quot; + layer.getDetails() + &quot;\n&quot;);</span>
-<span class="nc" id="L292">                layerCount++;</span>
-<span class="nc" id="L293">            }</span>
+<span class="nc" id="L317">            int layerCount = 1;</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">            for(Layer layer : this.layers) {</span>
+<span class="nc" id="L319">                details.append(&quot;\t&quot; + layerCount + &quot;\t&quot; + layer.getDetails() + &quot;\n&quot;);</span>
+<span class="nc" id="L320">                layerCount++;</span>
+<span class="nc" id="L321">            }</span>
         }
-<span class="nc" id="L295">    }</span>
+<span class="nc" id="L323">    }</span>
 
 
     /**
@@ -303,7 +331,7 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L306">        return this.details.toString();</span>
+<span class="nc" id="L334">        return this.details.toString();</span>
     }
 
 
@@ -314,26 +342,26 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
      */
     @Override
     public String toString() {
-<span class="nc" id="L317">        return getDetails();</span>
+<span class="nc" id="L345">        return getDetails();</span>
     }
 
 
     public static void main(String[] args) {
 
-<span class="nc" id="L323">        double[][] X = {{0, 0},</span>
+<span class="nc" id="L351">        double[][] X = {{0, 0},</span>
                         {0, 1},
                         {1, 0},
                         {1, 1}};
-<span class="nc" id="L327">        double[][] Y = {{0}, {1}, {1}, {0}};</span>
+<span class="nc" id="L355">        double[][] Y = {{0}, {1}, {1}, {0}};</span>
 
-<span class="nc" id="L329">        NeuralNetwork nn = new NeuralNetwork(0.1, 1000, 4, 0.5e-5);</span>
-<span class="nc" id="L330">        nn.add(new Dense(2, 20, Activations.sigmoid));</span>
-<span class="nc" id="L331">        nn.add(new Dense(20, Activations.sigmoid));</span>
-<span class="nc" id="L332">        nn.add(new Dense(1, Activations.sigmoid));</span>
-<span class="nc" id="L333">        System.out.println(nn.getDetails());</span>
+<span class="nc" id="L357">        NeuralNetwork nn = new NeuralNetwork(0.1, 1000, 4, 0.5e-5);</span>
+<span class="nc" id="L358">        nn.add(new Dense(2, 20, Activations.sigmoid));</span>
+<span class="nc" id="L359">        nn.add(new Dense(20, Activations.sigmoid));</span>
+<span class="nc" id="L360">        nn.add(new Dense(1, Activations.sigmoid));</span>
+<span class="nc" id="L361">        System.out.println(nn.getDetails());</span>
 
-<span class="nc" id="L335">        nn.fit(X, Y);</span>
-<span class="nc" id="L336">        System.out.println(Arrays.deepToString(nn.predict(X)));</span>
-<span class="nc" id="L337">    }</span>
+<span class="nc" id="L363">        nn.fit(X, Y);</span>
+<span class="nc" id="L364">        System.out.println(Arrays.deepToString(nn.predict(X)));</span>
+<span class="nc" id="L365">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
