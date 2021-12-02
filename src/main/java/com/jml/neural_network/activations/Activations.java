@@ -16,4 +16,6 @@ public abstract class Activations {
      * The Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
      */
     public static final Activation relu = new Relu();
+
+    public static final Activation linear = new Linear();
 }

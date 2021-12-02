@@ -50,7 +50,7 @@ class KnnTest {
     void Knnk2TestCase() {
         int[] expectedPred = {0};
 
-        KNearestNeighbors knn = new KNearestNeighbors(2);
+        KNearestNeighbors knn = new KNearestNeighbors();
         knn.fit(features, classes);
 
         double[][] tests = {{7.6, 7.1}};
@@ -126,7 +126,15 @@ class KnnTest {
         double[][] tests = {{3.5, 3}};
         int[] predictions = knn.predict(tests);
 
+        String expectedDetails = "Model Details\n" +
+                "----------------------------\n" +
+                "Model Type: " +  "K_NEAREST_NEIGHBORS" + "\n" +
+                "Is Trained: " + "Yes" + "\n" +
+                "k-neighbors: " + 2 + "\n" +
+                "distance parameter: " + 1;
+
         assertArrayEquals(expectedPred, predictions);
+        assertEquals(expectedDetails, knn.getDetails());
     }
 
 

@@ -21,21 +21,21 @@ import linalg.Vector;
  */
 public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
 
-<span class="pc" id="L24">    protected boolean isFit = false;</span>
+<span class="fc" id="L24">    protected boolean isFit = false;</span>
 
-<span class="pc" id="L26">    protected String MODEL_TYPE = ModelTypes.LOGISTIC_REGRESSION.toString();</span>
+<span class="fc" id="L26">    protected String MODEL_TYPE = ModelTypes.LOGISTIC_REGRESSION.toString();</span>
     protected Matrix w;
     protected double[] coefficients;
 
     // Variables for optimization.
-<span class="pc" id="L31">    protected double learningRate = 0.002;</span>
-<span class="pc" id="L32">    protected double threshold = 0.5e-5;</span>
-<span class="pc" id="L33">    protected int maxIterations = 1000;</span>
+<span class="fc" id="L31">    protected double learningRate = 0.002;</span>
+<span class="fc" id="L32">    protected double threshold = 0.5e-5;</span>
+<span class="fc" id="L33">    protected int maxIterations = 1000;</span>
     private Optimizer SGD;
     protected Scheduler schedule;
 
     // Details of model in human-readable format.
-<span class="pc" id="L38">    private StringBuilder details = new StringBuilder(</span>
+<span class="fc" id="L38">    private StringBuilder details = new StringBuilder(</span>
             &quot;Model Details\n&quot; +
                     &quot;----------------------------\n&quot; +
                     &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
@@ -64,14 +64,14 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      *                  will stop early.
      * @param schedule learning rate scheduler for optimization.
      */
-<span class="nc" id="L67">    public LogisticRegression(double learningRate, int maxIterations, double threshold, Scheduler schedule) {</span>
-<span class="nc" id="L68">        this.learningRate = learningRate;</span>
-<span class="nc" id="L69">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L70">        this.threshold = threshold;</span>
-<span class="nc" id="L71">        this.schedule = schedule;</span>
-<span class="nc" id="L72">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
-<span class="nc" id="L73">        SGD.setScheduler(this.schedule);</span>
-<span class="nc" id="L74">    }</span>
+<span class="fc" id="L67">    public LogisticRegression(double learningRate, int maxIterations, double threshold, Scheduler schedule) {</span>
+<span class="fc" id="L68">        this.learningRate = learningRate;</span>
+<span class="fc" id="L69">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L70">        this.threshold = threshold;</span>
+<span class="fc" id="L71">        this.schedule = schedule;</span>
+<span class="fc" id="L72">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="fc" id="L73">        SGD.setScheduler(this.schedule);</span>
+<span class="fc" id="L74">    }</span>
 
 
     /**
@@ -84,12 +84,12 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      * @param threshold Threshold for stopping the optimizer. If the loss becomes less than this value, the optimizer
      *                  will stop early.
      */
-<span class="nc" id="L87">    public LogisticRegression(double learningRate, int maxIterations, double threshold) {</span>
-<span class="nc" id="L88">        this.learningRate = learningRate;</span>
-<span class="nc" id="L89">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L90">        this.threshold = threshold;</span>
-<span class="nc" id="L91">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
-<span class="nc" id="L92">    }</span>
+<span class="fc" id="L87">    public LogisticRegression(double learningRate, int maxIterations, double threshold) {</span>
+<span class="fc" id="L88">        this.learningRate = learningRate;</span>
+<span class="fc" id="L89">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L90">        this.threshold = threshold;</span>
+<span class="fc" id="L91">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="fc" id="L92">    }</span>
 
 
     /**
@@ -100,11 +100,11 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      * @param learningRate Learning rate to use during optimization.
      * @param maxIterations Maximum iterations to run optimizer for.
      */
-<span class="nc" id="L103">    public LogisticRegression(double learningRate, int maxIterations) {</span>
-<span class="nc" id="L104">        this.learningRate = learningRate;</span>
-<span class="nc" id="L105">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L106">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
-<span class="nc" id="L107">    }</span>
+<span class="fc" id="L103">    public LogisticRegression(double learningRate, int maxIterations) {</span>
+<span class="fc" id="L104">        this.learningRate = learningRate;</span>
+<span class="fc" id="L105">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L106">        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);</span>
+<span class="fc" id="L107">    }</span>
 
 
     /**
@@ -131,17 +131,22 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      */
     @Override
     public Model&lt;double[][], double[]&gt; fit(double[][] features, double[] targets) {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if(features.length != targets.length) {</span>
+<span class="fc" id="L135">            throw new IllegalArgumentException(&quot;There must be the same number of samples in features and targets but got &quot; +</span>
+                    features.length + &quot; and &quot; + targets.length + &quot;.&quot;);
+        }
+
         // Convert features and targets to matrix representations.
-<span class="fc" id="L135">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
-<span class="fc" id="L136">        Matrix y = new Vector(targets);</span>
+<span class="fc" id="L140">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
+<span class="fc" id="L141">        Matrix y = new Vector(targets);</span>
 
-<span class="fc" id="L138">        w = SGD.optimize(LossFunctions.binCrossEntropy, X, y); // Apply optimizer to the loss function</span>
-<span class="fc" id="L139">        this.coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L143">        w = SGD.optimize(LossFunctions.binCrossEntropy, X, y); // Apply optimizer to the loss function</span>
+<span class="fc" id="L144">        this.coefficients = w.T().getValuesAsDouble()[0];</span>
 
-<span class="fc" id="L141">        isFit=true;</span>
-<span class="fc" id="L142">        buildDetails();</span>
+<span class="fc" id="L146">        isFit=true;</span>
+<span class="fc" id="L147">        buildDetails();</span>
 
-<span class="fc" id="L144">        return this;</span>
+<span class="fc" id="L149">        return this;</span>
     }
 
     /**
@@ -155,19 +160,19 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      */
     @Override
     public double[] predict(double[][] features) {
-<span class="nc bnc" id="L158" title="All 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L159">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L164">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
 
-<span class="nc" id="L162">        Matrix predictions = new Vector(features.length);</span>
-<span class="nc" id="L163">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
+<span class="fc" id="L167">        Matrix predictions = new Vector(features.length);</span>
+<span class="fc" id="L168">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
 
-<span class="nc bnc" id="L165" title="All 2 branches missed.">        for(int i=0; i&lt;X.numRows(); i++) { // Apply the fitted logistic function to all features of X.</span>
-<span class="nc" id="L166">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        for(int i=0; i&lt;X.numRows(); i++) { // Apply the fitted logistic function to all features of X.</span>
+<span class="fc" id="L171">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
                     i, 0);
         }
 
-<span class="nc" id="L170">        return predictions.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L175">        return predictions.T().getValuesAsDouble()[0];</span>
     }
 
 
@@ -183,14 +188,14 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
     @Override
     public Matrix predict(Matrix X, Matrix w) { // TODO: Currently only supports binary classification.
 
-<span class="fc" id="L186">        Matrix predictions = new Vector(X.numRows());</span>
+<span class="fc" id="L191">        Matrix predictions = new Vector(X.numRows());</span>
 
-<span class="fc bfc" id="L188" title="All 2 branches covered.">        for(int i=0; i&lt;X.numRows(); i++) {</span>
-<span class="fc" id="L189">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        for(int i=0; i&lt;X.numRows(); i++) {</span>
+<span class="fc" id="L194">            predictions.set(1 / (1+Math.pow(Math.E, -w.getColAsVector(0).innerProduct(X.getRowAsVector(i)).re)),</span>
                     i, 0);
         }
 
-<span class="fc" id="L193">        return predictions;</span>
+<span class="fc" id="L198">        return predictions;</span>
     }
 
 
@@ -201,11 +206,11 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      */
     @Override
     public Matrix getParams() {
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L205">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L210">            throw new IllegalStateException(&quot;Model must be fit before parameters can be got.&quot;);</span>
         }
 
-<span class="nc" id="L208">        return this.w;</span>
+<span class="fc" id="L213">        return this.w;</span>
     }
 
 
@@ -215,11 +220,11 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      * corresponds to the iteration the loss was computed for.
      */
     public double[] getLossHist() {
-<span class="pc bpc" id="L218" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L219">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L224">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
         }
 
-<span class="fc" id="L222">        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();</span>
+<span class="fc" id="L227">        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();</span>
     }
 
 
@@ -232,47 +237,47 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
     public void saveModel(String filePath) {
         Block[] blockList;
 
-<span class="pc bpc" id="L235" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L236">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L241">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
-<span class="nc" id="L239">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
+<span class="fc" id="L244">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="fc" id="L242">        blockList = new Block[2];</span>
+<span class="fc" id="L247">        blockList = new Block[2];</span>
 
         // Construct the blocks for the model file.
-<span class="fc" id="L245">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
-<span class="fc" id="L246">        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));</span>
+<span class="fc" id="L250">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="fc" id="L251">        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));</span>
 
-<span class="fc" id="L248">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
-<span class="fc" id="L249">    }</span>
+<span class="fc" id="L253">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="fc" id="L254">    }</span>
 
 
     protected void buildDetails() {
-<span class="fc" id="L253">        details = new StringBuilder(</span>
+<span class="fc" id="L258">        details = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                         &quot;----------------------------\n&quot; +
                         &quot;Model Type: &quot; + this.MODEL_TYPE + &quot;\n&quot; +
-<span class="pc bpc" id="L257" title="1 of 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
         );
 
-<span class="pc bpc" id="L260" title="2 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
-<span class="fc" id="L261">            details.append(&quot;Coefficients: &quot;);</span>
-<span class="fc" id="L262">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L263">            details.append(&quot;\nlogistic curve: y = 1 / [1+e^-{&quot; + coefficients[0] + &quot; + &quot;);</span>
+<span class="pc bpc" id="L265" title="2 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
+<span class="fc" id="L266">            details.append(&quot;Coefficients: &quot;);</span>
+<span class="fc" id="L267">            details.append(ArrayUtils.asString(coefficients));</span>
+<span class="fc" id="L268">            details.append(&quot;\nlogistic curve: y = 1 / [1+e^-{&quot; + coefficients[0] + &quot; + &quot;);</span>
 
-<span class="fc bfc" id="L265" title="All 2 branches covered.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L266">                details.append(coefficients[i] + &quot;*x_&quot; + i);</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
+<span class="fc" id="L271">                details.append(coefficients[i] + &quot;*x_&quot; + i);</span>
 
-<span class="fc bfc" id="L268" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
-<span class="fc" id="L269">                    details.append(&quot; + &quot;);</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
+<span class="fc" id="L274">                    details.append(&quot; + &quot;);</span>
                 }
             }
 
-<span class="fc" id="L273">            details.append(&quot;}]&quot;);</span>
+<span class="fc" id="L278">            details.append(&quot;}]&quot;);</span>
         }
-<span class="fc" id="L275">    }</span>
+<span class="fc" id="L280">    }</span>
 
 
     /**
@@ -283,7 +288,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L286">        return details.toString();</span>
+<span class="fc" id="L291">        return details.toString();</span>
     }
 
 
@@ -294,26 +299,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      */
     @Override
     public String toString() {
-<span class="nc" id="L297">        return getDetails();</span>
+<span class="fc" id="L302">        return getDetails();</span>
     }
-
-
-    public static void main(String[] args) {
-<span class="nc" id="L302">        double[][] features = {{4}, {5}, {6}, {7}, {-1}, {0}, {2}};</span>
-<span class="nc" id="L303">        double[] targets = {1, 1, 1, 1, 0, 0, 0};</span>
-
-<span class="nc" id="L305">        double[][] test = {{3}, {3.5}, {4.8}};</span>
-
-<span class="nc" id="L307">        LogisticRegression logreg = new LogisticRegression(0.8, 10000);</span>
-<span class="nc" id="L308">        logreg.fit(features, targets);</span>
-
-<span class="nc" id="L310">        System.out.println(&quot;\n\n&quot; + logreg.getDetails() + &quot;\n&quot;);</span>
-<span class="nc" id="L311">        System.out.println(&quot;\n\n&quot; + ArrayUtils.asString(logreg.predict(test)) + &quot;\n&quot;);</span>
-<span class="nc" id="L312">        logreg.saveModel(&quot;temp.mdl&quot;);</span>
-
-<span class="nc" id="L314">        Model&lt;double[][], double[]&gt; logFromFile = Model.load(&quot;temp.mdl&quot;);</span>
-<span class="nc" id="L315">        System.out.println(&quot;\n\n&quot; + logFromFile.getDetails() + &quot;\n&quot;);</span>
-<span class="nc" id="L316">        System.out.println(&quot;\n\n&quot; + ArrayUtils.asString(logFromFile.predict(test)) + &quot;\n&quot;);</span>
-<span class="nc" id="L317">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
