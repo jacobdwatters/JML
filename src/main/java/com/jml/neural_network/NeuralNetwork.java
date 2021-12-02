@@ -4,34 +4,27 @@ import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.neural_network.activations.Activation;
-import com.jml.neural_network.activations.Activations;
-import com.jml.neural_network.layers.Dense;
-import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.Layer;
-import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.StochasticGradientDescent;
-import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
-    private List<Layer> layers;
+    private final List<Layer> layers;
     protected double learningRate;
     protected double threshold;
     protected int epochs;
     protected int batchSize;
-    protected Optimizer optim;
 
     protected boolean isFit = false;
     List<Double> lossHist = new ArrayList<>();
 
     private Matrix[] dxUpdates;
+    private Matrix[] dxBiasUpdates;
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -56,7 +49,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.epochs = epochs;
         this.batchSize = batchSize;
         this.threshold = threshold;
-        layers = new ArrayList<Layer>();
+        layers = new ArrayList<>();
 
         buildDetails();
     }
@@ -76,9 +69,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     public NeuralNetwork fit(double[][] features, double[][] targets) {
         // TODO: Auto-generated method stub
         dxUpdates = new Matrix[layers.size()]; // Weight updates
-        for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
-            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
-        }
+        dxBiasUpdates = new Matrix[layers.size()];
+
+        resetDx();
 
         Matrix feature = new Matrix(features);
         Matrix target = new Matrix(targets);
@@ -98,17 +91,16 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             }
 
             predictions = new Matrix(this.predict(features));
-//            System.out.println("Epoch: " + (i+1) + ", loss = " + LossFunctions.mse.compute(predictions, target));
             lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re);
 
             if(lossHist.get(lossHist.size()-1) < threshold) {
-                System.out.println("Stopping Early...");
-                break; // Then stop training
+                break; // Then stop training since the loss has dropped below the stopping threshold.
             }
         }
 
         isFit=true;
         buildDetails();
+
         return this;
     }
 
@@ -136,40 +128,56 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param output Output of the neural network. i.e. the result of the feed forward operation.
      */
     protected void back(Matrix target, Matrix output, Matrix input) {
-        // TODO: Auto-generated method stub
 
-        Activation sigDx = Activations.sigmoidSlope;
         Matrix error = target.sub(output);
+        Activation activation;
 
+        // TODO: Update bias terms as well.
         if(layers.size()>1) {
-            // TODO: need separate dx for each layer.
-            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1].add(sigDx.apply(layers.get(layers.size()-1).getValues())
+            activation = layers.get(layers.size()-1).getActivation();
+
+            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1]
+                    .add(activation.slope(layers.get(layers.size()-1).getValues())
                     .elemMult(error)
                     .scalMult(learningRate)
                     .mult(layers.get(layers.size()-2).getValues().T()));
 
+            dxBiasUpdates[dxBiasUpdates.length-1] = dxBiasUpdates[dxBiasUpdates.length-1]
+                    .add(activation.slope(layers.get(layers.size()-1).getBias())
+                    .elemMult(error)
+                    .scalMult(learningRate));
+
             error = layers.get(layers.size()-1).getWeights().T().mult(error);
 
             for(int i=layers.size()-2; i>=1; i--) {
-                dxUpdates[i] = dxUpdates[i].add(sigDx.apply(layers.get(i).getValues())
+                activation = layers.get(i).getActivation();
+
+                dxUpdates[i] = dxUpdates[i]
+                        .add(activation.slope(layers.get(i).getValues())
                         .elemMult(error)
                         .scalMult(learningRate)
                         .mult(layers.get(i-1).getValues().T()));
 
+                dxBiasUpdates[i] = dxBiasUpdates[i]
+                        .add(activation.slope(layers.get(i).getBias())
+                        .elemMult(error)
+                        .scalMult(learningRate));
+
                 error = layers.get(i).getWeights().T().mult(error);
             }
 
-            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())
-                    .elemMult(error)
-                    .scalMult(learningRate)
-                    .mult(input.T()));
         }
-        else { // Then there are no hidden layers.
-            dxUpdates[0] = dxUpdates[0].add(sigDx.apply(layers.get(0).getValues())
-                    .elemMult(error)
-                    .scalMult(learningRate)
-                    .mult(input.T()));
-        }
+
+        activation = layers.get(0).getActivation();
+        dxUpdates[0] = dxUpdates[0]
+                .add(activation.slope(layers.get(0).getValues())
+                .elemMult(error)
+                .scalMult(learningRate)
+                .mult(input.T()));
+        dxBiasUpdates[0] = dxBiasUpdates[0]
+                .add(activation.slope(layers.get(0).getBias())
+                .elemMult(error)
+                .scalMult(learningRate));
     }
 
 
@@ -179,14 +187,16 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     private void applyUpdates() {
         for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
             layers.get(i).setWeights(dxUpdates[i].scalDiv(batchSize).add(layers.get(i).getWeights()));
+            layers.get(i).setBias(dxBiasUpdates[i].scalDiv(batchSize).add(layers.get(i).getBias()));
         }
 
-        resetDx();
+        resetDx(); // Reset dx's for next epoch.
     }
 
     private void resetDx() {
         for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
             dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
+            dxBiasUpdates[i] = new Vector(layers.get(i).getOutDim());
         }
     }
 
@@ -317,24 +327,5 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public String toString() {
         return getDetails();
-    }
-
-
-    public static void main(String[] args) {
-
-        double[][] X = {{0, 0},
-                        {0, 1},
-                        {1, 0},
-                        {1, 1}};
-        double[][] Y = {{0}, {1}, {1}, {0}};
-
-        NeuralNetwork nn = new NeuralNetwork(0.1, 1000, 4, 0.5e-5);
-        nn.add(new Dense(2, 20, Activations.sigmoid));
-        nn.add(new Dense(20, Activations.sigmoid));
-        nn.add(new Dense(1, Activations.sigmoid));
-        System.out.println(nn.getDetails());
-
-        nn.fit(X, Y);
-        System.out.println(Arrays.deepToString(nn.predict(X)));
     }
 }

@@ -1,5 +1,6 @@
 package com.jml.neural_network.layers;
 
+import com.jml.neural_network.activations.Activation;
 import linalg.Matrix;
 
 public interface Layer {
@@ -33,9 +34,34 @@ public interface Layer {
      */
     int getOutDim();
 
+
+    /**
+     * Gets the weights of this layer in its matrix representation.
+     * @return The weights of this layer.
+     */
     Matrix getWeights();
 
+
+    /**
+     * Sets the weights for this layer.
+     * @param w New weights for this layer
+     */
     void setWeights(Matrix w);
+
+
+    /**
+     * Gets the matrix representation of the bias terms for this layer.
+     * @return The bias terms of this layer.
+     */
+    Matrix getBias();
+
+
+    /**
+     * Sets the bias terms for this layer.
+     * @param b New bias terms for this layer.
+     */
+    void setBias(Matrix b);
+
 
     /**
      * Gets the node values for this layer.
@@ -43,5 +69,19 @@ public interface Layer {
      */
     Matrix getValues();
 
+
+    /**
+     * Gets the details of this layer as a string.
+     * @return A string representing the details of this layer. This may include input dimension, output dimension, and
+     * activation function depending on the layer.
+     */
     String getDetails();
+
+
+    /**
+     * Gets the activation function for this layer.
+     * @return The activation function for this layer. Note, if the layer does not have an activation function this will
+     * be null.
+     */
+    Activation getActivation();
 }

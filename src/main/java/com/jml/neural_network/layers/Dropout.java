@@ -1,6 +1,7 @@
 package com.jml.neural_network.layers;
 
 import com.jml.core.Stats;
+import com.jml.neural_network.activations.Activation;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -127,6 +128,8 @@ public class Dropout implements Layer {
     @Override
     public void setWeights(Matrix w) {}
 
+    @Override
+    public void setBias(Matrix b) {}
 
     /**
      * {@inheritDoc}
@@ -137,6 +140,10 @@ public class Dropout implements Layer {
         return this.values;
     }
 
+    @Override
+    public Matrix getBias() {
+        return null;
+    }
 
     /**
      * Gets the details of this layer as a String.
@@ -146,5 +153,10 @@ public class Dropout implements Layer {
     @Override
     public String getDetails() {
         return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
+    }
+
+    @Override
+    public Activation getActivation() {
+        return null;
     }
 }

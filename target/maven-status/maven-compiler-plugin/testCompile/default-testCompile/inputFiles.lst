@@ -4,6 +4,7 @@ C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\classifiers\LogRegTest.jav
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\PolynomialRegressionExceptionTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\LinRegSGDTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\LinearRegressionDatasetOneTest.java
+C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\classifiers\KDTreeTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\core\StatsTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\preprocessing\NormalizationExceptionTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\LinearRegressionSaveAndLoadTest.java
@@ -14,3 +15,4 @@ C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\classifiers\KnnTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\PolynomialRegressionDatasetOneTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\MultRegSGDTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\util\ArrayErrorsTest.java
+C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\core\LossFunctionTest.java

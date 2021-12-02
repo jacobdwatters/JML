@@ -1,5 +1,7 @@
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\losses\Function.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations\Sigmoid.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Model.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations\Linear.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\classifiers\KNearestNeighbors.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\classifiers\ClassifierTags.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\FileManager.java
@@ -10,6 +12,7 @@ C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\DataLoader.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\PolyRegFromData.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\core\Stats.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\util\ValueError.java
+C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations\Relu.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\neural_network\activations\Activation.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\MultipleLinearRegression.java
 C:\Users\17194\IdeaProjects\JML\src\main\java\com\jml\linear_models\LinearModelTags.java

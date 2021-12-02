@@ -131,6 +131,11 @@ public class LogisticRegression extends Model<double[][], double[]> {
      */
     @Override
     public Model<double[][], double[]> fit(double[][] features, double[] targets) {
+        if(features.length != targets.length) {
+            throw new IllegalArgumentException("There must be the same number of samples in features and targets but got " +
+                    features.length + " and " + targets.length + ".");
+        }
+
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
         Matrix y = new Vector(targets);
@@ -202,7 +207,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
     @Override
     public Matrix getParams() {
         if(!isFit) {
-            throw new IllegalStateException("Model must be fit before it can be saved.");
+            throw new IllegalStateException("Model must be fit before parameters can be got.");
         }
 
         return this.w;
@@ -295,24 +300,5 @@ public class LogisticRegression extends Model<double[][], double[]> {
     @Override
     public String toString() {
         return getDetails();
-    }
-
-
-    public static void main(String[] args) {
-        double[][] features = {{4}, {5}, {6}, {7}, {-1}, {0}, {2}};
-        double[] targets = {1, 1, 1, 1, 0, 0, 0};
-
-        double[][] test = {{3}, {3.5}, {4.8}};
-
-        LogisticRegression logreg = new LogisticRegression(0.8, 10000);
-        logreg.fit(features, targets);
-
-        System.out.println("\n\n" + logreg.getDetails() + "\n");
-        System.out.println("\n\n" + ArrayUtils.asString(logreg.predict(test)) + "\n");
-        logreg.saveModel("temp.mdl");
-
-        Model<double[][], double[]> logFromFile = Model.load("temp.mdl");
-        System.out.println("\n\n" + logFromFile.getDetails() + "\n");
-        System.out.println("\n\n" + ArrayUtils.asString(logFromFile.predict(test)) + "\n");
     }
 }

@@ -20,6 +20,10 @@ public class KDTree {
      * @param k Dimension of each point in the k dimensional tree.
      */
     public KDTree(int k) {
+        if(k<1) {
+            throw new IllegalArgumentException("k must be positive integer but got k=" + k + ".");
+        }
+
         this.k = k;
     }
 
@@ -67,17 +71,6 @@ public class KDTree {
     }
 
 
-    /**
-     * Gets the specified point from the tree if it exists.
-     *
-     * @param point Point to get from tree.
-     * @return Returns null if no point in the tree matches the specified point. Returns the point
-     */
-    public double[] get(double[] point) {
-        // TODO: Implementation.
-        return null;
-    }
-
 
     /**
      * Traverses this K-d tree in order.
@@ -112,7 +105,7 @@ public class KDTree {
      */
     class PointNode {
         double[] point;
-        PointNode left, right, parent;
+        PointNode left, right;
 
 
         /**
@@ -146,32 +139,6 @@ public class KDTree {
          */
         double getValue(int dimension) {
             return point[dimension];
-        }
-    }
-
-
-    public static void main(String[] args) {
-        double[][] values = {   {7, 2},
-                                {5, 4},
-                                {9, 6},
-                                {4, 7},
-                                {8, 1},
-                                {2, 3}};
-
-        KDTree tree = new KDTree(2);
-
-        for(double[] point : values) {
-            tree.insert(point);
-        }
-
-        List<double[]> vals = tree.inOrder();
-
-        for(double[] v : vals) {
-            for(double d : v) {
-                System.out.print(d + ", ");
-            }
-
-            System.out.println();
         }
     }
 }

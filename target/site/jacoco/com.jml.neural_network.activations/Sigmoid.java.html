@@ -2,82 +2,61 @@
 
 import linalg.Matrix;
 
-public class Sigmoid extends Activation {
 
-<span class="nc" id="L7">    private Sigmoid() {</span>
-<span class="nc" id="L8">        throw new IllegalStateException(&quot;Cannot instantiate utility class.&quot;);</span>
-    }
+/**
+ * The sigmoid activation function. 1/(1+exp(-x))
+ */
+<span class="nc" id="L9">class Sigmoid implements Activation {</span>
 
-
-    /**
-     * Applies the sigmoid activation function to the data.&lt;br&gt;
-     * Specifically, the logistic function is applied. i.e. 1/(1+e&lt;sup&gt;-x&lt;/sup&gt;)
-     *
-     * @param data Data to apply the activation function to.
-     * @return The image of the data under the activation function.
-     */
-    @Override
-    public double apply(double data) {
-<span class="nc" id="L21">        return 1 / (1+Math.exp(data));</span>
-    }
-
+<span class="nc" id="L11">    public final String NAME = &quot;Sigmoid&quot;;</span>
 
     /**
-     * Applies the sigmoid activation function, element-wise, to the data.&lt;br&gt;
-     * Specifically, the logistic function is applied. i.e. 1/(1+e&lt;sup&gt;-x&lt;/sup&gt;)
+     * Applies the sigmoid activation element-wise to a matrix.
      *
-     * @param data Data to apply the activation function to.
-     * @return The image of the data under the activation function.
-     */
-    @Override
-    public double[] apply(double[] data) {
-<span class="nc" id="L34">        double[] result = new double[data.length];</span>
-
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        for(int i=0; i&lt;data.length; i++) {</span>
-<span class="nc" id="L37">            result[i] = apply(data[i]);</span>
-        }
-
-<span class="nc" id="L40">        return result;</span>
-    }
-
-
-    /**
-     * Applies the sigmoid activation function, element-wise, to the data.&lt;br&gt;
-     * Specifically, the logistic function is applied. i.e. 1/(1+e&lt;sup&gt;-x&lt;/sup&gt;)
-     *
-     * @param data Data to apply the activation function to.
-     * @return The image of the data under the activation function.
-     */
-    @Override
-    public double[][] apply(double[][] data) {
-<span class="nc" id="L53">        double[][] result = new double[data.length][data[0].length];</span>
-
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        for(int i=0; i&lt;data.length; i++) {</span>
-<span class="nc" id="L56">            result[i] = apply(data[i]);</span>
-        }
-
-<span class="nc" id="L59">        return result;</span>
-    }
-
-
-    /**
-     * Applies the sigmoid activation function, element-wise, to the data.&lt;br&gt;
-     * Specifically, the logistic function is applied. i.e. 1/(1+e&lt;sup&gt;-x&lt;/sup&gt;)
-     *
-     * @param data Data to apply the activation function to.
-     * @return The image of the data under the activation function.
+     * @param data Matrix to apply sigmoid activation to.
+     * @return The result of the sigmoid activation applied element-wise to the data matrix.
      */
     @Override
     public Matrix apply(Matrix data) {
-<span class="nc" id="L72">        Matrix result = new Matrix(data.shape());</span>
+<span class="nc" id="L21">        double[][] result = new double[data.numRows()][data.numCols()];</span>
 
-<span class="nc bnc" id="L74" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="nc bnc" id="L75" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-//                result.set();
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="nc" id="L25">                result[i][j] = 1/(1+Math.exp(-data.getAsDouble(i, j)));</span>
             }
         }
 
-<span class="nc" id="L80">        return result;</span>
+<span class="nc" id="L29">        return new Matrix(result);</span>
     }
+
+
+    /**
+     * Applies the derivative of the sigmoid activation function element-wise to a matrix.
+     *
+     * @param data Matrix to apply the derivative of the sigmoid activation function to.
+     * @return The result of the derivative of the sigmoid activation applied element-wise to the data.
+     */
+    @Override
+    public Matrix slope(Matrix data) {
+<span class="nc" id="L41">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+        double exp;
+
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="nc" id="L46">                exp = Math.exp(-data.getAsDouble(i, j));</span>
+<span class="nc" id="L47">                result[i][j] = exp/Math.pow(1+exp, 2);</span>
+            }
+        }
+
+<span class="nc" id="L51">        return new Matrix(result);</span>
+    }
+
+
+    /**
+     * Gets the name of the activation function.
+     * @return The name of the activation function as a String.
+     */
+    @Override
+<span class="nc" id="L60">    public String getName(){return NAME;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

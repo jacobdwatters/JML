@@ -18,8 +18,7 @@ public class Dense implements Layer {
 
     Matrix values; // Node values for the layer
     Matrix weights; // Weights for the layer.
-    Matrix biasWeights; // Bias weights for the layer.
-    Matrix bias;
+    Matrix bias; // Bias for the layer.
 
 
     /**
@@ -39,8 +38,7 @@ public class Dense implements Layer {
         this.outDim = outDim;
         this.activation = activation;
 
-        this.bias = new Vector(this.outDim); // TODO: Will need to be initialized to all ones?
-        this.biasWeights = new Matrix(); // TODO: What does this need to look like?
+        this.bias = Matrix.random(this.outDim, 1);
     }
 
 
@@ -62,13 +60,12 @@ public class Dense implements Layer {
         this.inDim = inDim;
         this.outDim = outDim;
         this.activation = activation;
-        this.paramCount = inDim*outDim*2;
+        this.paramCount = inDim*outDim+outDim;
 
         this.values = new Vector(this.outDim);
-        this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
+        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights
 
-        this.bias = Matrix.ones(this.outDim, 1);
-        this.biasWeights = Matrix.random(this.outDim, this.inDim);; // TODO: What does this need to look like?
+        this.bias = Matrix.random(this.outDim, 1,-10, 10);
     }
 
 
@@ -79,7 +76,7 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        values = activation.apply(weights.mult(inputs)); // TODO: Add bias
+        values = activation.apply(weights.mult(inputs).add(bias)); // TODO: Add bias
         return values;
     }
 
@@ -111,8 +108,8 @@ public class Dense implements Layer {
     @Override
     public void updateInDim(int inDim) {
         this.inDim = inDim;
-        this.weights = Matrix.random(this.outDim, this.inDim); // Initialize weights
-        this.paramCount = inDim*outDim*2;
+        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights
+        this.paramCount = inDim*outDim + outDim;
     }
 
 
@@ -131,6 +128,11 @@ public class Dense implements Layer {
         this.weights = w.copy();
     }
 
+
+    @Override
+    public void setBias(Matrix b) {this.bias = b.copy();}
+
+
     /**
      * {@inheritDoc}
      * @return The values of this layer
@@ -141,6 +143,11 @@ public class Dense implements Layer {
     }
 
 
+    @Override
+    public Matrix getBias() {
+        return bias;
+    }
+
     /**
      * Gets the details of this layer as a String.
      *
@@ -149,7 +156,14 @@ public class Dense implements Layer {
     @Override
     public String getDetails() {
         StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
-                + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount);
+                + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount +
+                ",\tActivation: " + activation.getName());
         return details.toString();
+    }
+
+
+    @Override
+    public Activation getActivation() {
+        return this.activation;
     }
 }
