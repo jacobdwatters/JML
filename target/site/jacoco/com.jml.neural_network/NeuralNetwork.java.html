@@ -374,7 +374,7 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
 
 <span class="nc" id="L375">        NeuralNetwork nn = new NeuralNetwork(0.03, 50, 1, 1e-4);</span>
 <span class="nc" id="L376">        nn.add(new Dense(3, 15, Activations.relu));</span>
-<span class="nc" id="L377">        nn.add(new Dense(3, Activations.linear));</span>
+<span class="nc" id="L377">        nn.add(new Dense(15, Activations.linear));</span>
 <span class="nc" id="L378">        nn.add(new Dense(2, Activations.sigmoid));</span>
 
 <span class="nc" id="L380">        nn.fit(X, y);</span>

@@ -2,6 +2,7 @@
 
 import com.jml.core.Block;
 import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -11,8 +12,8 @@ import linalg.Vector;
  * This layer applies a linear transform &lt;code&gt;y=Ax+b&lt;/code&gt; onto the inputs x.
  */
 public class Dense implements Layer {
-<span class="nc" id="L14">    public final String LAYER_TYPE = &quot;Dense&quot;;</span>
-<span class="nc" id="L15">    public int inDim = -1; // Size of the input.</span>
+<span class="nc" id="L15">    public final String LAYER_TYPE = &quot;Dense&quot;;</span>
+<span class="nc" id="L16">    public int inDim = -1; // Size of the input.</span>
     public int outDim; // Size of the output.
     public ActivationFunction activation; // ActivationFunction function for the layer.
     protected int paramCount;
@@ -31,16 +32,16 @@ public class Dense implements Layer {
      * @param outDim Layer output dimension.
      * @param activation ActivationFunction function for layer.
      */
-<span class="nc" id="L34">    public Dense(int outDim, ActivationFunction activation) {</span>
-<span class="nc bnc" id="L35" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
-<span class="nc" id="L36">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
+<span class="nc" id="L35">    public Dense(int outDim, ActivationFunction activation) {</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
+<span class="nc" id="L37">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
         }
 
-<span class="nc" id="L39">        this.outDim = outDim;</span>
-<span class="nc" id="L40">        this.activation = activation;</span>
+<span class="nc" id="L40">        this.outDim = outDim;</span>
+<span class="nc" id="L41">        this.activation = activation;</span>
 
-<span class="nc" id="L42">        this.bias = Matrix.random(this.outDim, 1);</span>
-<span class="nc" id="L43">    }</span>
+<span class="nc" id="L43">        this.bias = Matrix.random(this.outDim, 1);</span>
+<span class="nc" id="L44">    }</span>
 
 
     /**
@@ -50,24 +51,24 @@ public class Dense implements Layer {
      * @param outDim Layer output dimension.
      * @param activation ActivationFunction function for layer.
      */
-<span class="nc" id="L53">    public Dense(int inDim, int outDim, ActivationFunction activation) {</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
-<span class="nc" id="L55">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
+<span class="nc" id="L54">    public Dense(int inDim, int outDim, ActivationFunction activation) {</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if(outDim&lt;=0) {</span>
+<span class="nc" id="L56">            throw new IllegalArgumentException(&quot;Expecting outDim to be positive but got &quot; + outDim);</span>
         }
-<span class="nc bnc" id="L57" title="All 2 branches missed.">        if(inDim&lt;=0) {</span>
-<span class="nc" id="L58">            throw new IllegalArgumentException(&quot;Expecting inDim to be positive but got &quot; + inDim);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if(inDim&lt;=0) {</span>
+<span class="nc" id="L59">            throw new IllegalArgumentException(&quot;Expecting inDim to be positive but got &quot; + inDim);</span>
         }
 
-<span class="nc" id="L61">        this.inDim = inDim;</span>
-<span class="nc" id="L62">        this.outDim = outDim;</span>
-<span class="nc" id="L63">        this.activation = activation;</span>
-<span class="nc" id="L64">        this.paramCount = inDim*outDim+outDim;</span>
+<span class="nc" id="L62">        this.inDim = inDim;</span>
+<span class="nc" id="L63">        this.outDim = outDim;</span>
+<span class="nc" id="L64">        this.activation = activation;</span>
+<span class="nc" id="L65">        this.paramCount = inDim*outDim+outDim;</span>
 
-<span class="nc" id="L66">        this.values = new Vector(this.outDim);</span>
-<span class="nc" id="L67">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
+<span class="nc" id="L67">        this.values = new Vector(this.outDim);</span>
+<span class="nc" id="L68">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
 
-<span class="nc" id="L69">        this.bias = Matrix.random(this.outDim, 1,-10, 10);</span>
-<span class="nc" id="L70">    }</span>
+<span class="nc" id="L70">        this.bias = Matrix.random(this.outDim, 1,-10, 10);</span>
+<span class="nc" id="L71">    }</span>
 
 
     /**
@@ -77,8 +78,8 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-<span class="nc" id="L80">        values = activation.apply(weights.mult(inputs).add(bias)); // TODO: Add bias</span>
-<span class="nc" id="L81">        return values;</span>
+<span class="nc" id="L81">        values = activation.apply(weights.mult(inputs).add(bias)); // TODO: Add bias</span>
+<span class="nc" id="L82">        return values;</span>
     }
 
 
@@ -87,7 +88,7 @@ public class Dense implements Layer {
      */
     @Override
     public int getInDim() {
-<span class="nc" id="L90">        return this.inDim;</span>
+<span class="nc" id="L91">        return this.inDim;</span>
     }
 
 
@@ -96,7 +97,7 @@ public class Dense implements Layer {
      */
     @Override
     public int getOutDim() {
-<span class="nc" id="L99">        return this.outDim;</span>
+<span class="nc" id="L100">        return this.outDim;</span>
     }
 
 
@@ -108,10 +109,10 @@ public class Dense implements Layer {
      */
     @Override
     public void updateInDim(int inDim) {
-<span class="nc" id="L111">        this.inDim = inDim;</span>
-<span class="nc" id="L112">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
-<span class="nc" id="L113">        this.paramCount = inDim*outDim + outDim;</span>
-<span class="nc" id="L114">    }</span>
+<span class="nc" id="L112">        this.inDim = inDim;</span>
+<span class="nc" id="L113">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
+<span class="nc" id="L114">        this.paramCount = inDim*outDim + outDim;</span>
+<span class="nc" id="L115">    }</span>
 
 
     /**
@@ -120,18 +121,18 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix getWeights() {
-<span class="nc" id="L123">        return this.weights;</span>
+<span class="nc" id="L124">        return this.weights;</span>
     }
 
 
     @Override
     public void setWeights(Matrix w) {
-<span class="nc" id="L129">        this.weights = w.copy();</span>
-<span class="nc" id="L130">    }</span>
+<span class="nc" id="L130">        this.weights = w.copy();</span>
+<span class="nc" id="L131">    }</span>
 
 
     @Override
-<span class="nc" id="L134">    public void setBias(Matrix b) {this.bias = b.copy();}</span>
+<span class="nc" id="L135">    public void setBias(Matrix b) {this.bias = b.copy();}</span>
 
 
     /**
@@ -140,13 +141,13 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix getValues() {
-<span class="nc" id="L143">        return this.values;</span>
+<span class="nc" id="L144">        return this.values;</span>
     }
 
 
     @Override
     public Matrix getBias() {
-<span class="nc" id="L149">        return bias;</span>
+<span class="nc" id="L150">        return bias;</span>
     }
 
     /**
@@ -156,10 +157,10 @@ public class Dense implements Layer {
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L159">        StringBuilder details = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
+<span class="nc" id="L160">        StringBuilder details = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
                 + inDim + &quot;,\tOutput size: &quot; + outDim + &quot;, \tTrainable Parameters: &quot; + paramCount +
-<span class="nc" id="L161">                &quot;,\tActivationFunction: &quot; + activation.getName());</span>
-<span class="nc" id="L162">        return details.toString();</span>
+<span class="nc" id="L162">                &quot;,\tActivationFunction: &quot; + activation.getName());</span>
+<span class="nc" id="L163">        return details.toString();</span>
     }
 
 
@@ -172,23 +173,24 @@ public class Dense implements Layer {
      */
     @Override
     public String inspect() {
-<span class="nc" id="L175">        StringBuilder inspection = new StringBuilder();</span>
+<span class="nc" id="L176">        StringBuilder inspection = new StringBuilder();</span>
 
-<span class="nc" id="L177">        inspection.append(this.LAYER_TYPE + &quot;\n&quot;);</span>
-<span class="nc" id="L178">        inspection.append(this.inDim + &quot;\n&quot;);</span>
-<span class="nc" id="L179">        inspection.append(this.outDim + &quot;\n&quot;);</span>
+<span class="nc" id="L178">        inspection.append(this.LAYER_TYPE + &quot;\n&quot;);</span>
+<span class="nc" id="L179">        inspection.append(this.activation.getName() + &quot;\n&quot;);</span>
+<span class="nc" id="L180">        inspection.append(this.inDim + &quot;\n&quot;);</span>
+<span class="nc" id="L181">        inspection.append(this.outDim + &quot;\n&quot;);</span>
 
         // TODO: Need to add simpleToString for this in Linear Algebra Library
-<span class="nc" id="L182">        Block weightBlock = new Block(&quot;WEIGHTS&quot;, this.weights.toString());</span>
-<span class="nc" id="L183">        Block biasBlock = new Block(&quot;BIAS&quot;, this.bias.toString());</span>
-<span class="nc" id="L184">        inspection.append(Block.buildFileContent(weightBlock, biasBlock));</span>
+<span class="nc" id="L184">        Block weightBlock = new Block(&quot;WEIGHTS&quot;, ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
+<span class="nc" id="L185">        Block biasBlock = new Block(&quot;BIAS&quot;, ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
+<span class="nc" id="L186">        inspection.append(Block.buildFileContent(weightBlock, biasBlock));</span>
 
-<span class="nc" id="L186">        return inspection.toString();</span>
+<span class="nc" id="L188">        return inspection.toString();</span>
     }
 
     @Override
     public ActivationFunction getActivation() {
-<span class="nc" id="L191">        return this.activation;</span>
+<span class="nc" id="L193">        return this.activation;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -2,6 +2,7 @@ package com.jml.neural_network.layers;
 
 import com.jml.core.Block;
 import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -175,12 +176,13 @@ public class Dense implements Layer {
         StringBuilder inspection = new StringBuilder();
 
         inspection.append(this.LAYER_TYPE + "\n");
+        inspection.append(this.activation.getName() + "\n");
         inspection.append(this.inDim + "\n");
         inspection.append(this.outDim + "\n");
 
         // TODO: Need to add simpleToString for this in Linear Algebra Library
-        Block weightBlock = new Block("WEIGHTS", this.weights.toString());
-        Block biasBlock = new Block("BIAS", this.bias.toString());
+        Block weightBlock = new Block("WEIGHTS", ArrayUtils.asString(this.weights.getValuesAsDouble()));
+        Block biasBlock = new Block("BIAS", ArrayUtils.asString(this.bias.getValuesAsDouble()));
         inspection.append(Block.buildFileContent(weightBlock, biasBlock));
 
         return inspection.toString();
