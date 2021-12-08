@@ -1,7 +1,7 @@
 package com.jml.neural_network.layers;
 
 import com.jml.core.Stats;
-import com.jml.neural_network.activations.Activation;
+import com.jml.neural_network.activations.ActivationFunction;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -156,7 +156,14 @@ public class Dropout implements Layer {
     }
 
     @Override
-    public Activation getActivation() {
+    // TODO: I think that inspect() and getDetails() names should switch.
+    public String inspect() {
+        // TODO: Auto-generated method-stub
+        return null;
+    }
+
+    @Override
+    public ActivationFunction getActivation() {
         return null;
     }
 }

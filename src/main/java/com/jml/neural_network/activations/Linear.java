@@ -7,7 +7,7 @@ import linalg.Matrix;
  * The linear activation function. Applies the activation f(x)= x to the data. This is equivalent to having no activation
  * for a layer.
  */
-public class Linear implements Activation {
+public class Linear implements ActivationFunction {
 
     public final String NAME = "Linear";
 

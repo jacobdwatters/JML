@@ -1,6 +1,7 @@
 package com.jml.neural_network.layers;
 
-import com.jml.neural_network.activations.Activation;
+import com.jml.core.Block;
+import com.jml.neural_network.activations.ActivationFunction;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -13,7 +14,7 @@ public class Dense implements Layer {
     public final String LAYER_TYPE = "Dense";
     public int inDim = -1; // Size of the input.
     public int outDim; // Size of the output.
-    public Activation activation; // Activation function for the layer.
+    public ActivationFunction activation; // ActivationFunction function for the layer.
     protected int paramCount;
 
     Matrix values; // Node values for the layer
@@ -25,12 +26,12 @@ public class Dense implements Layer {
      * Constructs a dense layer for a neural network.<br>
      * <b><u>Note</b></u>: this constructor infers the input dimension from the
      * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
-     * layer use {@link #Dense(int, int, Activation)} to specify the input dimension.
+     * layer use {@link #Dense(int, int, ActivationFunction)} to specify the input dimension.
      *
      * @param outDim Layer output dimension.
-     * @param activation Activation function for layer.
+     * @param activation ActivationFunction function for layer.
      */
-    public Dense(int outDim, Activation activation) {
+    public Dense(int outDim, ActivationFunction activation) {
         if(outDim<=0) {
             throw new IllegalArgumentException("Expecting outDim to be positive but got " + outDim);
         }
@@ -47,9 +48,9 @@ public class Dense implements Layer {
      *
      * @param inDim Layer input dimension.
      * @param outDim Layer output dimension.
-     * @param activation Activation function for layer.
+     * @param activation ActivationFunction function for layer.
      */
-    public Dense(int inDim, int outDim, Activation activation) {
+    public Dense(int inDim, int outDim, ActivationFunction activation) {
         if(outDim<=0) {
             throw new IllegalArgumentException("Expecting outDim to be positive but got " + outDim);
         }
@@ -157,13 +158,36 @@ public class Dense implements Layer {
     public String getDetails() {
         StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
                 + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount +
-                ",\tActivation: " + activation.getName());
+                ",\tActivationFunction: " + activation.getName());
         return details.toString();
     }
 
 
+    /**
+     * Constructs a string containing this layers activation function, input/output dimension,
+     * and all parameters of the layer. Note, this will be more detailed than the getDetails() method and
+     * can result in large strings.
+     *
+     * @return A string containing all information, including trainable parameters needed to recreate the layer.
+     */
     @Override
-    public Activation getActivation() {
+    public String inspect() {
+        StringBuilder inspection = new StringBuilder();
+
+        inspection.append(this.LAYER_TYPE + "\n");
+        inspection.append(this.inDim + "\n");
+        inspection.append(this.outDim + "\n");
+
+        // TODO: Need to add simpleToString for this in Linear Algebra Library
+        Block weightBlock = new Block("WEIGHTS", this.weights.toString());
+        Block biasBlock = new Block("BIAS", this.bias.toString());
+        inspection.append(Block.buildFileContent(weightBlock, biasBlock));
+
+        return inspection.toString();
+    }
+
+    @Override
+    public ActivationFunction getActivation() {
         return this.activation;
     }
 }

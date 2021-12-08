@@ -1,10 +1,14 @@
 package com.jml.neural_network;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
-import com.jml.neural_network.activations.Activation;
+import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Layer;
+import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -130,7 +134,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected void back(Matrix target, Matrix output, Matrix input) {
 
         Matrix error = target.sub(output);
-        Activation activation;
+        ActivationFunction activation;
 
         // TODO: Update bias terms as well.
         if(layers.size()>1) {
@@ -281,6 +285,35 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
+        Block[] blockList;
+
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before it can be saved.");
+        }
+        if(!filePath.endsWith(".mdl")) {
+            throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
+        }
+
+        blockList = new Block[2 + layers.size()];
+
+        StringBuilder hyperParams = new StringBuilder();
+        hyperParams.append(this.learningRate + "\n");
+        hyperParams.append(this.epochs + "\n");
+        hyperParams.append(this.batchSize + "\n");
+        hyperParams.append(this.threshold);
+
+        // Construct the blocks for the model file.
+        blockList[0] = new Block(ModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);
+        blockList[1] = new Block(ModelTags.HYPER_PARAMETERS.toString(), hyperParams.toString());
+
+        int count = 2;
+        StringBuilder layerDetails = new StringBuilder();
+        for(Layer layer : layers) {
+            blockList[count] = new Block(ModelTags.LAYER.toString(), layer.inspect());
+            count++;
+        }
+
+        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);
     }
 
 
@@ -327,5 +360,26 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public String toString() {
         return getDetails();
+    }
+
+
+    // TODO: TEMP TESTING
+    public static void main(String[] args) {
+        double[][] X = {{1, 2, 3},
+                        {4, 5, 6},
+                        {7, 8, 9}};
+        double[][] y = {{0, 1},
+                        {1, 0},
+                        {1, 1}};
+
+        NeuralNetwork nn = new NeuralNetwork(0.03, 50, 1, 1e-4);
+        nn.add(new Dense(3, 15, Activations.relu));
+        nn.add(new Dense(3, Activations.linear));
+        nn.add(new Dense(2, Activations.sigmoid));
+
+        nn.fit(X, y);
+        System.out.println(nn.getDetails());
+
+        nn.saveModel("testNN.mdl");
     }
 }
