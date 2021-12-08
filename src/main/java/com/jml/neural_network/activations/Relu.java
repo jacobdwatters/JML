@@ -8,7 +8,7 @@ import linalg.Matrix;
  */
 class Relu implements Activation {
 
-    public final String NAME = "ReLu";
+    public final String NAME = "ReLU";
 
     /**
      * Applies the ReLU activation function to a matrix element-wise.
