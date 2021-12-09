@@ -63,7 +63,7 @@ public class Perceptron extends Model<double[][], double[][]> {
      * {@inheritDoc}
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         return this.toString();
     }
 

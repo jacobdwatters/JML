@@ -50,10 +50,10 @@ class MultipleRegressionDatasetOneTest {
         model.fit(features, targets);
         String fileName = "./src/test/java/com/jml/linear_models/test_model_files/testMultModel1.mdl";
 
-        String expectedDetails = model.getDetails();
+        String expectedDetails = model.inspect();
         model.saveModel(fileName);
         Model loadedModel = Model.load(fileName);
-        String actualDetails = loadedModel.getDetails();
+        String actualDetails = loadedModel.inspect();
 
         assertEquals(expectedDetails, actualDetails);
     }

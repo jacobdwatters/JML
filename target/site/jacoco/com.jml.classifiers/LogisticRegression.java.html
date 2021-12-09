@@ -287,7 +287,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
 <span class="fc" id="L291">        return details.toString();</span>
     }
 
@@ -299,7 +299,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      */
     @Override
     public String toString() {
-<span class="fc" id="L302">        return getDetails();</span>
+<span class="fc" id="L302">        return inspect();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

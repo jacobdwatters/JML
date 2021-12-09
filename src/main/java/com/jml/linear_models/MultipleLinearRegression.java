@@ -162,7 +162,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         return this.toString();
     }
 

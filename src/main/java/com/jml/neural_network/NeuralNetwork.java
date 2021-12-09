@@ -39,6 +39,25 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
 
     /**
+     * Constructs a neural network with default hyper-parameters.
+     * <pre>
+     *     Learning Rate: 0.01
+     *     epochs: 10
+     *     batchSize: 1
+     *     threshold: 1E-5
+     * </pre>
+     */
+    public NeuralNetwork() {
+        this.learningRate = 0.01;
+        this.epochs = 10;
+        this.batchSize = 1;
+        this.threshold = 1e-5;
+        layers = new ArrayList<>();
+
+        buildDetails();
+    }
+
+    /**
      * Constructs a neural network with the specified hyper-parameters.
      *
      * @param learningRate The learning rate to be using during optimization.
@@ -297,9 +316,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         blockList = new Block[2 + layers.size()];
 
         StringBuilder hyperParams = new StringBuilder();
-        hyperParams.append(this.learningRate + "\n");
-        hyperParams.append(this.epochs + "\n");
-        hyperParams.append(this.batchSize + "\n");
+        hyperParams.append(this.learningRate + ", ");
+        hyperParams.append(this.epochs + ", ");
+        hyperParams.append(this.batchSize + ", ");
         hyperParams.append(this.threshold);
 
         // Construct the blocks for the model file.
@@ -309,7 +328,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         int count = 2;
         StringBuilder layerDetails = new StringBuilder();
         for(Layer layer : layers) {
-            blockList[count] = new Block(ModelTags.LAYER.toString(), layer.inspect());
+            blockList[count] = new Block(ModelTags.LAYER.toString(), layer.inspectTemp());
             count++;
         }
 
@@ -333,7 +352,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
             int layerCount = 1;
             for(Layer layer : this.layers) {
-                details.append("\t" + layerCount + "\t" + layer.getDetails() + "\n");
+                details.append("\t" + layerCount + "\t" + layer.inspect() + "\n");
                 layerCount++;
             }
         }
@@ -347,7 +366,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         return this.details.toString();
     }
 
@@ -359,7 +378,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public String toString() {
-        return getDetails();
+        return inspect();
     }
 
 
@@ -373,13 +392,18 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                         {1, 1}};
 
         NeuralNetwork nn = new NeuralNetwork(0.03, 50, 1, 1e-4);
-        nn.add(new Dense(3, 15, Activations.relu));
-        nn.add(new Dense(15, Activations.linear));
+        nn.add(new Dense(3, 2, Activations.relu));
+        nn.add(new Dense(2, Activations.linear));
         nn.add(new Dense(2, Activations.sigmoid));
 
         nn.fit(X, y);
-        System.out.println(nn.getDetails());
+        System.out.println(nn.inspect());
 
         nn.saveModel("testNN.mdl");
+
+        Model mdl = Model.load("testNN.mdl");
+        System.out.println(mdl.inspect());
+
+        mdl.saveModel("testNN2.mdl");
     }
 }

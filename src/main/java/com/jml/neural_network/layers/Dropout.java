@@ -151,13 +151,13 @@ public class Dropout implements Layer {
      * @return The details of this layer as a String.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
     }
 
     @Override
     // TODO: I think that inspect() and getDetails() names should switch.
-    public String inspect() {
+    public String inspectTemp() {
         // TODO: Auto-generated method-stub
         return null;
     }

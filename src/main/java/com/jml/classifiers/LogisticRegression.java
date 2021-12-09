@@ -287,7 +287,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         return details.toString();
     }
 
@@ -299,6 +299,6 @@ public class LogisticRegression extends Model<double[][], double[]> {
      */
     @Override
     public String toString() {
-        return getDetails();
+        return inspect();
     }
 }

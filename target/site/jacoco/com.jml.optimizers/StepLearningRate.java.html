@@ -54,7 +54,7 @@ public class StepLearningRate extends Scheduler {
      */
     @Override
     public void apply(Optimizer optm) {
-<span class="pc bpc" id="L57" title="1 of 4 branches missed.">        if(optm.iterations!=0 &amp;&amp; optm.iterations%interval == 0) { // Then we apply the StepLearningRate optimizer</span>
+<span class="pc bpc" id="L57" title="2 of 4 branches missed.">        if(optm.iterations!=0 &amp;&amp; optm.iterations%interval == 0) { // Then we apply the StepLearningRate optimizer</span>
 <span class="fc" id="L58">            optm.learningRate*=stepFactor;</span>
         } // Otherwise, do nothing.
 <span class="fc" id="L60">    }</span>

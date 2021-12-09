@@ -1,6 +1,7 @@
 package com.jml.neural_network.layers;
 
 import com.jml.core.Block;
+import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.util.ArrayUtils;
 import linalg.Matrix;
@@ -156,7 +157,7 @@ public class Dense implements Layer {
      * @return The details of this layer as a String.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
                 + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount +
                 ",\tActivationFunction: " + activation.getName());
@@ -172,18 +173,18 @@ public class Dense implements Layer {
      * @return A string containing all information, including trainable parameters needed to recreate the layer.
      */
     @Override
-    public String inspect() {
+    public String inspectTemp() {
         StringBuilder inspection = new StringBuilder();
 
-        inspection.append(this.LAYER_TYPE + "\n");
-        inspection.append(this.activation.getName() + "\n");
-        inspection.append(this.inDim + "\n");
-        inspection.append(this.outDim + "\n");
+        // Create all the blocks for this layer.
+        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);
+        Block activationBlock = new Block(ModelTags.ACTIVATION.toString(), this.activation.getName());
+        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + ", " + this.outDim);
+        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));
+        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));
 
-        // TODO: Need to add simpleToString for this in Linear Algebra Library
-        Block weightBlock = new Block("WEIGHTS", ArrayUtils.asString(this.weights.getValuesAsDouble()));
-        Block biasBlock = new Block("BIAS", ArrayUtils.asString(this.bias.getValuesAsDouble()));
-        inspection.append(Block.buildFileContent(weightBlock, biasBlock));
+        // Combine all blocks into a single string.
+        inspection.append(Block.buildFileContent(layerBlock, activationBlock, dimBlock, weightBlock, biasBlock));
 
         return inspection.toString();
     }

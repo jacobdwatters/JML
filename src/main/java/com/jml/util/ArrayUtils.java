@@ -130,7 +130,7 @@ public class ArrayUtils {
             }
 
             if(i!=arr.length-1) {
-                arrAsString.append("\n");
+                arrAsString.append(";\n");
             }
         }
 

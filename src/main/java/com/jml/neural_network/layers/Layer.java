@@ -75,7 +75,7 @@ public interface Layer {
      * @return A string representing the details of this layer. This may include input dimension, output dimension, and
      * activation function depending on the layer.
      */
-    String getDetails();
+    String inspect();
 
 
     /**
@@ -85,7 +85,7 @@ public interface Layer {
      *
      * @return A string containing all information, including trainable parameters needed to recreate the layer.
      */
-    String inspect();
+    String inspectTemp();
 
 
     /**

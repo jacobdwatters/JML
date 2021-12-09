@@ -1,5 +1,5 @@
 package com.jml.neural_network;
 
-enum ModelTags {
-    MODEL_TYPE, HYPER_PARAMETERS, LAYER
+public enum ModelTags {
+    MODEL_TYPE, HYPER_PARAMETERS, LAYER, TYPE, ACTIVATION, DIMENSIONS, WEIGHTS, BIAS
 }

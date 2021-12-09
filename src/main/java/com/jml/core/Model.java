@@ -3,11 +3,9 @@ package com.jml.core;
 import com.jml.util.FileManager;
 import linalg.Matrix;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -79,7 +77,7 @@ public abstract class Model<X, Y> {
      *
      * @return Details of model as string.
      */
-    public abstract String getDetails();
+    public abstract String inspect();
 
 
     /**
@@ -98,6 +96,7 @@ public abstract class Model<X, Y> {
      * @return Returns a saved trained model from the file path.
      */
     public static Model load(String filePath) {
+
         if(!filePath.endsWith(".mdl")) {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
@@ -107,8 +106,8 @@ public abstract class Model<X, Y> {
         if(fileContent.equals("")) {
             return null;
         } else {
-            List<String> lines = new ArrayList<String>(),
-                    blocks = new ArrayList<String>();
+            List<String> lines = new ArrayList<>(),
+                    blocks = new ArrayList<>();
             Collections.addAll(lines, fileContent.split("\n"));
 
             while(!lines.isEmpty()) {
@@ -122,30 +121,44 @@ public abstract class Model<X, Y> {
     }
 
 
+    // TODO: Move this into the ModelFromData class.
     /**
-     * A helper method which gets the next block from an ArrayList of file lines.
+     * A helper method which gets the next block from an ArrayList of file lines. This gets only outer-block.
+     * That is, if a block has sub-blocks, the entire parent block, containing the sub-blocks, will be returned.
      * This also removes that block from the lines.
      *
      * @param lines Lines of file.
      * @return The string format of the block.
      */
-    private static String nextBlock(List<String> lines) {
+    protected static String nextBlock(List<String> lines) {
         StringBuilder block = new StringBuilder();
         boolean foundStart = false, blockFound = false;
+        String startTag = "", currentTag;
 
         while(!blockFound) {
-            if(lines.get(0).matches("<(.*?)>") && lines.get(0).contains("<\\")) {
+            if(lines.get(0).matches("<(.*?)>") && lines.get(0).contains("<\\")) { // Then we have found an ending block
                 if(!foundStart) {
                     throw new IllegalStateException("Unable to load model. Parser got stuck in a bad state.");
                 }
 
+                // Get the tag of the starting block. We want to continue
+                currentTag = ModelFromData.getTag(lines.get(0).replace("\\", ""));
+
                 block.append(lines.remove(0)); // Remove line and add it to block
                 block.append("\n");
 
-                blockFound=true; // This is the end of the block
+                if(startTag.equals(currentTag)) {
+                    blockFound=true; // This is the end of the block
+                }
             }
-            else if(lines.get(0).matches("<(.*?)>") && !lines.get(0).contains("\\")) { // Then we have the beginning of a block
+            else if(lines.get(0).matches("<(.*?)>") && !lines.get(0).contains("\\") && !foundStart) { // Then we have the beginning of a block
                 foundStart = true;
+
+                /*
+                 * Get the tag of the starting block. We want to continue until we find a closing block with the same tag.
+                 */
+                startTag = ModelFromData.getTag(lines.get(0));
+
                 block.append(lines.remove(0)); // Remove line and add it to block
                 block.append("\n");
             } else {

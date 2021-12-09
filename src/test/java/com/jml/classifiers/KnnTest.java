@@ -134,7 +134,7 @@ class KnnTest {
                 "distance parameter: " + 1;
 
         assertArrayEquals(expectedPred, predictions);
-        assertEquals(expectedDetails, knn.getDetails());
+        assertEquals(expectedDetails, knn.inspect());
     }
 
 
@@ -200,7 +200,7 @@ class KnnTest {
         knn.saveModel("./src/test/java/com/jml/classifiers/testfiles/testKnn.mdl");
         Model loadedKnn = Model.load("./src/test/java/com/jml/classifiers/testfiles/testKnn.mdl");
 
-        assertEquals(loadedKnn.getDetails(), knn.getDetails());
+        assertEquals(loadedKnn.inspect(), knn.inspect());
     }
 
 

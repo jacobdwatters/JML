@@ -62,7 +62,7 @@ class LogRegTest {
         assertEquals(maxIterations, logReg.maxIterations);
         assertNull(logReg.schedule);
         assertTrue(logReg.isFit);
-        assertEquals(loadedMdl.getDetails(), logReg.getDetails());
+        assertEquals(loadedMdl.inspect(), logReg.inspect());
     }
 
 
@@ -114,7 +114,7 @@ class LogRegTest {
         assertEquals(0.004, logReg.threshold);
         assertEquals(1600, logReg.maxIterations);
         assertEquals(schedule, logReg.schedule);
-        assertEquals(logReg.toString(), logReg.getDetails());
+        assertEquals(logReg.toString(), logReg.inspect());
     }
 
 

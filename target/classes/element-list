@@ -1,8 +1,0 @@
-com.jml.core
-com.jml.losses
-com.jml.linear_models
-com.jml.neural_network
-com.jml.neural_network.activations
-com.jml.neural_network.layers
-com.jml.optimizers
-com.jml.util

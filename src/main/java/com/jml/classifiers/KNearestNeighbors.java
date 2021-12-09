@@ -6,6 +6,7 @@ import com.jml.core.Stats;
 import com.jml.core.Block;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
+
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -212,7 +213,7 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         return details.toString();
     }
 
@@ -224,6 +225,6 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
      */
     @Override
     public String toString() {
-        return getDetails();
+        return inspect();
     }
 }

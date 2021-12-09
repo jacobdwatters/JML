@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NeuralNetFromData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.core</a> &gt; <span class="el_source">NeuralNetFromData.java</span></div><h1>NeuralNetFromData.java</h1><pre class="source lang-java linenums">package com.jml.core;
+
+import com.jml.neural_network.ModelTags;
+import com.jml.neural_network.NeuralNetwork;
+import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.Dense;
+import com.jml.neural_network.layers.Layer;
+import linalg.Matrix;
+import linalg.Vector;
+import org.apache.maven.model.Activation;
+
+
+import java.util.*;
+
+<span class="nc" id="L16">class NeuralNetFromData extends NeuralNetwork {</span>
+
+    private static Scanner scanner;
+
+    static Model create(List&lt;String&gt; tags, List&lt;String&gt; contents) {
+<span class="nc" id="L21">        NeuralNetFromData neuralNetModel = new NeuralNetFromData();</span>
+        String tag, content;
+
+<span class="nc" id="L24">        neuralNetModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
+
+<span class="nc bnc" id="L26" title="All 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) { // Parse through all blocks from the file.</span>
+<span class="nc" id="L27">            tag = tags.remove(0);</span>
+<span class="nc" id="L28">            content = contents.remove(0);</span>
+<span class="nc" id="L29">            scanner = new Scanner(content);</span>
+
+<span class="nc bnc" id="L31" title="All 2 branches missed.">            if(tag.equals(ModelTags.HYPER_PARAMETERS.toString())) {</span>
+<span class="nc" id="L32">                String[] hypParams = content.split(&quot;,&quot;);</span>
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">                if(hypParams.length != 4) { // Ensure that there are four hyper-parameters.</span>
+<span class="nc" id="L35">                    throw new IllegalStateException(&quot;Failed to load model: Unexpected number of hyper-parameters.&quot;);</span>
+                }
+
+<span class="nc" id="L38">                neuralNetModel.learningRate = Double.parseDouble(hypParams[0]);</span>
+<span class="nc" id="L39">                neuralNetModel.epochs = Integer.parseInt(hypParams[1]);</span>
+<span class="nc" id="L40">                neuralNetModel.batchSize = Integer.parseInt(hypParams[2]);</span>
+<span class="nc" id="L41">                neuralNetModel.threshold = Double.parseDouble(hypParams[3]);</span>
+
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            } else if(tag.equals(ModelTags.LAYER.toString())) {</span>
+
+<span class="nc" id="L45">                List&lt;String&gt; lines = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L46">                List&lt;String&gt; blocks = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L47">                List&lt;String&gt; layerTags = new ArrayList&lt;&gt;(), layerContents = new ArrayList&lt;&gt;();</span>
+
+                /* Reformat the layer contents so that the sub-blocks can be parsed.*/
+                // TODO: This is a little ridiculous, write a real parser that can deal with sub-blocks properly.
+<span class="nc" id="L51">                String[] temp = content.replace(&quot;&gt;&quot;, &quot;&gt;\n&quot;)</span>
+<span class="nc" id="L52">                        .replace(&quot;&lt;&quot;, &quot;\n&lt;&quot;)</span>
+<span class="nc" id="L53">                        .replace(&quot;\n\n&quot;, &quot;\n&quot;).trim()</span>
+<span class="nc" id="L54">                        .split(&quot;\n&quot;);</span>
+                /* End of reformatting layer contents*/
+
+<span class="nc" id="L57">                Collections.addAll(lines, temp);</span>
+
+                // get all blocks of the layer.
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                while(!lines.isEmpty()) {</span>
+<span class="nc" id="L61">                    blocks.add(Model.nextBlock(lines));</span>
+                }
+
+                // Extract all tags and contents from the blocks of this layer.
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                for(String blk : blocks) {</span>
+<span class="nc" id="L66">                    layerTags.add(ModelFromData.getTag(blk));</span>
+<span class="nc" id="L67">                    layerContents.add(ModelFromData.getContent(blk));</span>
+<span class="nc" id="L68">                }</span>
+
+<span class="nc" id="L70">                neuralNetModel.add(createLayer(layerTags, layerContents)); // Construct layer and add to model.</span>
+<span class="nc" id="L71">            }</span>
+            else {
+<span class="nc" id="L73">                throw new IllegalArgumentException(&quot;Failed to load model: Unrecognized tag in file: &quot; + tag);</span>
+            }
+        }
+
+<span class="nc" id="L77">        return neuralNetModel;</span>
+    }
+
+
+    private static Layer createLayer(List&lt;String&gt; layerTags, List&lt;String&gt; layerContents) {
+<span class="nc" id="L82">        Layer layer = null;</span>
+        String type, tag, content;
+<span class="nc" id="L84">        ActivationFunction activation = null;</span>
+<span class="nc" id="L85">        Matrix weights = null, bias = null;</span>
+<span class="nc" id="L86">        int inDim=-1, outDim=-1;</span>
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if(!layerTags.get(0).equals(ModelTags.TYPE.toString())) {</span>
+<span class="nc" id="L89">            throw new IllegalStateException(&quot;Failed to load model: First tag in neural network layer must be type but got &quot;</span>
+<span class="nc" id="L90">                 + layerTags.get(0));</span>
+        } else {
+<span class="nc" id="L92">            layerTags.remove(0);</span>
+<span class="nc" id="L93">            type = layerContents.remove(0);</span>
+        }
+
+<span class="nc bnc" id="L96" title="All 4 branches missed.">        while(layerTags.size()!=0 &amp;&amp; layerContents.size()!=0) {</span>
+<span class="nc" id="L97">            tag = layerTags.remove(0);</span>
+<span class="nc" id="L98">            content = layerContents.remove(0);</span>
+
+<span class="nc bnc" id="L100" title="All 2 branches missed.">            if(tag.equals(ModelTags.ACTIVATION.toString())) {</span>
+                // Extract the activation function.
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                if(content.equalsIgnoreCase(&quot;linear&quot;)) {</span>
+                    // Then we have a linear activation
+<span class="nc" id="L104">                    activation = Activations.linear;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                } else if(content.equalsIgnoreCase(&quot;sigmoid&quot;)) {</span>
+                    // Then we have a sigmoid activation
+<span class="nc" id="L107">                    activation = Activations.sigmoid;</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                } else if(content.equalsIgnoreCase(&quot;relu&quot;)) {</span>
+                    // Then we have a ReLU activation.
+<span class="nc" id="L110">                    activation = Activations.relu;</span>
+                }
+
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            } else if(tag.equals(ModelTags.DIMENSIONS.toString())) {</span>
+                // Extract dimensions of the layer.
+<span class="nc" id="L115">                String[] dims = content.split(&quot;,&quot;);</span>
+<span class="nc" id="L116">                inDim = Integer.parseInt(dims[0]);</span>
+<span class="nc" id="L117">                outDim = Integer.parseInt(dims[1]);</span>
+
+<span class="nc bnc" id="L119" title="All 2 branches missed.">            } else if(tag.equals(ModelTags.WEIGHTS.toString())) {</span>
+                // Form the weight matrix for the layer.
+<span class="nc" id="L121">                String[] rows = content.split(&quot;;&quot;);</span>
+<span class="nc" id="L122">                int rowLength = rows[0].split(&quot;,&quot;).length;</span>
+<span class="nc" id="L123">                String[][] vals = new String[rows.length][rowLength];</span>
+
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                for(int i=0; i&lt;vals.length; i++) {</span>
+<span class="nc" id="L126">                    String[] rowVals = rows[i].split(&quot;,&quot;);</span>
+
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                    for(int j=0; j&lt;vals[0].length; j++) {</span>
+<span class="nc" id="L129">                        vals[i][j] = rowVals[j];</span>
+                    }
+                }
+
+<span class="nc" id="L133">                weights = new Matrix(vals);</span>
+
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            } else if(tag.equals(ModelTags.BIAS.toString())) {</span>
+                // Form the bias vector for the layer.
+<span class="nc" id="L137">                String[] v = content.split(&quot;;&quot;);</span>
+<span class="nc" id="L138">                String[][] vals = new String[1][v.length];</span>
+<span class="nc" id="L139">                vals[0] = v;</span>
+
+<span class="nc" id="L141">                bias = new Matrix(vals).T();</span>
+<span class="nc" id="L142">            }</span>
+        }
+
+        // Create the layer
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if(type.equals(&quot;Dense&quot;)) {</span>
+<span class="nc" id="L147">            layer = new Dense(inDim, outDim, activation);</span>
+<span class="nc" id="L148">            layer.setBias(bias);</span>
+<span class="nc" id="L149">            layer.setWeights(weights);</span>
+
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        } else if(type.equals(&quot;Dropout&quot;)) {</span>
+            // TODO: Implement
+        }
+
+<span class="nc" id="L155">        return layer;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
