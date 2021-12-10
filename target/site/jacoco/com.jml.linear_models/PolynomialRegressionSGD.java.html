@@ -19,9 +19,9 @@ import linalg.Vector;
  * by the model. This is solved using Stochastic Gradient Descent.
  */
 public class PolynomialRegressionSGD extends PolynomialRegression {
-<span class="pc" id="L22">    protected double learningRate = 0.002;</span>
-<span class="pc" id="L23">    protected double threshold = 0.5e-5;</span>
-<span class="pc" id="L24">    protected int maxIterations = 1000;</span>
+<span class="fc" id="L22">    protected double learningRate = 0.002;</span>
+<span class="fc" id="L23">    protected double threshold = 0.5e-5;</span>
+<span class="fc" id="L24">    protected int maxIterations = 1000;</span>
     private Optimizer SGD;
     protected Scheduler schedule;
 
@@ -123,11 +123,11 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      *
      * @param degree Degree of the polynomial to fit.
      */
-<span class="nc" id="L126">    public PolynomialRegressionSGD(int degree) {</span>
-<span class="nc" id="L127">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L128">        this.degree = degree;</span>
-<span class="nc" id="L129">        paramCheck();</span>
-<span class="nc" id="L130">    }</span>
+<span class="fc" id="L126">    public PolynomialRegressionSGD(int degree) {</span>
+<span class="fc" id="L127">        super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L128">        this.degree = degree;</span>
+<span class="fc" id="L129">        paramCheck();</span>
+<span class="fc" id="L130">    }</span>
 
 
     /**

@@ -35,7 +35,7 @@ class PolynomialRegressionSaveAndLoadTest {
 
         loadedModel = Model.load(filePath);
 
-        assertEquals(model.getDetails(), loadedModel.getDetails());
+        assertEquals(model.inspect(), loadedModel.inspect());
         assertArrayEquals(initialPredictions, loadedModel.predict(tests));
     }
 
@@ -52,7 +52,7 @@ class PolynomialRegressionSaveAndLoadTest {
 
         loadedModel = Model.load(filePath);
 
-        assertEquals(model.getDetails(), loadedModel.getDetails());
+        assertEquals(model.inspect(), loadedModel.inspect());
         assertArrayEquals(initialPredictions, loadedModel.predict(tests));
     }
 

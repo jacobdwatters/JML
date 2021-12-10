@@ -1,10 +1,8 @@
 package com.jml.core;
 
-import com.jml.clasifiers.LogisticRegression;
 import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.MultipleLinearRegression;
 import linalg.Matrix;
-import linalg.Vector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,10 +16,12 @@ class MultRegFromData extends MultipleLinearRegression {
         MultRegFromData multRegModel = new MultRegFromData();
         multRegModel.isFit = true; // Since we are loading a pretrained model, set to true.
 
+        String tag, content;
+
         while(!tags.isEmpty() && !contents.isEmpty()) {
             // Get the tag/content pair
-            String tag = tags.remove(0);
-            String content = contents.remove(0);
+            tag = tags.remove(0);
+            content = contents.remove(0);
             scanner = new Scanner(content);
 
             if(tag.equals(LinearModelTags.PARAMETERS.toString())) {
@@ -35,7 +35,7 @@ class MultRegFromData extends MultipleLinearRegression {
                 multRegModel.w.setCol(multRegModel.coefficients, 0);
 
             } else {
-                throw new IllegalArgumentException("Failed to load model. Unrecognized tag in file.");
+                throw new IllegalArgumentException("Failed to load model. Unrecognized tag in file: " + tag);
             }
 
             scanner.close();

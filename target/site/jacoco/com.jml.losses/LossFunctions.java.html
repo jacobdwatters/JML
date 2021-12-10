@@ -57,10 +57,10 @@ public class LossFunctions {
 
 <span class="fc bfc" id="L58" title="All 2 branches covered.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
             // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
-<span class="fc bfc" id="L60" title="All 2 branches covered.">            if(yPred.getAsDouble(i, 0)==0) {</span>
-<span class="fc" id="L61">                yPred.set(eps, i,  0);</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
-<span class="fc" id="L63">                yPred.set(1-eps, i,  0);</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">            if(yPred.getAsDouble(i, 0)==0) {</span>
+<span class="nc" id="L61">                yPred.set(eps, i,  0);</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
+<span class="nc" id="L63">                yPred.set(1-eps, i,  0);</span>
             }
 
 <span class="fc" id="L66">            loss += y.getAsDouble(i, 0)*Math.log(yPred.getAsDouble(i, 0))</span>

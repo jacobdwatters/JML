@@ -1,6 +1,6 @@
 package com.jml.neural_network.layers;
 
-import com.jml.neural_network.activations.Activation;
+import com.jml.neural_network.activations.ActivationFunction;
 import linalg.Matrix;
 
 public interface Layer {
@@ -75,7 +75,17 @@ public interface Layer {
      * @return A string representing the details of this layer. This may include input dimension, output dimension, and
      * activation function depending on the layer.
      */
-    String getDetails();
+    String inspect();
+
+
+    /**
+     * Constructs a string containing this layers activation function, input/output dimension,
+     * and all parameters of the layer. Note, this will be more detailed than the getDetails() method and
+     * can result in large strings.
+     *
+     * @return A string containing all information, including trainable parameters needed to recreate the layer.
+     */
+    String inspectTemp();
 
 
     /**
@@ -83,5 +93,5 @@ public interface Layer {
      * @return The activation function for this layer. Note, if the layer does not have an activation function this will
      * be null.
      */
-    Activation getActivation();
+    ActivationFunction getActivation();
 }

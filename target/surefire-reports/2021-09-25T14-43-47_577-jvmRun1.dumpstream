@@ -1,3 +1,0 @@
-# Created at 2021-09-25T14:43:48.354
-java.util.ServiceConfigurationError: org.junit.platform.engine.TestEngine: org.junit.jupiter.engine.JupiterTestEngine Unable to get public no-arg constructor
-

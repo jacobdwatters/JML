@@ -1,6 +1,6 @@
 package com.jml.core;
 
-import com.jml.clasifiers.LogisticRegression;
+import com.jml.classifiers.LogisticRegression;
 import com.jml.linear_models.LinearModelTags;
 import linalg.Matrix;
 

@@ -1,6 +1,9 @@
 package com.jml.neural_network.layers;
 
-import com.jml.neural_network.activations.Activation;
+import com.jml.core.Block;
+import com.jml.neural_network.ModelTags;
+import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -13,7 +16,7 @@ public class Dense implements Layer {
     public final String LAYER_TYPE = "Dense";
     public int inDim = -1; // Size of the input.
     public int outDim; // Size of the output.
-    public Activation activation; // Activation function for the layer.
+    public ActivationFunction activation; // ActivationFunction function for the layer.
     protected int paramCount;
 
     Matrix values; // Node values for the layer
@@ -25,12 +28,12 @@ public class Dense implements Layer {
      * Constructs a dense layer for a neural network.<br>
      * <b><u>Note</b></u>: this constructor infers the input dimension from the
      * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
-     * layer use {@link #Dense(int, int, Activation)} to specify the input dimension.
+     * layer use {@link #Dense(int, int, ActivationFunction)} to specify the input dimension.
      *
      * @param outDim Layer output dimension.
-     * @param activation Activation function for layer.
+     * @param activation ActivationFunction function for layer.
      */
-    public Dense(int outDim, Activation activation) {
+    public Dense(int outDim, ActivationFunction activation) {
         if(outDim<=0) {
             throw new IllegalArgumentException("Expecting outDim to be positive but got " + outDim);
         }
@@ -47,9 +50,9 @@ public class Dense implements Layer {
      *
      * @param inDim Layer input dimension.
      * @param outDim Layer output dimension.
-     * @param activation Activation function for layer.
+     * @param activation ActivationFunction function for layer.
      */
-    public Dense(int inDim, int outDim, Activation activation) {
+    public Dense(int inDim, int outDim, ActivationFunction activation) {
         if(outDim<=0) {
             throw new IllegalArgumentException("Expecting outDim to be positive but got " + outDim);
         }
@@ -154,16 +157,40 @@ public class Dense implements Layer {
      * @return The details of this layer as a String.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         StringBuilder details = new StringBuilder("Type: " + LAYER_TYPE + ",\tInput size: "
                 + inDim + ",\tOutput size: " + outDim + ", \tTrainable Parameters: " + paramCount +
-                ",\tActivation: " + activation.getName());
+                ",\tActivationFunction: " + activation.getName());
         return details.toString();
     }
 
 
+    /**
+     * Constructs a string containing this layers activation function, input/output dimension,
+     * and all parameters of the layer. Note, this will be more detailed than the getDetails() method and
+     * can result in large strings.
+     *
+     * @return A string containing all information, including trainable parameters needed to recreate the layer.
+     */
     @Override
-    public Activation getActivation() {
+    public String inspectTemp() {
+        StringBuilder inspection = new StringBuilder();
+
+        // Create all the blocks for this layer.
+        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);
+        Block activationBlock = new Block(ModelTags.ACTIVATION.toString(), this.activation.getName());
+        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + ", " + this.outDim);
+        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));
+        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));
+
+        // Combine all blocks into a single string.
+        inspection.append(Block.buildFileContent(layerBlock, activationBlock, dimBlock, weightBlock, biasBlock));
+
+        return inspection.toString();
+    }
+
+    @Override
+    public ActivationFunction getActivation() {
         return this.activation;
     }
 }

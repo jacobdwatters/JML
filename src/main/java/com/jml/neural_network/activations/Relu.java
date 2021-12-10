@@ -6,9 +6,9 @@ import linalg.Matrix;
 /**
  * The ReLU (Rectified Linear Unit) activation function. That is f(x)=max(0, x)
  */
-class Relu implements Activation {
+class Relu implements ActivationFunction {
 
-    public final String NAME = "ReLu";
+    public final String NAME = "ReLU";
 
     /**
      * Applies the ReLU activation function to a matrix element-wise.

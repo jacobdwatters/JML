@@ -1,10 +1,8 @@
 package com.jml.core;
 
-import com.jml.clasifiers.ClassifierTags;
-import com.jml.clasifiers.KNearestNeighbors;
-import com.jml.linear_models.LinearModelTags;
-import com.jml.linear_models.LinearRegression;
-import com.jml.util.ArrayUtils;
+import com.jml.classifiers.ClassifierTags;
+import com.jml.classifiers.KNearestNeighbors;
+
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -40,7 +38,7 @@ class KnnFromData extends KNearestNeighbors {
 
             } else if(tag.equals(ClassifierTags.FEATURES.toString())) {
                 List<double[]> features = new ArrayList<>();
-                String[] sample = new String[0];
+                String[] sample;
 
                 sample = scanner.nextLine().split(";");
 
@@ -49,6 +47,7 @@ class KnnFromData extends KNearestNeighbors {
                             .mapToDouble(Double::parseDouble)
                             .toArray());
                 }
+
 
                 double[][] featureArray = new double[features.size()][sample.length];
 

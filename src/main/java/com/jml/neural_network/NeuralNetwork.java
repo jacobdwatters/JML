@@ -1,10 +1,14 @@
 package com.jml.neural_network;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
-import com.jml.neural_network.activations.Activation;
+import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Layer;
+import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -14,7 +18,7 @@ import java.util.List;
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
-    private final List<Layer> layers;
+    protected final List<Layer> layers;
     protected double learningRate;
     protected double threshold;
     protected int epochs;
@@ -33,6 +37,25 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                     "Is Trained: No\n"
     );
 
+    // TODO: Add other constructors.
+    /**
+     * Constructs a neural network with default hyper-parameters.
+     * <pre>
+     *     Learning Rate: 0.01
+     *     epochs: 10
+     *     batchSize: 1
+     *     threshold: 1E-5
+     * </pre>
+     */
+    public NeuralNetwork() {
+        this.learningRate = 0.01;
+        this.epochs = 10;
+        this.batchSize = 1;
+        this.threshold = 1e-5;
+        layers = new ArrayList<>();
+
+        buildDetails();
+    }
 
     /**
      * Constructs a neural network with the specified hyper-parameters.
@@ -43,7 +66,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param threshold The threshold for the loss to stop early. If the loss drops below this threshold before the
      *                  specified number of epochs has been reached, the training will stop early.
      */
-    // TODO: Will ned to take optimizer as parameter. Take this as a string?
+    // TODO: Will need to take optimizer as parameter. Take this as a string?
     public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {
         this.learningRate = learningRate;
         this.epochs = epochs;
@@ -130,7 +153,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected void back(Matrix target, Matrix output, Matrix input) {
 
         Matrix error = target.sub(output);
-        Activation activation;
+        ActivationFunction activation;
 
         // TODO: Update bias terms as well.
         if(layers.size()>1) {
@@ -281,6 +304,35 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public void saveModel(String filePath) {
         // TODO: Auto-generated method stub
+        Block[] blockList;
+
+        if(!isFit) {
+            throw new IllegalStateException("Model must be fit before it can be saved.");
+        }
+        if(!filePath.endsWith(".mdl")) {
+            throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
+        }
+
+        blockList = new Block[2 + layers.size()];
+
+        StringBuilder hyperParams = new StringBuilder();
+        hyperParams.append(this.learningRate + ", ");
+        hyperParams.append(this.epochs + ", ");
+        hyperParams.append(this.batchSize + ", ");
+        hyperParams.append(this.threshold);
+
+        // Construct the blocks for the model file.
+        blockList[0] = new Block(ModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);
+        blockList[1] = new Block(ModelTags.HYPER_PARAMETERS.toString(), hyperParams.toString());
+
+        int count = 2;
+        StringBuilder layerDetails = new StringBuilder();
+        for(Layer layer : layers) {
+            blockList[count] = new Block(ModelTags.LAYER.toString(), layer.inspectTemp());
+            count++;
+        }
+
+        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);
     }
 
 
@@ -300,7 +352,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
             int layerCount = 1;
             for(Layer layer : this.layers) {
-                details.append("\t" + layerCount + "\t" + layer.getDetails() + "\n");
+                details.append("\t" + layerCount + "\t" + layer.inspect() + "\n");
                 layerCount++;
             }
         }
@@ -314,7 +366,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
         return this.details.toString();
     }
 
@@ -326,6 +378,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public String toString() {
-        return getDetails();
+        return inspect();
     }
 }

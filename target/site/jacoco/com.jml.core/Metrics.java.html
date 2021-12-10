@@ -16,20 +16,21 @@ public class Metrics {
      * @return The percentage of correct predictions
      */
     public static double accuracy(double[][] predictions, double[][] targets) {
-<span class="nc" id="L19">        double accuracy = 0;</span>
+<span class="fc" id="L19">        double accuracy = 0;</span>
 
-<span class="nc bnc" id="L21" title="All 2 branches missed.">        if(predictions.length!= targets.length) {</span>
-<span class="nc" id="L22">            throw new IllegalArgumentException(&quot;Predictions and targets must have the same number of samples but got &quot; +</span>
-                    predictions.length + &quot; and &quot; + targets.length);
+<span class="fc bfc" id="L21" title="All 4 branches covered.">        if(predictions.length != targets.length || predictions[0].length != targets[0].length) {</span>
+<span class="fc" id="L22">            throw new IllegalArgumentException(&quot;Predictions and targets must have the same shape but got (&quot; +</span>
+                    predictions.length + &quot;, &quot; + predictions[0].length + &quot;) and (&quot;
+                    + targets.length + &quot;, &quot; + targets[0].length + &quot;).&quot;);
         }
 
-<span class="nc bnc" id="L26" title="All 2 branches missed.">        for(int i=0; i&lt;predictions.length; i++) {</span>
-<span class="nc bnc" id="L27" title="All 2 branches missed.">            if(Arrays.equals(predictions[i], targets[i])) {</span>
-<span class="nc" id="L28">                accuracy++;</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        for(int i=0; i&lt;predictions.length; i++) {</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">            if(Arrays.equals(predictions[i], targets[i])) {</span>
+<span class="fc" id="L29">                accuracy++;</span>
             }
         }
 
-<span class="nc" id="L32">        return accuracy/predictions.length;</span>
+<span class="fc" id="L33">        return accuracy/predictions.length;</span>
     }
 
 
@@ -41,20 +42,20 @@ public class Metrics {
      * @return The percentage of correct predictions
      */
     public static double accuracy(double[] predictions, double[] targets) {
-<span class="nc" id="L44">        double accuracy = 0;</span>
+<span class="fc" id="L45">        double accuracy = 0;</span>
 
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        if(predictions.length!= targets.length) {</span>
-<span class="nc" id="L47">            throw new IllegalArgumentException(&quot;Predictions and targets must have the same number of samples but got &quot; +</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if(predictions.length!= targets.length) {</span>
+<span class="fc" id="L48">            throw new IllegalArgumentException(&quot;Predictions and targets must have the same number of samples but got &quot; +</span>
                     predictions.length + &quot; and &quot; + targets.length);
         }
 
-<span class="nc bnc" id="L51" title="All 2 branches missed.">        for(int i=0; i&lt;predictions.length; i++) {</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">            if(predictions[i]==targets[i]) {</span>
-<span class="nc" id="L53">                accuracy++;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for(int i=0; i&lt;predictions.length; i++) {</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            if(predictions[i]==targets[i]) {</span>
+<span class="fc" id="L54">                accuracy++;</span>
             }
         }
 
-<span class="nc" id="L57">        return accuracy/predictions.length;</span>
+<span class="fc" id="L58">        return accuracy/predictions.length;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

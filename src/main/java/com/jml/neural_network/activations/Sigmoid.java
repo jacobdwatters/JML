@@ -6,7 +6,7 @@ import linalg.Matrix;
 /**
  * The sigmoid activation function. 1/(1+exp(-x))
  */
-class Sigmoid implements Activation {
+class Sigmoid implements ActivationFunction {
 
     public final String NAME = "Sigmoid";
 

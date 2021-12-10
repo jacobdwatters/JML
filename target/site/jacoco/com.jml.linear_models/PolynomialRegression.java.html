@@ -200,7 +200,7 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
 <span class="fc" id="L204">       return this.toString();</span>
     }
 
@@ -214,21 +214,5 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
     public String toString() {
 <span class="fc" id="L215">        return details.toString();</span>
     }
-
-    public static void main(String[] args) {
-<span class="nc" id="L219">        double[] x = {1, 4, 5, 6, 7};</span>
-<span class="nc" id="L220">        double[] y = {3, 4, 5, 6, 10};</span>
-
-<span class="nc" id="L222">        Model model = new LinearRegression();</span>
-<span class="nc" id="L223">        model.fit(x, y);</span>
-
-<span class="nc" id="L225">        System.out.println(model.getDetails());</span>
-<span class="nc" id="L226">        System.out.println(ArrayUtils.asString(model.getParams().T().getValuesAsDouble()[0]));</span>
-
-<span class="nc" id="L228">        model.saveModel(&quot;temp.mdl&quot;);</span>
-
-<span class="nc" id="L230">        Model nmdl = Model.load(&quot;temp.mdl&quot;);</span>
-//        System.out.println(nmdl.getDetails());
-<span class="nc" id="L232">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

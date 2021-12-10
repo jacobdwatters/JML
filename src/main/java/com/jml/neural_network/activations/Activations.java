@@ -9,13 +9,13 @@ public abstract class Activations {
     /**
      * The sigmoid activation function. f(x)=1/(1+exp(-x))
      */
-    public static final Activation sigmoid = new Sigmoid();
+    public static final ActivationFunction sigmoid = new Sigmoid();
 
 
     /**
      * The Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
      */
-    public static final Activation relu = new Relu();
+    public static final ActivationFunction relu = new Relu();
 
-    public static final Activation linear = new Linear();
+    public static final ActivationFunction linear = new Linear();
 }

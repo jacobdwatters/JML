@@ -200,7 +200,7 @@ public class PolynomialRegression extends Model<double[], double[]> {
      * @return Details of model as string.
      */
     @Override
-    public String getDetails() {
+    public String inspect() {
        return this.toString();
     }
 
@@ -213,21 +213,5 @@ public class PolynomialRegression extends Model<double[], double[]> {
     @Override
     public String toString() {
         return details.toString();
-    }
-
-    public static void main(String[] args) {
-        double[] x = {1, 4, 5, 6, 7};
-        double[] y = {3, 4, 5, 6, 10};
-
-        Model model = new LinearRegression();
-        model.fit(x, y);
-
-        System.out.println(model.getDetails());
-        System.out.println(ArrayUtils.asString(model.getParams().T().getValuesAsDouble()[0]));
-
-        model.saveModel("temp.mdl");
-
-        Model nmdl = Model.load("temp.mdl");
-//        System.out.println(nmdl.getDetails());
     }
 }

@@ -20,9 +20,9 @@ import com.jml.util.ValueError;
  */
 public class LinearRegressionSGD extends LinearRegression {
 
-<span class="pc" id="L23">    protected double learningRate = 0.002;</span>
-<span class="pc" id="L24">    protected double threshold = 0.5e-5;</span>
-<span class="pc" id="L25">    protected int maxIterations = 1000;</span>
+<span class="fc" id="L23">    protected double learningRate = 0.002;</span>
+<span class="fc" id="L24">    protected double threshold = 0.5e-5;</span>
+<span class="fc" id="L25">    protected int maxIterations = 1000;</span>
     protected Optimizer SGD;
     protected Scheduler schedule;
 
@@ -123,11 +123,11 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L126">    public LinearRegressionSGD(int maxIterations) {</span>
-<span class="nc" id="L127">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L128">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L129">        paramCheck();</span>
-<span class="nc" id="L130">    }</span>
+<span class="fc" id="L126">    public LinearRegressionSGD(int maxIterations) {</span>
+<span class="fc" id="L127">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L128">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L129">        paramCheck();</span>
+<span class="fc" id="L130">    }</span>
 
 
     /**
