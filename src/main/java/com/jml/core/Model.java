@@ -18,7 +18,12 @@ public abstract class Model<X, Y> {
 
 
     /**
-     * Fits or trains the model with the given features and targets.
+     * Fits or trains the model with the given features and targets. For both the features and targets parameters,
+     * if they are 2D arrays, then the number of rows in each must match and will be the number of samples in the
+     * data. The number of columns in each will be the number of features and targets in a single sample.<br><br>
+     *
+     * For instance, if the features array has shape n-by-m and the targets array has shape n-by-k. Then there
+     * are n samples in the dataset, each individual sample has m features, and each individual sample has k targets.
      *
      * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
      * the specification when the model was compiled.
