@@ -1,17 +1,14 @@
 package com.jml.linear_models;
 
-import com.jml.core.Metrics;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
-import com.jml.core.Stats;
 import com.jml.neural_network.NeuralNetwork;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Layer;
-import linalg.Matrix;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import linalg.Matrix;
 
 
 /**

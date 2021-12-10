@@ -1,8 +1,8 @@
 package com.jml.neural_network.activations;
 
-
 /**
- * A class which contains various activation functions.
+ * A class which contains various pre-made {@link com.jml.neural_network.activations.ActivationFunction activation functions} for use in neural network
+ * {@link com.jml.neural_network.layers.Layer layers}.
  */
 public abstract class Activations {
 
@@ -17,5 +17,9 @@ public abstract class Activations {
      */
     public static final ActivationFunction relu = new Relu();
 
+
+    /**
+     * The linear activation function. f(x)=x.
+     */
     public static final ActivationFunction linear = new Linear();
 }

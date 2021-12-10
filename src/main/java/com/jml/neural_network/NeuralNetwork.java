@@ -5,8 +5,6 @@ import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.neural_network.activations.ActivationFunction;
-import com.jml.neural_network.activations.Activations;
-import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Layer;
 import com.jml.util.FileManager;
 import linalg.Matrix;
@@ -15,6 +13,30 @@ import linalg.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * A class that supports the creation and training of neural networks. A neural network is a supervised
+ * learning model that is structured in layers. <br><br>
+ * Neural networks are created sequentially one layer at a time by using the {@link #add(Layer)} method.
+ * Activation functions can be specified for applicable layers.
+ *
+ * <br><br>
+ * Layers:
+ * <pre>
+ *     {@link com.jml.neural_network.layers.Dense Dense}
+ *     {@link com.jml.neural_network.layers.Dropout Dropout}
+ * </pre>
+ * Activation Functions:
+ * <pre>
+ *     {@link com.jml.neural_network.activations.Activations#linear Linear}
+ *     {@link com.jml.neural_network.activations.Activations#sigmoid Sigmoid}
+ *     {@link com.jml.neural_network.activations.Activations#relu ReLU}
+ * </pre>
+ *
+ * Custom layers or activation functions can be created using the
+ * {@link com.jml.neural_network.activations.ActivationFunction ActivationFunction} and
+ * {@link com.jml.neural_network.layers.Layer Layer} interfaces.
+ */
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
@@ -268,7 +290,15 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
 
     /**
-     * Adds specified layer to the network.
+     * Adds specified layer to the network.<br><br>
+     *
+     * The first layer must have a specified input dimension that matches
+     * the number of columns of a feature array that will be used in the {@link #fit(double[][], double[][])} method. <br>
+     * Subsequent layers may have no input dimension defined. In this case the input dimension will
+     * be inferred from the output dimension of the previous layer.<br><br>
+     *
+     * The final layers output dimension must match the number of columns of the target array that is used in the
+     * {@link #fit(double[][], double[][])} method.
      *
      * @param layer Layer to add to the neural network.
      */

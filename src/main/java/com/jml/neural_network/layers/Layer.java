@@ -3,6 +3,16 @@ package com.jml.neural_network.layers;
 import com.jml.neural_network.activations.ActivationFunction;
 import linalg.Matrix;
 
+
+/**
+ * An interface for specifying a layer for a neural network. Several pre-made layers are available.<br><br>
+ *
+ * Layers:
+ * <pre>
+ *     {@link com.jml.neural_network.layers.Dense Dense}
+ *     {@link com.jml.neural_network.layers.Dropout Dropout}
+ * </pre>
+ */
 public interface Layer {
     /**
      * Feeds the inputs through the layer.
