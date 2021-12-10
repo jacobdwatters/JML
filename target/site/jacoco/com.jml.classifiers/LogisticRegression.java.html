@@ -31,7 +31,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
 <span class="fc" id="L31">    protected double learningRate = 0.002;</span>
 <span class="fc" id="L32">    protected double threshold = 0.5e-5;</span>
 <span class="fc" id="L33">    protected int maxIterations = 1000;</span>
-    private Optimizer SGD;
+    private final Optimizer SGD;
     protected Scheduler schedule;
 
     // Details of model in human-readable format.

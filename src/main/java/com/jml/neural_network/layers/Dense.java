@@ -10,7 +10,8 @@ import linalg.Vector;
 
 /**
  * A standard dense or fully connected neural network layer.
- * This layer applies a linear transform <code>y=Ax+b</code> onto the inputs x.
+ * This layer applies a linear transform <code>y=f(Ax+b)</code> onto the inputs x where f is the
+ * {@link com.jml.neural_network.activations.ActivationFunction activation function} used in the layer.
  */
 public class Dense implements Layer {
     public final String LAYER_TYPE = "Dense";

@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class Stats {
 
-<span class="fc" id="L15">    private static SplittableRandom random = new SplittableRandom();</span>
+<span class="fc" id="L15">    private static final SplittableRandom random = new SplittableRandom();</span>
 
 <span class="nc" id="L17">    private Stats() {</span>
 <span class="nc" id="L18">        throw new IllegalStateException(&quot;Utility Class.&quot;);</span>
@@ -20,7 +20,7 @@ public class Stats {
 
     public static double round(double value, int decimals) {
         double result;
-<span class="fc" id="L23">        BigDecimal bd = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);;</span>
+<span class="fc" id="L23">        BigDecimal bd = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);</span>
 <span class="fc" id="L24">        result = bd.doubleValue();</span>
 <span class="fc" id="L25">        return result;</span>
     }
@@ -62,7 +62,7 @@ public class Stats {
 <span class="fc" id="L62">            double[] sorted = new double[data.length];</span>
 <span class="fc" id="L63">            System.arraycopy(data, 0, sorted, 0, data.length);</span>
 <span class="fc" id="L64">            Arrays.sort(sorted);</span>
-<span class="fc" id="L65">            int index = (int) (data.length / 2);</span>
+<span class="fc" id="L65">            int index = data.length / 2;</span>
 
 <span class="fc bfc" id="L67" title="All 2 branches covered.">            if (data.length % 2 == 0) { // Then we have an even number of entries.</span>
 <span class="fc" id="L68">                median = (sorted[index] + sorted[index - 1]) / 2;</span>
