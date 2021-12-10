@@ -18,7 +18,7 @@ import java.util.List;
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
-    private final List<Layer> layers;
+    protected final List<Layer> layers;
     protected double learningRate;
     protected double threshold;
     protected int epochs;
@@ -37,7 +37,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                     "Is Trained: No\n"
     );
 
-
+    // TODO: Add other constructors.
     /**
      * Constructs a neural network with default hyper-parameters.
      * <pre>
@@ -66,7 +66,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param threshold The threshold for the loss to stop early. If the loss drops below this threshold before the
      *                  specified number of epochs has been reached, the training will stop early.
      */
-    // TODO: Will ned to take optimizer as parameter. Take this as a string?
+    // TODO: Will need to take optimizer as parameter. Take this as a string?
     public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {
         this.learningRate = learningRate;
         this.epochs = epochs;
@@ -379,31 +379,5 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     @Override
     public String toString() {
         return inspect();
-    }
-
-
-    // TODO: TEMP TESTING
-    public static void main(String[] args) {
-        double[][] X = {{1, 2, 3},
-                        {4, 5, 6},
-                        {7, 8, 9}};
-        double[][] y = {{0, 1},
-                        {1, 0},
-                        {1, 1}};
-
-        NeuralNetwork nn = new NeuralNetwork(0.03, 50, 1, 1e-4);
-        nn.add(new Dense(3, 2, Activations.relu));
-        nn.add(new Dense(2, Activations.linear));
-        nn.add(new Dense(2, Activations.sigmoid));
-
-        nn.fit(X, y);
-        System.out.println(nn.inspect());
-
-        nn.saveModel("testNN.mdl");
-
-        Model mdl = Model.load("testNN.mdl");
-        System.out.println(mdl.inspect());
-
-        mdl.saveModel("testNN2.mdl");
     }
 }

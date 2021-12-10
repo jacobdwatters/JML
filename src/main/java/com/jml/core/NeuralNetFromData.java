@@ -7,9 +7,6 @@ import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
-import linalg.Vector;
-import org.apache.maven.model.Activation;
-
 
 import java.util.*;
 

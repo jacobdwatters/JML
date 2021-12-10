@@ -1,8 +1,10 @@
 com\jml\linear_models\LinRegSGDTest.class
-com\jml\linear_models\PolyRegTest.class
 com\jml\preprocessing\NormalizationTest.class
+com\jml\linear_models\PolyRegSGDTest.class
 com\jml\util\ArrayErrorsTest.class
 com\jml\linear_models\PolynomialRegressionExceptionTest.class
+com\jml\core\DataLoaderTest.class
+com\jml\linear_models\PerceptronTest.class
 com\jml\classifiers\LogRegTest.class
 com\jml\optimizers\StepLearningRateTest.class
 com\jml\linear_models\PolynomialRegressionDatasetOneTest.class
@@ -14,5 +16,7 @@ com\jml\linear_models\MultipleRegressionDatasetOneTest.class
 com\jml\linear_models\LinearRegressionDatasetOneTest.class
 com\jml\core\LossFunctionTest.class
 com\jml\linear_models\PolynomialRegressionSaveAndLoadTest.class
+com\jml\neural_network\NeuralNetworkTest.class
+com\jml\core\MetricsTest.class
 com\jml\linear_models\MultRegSGDTest.class
 com\jml\linear_models\LinearRegressionSaveAndLoadTest.class

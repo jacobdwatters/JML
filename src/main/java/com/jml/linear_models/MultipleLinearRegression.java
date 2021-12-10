@@ -176,20 +176,4 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
     public String toString() {
         return details.toString();
     }
-
-
-    public static void main(String[] args) {
-        Model model = new MultipleLinearRegression();
-        double[][] features = new double[][] { {1, 4, -3, 4},
-                                                {5, 6, -4, 8},
-                                                {9, -1, 11, 12},
-                                                {0, 1, 0.6, 1},
-                                                {5, 4, 3, 2}};
-        double[] targets = new double[]{1, 9, -1, 6, 4};
-        double[][] tests = new double[][] {{1, 3, 4, 5},
-                                            {-0.1, 3.5, 2, 6}};
-
-        model.fit(features, targets);
-        System.out.println(model.toString());
-    }
 }

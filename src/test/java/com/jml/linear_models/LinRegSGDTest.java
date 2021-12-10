@@ -39,6 +39,20 @@ public class LinRegSGDTest {
         assertNull(model.schedule);
     }
 
+    @Test
+    void defaultConstructorZeroTestCase() {
+        double learningRate = 0.002;
+        double threshold = 0.5e-5;
+        int maxIterations = 105;
+
+        model = new LinearRegressionSGD(105);
+
+        assertEquals(learningRate, model.learningRate);
+        assertEquals(threshold, model.threshold);
+        assertEquals(maxIterations, model.maxIterations);
+        assertNull(model.schedule);
+    }
+
 
     @Test
     void ConstructorOneTestCase() {

@@ -1,15 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Perceptron.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.linear_models</a> &gt; <span class="el_source">Perceptron.java</span></div><h1>Perceptron.java</h1><pre class="source lang-java linenums">package com.jml.linear_models;
 
+import com.jml.core.Metrics;
 import com.jml.core.Model;
+import com.jml.core.ModelTypes;
+import com.jml.core.Stats;
+import com.jml.neural_network.NeuralNetwork;
+import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.Dense;
+import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /**
- * Fits a one layer perceptron to a set of features.&lt;br&gt;&lt;br&gt;
+ * A perceptron is a linear model that is equivalent to a single layer neural network.&lt;br&gt;&lt;br&gt;
  *
- * Perceptron is a linear classifier that is analogous to logistic regression using stochastic gradient descent.
+ * When a perceptron model is saved, it will be saved as a neural network model.
+ *
+ * When the activation of a perceptron is the sigmoid function, it is a linear classifier that is analogous to
+ * logistic regression.
  */
-<span class="nc" id="L12">public class Perceptron extends Model&lt;double[][], double[][]&gt; {</span>
+public class Perceptron extends Model&lt;double[][], double[][]&gt; {
+
+<span class="fc" id="L27">    final String MODEL_TYPE = ModelTypes.PERCEPTRON.toString();</span>
+    NeuralNetwork perceptron;
+    ActivationFunction activation;
+    Layer layer;
+
+    double learningRate, threshold;
+    int epochs, batchSize;
+<span class="fc" id="L34">    boolean isFit = false;</span>
+
+<span class="fc" id="L36">    StringBuilder inspection = new StringBuilder(</span>
+            &quot;Model Details\n&quot; +
+            &quot;----------------------------\n&quot; +
+            &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
+            &quot;Is Trained: No\n&quot;
+    );
+
+
+    /**
+     * Creates a perceptron with default hyper-parameters. The default parameters are listed below.
+     * &lt;pre&gt;
+     *     Learning Rate: 0.01
+     *     Epochs: 10
+     *     Batch Size: 1
+     *     Threshold: 1e-5
+     *     Activation: Sigmoid Function
+     * &lt;/pre&gt;
+     */
+<span class="fc" id="L54">    public Perceptron() {</span>
+<span class="fc" id="L55">        this.learningRate = 0.01;</span>
+<span class="fc" id="L56">        this.epochs = 10;</span>
+<span class="fc" id="L57">        this.batchSize = 1;</span>
+<span class="fc" id="L58">        this.threshold = 1e-5;</span>
+<span class="fc" id="L59">        this.activation = Activations.sigmoid;</span>
+
+<span class="fc" id="L61">        this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);</span>
+
+<span class="fc" id="L63">        buildDetails();</span>
+<span class="fc" id="L64">    }</span>
+
+
+    /**
+     * Creates a perceptron with specified hyper-parameters and the sigmoid activation function. &lt;br&gt;
+     * To specify an activation function, see {@link #Perceptron(double, int, int, double, ActivationFunction)}.
+     *
+     * @param learningRate Learning rate to use during training.
+     * @param epochs Number of epochs to train the perceptron for.
+     * @param batchSize Batch size to use during training.
+     * @param threshold Threshold for early stopping of training. If the loss of the
+     *                  perceptron model falls below this value during training, training will end before the specified
+     *                  number of epochs.
+     */
+<span class="fc" id="L78">    public Perceptron(double learningRate, int epochs, int batchSize, double threshold) {</span>
+<span class="fc" id="L79">        this.learningRate = learningRate;</span>
+<span class="fc" id="L80">        this.epochs = epochs;</span>
+<span class="fc" id="L81">        this.batchSize = batchSize;</span>
+<span class="fc" id="L82">        this.threshold = threshold;</span>
+<span class="fc" id="L83">        this.activation = Activations.sigmoid;</span>
+
+<span class="fc" id="L85">        this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);</span>
+<span class="fc" id="L86">        buildDetails();</span>
+<span class="fc" id="L87">    }</span>
+
+
+    /**
+     * Creates a perceptron with specified hyper-parameters and activation function.
+     *
+     * @param learningRate Learning rate to use during training.
+     * @param epochs Number of epochs to train the perceptron for.
+     * @param batchSize Batch size to use during training.
+     * @param threshold Threshold for early stopping of training. If the loss of the
+     *                  perceptron model falls below this value during training, training will end before the specified
+     *                  number of epochs.
+     * @param activation Activation function to use in the perceptron.
+     */
+<span class="fc" id="L101">    public Perceptron(double learningRate, int epochs, int batchSize, double threshold, ActivationFunction activation) {</span>
+<span class="fc" id="L102">        this.learningRate = learningRate;</span>
+<span class="fc" id="L103">        this.epochs = epochs;</span>
+<span class="fc" id="L104">        this.batchSize = batchSize;</span>
+<span class="fc" id="L105">        this.threshold = threshold;</span>
+<span class="fc" id="L106">        this.activation = activation;</span>
+
+<span class="fc" id="L108">        this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);</span>
+<span class="fc" id="L109">        buildDetails();</span>
+<span class="fc" id="L110">    }</span>
 
 
     /**
@@ -17,8 +115,25 @@ import linalg.Matrix;
      */
     @Override
     public Perceptron fit(double[][] features, double[][] targets) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L21">        return null;</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">        if(isFit) {</span>
+<span class="nc" id="L119">           throw new IllegalStateException(&quot;Model has already been fit. Can not fit again.&quot;);</span>
+        }
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if(targets[0].length != 1) {</span>
+<span class="nc" id="L122">            throw new IllegalArgumentException(&quot;Perceptron can only have output dimension of 1 but got targets with &quot; +</span>
+                    &quot;dimension of &quot; + targets[0].length + &quot;. Target shape must be (n, 1) for n training samples.&quot;);
+        }
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if(targets.length != features.length) {</span>
+<span class="nc" id="L126">            throw new IllegalArgumentException(&quot;Features and targets do not have the same number of samples. Got &quot; +</span>
+                    features.length + &quot; and &quot; + targets.length + &quot;.&quot;);
+        }
+
+<span class="fc" id="L130">        layer = new Dense(features[0].length, 1, activation);</span>
+<span class="fc" id="L131">        perceptron.add(layer); // Add layer to the perceptron.</span>
+<span class="fc" id="L132">        perceptron.fit(features, targets);</span>
+<span class="fc" id="L133">        this.isFit = true;</span>
+<span class="fc" id="L134">        buildDetails();</span>
+
+<span class="fc" id="L136">        return this;</span>
     }
 
 
@@ -27,8 +142,7 @@ import linalg.Matrix;
      */
     @Override
     public double[][] predict(double[][] features) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L31">        return null;</span>
+<span class="fc" id="L145">        return perceptron.predict(features);</span>
     }
 
 
@@ -37,16 +151,17 @@ import linalg.Matrix;
      */
     @Override
     public Matrix predict(Matrix X, Matrix w) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L41">        return null;</span>
+        // TODO: Unneeded in perceptron.
+<span class="nc" id="L155">        return null;</span>
     }
+
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Matrix getParams() {
-<span class="nc" id="L49">        return null;</span>
+<span class="nc" id="L164">        return null;</span>
     }
 
 
@@ -55,8 +170,29 @@ import linalg.Matrix;
      */
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L173">        perceptron.saveModel(filePath);</span>
+<span class="fc" id="L174">    }</span>
+
+
+    /**
+     * Builds the details of the model as a string representation of the important aspects of the model.
+     */
+    protected void buildDetails() {
+<span class="fc" id="L181">        inspection = new StringBuilder(</span>
+                &quot;Model Details\n&quot; +
+                        &quot;----------------------------\n&quot; +
+                        &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
+<span class="fc bfc" id="L185" title="All 2 branches covered.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+        );
+
+<span class="fc" id="L188">        inspection.append(&quot;Learning Rate: &quot; + this.learningRate + &quot;\n&quot;);</span>
+<span class="fc" id="L189">        inspection.append(&quot;Batch Size: &quot; + this.batchSize + &quot;\n&quot;);</span>
+
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if(layer != null) {</span>
+<span class="fc" id="L192">            inspection.append(&quot;Layer:\n&quot; + &quot;------------\n&quot;);</span>
+<span class="fc" id="L193">            inspection.append(&quot;\t&quot; + layer.inspect());</span>
+        }
+<span class="fc" id="L195">    }</span>
 
 
     /**
@@ -64,7 +200,7 @@ import linalg.Matrix;
      */
     @Override
     public String inspect() {
-<span class="nc" id="L67">        return this.toString();</span>
+<span class="nc" id="L203">        return this.toString();</span>
     }
 
     /**
@@ -72,8 +208,7 @@ import linalg.Matrix;
      */
     @Override
     public String toString() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L76">        return &quot;&quot;;</span>
+<span class="nc" id="L211">        return inspection.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

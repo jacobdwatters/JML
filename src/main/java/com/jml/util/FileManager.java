@@ -72,7 +72,7 @@ public class FileManager {
             csv = new String[arr.length][arr[0].split(",").length];
 
             for(int i = 0; i < arr.length; i++) {
-                csv[i] = arr[i].split(",");
+                csv[i] = arr[i].replace(" ", "").split(",");
             }
 
 

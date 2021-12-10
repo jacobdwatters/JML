@@ -71,16 +71,20 @@ public class DataLoader {
         String[][] features = new String[content.length][featureColumns.length];
         String[][] targets = new String[content.length][targetColumns.length];
 
+        int colCount = 0;
         for(int j : featureColumns) {
             for(int i=0; i< content.length; i++) {
-                features[i][j] = content[i][j];
+                features[i][colCount] = content[i][j];
             }
+            colCount++;
         }
 
+        colCount=0;
         for(int j : targetColumns) {
             for(int i=0; i< content.length; i++) {
-                targets[i][j] = content[i][j];
+                targets[i][colCount] = content[i][j];
             }
+            colCount++;
         }
 
         data.add(features);

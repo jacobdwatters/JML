@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PolyRegTest {
+class PolyRegSGDTest {
 
     PolynomialRegressionSGD model;
     double[] features;
@@ -22,7 +22,6 @@ class PolyRegTest {
         targets = new double[]{44.6, 57.8, 49.9, 61.3, 49.6, 61.8, 49.0, 44.7, 59.2, 53.9, 46.5, 54.7, 50.3, 51.2, 45.7};
     }
 
-
     @Test
     void defaultConstructorTestCase() {
         double learningRate = 0.002;
@@ -32,6 +31,22 @@ class PolyRegTest {
         model = new PolynomialRegressionSGD();
 
         assertEquals(1, model.degree);
+        assertEquals(learningRate, model.learningRate);
+        assertEquals(threshold, model.threshold);
+        assertEquals(maxIterations, model.maxIterations);
+        assertNull(model.schedule);
+    }
+
+
+    @Test
+    void defaultConstructorZeroTestCase() {
+        double learningRate = 0.002;
+        double threshold = 0.5e-5;
+        int maxIterations = 1000;
+
+        model = new PolynomialRegressionSGD(3);
+
+        assertEquals(3, model.degree);
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MultRegSGDTest {
 
@@ -35,6 +34,21 @@ class MultRegSGDTest {
         int maxIterations = 1000;
 
         model = new MultipleLinearRegressionSGD();
+
+        assertEquals(learningRate, model.learningRate);
+        assertEquals(threshold, model.threshold);
+        assertEquals(maxIterations, model.maxIterations);
+        assertNull(model.schedule);
+    }
+
+
+    @Test
+    void defaultConstructorZeroTestCase() {
+        double learningRate = 0.002;
+        double threshold = 0.5e-5;
+        int maxIterations = 10;
+
+        model = new MultipleLinearRegressionSGD(10);
 
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);

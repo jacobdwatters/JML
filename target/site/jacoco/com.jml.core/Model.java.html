@@ -147,11 +147,11 @@ import java.util.List;
 <span class="fc" id="L147">                block.append(lines.remove(0)); // Remove line and add it to block</span>
 <span class="fc" id="L148">                block.append(&quot;\n&quot;);</span>
 
-<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                if(startTag.equals(currentTag)) {</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">                if(startTag.equals(currentTag)) {</span>
 <span class="fc" id="L151">                    blockFound=true; // This is the end of the block</span>
                 }
             }
-<span class="pc bpc" id="L154" title="2 of 6 branches missed.">            else if(lines.get(0).matches(&quot;&lt;(.*?)&gt;&quot;) &amp;&amp; !lines.get(0).contains(&quot;\\&quot;) &amp;&amp; !foundStart) { // Then we have the beginning of a block</span>
+<span class="pc bpc" id="L154" title="1 of 6 branches missed.">            else if(lines.get(0).matches(&quot;&lt;(.*?)&gt;&quot;) &amp;&amp; !lines.get(0).contains(&quot;\\&quot;) &amp;&amp; !foundStart) { // Then we have the beginning of a block</span>
 <span class="fc" id="L155">                foundStart = true;</span>
 
                 /*

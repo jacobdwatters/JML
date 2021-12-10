@@ -72,7 +72,7 @@ public class FileManager {
 <span class="fc" id="L72">            csv = new String[arr.length][arr[0].split(&quot;,&quot;).length];</span>
 
 <span class="fc bfc" id="L74" title="All 2 branches covered.">            for(int i = 0; i &lt; arr.length; i++) {</span>
-<span class="fc" id="L75">                csv[i] = arr[i].split(&quot;,&quot;);</span>
+<span class="fc" id="L75">                csv[i] = arr[i].replace(&quot; &quot;, &quot;&quot;).split(&quot;,&quot;);</span>
             }
 
 

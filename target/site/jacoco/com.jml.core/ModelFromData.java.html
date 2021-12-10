@@ -38,13 +38,13 @@ class ModelFromData {
 <span class="fc bfc" id="L38" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.K_NEAREST_NEIGHBORS.toString())){</span>
 <span class="fc" id="L39">            model = KnnFromData.create(tags, contents);</span>
 
-<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.LOGISTIC_REGRESSION.toString())) {</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.LOGISTIC_REGRESSION.toString())) {</span>
 <span class="fc" id="L42">            model = LogRegFromData.create(tags, contents);</span>
 
-<span class="nc bnc" id="L44" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
             // TODO:
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {</span>
-<span class="nc" id="L47">            model = NeuralNetFromData.create(tags, contents);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {</span>
+<span class="fc" id="L47">            model = NeuralNetFromData.create(tags, contents);</span>
         } else {
 <span class="nc" id="L49">            throw new IllegalArgumentException(&quot;The file does not seem to contain a valid model.&quot;);</span>
         }
@@ -66,7 +66,7 @@ class ModelFromData {
 <span class="fc" id="L66">        String tag = getTag(block);</span>
 
 <span class="pc bpc" id="L68" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
-<span class="pc bpc" id="L69" title="2 of 6 branches missed.">            if(block.charAt(i)=='&gt;' &amp;&amp; end==-1 &amp;&amp; start==-1) {</span>
+<span class="pc bpc" id="L69" title="1 of 6 branches missed.">            if(block.charAt(i)=='&gt;' &amp;&amp; end==-1 &amp;&amp; start==-1) {</span>
 <span class="fc" id="L70">                start=i+1;</span>
 <span class="fc bfc" id="L71" title="All 4 branches covered.">            } else if(block.charAt(i)=='&lt;' &amp;&amp; start&gt;-1) {</span>
 <span class="fc" id="L72">                currentTag = new StringBuilder();</span>
@@ -79,7 +79,7 @@ class ModelFromData {
                     }
                 }
 
-<span class="pc bpc" id="L82" title="1 of 2 branches missed.">                if(currentTag.toString().equals(tag)) { // Ensure that the ending tag is the same as the opening tag.</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">                if(currentTag.toString().equals(tag)) { // Ensure that the ending tag is the same as the opening tag.</span>
 <span class="fc" id="L83">                    end=i;</span>
 <span class="fc" id="L84">                    break;</span>
                 }

@@ -6,9 +6,9 @@ import linalg.Matrix;
 /**
  * The ReLU (Rectified Linear Unit) activation function. That is f(x)=max(0, x)
  */
-<span class="nc" id="L9">class Relu implements ActivationFunction {</span>
+<span class="fc" id="L9">class Relu implements ActivationFunction {</span>
 
-<span class="nc" id="L11">    public final String NAME = &quot;ReLU&quot;;</span>
+<span class="fc" id="L11">    public final String NAME = &quot;ReLU&quot;;</span>
 
     /**
      * Applies the ReLU activation function to a matrix element-wise.
@@ -18,21 +18,21 @@ import linalg.Matrix;
      */
     @Override
     public Matrix apply(Matrix data) {
-<span class="nc" id="L21">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+<span class="fc" id="L21">        double[][] result = new double[data.numRows()][data.numCols()];</span>
         double value;
 
-<span class="nc bnc" id="L24" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="nc bnc" id="L25" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="nc" id="L26">                value = data.getAsDouble(i, j);</span>
-<span class="nc bnc" id="L27" title="All 2 branches missed.">                if(value &gt; 0) {</span>
-<span class="nc" id="L28">                    result[i][j] = value;</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="fc" id="L26">                value = data.getAsDouble(i, j);</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">                if(value &gt; 0) {</span>
+<span class="fc" id="L28">                    result[i][j] = value;</span>
                 } else {
-<span class="nc" id="L30">                    result[i][j] = 0;</span>
+<span class="fc" id="L30">                    result[i][j] = 0;</span>
                 }
             }
         }
 
-<span class="nc" id="L35">        return new Matrix(result);</span>
+<span class="fc" id="L35">        return new Matrix(result);</span>
     }
 
 
@@ -44,20 +44,20 @@ import linalg.Matrix;
      */
     @Override
     public Matrix slope(Matrix data) {
-<span class="nc" id="L47">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+<span class="fc" id="L47">        double[][] result = new double[data.numRows()][data.numCols()];</span>
         double value;
 
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="nc bnc" id="L51" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">                if(data.getAsDouble(i, j) &gt; 0) {</span>
-<span class="nc" id="L53">                    result[i][j] = 1;</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">                if(data.getAsDouble(i, j) &gt; 0) {</span>
+<span class="fc" id="L53">                    result[i][j] = 1;</span>
                 } else {
-<span class="nc" id="L55">                    result[i][j] = 0;</span>
+<span class="fc" id="L55">                    result[i][j] = 0;</span>
                 }
             }
         }
 
-<span class="nc" id="L60">        return new Matrix(result);</span>
+<span class="fc" id="L60">        return new Matrix(result);</span>
     }
 
 
@@ -66,6 +66,6 @@ import linalg.Matrix;
      * @return The name of the activation function as a String.
      */
     @Override
-<span class="nc" id="L69">    public String getName(){return NAME;}</span>
+<span class="fc" id="L69">    public String getName(){return NAME;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

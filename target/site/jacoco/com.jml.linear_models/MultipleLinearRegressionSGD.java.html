@@ -20,9 +20,9 @@ import linalg.Vector;
  */
 public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 
-<span class="pc" id="L23">    protected double learningRate = 0.002;</span>
-<span class="pc" id="L24">    protected double threshold = 0.5e-5;</span>
-<span class="pc" id="L25">    protected int maxIterations = 1000;</span>
+<span class="fc" id="L23">    protected double learningRate = 0.002;</span>
+<span class="fc" id="L24">    protected double threshold = 0.5e-5;</span>
+<span class="fc" id="L25">    protected int maxIterations = 1000;</span>
     private Optimizer SGD;
     protected Scheduler schedule;
 
@@ -116,11 +116,11 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
      */
-<span class="nc" id="L119">    public MultipleLinearRegressionSGD(int maxIterations) {</span>
-<span class="nc" id="L120">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
-<span class="nc" id="L121">        this.maxIterations = maxIterations;</span>
-<span class="nc" id="L122">        paramCheck();</span>
-<span class="nc" id="L123">    }</span>
+<span class="fc" id="L119">    public MultipleLinearRegressionSGD(int maxIterations) {</span>
+<span class="fc" id="L120">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L121">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L122">        paramCheck();</span>
+<span class="fc" id="L123">    }</span>
 
 
     /**
