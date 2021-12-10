@@ -144,7 +144,7 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
 <span class="fc bfc" id="L144" title="All 2 branches covered.">        if(!isFit) {</span>
 <span class="fc" id="L145">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="fc bfc" id="L147" title="All 2 branches covered.">        if(!filePath.substring(filePath.length()-4,filePath.length()).equals(&quot;.mdl&quot;)) {</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if(!filePath.startsWith(&quot;.mdl&quot;, filePath.length()-4)) {</span>
 <span class="fc" id="L148">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 

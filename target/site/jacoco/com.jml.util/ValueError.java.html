@@ -11,11 +11,7 @@ public class ValueError {
      * @return Returns true if the value is 0 or positive. Otherwise, returns false.
      */
     public static boolean isNonNegative(double val) {
-<span class="fc bfc" id="L14" title="All 2 branches covered.">        if(val&gt;=0) {</span>
-<span class="fc" id="L15">            return true;</span>
-        } else{
-<span class="fc" id="L17">            return false;</span>
-        }
+<span class="fc bfc" id="L14" title="All 2 branches covered.">        return val &gt;= 0;</span>
     }
 
 
@@ -24,11 +20,7 @@ public class ValueError {
      * @return Returns true if the value is  positive. Otherwise, returns false.
      */
     public static boolean isPositive(double val) {
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        if(val&gt;0) {</span>
-<span class="nc" id="L28">            return true;</span>
-        } else{
-<span class="nc" id="L30">            return false;</span>
-        }
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        return val &gt; 0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
