@@ -88,7 +88,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param threshold The threshold for the loss to stop early. If the loss drops below this threshold before the
      *                  specified number of epochs has been reached, the training will stop early.
      */
-    // TODO: Will need to take optimizer as parameter. Take this as a string?
+    // TODO: Will need to take optimizer as parameter in another constructor. Default should be momentum.
     public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {
         this.learningRate = learningRate;
         this.epochs = epochs;
@@ -112,7 +112,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
-        // TODO: Auto-generated method stub
         dxUpdates = new Matrix[layers.size()]; // Weight updates
         dxBiasUpdates = new Matrix[layers.size()];
 
@@ -177,7 +176,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         Matrix error = target.sub(output);
         ActivationFunction activation;
 
-        // TODO: Update bias terms as well.
         if(layers.size()>1) {
             activation = layers.get(layers.size()-1).getActivation();
 
