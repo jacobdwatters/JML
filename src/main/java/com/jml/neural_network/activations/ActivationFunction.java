@@ -13,7 +13,7 @@ public interface ActivationFunction {
      * @param data The matrix to apply activation function to.
      * @return The result of the element-wise activation function applied to the matrix.
      */
-    public Matrix apply(Matrix data);
+    Matrix apply(Matrix data);
 
 
     /**
@@ -22,12 +22,12 @@ public interface ActivationFunction {
      * @param data The matrix to apply the derivative of the activation function to.
      * @return
      */
-    public Matrix slope(Matrix data);
+    Matrix slope(Matrix data);
 
 
     /**
      * Gets the name of the activation function.
      * @return The name of the activation function as a String.
      */
-    public String getName();
+    String getName();
 }

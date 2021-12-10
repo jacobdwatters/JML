@@ -8,7 +8,7 @@ import linalg.Matrix;
  */
 public class Gradient {
 
-    private static double eps = 0.5e-8;
+    private static final double eps = 0.5e-8;
 
     private Gradient() {
         throw new IllegalStateException("Utility method cannot be instantiated.");
