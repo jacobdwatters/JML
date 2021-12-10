@@ -12,7 +12,7 @@ public class KDTree {
     /**
      * Dimension of each point in the tree.
      */
-    private int k;
+    private final int k;
     private PointNode root;
 
     /**

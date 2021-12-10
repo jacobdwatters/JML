@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class Stats {
 
-    private static SplittableRandom random = new SplittableRandom();
+    private static final SplittableRandom random = new SplittableRandom();
 
     private Stats() {
         throw new IllegalStateException("Utility Class.");
@@ -20,7 +20,7 @@ public class Stats {
 
     public static double round(double value, int decimals) {
         double result;
-        BigDecimal bd = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);;
+        BigDecimal bd = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);
         result = bd.doubleValue();
         return result;
     }
@@ -62,7 +62,7 @@ public class Stats {
             double[] sorted = new double[data.length];
             System.arraycopy(data, 0, sorted, 0, data.length);
             Arrays.sort(sorted);
-            int index = (int) (data.length / 2);
+            int index = data.length / 2;
 
             if (data.length % 2 == 0) { // Then we have an even number of entries.
                 median = (sorted[index] + sorted[index - 1]) / 2;

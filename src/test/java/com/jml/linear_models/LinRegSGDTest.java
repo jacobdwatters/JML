@@ -1,6 +1,5 @@
 package com.jml.linear_models;
 
-import com.jml.core.Stats;
 import com.jml.optimizers.Scheduler;
 import com.jml.optimizers.StepLearningRate;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LinRegSGDTest {
+class LinRegSGDTest {
 
     LinearRegressionSGD model;
     double[] features;

@@ -96,7 +96,7 @@ public class ArrayUtils {
      * @return The string representation of arr.
      */
     public static String asString(Object[] arr) {
-        StringBuilder arrAsString = new StringBuilder("");
+        StringBuilder arrAsString = new StringBuilder();
 
         for(int i=0; i<arr.length; i++) {
             arrAsString.append(arr[i].toString());
@@ -117,7 +117,7 @@ public class ArrayUtils {
      * @return The string representation of arr.
      */
     public static String asString2D(Object[][] arr) {
-        StringBuilder arrAsString = new StringBuilder("");
+        StringBuilder arrAsString = new StringBuilder();
 
 
         for(int i=0; i<arr.length; i++) {
