@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Momentum.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.optimizers</a> &gt; <span class="el_source">Momentum.java</span></div><h1>Momentum.java</h1><pre class="source lang-java linenums">package com.jml.optimizers;
+
+
+import linalg.Matrix;
+
+/**
+ * The momentum based gradient descent optimizer. This is similar to vanilla gradient descent but will dampen oscillations
+ * during optimization by helping accelerate the optimization in the relevant direction where the gradient may be steeper
+ * than in other directions.&lt;br&gt;&lt;br&gt;
+ *
+ * Applies the following update rule:
+ * &lt;pre&gt;
+ *      &lt;code&gt;v&lt;sub&gt;t&lt;/sub&gt; = y*v&lt;sub&gt;t-1&lt;/sub&gt; + a*grad( w&lt;sub&gt;t&lt;/sub&gt; )&lt;/code&gt;
+ *      &lt;code&gt;w&lt;sub&gt;t+1&lt;/sub&gt; = w&lt;sub&gt;t&lt;/sub&gt; - v&lt;sub&gt;t&lt;/sub&gt;&lt;/code&gt;
+ *
+ *      Where &lt;code&gt;a&lt;/code&gt; is the learning rate and &lt;code&gt;y&lt;/code&gt; is the momentum with &lt;code&gt;0 &lt;= y &lt;= 1&lt;/code&gt;
+ * &lt;/pre&gt;
+ *
+ * Note: If the momentum term is zero, then this optimizer is equivalent to {@link GradientDescent Vanilla Gradient Descent}.
+ */
+public class Momentum extends Optimizer {
+    public static final String OPTIM_NAME = &quot;Momentum&quot;;
+<span class="nc" id="L23">    double momentum = 0;</span>
+
+
+    /**
+     * Creates a Momentum optimizer with specified learning rate. A default momentum of 0.9 will be used. To
+     * specify a momentum, see {@link #Momentum(double, double)}.
+     *
+     * @param learningRate
+     */
+<span class="nc" id="L32">    public Momentum(double learningRate) {</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(learningRate &lt; 0) {</span>
+<span class="nc" id="L34">            throw new IllegalArgumentException(&quot;Learning rate must be non-negative but got &quot; + learningRate + &quot;.&quot;);</span>
+        }
+
+<span class="nc" id="L37">        super.learningRate = learningRate;</span>
+<span class="nc" id="L38">        super.name = this.OPTIM_NAME;</span>
+<span class="nc" id="L39">        this.momentum=0.9;</span>
+<span class="nc" id="L40">    }</span>
+
+
+    /**
+     * Creates a Momentum optimizer with specified learning rate and momentum.
+     *
+     * @param learningRate Learning rate to use when applying this optimizer.
+     * @param momentum Momentum value to use when applying this optimizer.
+     */
+<span class="nc" id="L49">    public Momentum(double learningRate, double momentum) {</span>
+<span class="nc bnc" id="L50" title="All 4 branches missed.">        if(momentum &gt; 1 || momentum &lt; 0) {</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Momentum must be between 0 and 1 inclusive but got &quot; + momentum + &quot;.&quot;);</span>
+        }
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(learningRate &lt; 0) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Learning rate must be non-negative but got &quot; + learningRate + &quot;.&quot;);</span>
+        }
+
+<span class="nc" id="L57">        super.learningRate = learningRate;</span>
+<span class="nc" id="L58">        super.name = this.OPTIM_NAME;</span>
+<span class="nc" id="L59">        this.momentum=momentum;</span>
+<span class="nc" id="L60">    }</span>
+
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of
+     * the optimizer to the matrix w.
+     *
+     * @param w     A matrix contain the
+     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @return The result of applying the update rule of the optimizer to the matrix w.
+     */
+    @Override
+    public Matrix step(Matrix w, Matrix wGrad) {
+<span class="nc" id="L73">        throw new IllegalArgumentException(&quot;This step method is not defined for momentum.&quot;);</span>
+    }
+
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
+     * step method should be used for momentum.
+     *
+     * @param w     A matrix containing the weights to apply the update to.
+     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
+     *              no effect.
+     * @return The result of applying the update rule of the optimizer to the matrix w.
+     */
+    @Override
+    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
+<span class="nc" id="L89">        v = v.scalMult(momentum).add(wGrad.scalMult(learningRate));</span>
+<span class="nc" id="L90">        return new Matrix[]{w.sub(v), v};</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

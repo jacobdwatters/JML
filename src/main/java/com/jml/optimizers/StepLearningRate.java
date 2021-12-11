@@ -13,6 +13,7 @@ public class StepLearningRate extends Scheduler {
 
     double stepFactor;
     int interval;
+    int iterations;
 
 
     /**
@@ -21,6 +22,7 @@ public class StepLearningRate extends Scheduler {
     public StepLearningRate() {
         this.stepFactor = 0.8;  // Default Step factor
         this.interval = 10; // Default step interval
+        this.iterations = 0;
     }
 
 
@@ -53,9 +55,11 @@ public class StepLearningRate extends Scheduler {
      * return The new learning rate according to the specific Schedulers rules.
      */
     @Override
-    public void apply(Optimizer optm) {
-        if(optm.iterations!=0 && optm.iterations%interval == 0) { // Then we apply the StepLearningRate optimizer
+    public void step(Optimizer optm) {
+        if(iterations!=0 && iterations%interval == 0) {
+            // Then we apply the StepLearningRate optimizer
             optm.learningRate*=stepFactor;
         } // Otherwise, do nothing.
+        iterations++;
     }
 }

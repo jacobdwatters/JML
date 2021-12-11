@@ -1,11 +1,12 @@
 package com.jml.neural_network;
 
-import com.jml.core.Block;
-import com.jml.core.Model;
-import com.jml.core.ModelTypes;
+import com.jml.core.*;
 import com.jml.losses.LossFunctions;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.layers.Layer;
+import com.jml.optimizers.GradientDescent;
+import com.jml.optimizers.Momentum;
+import com.jml.optimizers.Optimizer;
 import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
@@ -51,6 +52,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     private Matrix[] dxUpdates;
     private Matrix[] dxBiasUpdates;
+    private Matrix[] V; // Momentum update matrices. Only used for the Momentum optimizer.
+
+    private Optimizer optim; // Optimizer to use during backpropagation.
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -59,7 +63,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                     "Is Trained: No\n"
     );
 
-    // TODO: Add other constructors.
+
     /**
      * Constructs a neural network with default hyper-parameters.
      * <pre>
@@ -67,6 +71,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *     epochs: 10
      *     batchSize: 1
      *     threshold: 1E-5
+     *     optimizer: {@link GradientDescent Vanila Gradient Descent}
      * </pre>
      */
     public NeuralNetwork() {
@@ -76,11 +81,54 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = 1e-5;
         layers = new ArrayList<>();
 
+        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
+
         buildDetails();
     }
 
+
     /**
      * Constructs a neural network with the specified hyper-parameters.
+     * Uses a default batchSize of 1 and the {@link GradientDescent Vanila Gradient Descent} optimizer.
+     *
+     * @param learningRate Learning to be used during optimization.
+     * @param epochs Number of epochs to train the network for.
+     */
+    public NeuralNetwork(double learningRate, int epochs) {
+        this.learningRate = learningRate;
+        this.epochs = epochs;
+        this.batchSize = 1;
+        layers = new ArrayList<>();
+        this.threshold = 1e-5;
+        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
+
+        buildDetails();
+    }
+
+
+    /**
+     * Constructs a neural network with the specified hyper-parameters. Uses the
+     * {@link GradientDescent Vanila Gradient Descent} optimizer as the default optimizer.
+     *
+     * @param learningRate Learning to be used during optimization.
+     * @param epochs Number of epochs to train the network for.
+     * @param batchSize The batch size to use during training.
+     */
+    public NeuralNetwork(double learningRate, int epochs, int batchSize) {
+        this.learningRate = learningRate;
+        this.epochs = epochs;
+        this.batchSize = batchSize;
+        layers = new ArrayList<>();
+        this.threshold = 1e-5;
+        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
+
+        buildDetails();
+    }
+
+
+    /**
+     * Constructs a neural network with the specified hyper-parameters.
+     * Uses the {@link GradientDescent Vanila Gradient Descent} optimizer as the default optimizer.
      *
      * @param learningRate The learning rate to be using during optimization.
      * @param epochs The number of epochs to train the network for.
@@ -88,7 +136,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param threshold The threshold for the loss to stop early. If the loss drops below this threshold before the
      *                  specified number of epochs has been reached, the training will stop early.
      */
-    // TODO: Will need to take optimizer as parameter. Take this as a string?
     public NeuralNetwork(double learningRate, int epochs, int batchSize, double threshold) {
         this.learningRate = learningRate;
         this.epochs = epochs;
@@ -96,8 +143,69 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = threshold;
         layers = new ArrayList<>();
 
+        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
+
         buildDetails();
     }
+
+
+    /**
+     * Creates a neural network with the specified hyper-parameters and optimizer. Note that when an optimizer
+     * is specified, the learning rate will be specified upon creation of the optimizer and is not needed as a
+     * parameter. A default batchSize of 1 will be used.
+     *
+     * @param optim The optimizer to use during training.
+     * @param epochs The number of epochs to train the neural network for.
+     */
+    public NeuralNetwork(Optimizer optim, int epochs) {
+        this.learningRate = optim.getLearningRate();
+        this.epochs = epochs;
+        this.batchSize = 1;
+        this.threshold = 1e-5;
+        layers = new ArrayList<>();
+        this.optim = optim;
+    }
+
+
+    /**
+     * Creates a neural network with the specified hyper-parameters and optimizer. Note that when an optimizer
+     * is specified, the learning rate will be specified upon creation of the optimizer and is not needed as a
+     * parameter.
+     *
+     * @param optim The optimizer to use during training.
+     * @param epochs The number of epochs to train the neural network for.
+     * @param batchSize The batch size to use during training.
+     */
+    public NeuralNetwork(Optimizer optim, int epochs, int batchSize) {
+        this.learningRate = optim.getLearningRate();
+        this.epochs = epochs;
+        this.batchSize = batchSize;
+        this.threshold = 1e-5;
+        layers = new ArrayList<>();
+        this.optim = optim;
+    }
+
+
+    /**
+     * Creates a neural network with the specified hyper-parameters and optimizer. Note that when an optimizer
+     * is specified, the learning rate will be specified upon creation of the optimizer and is not needed as a
+     * parameter.
+     *
+     * @param optim The optimizer to use during training.
+     * @param epochs The number of epochs to train the neural network for.
+     * @param batchSize The batch size to use during training.
+     * @param threshold The threshold for the loss to stop early. If the loss drops below this threshold before the
+     *                  specified number of epochs has been reached, the training will stop early.
+     */
+    public NeuralNetwork(Optimizer optim, int epochs, int batchSize, double threshold) {
+        this.learningRate = optim.getLearningRate();
+        this.epochs = epochs;
+        this.batchSize = batchSize;
+        this.threshold = threshold;
+        layers = new ArrayList<>();
+        this.optim = optim;
+    }
+
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -112,9 +220,12 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
-        // TODO: Auto-generated method stub
         dxUpdates = new Matrix[layers.size()]; // Weight updates
         dxBiasUpdates = new Matrix[layers.size()];
+
+        if(optim.name.equals(Momentum.OPTIM_NAME)) {
+            initMomentum(); // Then initialize momentum matrices.
+        }
 
         resetDx();
 
@@ -140,6 +251,11 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
             if(lossHist.get(lossHist.size()-1) < threshold) {
                 break; // Then stop training since the loss has dropped below the stopping threshold.
+            }
+
+            if(optim.schedule!=null) {
+                // TODO: Make the schedule take Optimizer.
+                // optim.schedule.step(this);
             }
         }
 
@@ -177,20 +293,17 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         Matrix error = target.sub(output);
         ActivationFunction activation;
 
-        // TODO: Update bias terms as well.
         if(layers.size()>1) {
             activation = layers.get(layers.size()-1).getActivation();
 
             dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1]
-                    .add(activation.slope(layers.get(layers.size()-1).getValues())
+                    .sub(activation.slope(layers.get(layers.size()-1).getValues())
                     .elemMult(error)
-                    .scalMult(learningRate)
                     .mult(layers.get(layers.size()-2).getValues().T()));
 
             dxBiasUpdates[dxBiasUpdates.length-1] = dxBiasUpdates[dxBiasUpdates.length-1]
-                    .add(activation.slope(layers.get(layers.size()-1).getBias())
-                    .elemMult(error)
-                    .scalMult(learningRate));
+                    .sub(activation.slope(layers.get(layers.size()-1).getBias())
+                    .elemMult(error));
 
             error = layers.get(layers.size()-1).getWeights().T().mult(error);
 
@@ -198,15 +311,13 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 activation = layers.get(i).getActivation();
 
                 dxUpdates[i] = dxUpdates[i]
-                        .add(activation.slope(layers.get(i).getValues())
+                        .sub(activation.slope(layers.get(i).getValues())
                         .elemMult(error)
-                        .scalMult(learningRate)
                         .mult(layers.get(i-1).getValues().T()));
 
                 dxBiasUpdates[i] = dxBiasUpdates[i]
-                        .add(activation.slope(layers.get(i).getBias())
-                        .elemMult(error)
-                        .scalMult(learningRate));
+                        .sub(activation.slope(layers.get(i).getBias())
+                        .elemMult(error));
 
                 error = layers.get(i).getWeights().T().mult(error);
             }
@@ -215,33 +326,75 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         activation = layers.get(0).getActivation();
         dxUpdates[0] = dxUpdates[0]
-                .add(activation.slope(layers.get(0).getValues())
+                .sub(activation.slope(layers.get(0).getValues())
                 .elemMult(error)
-                .scalMult(learningRate)
                 .mult(input.T()));
         dxBiasUpdates[0] = dxBiasUpdates[0]
-                .add(activation.slope(layers.get(0).getBias())
-                .elemMult(error)
-                .scalMult(learningRate));
+                .sub(activation.slope(layers.get(0).getBias())
+                .elemMult(error));
     }
 
 
     /**
-     * Applies weight updates to each layer.
+     * Applies weight updates to each layer by applying the optimizer to the weights.
      */
     private void applyUpdates() {
-        for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
-            layers.get(i).setWeights(dxUpdates[i].scalDiv(batchSize).add(layers.get(i).getWeights()));
-            layers.get(i).setBias(dxBiasUpdates[i].scalDiv(batchSize).add(layers.get(i).getBias()));
+
+        if(optim.name.equals(GradientDescent.OPTIM_NAME)) {
+            for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
+                // Apply the optimizer update rule to the weights and bias terms.
+                layers.get(i).setWeights(optim.step(layers.get(i).getWeights(), dxUpdates[i].scalDiv(batchSize)));
+                layers.get(i).setBias(optim.step(layers.get(i).getBias(), dxBiasUpdates[i].scalDiv(batchSize)));
+            }
+
+        } else if(optim.name.equals(Momentum.OPTIM_NAME)) {
+            int vi = 0;
+
+            Matrix[] wv; // Holds new weight and momentum matrices.
+            Matrix[] bv; // Holds new bias and momentum matrices.
+
+            for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
+                // Apply the optimizer update rule to the weights and bias terms.
+                wv = optim.step(layers.get(i).getWeights(), dxUpdates[i].scalDiv(batchSize), V[vi]);
+                bv = optim.step(layers.get(i).getBias(), dxBiasUpdates[i].scalDiv(batchSize), V[vi+1]);
+
+                // Apply updates to weight, bias, and momentum matrices.
+                layers.get(i).setWeights(wv[0]);
+                layers.get(i).setBias(bv[0]);
+                V[vi] = wv[1];
+                V[vi+1] = bv[1];
+
+                vi+=2;
+            }
+        } else {
+            throw new IllegalStateException("Unknown optimizer: " + optim.getClass());
         }
 
         resetDx(); // Reset dx's for next epoch.
+//        initMomentum(); // Reset momentum matrices for next epoch.
     }
 
+
+    // Reset all dx's to zero.
     private void resetDx() {
         for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
             dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
             dxBiasUpdates[i] = new Vector(layers.get(i).getOutDim());
+        }
+    }
+
+
+    // initialize momentum matrices if momentum optimizer is being used.
+    private void initMomentum() {
+        if(!optim.name.equals(Momentum.OPTIM_NAME)) {
+            throw new IllegalStateException("Can not initialize momentum vectors for optimizer " + this.optim.getClass());
+        }
+
+        V = new Matrix[layers.size()*2]; // Create a V for each weight and bias matrix
+
+        for(int i=0; i<V.length; i+=2) {
+            V[i] = new Matrix(layers.get(i/2).getWeights().shape());
+            V[i+1] = new Matrix(layers.get(i/2).getBias().shape());
         }
     }
 
@@ -376,6 +529,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         details.append("Learning Rate: " + this.learningRate + "\n");
         details.append("Batch Size: " + this.batchSize + "\n");
+        details.append("Optimizer: " + this.optim.name + "\n");
 
         if(!layers.isEmpty()) {
             details.append("Layers (" + layers.size() + "):\n" + "------------\n");
