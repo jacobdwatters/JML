@@ -1,54 +1,53 @@
 package com.jml.optimizers;
 
-import com.jml.core.Model;
-import com.jml.losses.Function;
 import linalg.Matrix;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 /**
- * An optimizer which minimizes a specified function numerically.<br><br>
- *
- * The function is assumed to depend on two matrices X
- * and y. For instance a {@link com.jml.losses.LossFunctions loss function} depends on two matrices X and y where y is
- * the expected values and a model making predictions on X are the estimated values.
+ * Interface for an optimizer which can be used to minimize a function by utilizing the gradients of that function.
  */
 public abstract class Optimizer {
-
-    double threshold = 0.5e-5; // Threshold for stopping optimizer before maxIterations is reached.
-    int maxIterations = 1500; // Maximum number of iterations to run optimizer before quiting.
-    int iterations; // Tracks how manny iterations the optimizer has run for.
-    double learningRate = 0.2; // Learning rate of the optimizer.
-    Model model; // Model which the optimizer is working on. This is needed since loss functions depends on a model.
-    Scheduler scheduler; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
-    List<Double> lossHistory = new ArrayList<>(); // Tracks loss per iteration of the optimizer.
-
+    double learningRate; // Learning rate of the optimizer.
+    public Scheduler schedule; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
+    public String name;
 
     /**
-     * Gets the loss history from the optimizer.
+     * Steps the optimizer a single iteration by applying the update rule of
+     * the optimizer to the matrix w.<br><br>
      *
-     * @return The loss of every iteration stored in a List. If the optimizer has not been applied, returns null.
-     */
-    public abstract List<Double> getLossHist();
-
-    /**
-     * Applies specified optimizer rule to loss function.
+     * WARNING: If this step method is called for the {@link Momentum} optimizer an exception will be thrown.
+     * Use {@link #step(Matrix, Matrix, Matrix)} instead.
      *
-     * @param function The loss function to optimize.
-     * @param X Features of model.
-     * @param y Targets of model.
-     * @return The computed minimum of the loss function.
+     * @param w A matrix containing the weights to apply the update to.
+     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    public abstract Matrix optimize(Function function, Matrix X, Matrix y);
+    public abstract Matrix step(Matrix w, Matrix wGrad);
 
 
     /**
-     * Sets the learning rate scheduler for the optimizer.
-     * @param scheduler The scheduler for the optimizer.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
+     * step method should be used for momentum.
+     *
+     * @param w A matrix containing the weights to apply the update to.
+     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @param v The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
+     *          no effect.
+     * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    public void setScheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
+    public abstract Matrix[] step(Matrix w, Matrix wGrad, Matrix v);
+
+    /**
+     * Sets the learning rate scheduler for this optimizer.
+     * @param schedule Learning rate scheduler.
+     */
+    public void setScheduler(Scheduler schedule) {
+        this.schedule = schedule;
     }
+
+
+    /**
+     * Gets the learning rate for this optimizer.
+     * @return The learning rate for this optimizer.
+     */
+    public double getLearningRate() {return learningRate;}
 }

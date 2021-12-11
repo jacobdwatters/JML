@@ -1,10 +1,10 @@
 com\jml\neural_network\activations\ActivationFunction.class
 com\jml\neural_network\activations\Activations.class
-com\jml\optimizers\StochasticGradientDescent.class
 com\jml\core\Stats$1.class
 com\jml\core\Metrics.class
 com\jml\core\Stats.class
 com\jml\core\ModelTypes.class
+com\jml\optimizers\GradientDescent.class
 com\jml\util\ArrayUtils.class
 com\jml\classifiers\KDTree.class
 com\jml\core\LinRegFromData.class
@@ -47,4 +47,5 @@ com\jml\linear_models\LinearRegressionSGD.class
 com\jml\classifiers\ClassifierTags.class
 com\jml\core\LogRegFromData.class
 com\jml\core\Model.class
+com\jml\optimizers\Momentum.class
 com\jml\core\Block.class

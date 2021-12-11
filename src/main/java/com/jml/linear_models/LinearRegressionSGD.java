@@ -1,14 +1,16 @@
 package com.jml.linear_models;
 
 
+import com.jml.core.Gradient;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
-import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StochasticGradientDescent;
+import com.jml.optimizers.*;
 import linalg.Matrix;
 import linalg.Vector;
 import com.jml.util.ValueError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -23,9 +25,11 @@ public class LinearRegressionSGD extends LinearRegression {
     protected double learningRate = 0.002;
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
-    protected Optimizer SGD;
+    protected Optimizer GD;
     protected Scheduler schedule;
+    private List<Double> lossHist = new ArrayList<>();
 
+    // TODO: This is using just gradient descent, need to change to true stochastic gradient descent.
 
     /**
      * Creates a {@link LinearRegressionSGD} model.<br>
@@ -143,16 +147,32 @@ public class LinearRegressionSGD extends LinearRegression {
      */
     @Override
     public LinearRegressionSGD fit(double[] features, double[] targets) {
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
-        SGD.setScheduler(this.schedule);
+        GD = new GradientDescent(learningRate);
+        GD.setScheduler(this.schedule); // Need to actually step this scheduler in the loop...
 
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));
         Matrix y = new Vector(targets);
 
-        w = SGD.optimize(LossFunctions.sse, X, y);
+        Matrix wGrad;
+        w = Matrix.randn(X.numCols(), 1, false); // initialize w.
+
+        for(int i=0; i<maxIterations; i++) {
+            wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients
+            w = GD.step(w, wGrad); // Apply gradient descent update rule.
+
+            // TODO: Need to apply scheduler.
+
+            // Append loss to the loss history.
+            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));
+
+            if(lossHist.get(lossHist.size()-1)<threshold) {
+                break; // Then stop the training early
+            }
+        }
 
         // Update the model details
+        super.coefficients = w.T().getValuesAsDouble()[0];
         super.isFit=true;
         buildDetails();
 
@@ -170,7 +190,7 @@ public class LinearRegressionSGD extends LinearRegression {
             throw new IllegalStateException("Model must be trained before the loss history can be computed.");
         }
 
-        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
+        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();
     }
 
     private void paramCheck() {

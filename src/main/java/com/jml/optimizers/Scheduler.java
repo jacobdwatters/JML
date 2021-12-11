@@ -13,5 +13,5 @@ public abstract class Scheduler {
      *
      * @param optm Optimizer to apply this Scheduler to.
      */
-    public abstract void apply(Optimizer optm);
+    public abstract void step(Optimizer optm);
 }

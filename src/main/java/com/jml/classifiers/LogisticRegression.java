@@ -1,17 +1,21 @@
 package com.jml.classifiers;
 
 import com.jml.core.Block;
+import com.jml.core.Gradient;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.linear_models.LinearModelTags;
 import com.jml.losses.LossFunctions;
+import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StochasticGradientDescent;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -31,8 +35,10 @@ public class LogisticRegression extends Model<double[][], double[]> {
     protected double learningRate = 0.002;
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
-    private final Optimizer SGD;
+    private final Optimizer GD;
     protected Scheduler schedule;
+
+    private List<Double> lossHist = new ArrayList<>();
 
     // Details of model in human-readable format.
     private StringBuilder details = new StringBuilder(
@@ -49,7 +55,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
      * learning rate. Defaults to a learning rate of 0.002, 1000 max iterations and a threshold of 0.5e-5.
      */
     public LogisticRegression() {
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
+        GD = new GradientDescent(learningRate);
     }
 
 
@@ -69,8 +75,8 @@ public class LogisticRegression extends Model<double[][], double[]> {
         this.maxIterations = maxIterations;
         this.threshold = threshold;
         this.schedule = schedule;
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
-        SGD.setScheduler(this.schedule);
+        GD = new GradientDescent(learningRate);
+        GD.setScheduler(this.schedule);
     }
 
 
@@ -88,7 +94,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
         this.threshold = threshold;
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
+        GD = new GradientDescent(learningRate);;
     }
 
 
@@ -103,7 +109,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
     public LogisticRegression(double learningRate, int maxIterations) {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
+        GD = new GradientDescent(learningRate);
     }
 
 
@@ -116,7 +122,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
      */
     public LogisticRegression(double learningRate) {
         this.learningRate = learningRate;
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
+        GD = new GradientDescent(learningRate);
     }
 
 
@@ -139,8 +145,23 @@ public class LogisticRegression extends Model<double[][], double[]> {
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
         Matrix y = new Vector(targets);
+        Matrix wGrad;
+        w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
-        w = SGD.optimize(LossFunctions.binCrossEntropy, X, y); // Apply optimizer to the loss function
+        for(int i=0; i<maxIterations; i++) {
+            wGrad = Gradient.compute(w, X, y, LossFunctions.binCrossEntropy, this); // Compute gradients
+            w = GD.step(w, wGrad); // Apply gradient descent update rule.
+
+            // TODO: Need to apply scheduler.
+
+            // Append loss to the loss history.
+            lossHist.add(LossFunctions.binCrossEntropy.compute(y, this.predict(X, w)).getAsDouble(0, 0));
+
+            if(lossHist.get(lossHist.size()-1)<threshold) {
+                break; // Then stop the training early
+            }
+        }
+
         this.coefficients = w.T().getValuesAsDouble()[0];
 
         isFit=true;
@@ -224,7 +245,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
             throw new IllegalStateException("Model must be trained before the loss history can be computed.");
         }
 
-        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
+        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();
     }
 
 

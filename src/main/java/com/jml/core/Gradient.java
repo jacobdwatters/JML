@@ -26,7 +26,7 @@ public class Gradient {
      * @param model Model to use for gradient computation.
      * @return Gradient with respect to w for the specified function.
      */
-    // TODO: Only take function,
+    // TODO: Only take function. i.e. yPred should be computed before and passed to this method.
     public static Matrix compute(Matrix w, Matrix X, Matrix y, Function F, Model model) {
 
         Matrix grad = new Matrix(w.shape());
