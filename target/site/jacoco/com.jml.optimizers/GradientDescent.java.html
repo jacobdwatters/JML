@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GradientDescent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.optimizers</a> &gt; <span class="el_source">GradientDescent.java</span></div><h1>GradientDescent.java</h1><pre class="source lang-java linenums">package com.jml.optimizers;
+
+import linalg.Matrix;
+
+
+/**
+ * Vanilla gradient descent optimizer. Applies the update rule,
+ * &lt;code&gt;w&lt;sub&gt;i+1&lt;/sub&gt; = w&lt;sub&gt;i&lt;/sub&gt; - a*grad( w&lt;sub&gt;i&lt;/sub&gt; )&lt;/code&gt; where &lt;code&gt;a&lt;/code&gt; is the learning rate.
+ */
+public class GradientDescent  extends Optimizer {
+    public static final String OPTIM_NAME = &quot;Gradient Descent&quot;;
+
+
+    /**
+     * Creates a vanilla gradient descent optimizer with the specified learning rate.
+     *
+     * @param learningRate Learning rate to be used in the gradient descent algorithm.
+     */
+<span class="fc" id="L19">    public GradientDescent(double learningRate) {</span>
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">        if(learningRate &lt; 0) {</span>
+<span class="nc" id="L21">            throw new IllegalArgumentException(&quot;Learning rate must be non-negative but got &quot; + learningRate + &quot;.&quot;);</span>
+        }
+
+<span class="fc" id="L24">        this.learningRate = learningRate;</span>
+<span class="fc" id="L25">        super.name = this.OPTIM_NAME;</span>
+<span class="fc" id="L26">    }</span>
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of
+     * the optimizer to the matrix w.
+     *
+     * @param w A matrix contain the
+     * @param wGrad The gradient of w.
+     * @return The result of applying the update rule of the optimizer to the matrix w.
+     */
+    @Override
+    public Matrix step(Matrix w, Matrix wGrad) {
+<span class="fc" id="L38">        return w.sub(wGrad.scalMult(learningRate));</span>
+    }
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
+     * step method should be used for momentum.
+     *
+     * @param w     A matrix containing the weights to apply the update to.
+     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
+     *              no effect.
+     * @return The result of applying the update rule of the optimizer to the matrix w.
+     */
+    @Override
+    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
+<span class="nc" id="L53">        throw new IllegalStateException(&quot;This step method is not defined for the &quot; + OPTIM_NAME + &quot; optimizer&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

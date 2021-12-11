@@ -1,13 +1,17 @@
 package com.jml.linear_models;
 
+import com.jml.core.Gradient;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
+import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StochasticGradientDescent;
 import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -22,9 +26,11 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     protected double learningRate = 0.002;
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
-    private Optimizer SGD;
+    private Optimizer GD;
     protected Scheduler schedule;
+    private List<Double> lossHist = new ArrayList<>();
 
+    // TODO: Currently using standard gradient descent. Need to change to actual stochastic gradient descent.
 
     /**
      * Creates a {@link PolynomialRegressionSGD} model. This will use a default learning rate of 0.002.
@@ -143,16 +149,32 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
      */
     @Override
     public PolynomialRegressionSGD fit(double[] features, double[] targets) {
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
-        SGD.setScheduler(this.schedule);
+        GD = new GradientDescent(learningRate);
+        GD.setScheduler(this.schedule);
 
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.van( new Vector(features), degree+1);
         Matrix y = new Vector(targets);
 
-        w = SGD.optimize(LossFunctions.sse, X, y);
+        Matrix wGrad;
+        w = Matrix.randn(X.numCols(), 1, false); // initialize w.
+
+        for(int i=0; i<maxIterations; i++) {
+            wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients
+            w = GD.step(w, wGrad); // Apply gradient descent update rule.
+
+            // TODO: Need to apply scheduler.
+
+            // Append loss to the loss history.
+            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));
+
+            if(lossHist.get(lossHist.size()-1)<threshold) {
+                break; // Then stop the training early
+            }
+        }
 
         // Update the model details
+        super.coefficients = w.T().getValuesAsDouble()[0];
         super.isFit=true;
         buildDetails();
 
@@ -170,7 +192,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
             throw new IllegalStateException("Model must be trained before the loss history can be computed.");
         }
 
-        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
+        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();
     }
 
 

@@ -13,15 +13,17 @@ public class StepLearningRate extends Scheduler {
 
     double stepFactor;
     int interval;
+    int iterations;
 
 
     /**
      * Creates a default {@link StepLearningRate} scheduler with factor of 0.8 and an interval of 10.
      */
-<span class="nc" id="L21">    public StepLearningRate() {</span>
-<span class="nc" id="L22">        this.stepFactor = 0.8;  // Default Step factor</span>
-<span class="nc" id="L23">        this.interval = 10; // Default step interval</span>
-<span class="nc" id="L24">    }</span>
+<span class="nc" id="L22">    public StepLearningRate() {</span>
+<span class="nc" id="L23">        this.stepFactor = 0.8;  // Default Step factor</span>
+<span class="nc" id="L24">        this.interval = 10; // Default step interval</span>
+<span class="nc" id="L25">        this.iterations = 0;</span>
+<span class="nc" id="L26">    }</span>
 
 
     /**
@@ -29,9 +31,9 @@ public class StepLearningRate extends Scheduler {
      *
      * @param stepFactor Factor to multiply the learning rate by every 10 iterations.
      */
-<span class="fc" id="L32">    public StepLearningRate(double stepFactor) {</span>
-<span class="fc" id="L33">        this.stepFactor = stepFactor;</span>
-<span class="fc" id="L34">    }</span>
+<span class="fc" id="L34">    public StepLearningRate(double stepFactor) {</span>
+<span class="fc" id="L35">        this.stepFactor = stepFactor;</span>
+<span class="fc" id="L36">    }</span>
 
 
     /**
@@ -41,10 +43,10 @@ public class StepLearningRate extends Scheduler {
      * @param interval Specified number of optimizer iterations to apply before applying this
      *                 scheduler rule.
      */
-<span class="fc" id="L44">    public StepLearningRate(double stepFactor, int interval) {</span>
-<span class="fc" id="L45">        this.stepFactor = stepFactor;</span>
-<span class="fc" id="L46">        this.interval = interval;</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L46">    public StepLearningRate(double stepFactor, int interval) {</span>
+<span class="fc" id="L47">        this.stepFactor = stepFactor;</span>
+<span class="fc" id="L48">        this.interval = interval;</span>
+<span class="fc" id="L49">    }</span>
 
 
     /**
@@ -53,10 +55,12 @@ public class StepLearningRate extends Scheduler {
      * return The new learning rate according to the specific Schedulers rules.
      */
     @Override
-    public void apply(Optimizer optm) {
-<span class="pc bpc" id="L57" title="2 of 4 branches missed.">        if(optm.iterations!=0 &amp;&amp; optm.iterations%interval == 0) { // Then we apply the StepLearningRate optimizer</span>
-<span class="fc" id="L58">            optm.learningRate*=stepFactor;</span>
+    public void step(Optimizer optm) {
+<span class="pc bpc" id="L59" title="1 of 4 branches missed.">        if(iterations!=0 &amp;&amp; iterations%interval == 0) {</span>
+            // Then we apply the StepLearningRate optimizer
+<span class="fc" id="L61">            optm.learningRate*=stepFactor;</span>
         } // Otherwise, do nothing.
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L63">        iterations++;</span>
+<span class="fc" id="L64">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

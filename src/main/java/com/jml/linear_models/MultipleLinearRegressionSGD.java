@@ -1,13 +1,17 @@
 package com.jml.linear_models;
 
+import com.jml.core.Gradient;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
+import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StochasticGradientDescent;
 import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -23,9 +27,11 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     protected double learningRate = 0.002;
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
-    private Optimizer SGD;
+    private Optimizer GD;
     protected Scheduler schedule;
+    private List<Double> lossHist = new ArrayList<>();
 
+    // TODO: Currently using standard gradient descent. Need to change to actual stochastic gradient descent.
 
     /**
      * Creates a {@link MultipleLinearRegressionSGD} model.  This will use a default learning rate of 0.002.
@@ -128,16 +134,31 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
      */
     @Override
     public MultipleLinearRegressionSGD fit(double[][] features, double[] targets) {
-        SGD = new StochasticGradientDescent(this, learningRate, maxIterations, threshold);
-        SGD.setScheduler(this.schedule);
+        GD = new GradientDescent(learningRate);
+        GD.setScheduler(this.schedule);
 
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
         Matrix y = new Vector(targets);
 
-        w = SGD.optimize(LossFunctions.sse, X, y); // Apply optimizer to the loss function
-        super.coefficients = w.T().getValuesAsDouble()[0];
+        Matrix wGrad;
+        w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
+        for(int i=0; i<maxIterations; i++) {
+            wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients
+            w = GD.step(w, wGrad); // Apply gradient descent update rule.
+
+            // TODO: Need to apply scheduler.
+
+            // Append loss to the loss history.
+            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));
+
+            if(lossHist.get(lossHist.size()-1)<threshold) {
+                break; // Then stop the training early
+            }
+        }
+
+        super.coefficients = w.T().getValuesAsDouble()[0];
         super.isFit=true;
         super.buildDetails();
 
@@ -155,10 +176,11 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
             throw new IllegalStateException("Model must be trained before the loss history can be computed.");
         }
 
-        return SGD.getLossHist().stream().mapToDouble(Double::doubleValue).toArray();
+        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();
     }
 
 
+    // Ensure parameters are valid.
     private void paramCheck() {
         if(!ValueError.isNonNegative(maxIterations))
             throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations);
