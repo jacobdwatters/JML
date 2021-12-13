@@ -5,9 +5,9 @@ import linalg.Matrix;
 
 
 /**
- * An interface for specifying a layer for a neural network. Several pre-made layers are available.<br><br>
+ * An interface for specifying a layer for a neural network. Pre-made layers are available.<br><br>
  *
- * Layers:
+ * Pre-made Layers:
  * <pre>
  *     {@link com.jml.neural_network.layers.Dense Dense}
  *     {@link com.jml.neural_network.layers.Dropout Dropout}
@@ -21,6 +21,17 @@ public interface Layer {
      * @return The result of the layer applied to the values.
      */
     Matrix forward(Matrix inputs);
+
+
+    /**
+     * Computes the backward pass of the layer.
+     *
+     * @param previousVals Values of the previous layer in the network (or input values for first layer).
+     * @param error Error for this layer.
+     * @return Updates for weights based on the gradients of this layer.
+     */
+    Matrix[] back(Matrix previousVals, Matrix error);
+
 
     /**
      * Updates the input dimension for the layer. <br>
@@ -95,7 +106,7 @@ public interface Layer {
      *
      * @return A string containing all information, including trainable parameters needed to recreate the layer.
      */
-    String inspectTemp();
+    String getDetails();
 
 
     /**

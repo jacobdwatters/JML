@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Adam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.optimizers</a> &gt; <span class="el_source">Adam.java</span></div><h1>Adam.java</h1><pre class="source lang-java linenums">package com.jml.optimizers;
+
+import linalg.Matrix;
+
+
+/**
+ * The Adam (Adaptive Moment Estimation) optimizer. Adam is a first order gradient method for efficient
+ * stochastic optimization.&lt;br&gt;&lt;br&gt;
+ *
+ * This is recommended as the default optimizer on most problems.
+ *
+ * Applies the following update rule:
+ * &lt;pre&gt;
+ *      g&lt;sub&gt;t&lt;/sub&gt; = grad(w&lt;sub&gt;t-1&lt;/sub&gt;)
+ *      m&lt;sub&gt;t&lt;/sub&gt; = b&lt;sub&gt;1&lt;/sub&gt;*m&lt;sub&gt;t-1&lt;/sub&gt; + (1-b&lt;sub&gt;1&lt;/sub&gt;)*g&lt;sub&gt;t&lt;/sub&gt;
+ *      v&lt;sub&gt;t&lt;/sub&gt; = b&lt;sub&gt;2&lt;/sub&gt;*v&lt;sub&gt;t-1&lt;/sub&gt; + (1-b&lt;sub&gt;2&lt;/sub&gt;)*g&lt;sub&gt;t&lt;/sub&gt;&lt;sup&gt;2&lt;/sup&gt;
+ *
+ *      m&amp;#770;&lt;sub&gt;t&lt;/sub&gt; = m&lt;sub&gt;t&lt;/sub&gt;/(1-b&lt;sub&gt;1&lt;/sub&gt;&lt;sup&gt;t&lt;/sup&gt;)
+ *      v&amp;#770;&lt;sub&gt;t&lt;/sub&gt; = v&lt;sub&gt;t&lt;/sub&gt;/(1-b&lt;sub&gt;2&lt;/sub&gt;&lt;sup&gt;t&lt;/sup&gt;)
+ *
+ *      w&lt;sub&gt;t&lt;/sub&gt; = w&lt;sub&gt;t-1&lt;/sub&gt; - a*m&amp;#770;&lt;sub&gt;t&lt;/sub&gt;/(&amp;#8730;(v&amp;#770;&lt;sub&gt;t&lt;/sub&gt;) + &amp;#1013;)
+ *
+ *      Where a is the learning rate, b&lt;sub&gt;1&lt;/sub&gt; and b&lt;sub&gt;2&lt;/sub&gt; are the moment parameters,
+ *      and &amp;#1013; is a small value to avoid division bny zero.
+ * &lt;/pre&gt;
+ *
+ *
+ */
+<span class="nc" id="L29">public class Adam extends Optimizer {</span>
+
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of
+     * the optimizer to the matrix w.&lt;br&gt;&lt;br&gt;
+     * &lt;p&gt;
+     * WARNING: If this step method is called for the {@link Momentum} optimizer an exception will be thrown.
+     * Use {@link #step(Matrix, Matrix, Matrix)} instead.
+     *
+     * @param w     A matrix containing the weights to apply the update to.
+     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @return The result of applying the update rule of the optimizer to the matrix w.
+     */
+    @Override
+    public Matrix step(Matrix w, Matrix wGrad) {
+        // TODO: Auto-generated method stub
+<span class="nc" id="L46">        return null;</span>
+    }
+
+
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
+     * step method should be used for momentum.
+     *
+     * @param w     A matrix containing the weights to apply the update to.
+     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
+     *              no effect.
+     * @return The result of applying the update rule of the optimizer to the matrix w.
+     */
+    @Override
+    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
+        // TODO: Auto-generated method stub
+<span class="nc" id="L64">        return new Matrix[0];</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

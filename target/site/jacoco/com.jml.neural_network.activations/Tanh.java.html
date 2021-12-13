@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tanh.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.activations</a> &gt; <span class="el_source">Tanh.java</span></div><h1>Tanh.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.activations;
+
+
+import linalg.Matrix;
+
+/**
+ * The hyperbolic tangent activation function.
+ * &lt;code&gt;f(x) = tanh(x) = (e&lt;sup&gt;x&lt;/sup&gt; - e&lt;sup&gt;-x&lt;/sup&gt;) / (e&lt;sup&gt;x&lt;/sup&gt; + e&lt;sup&gt;-x&lt;/sup&gt;)&lt;/code&gt;
+ */
+<span class="fc" id="L10">public class Tanh implements ActivationFunction{</span>
+    public static final String NAME = &quot;tanh&quot;;
+
+
+    /**
+     * Applies the activation function, element-wise, to a matrix.
+     *
+     * @param data The matrix to apply activation function to.
+     * @return The result of the element-wise activation function applied to the matrix.
+     */
+    @Override
+    public Matrix apply(Matrix data) {
+<span class="nc" id="L22">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+        double exp, negExp;
+
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="nc" id="L27">                exp = Math.exp(data.getAsDouble(i, j));</span>
+<span class="nc" id="L28">                negExp = Math.exp(data.getAsDouble(i, j));</span>
+
+<span class="nc" id="L30">                result[i][j] =  (exp - negExp) / (exp + negExp);</span>
+            }
+        }
+
+<span class="nc" id="L34">        return new Matrix(result);</span>
+    }
+
+
+    /**
+     * Applies the derivative of the activation function, element-wise, to a matrix.
+     *
+     * @param data The matrix to apply the derivative of the activation function to.
+     * @return
+     */
+    @Override
+    public Matrix slope(Matrix data) {
+<span class="nc" id="L46">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+        double exp, negExp;
+
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="nc" id="L51">                exp = Math.exp(data.getAsDouble(i, j));</span>
+<span class="nc" id="L52">                negExp = Math.exp(data.getAsDouble(i, j));</span>
+
+<span class="nc" id="L54">                result[i][j] =  4 / Math.pow(exp + negExp, 2);</span>
+            }
+        }
+
+<span class="nc" id="L58">        return new Matrix(result);</span>
+    }
+
+
+    /**
+     * Gets the name of the activation function.
+     *
+     * @return The name of the activation function as a String.
+     */
+    @Override
+    public String getName() {
+<span class="nc" id="L69">        return this.NAME;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

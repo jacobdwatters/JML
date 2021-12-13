@@ -48,15 +48,15 @@ public class LinearRegressionSGD extends LinearRegression {
 
     /**
      *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
      * @param schedule Learning rate scheduler.
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
 <span class="fc" id="L61">    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {</span>
 <span class="fc" id="L62">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
@@ -70,14 +70,14 @@ public class LinearRegressionSGD extends LinearRegression {
 
     /**
      *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
 <span class="fc" id="L82">    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold) {</span>
 <span class="fc" id="L83">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
@@ -90,12 +90,12 @@ public class LinearRegressionSGD extends LinearRegression {
 
     /**
      *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
 <span class="fc" id="L100">    public LinearRegressionSGD(double learningRate, int maxIterations) {</span>
 <span class="fc" id="L101">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
@@ -107,10 +107,10 @@ public class LinearRegressionSGD extends LinearRegression {
 
     /**
      *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
 <span class="fc" id="L115">    public LinearRegressionSGD(double learningRate) {</span>
 <span class="fc" id="L116">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
@@ -121,11 +121,11 @@ public class LinearRegressionSGD extends LinearRegression {
 
     /**
      *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
 <span class="fc" id="L130">    public LinearRegressionSGD(int maxIterations) {</span>
 <span class="fc" id="L131">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>

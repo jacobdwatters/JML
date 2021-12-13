@@ -2,16 +2,20 @@ package com.jml.neural_network;
 
 import com.jml.core.*;
 import com.jml.losses.LossFunctions;
-import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.Dense;
+import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.Layer;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Momentum;
 import com.jml.optimizers.Optimizer;
+import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -46,6 +50,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected double threshold;
     protected int epochs;
     protected int batchSize;
+
+    private int trainableLayers=0;
 
     protected boolean isFit = false;
     List<Double> lossHist = new ArrayList<>();
@@ -220,14 +226,13 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
-        dxUpdates = new Matrix[layers.size()]; // Weight updates
-        dxBiasUpdates = new Matrix[layers.size()];
-
-        if(optim.name.equals(Momentum.OPTIM_NAME)) {
+        if(optim instanceof Momentum) {
             initMomentum(); // Then initialize momentum matrices.
         }
 
-        resetDx();
+        dxUpdates = new Matrix[trainableLayers]; // Weight updates
+        dxBiasUpdates = new Matrix[trainableLayers]; // bias updates
+        resetDx(); // Initialize the gradient update matrices.
 
         Matrix feature = new Matrix(features);
         Matrix target = new Matrix(targets);
@@ -239,11 +244,11 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             for(int j=0; j<feature.numRows(); j++) {
                 for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) {
                     input = feature.getRowAsVector(j+k).T();
-                    output = feedForward(input);
-                    back(target.getRowAsVector(j+k).T(), output, input);
+                    output = feedForward(input); // Apply the forward pass on the network.
+                    back(target.getRowAsVector(j+k).T(), output, input); // Apply the backward pass of the network.
                 }
 
-                applyUpdates();
+                applyUpdates(); // Apply updates computed during the backward pass to the weights.
             }
 
             predictions = new Matrix(this.predict(features));
@@ -253,9 +258,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 break; // Then stop training since the loss has dropped below the stopping threshold.
             }
 
-            if(optim.schedule!=null) {
-                // TODO: Make the schedule take Optimizer.
-                // optim.schedule.step(this);
+            if(optim.schedule!=null) { // Apply learning rate scheduler if applicable
+                optim.schedule.step(optim);
             }
         }
 
@@ -273,7 +277,14 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected Matrix feedForward(Matrix input) {
         Matrix currentInput = new Matrix(input);
         for(Layer layer : layers) { // Feeds the input through all layers.
-            currentInput = layer.forward(currentInput);
+            if(isFit) { // Then ensure that dropout is not applied
+                if(!(layer instanceof Dropout)) { // Layer is NOT dropout so apply it.
+                    currentInput = layer.forward(currentInput);
+                }
+
+            } else { // Then apply all layers on untrained model.
+                currentInput = layer.forward(currentInput);
+            }
         }
 
         return currentInput;
@@ -282,56 +293,39 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     /**
      * Computes the backward pass of the neural network and updates weights.
-     * The backwards pass updates the weights of each layer in an attempt to decrease the loss of the forward pass.
-     * This is done by back-propagation and gradient descent.
+     * The backwards pass computes the gradients of each layer. These gradients are used in an attempt to decrease the loss of the forward pass.
+     * This is done by back-propagation and gradient descent or another optimizer.
      *
      * @param target Target for the neural network. i.e. the expected or desired output for the given input sample.
      * @param output Output of the neural network. i.e. the result of the feed forward operation.
      */
     protected void back(Matrix target, Matrix output, Matrix input) {
+        Matrix error = target.sub(output); // initial error.
+        Matrix[] updates;
+        Matrix previousValues;
+        int param_i = trainableLayers-1; // Keeps track of parameter updates index.
 
-        Matrix error = target.sub(output);
-        ActivationFunction activation;
+        for(int i=layers.size()-1; i>=1; i--) {
+            if(!(layers.get(i) instanceof Dropout)) {
+                // Compute the backward pass for the layer.
+                updates = layers.get(i).back(layers.get(i-1).getValues(), error);
 
-        if(layers.size()>1) {
-            activation = layers.get(layers.size()-1).getActivation();
-
-            dxUpdates[dxUpdates.length-1] = dxUpdates[dxUpdates.length-1]
-                    .sub(activation.slope(layers.get(layers.size()-1).getValues())
-                    .elemMult(error)
-                    .mult(layers.get(layers.size()-2).getValues().T()));
-
-            dxBiasUpdates[dxBiasUpdates.length-1] = dxBiasUpdates[dxBiasUpdates.length-1]
-                    .sub(activation.slope(layers.get(layers.size()-1).getBias())
-                    .elemMult(error));
-
-            error = layers.get(layers.size()-1).getWeights().T().mult(error);
-
-            for(int i=layers.size()-2; i>=1; i--) {
-                activation = layers.get(i).getActivation();
-
-                dxUpdates[i] = dxUpdates[i]
-                        .sub(activation.slope(layers.get(i).getValues())
-                        .elemMult(error)
-                        .mult(layers.get(i-1).getValues().T()));
-
-                dxBiasUpdates[i] = dxBiasUpdates[i]
-                        .sub(activation.slope(layers.get(i).getBias())
-                        .elemMult(error));
+                // Update gradients
+                dxUpdates[param_i] = dxUpdates[param_i].sub(updates[0]);
+                dxBiasUpdates[param_i] = dxBiasUpdates[param_i].sub(updates[1]);
 
                 error = layers.get(i).getWeights().T().mult(error);
+                param_i--;
             }
-
         }
 
-        activation = layers.get(0).getActivation();
-        dxUpdates[0] = dxUpdates[0]
-                .sub(activation.slope(layers.get(0).getValues())
-                .elemMult(error)
-                .mult(input.T()));
-        dxBiasUpdates[0] = dxBiasUpdates[0]
-                .sub(activation.slope(layers.get(0).getBias())
-                .elemMult(error));
+        if(!(layers.get(0) instanceof Dropout)) {
+            updates = layers.get(0).back(input, error);
+
+            // Update gradients
+            dxUpdates[0] = dxUpdates[0].sub(updates[0]);
+            dxBiasUpdates[0] = dxBiasUpdates[0].sub(updates[1]);
+        }
     }
 
 
@@ -339,15 +333,19 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * Applies weight updates to each layer by applying the optimizer to the weights.
      */
     private void applyUpdates() {
+        int param_i = 0;
 
-        if(optim.name.equals(GradientDescent.OPTIM_NAME)) {
+        if(optim instanceof GradientDescent) {
             for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
                 // Apply the optimizer update rule to the weights and bias terms.
-                layers.get(i).setWeights(optim.step(layers.get(i).getWeights(), dxUpdates[i].scalDiv(batchSize)));
-                layers.get(i).setBias(optim.step(layers.get(i).getBias(), dxBiasUpdates[i].scalDiv(batchSize)));
+                if(!(layers.get(i) instanceof Dropout)) {
+                    layers.get(i).setWeights(optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize)));
+                    layers.get(i).setBias(optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize)));
+                    param_i++;
+                }
             }
 
-        } else if(optim.name.equals(Momentum.OPTIM_NAME)) {
+        } else if(optim instanceof Momentum) {
             int vi = 0;
 
             Matrix[] wv; // Holds new weight and momentum matrices.
@@ -355,16 +353,20 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
             for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
                 // Apply the optimizer update rule to the weights and bias terms.
-                wv = optim.step(layers.get(i).getWeights(), dxUpdates[i].scalDiv(batchSize), V[vi]);
-                bv = optim.step(layers.get(i).getBias(), dxBiasUpdates[i].scalDiv(batchSize), V[vi+1]);
 
-                // Apply updates to weight, bias, and momentum matrices.
-                layers.get(i).setWeights(wv[0]);
-                layers.get(i).setBias(bv[0]);
-                V[vi] = wv[1];
-                V[vi+1] = bv[1];
+                if(!(layers.get(i) instanceof Dropout)) {
+                    wv = optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize), V[vi]);
+                    bv = optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize), V[vi+1]);
 
-                vi+=2;
+                    // Apply updates to weight, bias, and momentum matrices.
+                    layers.get(i).setWeights(wv[0]);
+                    layers.get(i).setBias(bv[0]);
+                    V[vi] = wv[1];
+                    V[vi+1] = bv[1];
+
+                    vi+=2;
+                    param_i++;
+                }
             }
         } else {
             throw new IllegalStateException("Unknown optimizer: " + optim.getClass());
@@ -377,9 +379,14 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     // Reset all dx's to zero.
     private void resetDx() {
-        for(int i=0; i<dxUpdates.length; i++) { // Initialize all weight updates to the zero matrix of appropriate size.
-            dxUpdates[i] = new Matrix(layers.get(i).getWeights().shape());
-            dxBiasUpdates[i] = new Vector(layers.get(i).getOutDim());
+        int param_i = 0;
+
+        for(int i=0; i<layers.size(); i++) { // Initialize all weight updates to the zero matrix of appropriate size.
+            if(!(layers.get(i) instanceof Dropout)) { // Ensure layer is not dropout.
+                dxUpdates[param_i] = new Matrix(layers.get(i).getWeights().shape());
+                dxBiasUpdates[param_i] = new Vector(layers.get(i).getOutDim());
+                param_i++;
+            }
         }
     }
 
@@ -390,7 +397,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             throw new IllegalStateException("Can not initialize momentum vectors for optimizer " + this.optim.getClass());
         }
 
-        V = new Matrix[layers.size()*2]; // Create a V for each weight and bias matrix
+        V = new Matrix[trainableLayers*2]; // Create a V for each weight and bias matrix
 
         for(int i=0; i<V.length; i+=2) {
             V[i] = new Matrix(layers.get(i/2).getWeights().shape());
@@ -429,6 +436,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         // Answer, probably not
         return null;
     }
+
 
     /**
      * Gets the parameters of the trained model.
@@ -474,6 +482,10 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             }
         }
 
+        if(!(layer instanceof Dropout)) { // Add to the count of trainable layers.
+            trainableLayers++;
+        }
+
         layers.add(layer);
         buildDetails();
     }
@@ -496,7 +508,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             throw new IllegalArgumentException("Incorrect file type. File does not end with \".mdl\".");
         }
 
-        blockList = new Block[2 + layers.size()];
+        blockList = new Block[2 + trainableLayers];
 
         StringBuilder hyperParams = new StringBuilder();
         hyperParams.append(this.learningRate + ", ");
@@ -511,8 +523,10 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         int count = 2;
         StringBuilder layerDetails = new StringBuilder();
         for(Layer layer : layers) {
-            blockList[count] = new Block(ModelTags.LAYER.toString(), layer.inspectTemp());
-            count++;
+            if(!(layer instanceof Dropout)) {
+                blockList[count] = new Block(ModelTags.LAYER.toString(), layer.getDetails());
+                count++;
+            }
         }
 
         FileManager.stringToFile(Block.buildFileContent(blockList), filePath);

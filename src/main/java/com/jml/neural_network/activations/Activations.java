@@ -22,4 +22,11 @@ public abstract class Activations {
      * The linear activation function. f(x)=x.
      */
     public static final ActivationFunction linear = new Linear();
+
+
+    /**
+     * The hyperbolic tangent activation function.
+     * <code>f(x) = tanh(x) = (e<sup>x</sup> - e<sup>-x</sup>) / (e<sup>x</sup> + e<sup>-x</sup>)</code>
+     */
+    public static final ActivationFunction tanh = new Tanh();
 }

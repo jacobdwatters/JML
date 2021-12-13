@@ -80,8 +80,23 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        values = activation.apply(weights.mult(inputs).add(bias)); // TODO: Add bias
+        values = activation.apply(weights.mult(inputs).add(bias));
         return values;
+    }
+
+
+    // Computes backward pass of layer.
+    @Override
+    public Matrix[] back(Matrix previousVals, Matrix error) {
+
+        Matrix dxUpdates = activation.slope(values)
+                        .elemMult(error)
+                        .mult(previousVals.T());
+
+        Matrix dxBiasUpdates = activation.slope(bias)
+                        .elemMult(error);
+
+        return new Matrix[]{dxUpdates, dxBiasUpdates};
     }
 
 
@@ -174,7 +189,7 @@ public class Dense implements Layer {
      * @return A string containing all information, including trainable parameters needed to recreate the layer.
      */
     @Override
-    public String inspectTemp() {
+    public String getDetails() {
         StringBuilder inspection = new StringBuilder();
 
         // Create all the blocks for this layer.
