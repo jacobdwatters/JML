@@ -20,9 +20,9 @@ public class LossFunctions {
 
     /**
      * The sum of mean squared-errors loss function.&lt;br&gt;
-     * That is &lt;code&gt;mse = (1/n)sum(x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt;)&lt;sup&gt;2&lt;/sup&gt;&lt;/code&gt;
-     * where &lt;code&gt;x&lt;code/&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;code/&gt;,
-     * and &lt;code&gt;x&lt;code/&gt; is the actual data and &lt;code&gt;y&lt;code/&gt; is the predicted data.
+     * That is &lt;code&gt;mse = (1/n)*sum(x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt;)&lt;sup&gt;2&lt;/sup&gt;&lt;/code&gt;
+     * where &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; are datasets of length &lt;code&gt;n&lt;/code&gt;,
+     * and &lt;code&gt;x&lt;/code&gt; is the actual data and &lt;code&gt;y&lt;/code&gt; is the predicted data.
      */
 <span class="fc" id="L27">    public static Function mse = (Matrix y, Matrix yPred) -&gt; {</span>
 <span class="fc" id="L28">        return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());</span>
@@ -32,8 +32,8 @@ public class LossFunctions {
     /**
      * The sum of squared-errors loss function.&lt;br&gt;
      * That is &lt;code&gt;sse = sum(x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt;)&lt;sup&gt;2&lt;/sup&gt;&lt;/code&gt;
-     * where &lt;code&gt;x&lt;code/&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;code/&gt;,
-     * and &lt;code&gt;x&lt;code/&gt; is the actual data and &lt;code&gt;y&lt;code/&gt; is the predicted data.
+     * where &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;/code&gt;,
+     * and &lt;code&gt;x&lt;/code&gt; is the actual data and &lt;code&gt;y&lt;/code&gt; is the predicted data.
      */
 <span class="fc" id="L38">    public static Function sse = (Matrix y, Matrix yPred) -&gt; {</span>
 <span class="fc" id="L39">        return yPred.sub(y).T().mult(yPred.sub(y));</span>

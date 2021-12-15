@@ -66,6 +66,6 @@ public class Tanh implements ActivationFunction{
      */
     @Override
     public String getName() {
-        return this.NAME;
+        return NAME;
     }
 }

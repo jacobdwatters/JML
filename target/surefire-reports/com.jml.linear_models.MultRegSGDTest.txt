@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.jml.linear_models.MultRegSGDTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s - in com.jml.linear_models.MultRegSGDTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s - in com.jml.linear_models.MultRegSGDTest

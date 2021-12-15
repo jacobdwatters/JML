@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class ArrayUtils {
-
+    static Random rand = new Random();
 
     /**
      * Rounds all numbers in array to n decimal places.
@@ -261,15 +261,13 @@ public class ArrayUtils {
      * @return Arrays with rows randomly shuffled.
      */
     public static double[][] shuffle(double[]... arr) {
-        Random r = new Random();
         double[][] newArr = arr.clone();
         double temp;
 
         for (int i = arr[0].length-1; i>0; i--) {
 
             // Pick a random index from 0 to i
-            int j = r.nextInt(i+1);
-
+            int j = rand.nextInt(i+1);
 
             for(int k=0; k<arr.length; k++) { // Swap same element for all rows.
                 // Swap arr[i] with the element at random index
@@ -311,14 +309,13 @@ public class ArrayUtils {
      * @return Arrays with rows randomly shuffled.
      */
     public static double[][][] shuffle(double[][]... arr) {
-        Random r = new Random();
         double[][][] newArr = arr.clone();
         double[] temp;
 
         for (int i = arr[0].length-1; i>0; i--) {
 
             // Pick a random index from 0 to i
-            int j = r.nextInt(i+1);
+            int j = rand.nextInt(i+1);
 
 
             for(int k=0; k<arr.length; k++) { // Swap same row for entire depth.
