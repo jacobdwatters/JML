@@ -67,9 +67,9 @@ public class Dense implements Layer {
         this.paramCount = inDim*outDim+outDim;
 
         this.values = new Vector(this.outDim);
-        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights
+        this.weights = Matrix.random(this.outDim, this.inDim, false); // Initialize weights
 
-        this.bias = Matrix.random(this.outDim, 1,-10, 10);
+        this.bias = Matrix.random(this.outDim, 1, false);
     }
 
 

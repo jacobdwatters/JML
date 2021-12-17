@@ -15,7 +15,6 @@ import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -398,10 +397,15 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         }
 
         V = new Matrix[trainableLayers*2]; // Create a V for each weight and bias matrix
+        int vi = 0;
 
-        for(int i=0; i<V.length; i+=2) {
-            V[i] = new Matrix(layers.get(i/2).getWeights().shape());
-            V[i+1] = new Matrix(layers.get(i/2).getBias().shape());
+        for(int i=0; i<layers.size(); i++) {
+
+            if(!(layers.get(i) instanceof Dropout)) {
+                V[vi] = new Matrix(layers.get(i).getWeights().shape());
+                V[vi+1] = new Matrix(layers.get(i).getBias().shape());
+                vi+=2;
+            }
         }
     }
 

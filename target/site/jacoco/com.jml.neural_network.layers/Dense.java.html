@@ -67,9 +67,9 @@ public class Dense implements Layer {
 <span class="fc" id="L67">        this.paramCount = inDim*outDim+outDim;</span>
 
 <span class="fc" id="L69">        this.values = new Vector(this.outDim);</span>
-<span class="fc" id="L70">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
+<span class="fc" id="L70">        this.weights = Matrix.random(this.outDim, this.inDim, false); // Initialize weights</span>
 
-<span class="fc" id="L72">        this.bias = Matrix.random(this.outDim, 1,-10, 10);</span>
+<span class="fc" id="L72">        this.bias = Matrix.random(this.outDim, 1, false);</span>
 <span class="fc" id="L73">    }</span>
 
 
@@ -207,7 +207,7 @@ public class Dense implements Layer {
 
     @Override
     public ActivationFunction getActivation() {
-<span class="fc" id="L210">        return this.activation;</span>
+<span class="nc" id="L210">        return this.activation;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

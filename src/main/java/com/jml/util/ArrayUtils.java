@@ -218,6 +218,67 @@ public class ArrayUtils {
 
 
     /**
+     * Converts a String array to an 1D array of doubles.<br>
+     * Also see {@link #toDouble(String[])} for 1D arrays.
+     *
+     * @param arr Array to convert to doubles.
+     * @return Content of arr in a 1D double array.
+     */
+    public static double[] toDoubleFlat(String[][] arr) {
+        double[] arrAsDouble = new double[arr.length*arr[0].length];
+        int result_i = 0;
+
+        for(int i=0; i<arr.length; i++) {
+            for(int j=0; j<arr[0].length; j++) {
+                arrAsDouble[result_i] = Double.valueOf(arr[i][j]);
+                result_i++;
+            }
+        }
+
+        return arrAsDouble;
+    }
+
+
+    /**
+     * Converts a String array to an 1D array of doubles.<br>
+     * Also see {@link #toDouble(String[])} for 1D arrays.
+     *
+     * @param arr Array to convert to doubles.
+     * @return Content of arr in a 1D double array.
+     */
+    public static int[] toIntFlat(String[][] arr) {
+        int[] arrAsInt = new int[arr.length*arr[0].length];
+        int result_i = 0;
+
+        for(int i=0; i<arr.length; i++) {
+            for(int j=0; j<arr[0].length; j++) {
+                arrAsInt[result_i] = Double.valueOf(arr[i][j]).intValue();
+                result_i++;
+            }
+        }
+
+        return arrAsInt;
+    }
+
+
+    /**
+     * Converts a double array to an int array. Note, this is not the same as round(arr, 0) as this method does not
+     * round the double value just casts it and any precision after the decimal place is lost.
+     *
+     * @param arr Array to convert to int array.
+     * @return The given array converted to an int array.
+     */
+    public static int[] toInt(double[] arr) {
+        int[] arrAsInt = new int[arr.length];
+
+        for (int i=0; i<arr.length; ++i)
+            arrAsInt[i] = (int) arr[i];
+
+        return arrAsInt;
+    }
+
+
+    /**
      * Randomly shuffles arrays using the Fisher–Yates algorithm.
      *
      * @param arr Arrays to shuffle

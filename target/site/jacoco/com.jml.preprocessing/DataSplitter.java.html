@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataSplitter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.preprocessing</a> &gt; <span class="el_source">DataSplitter.java</span></div><h1>DataSplitter.java</h1><pre class="source lang-java linenums">package com.jml.preprocessing;
 
 
+import com.jml.core.DataLoader;
 import com.jml.util.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * A class that provides a method for splitting a dataset into a training and testing dataset.
  */
 public class DataSplitter {
-<span class="nc" id="L14">    private DataSplitter(){</span>
-<span class="nc" id="L15">        throw new IllegalStateException(&quot;Utility class cannot be instantiated.&quot;);</span>
+<span class="nc" id="L16">    private DataSplitter(){</span>
+<span class="nc" id="L17">        throw new IllegalStateException(&quot;Utility class cannot be instantiated.&quot;);</span>
     }
 
 
@@ -33,40 +35,56 @@ public class DataSplitter {
      * &lt;/pre&gt;
      */
     public static Map&lt;String, double[][]&gt; trainTestSplit(double[][] X, double[][] y, double testSize) {
-<span class="nc bnc" id="L36" title="All 4 branches missed.">        if(testSize&gt;1 || testSize&lt;0) {</span>
-<span class="nc" id="L37">            throw new IllegalArgumentException(&quot;testSize must be a percentage between zero and one (inclusive) but got &quot; +</span>
+<span class="nc bnc" id="L38" title="All 4 branches missed.">        if(testSize&gt;1 || testSize&lt;0) {</span>
+<span class="nc" id="L39">            throw new IllegalArgumentException(&quot;testSize must be a percentage between zero and one (inclusive) but got &quot; +</span>
                     testSize + &quot;.&quot;);
         }
 
-<span class="nc" id="L41">        Map&lt;String, double[][]&gt; split = new HashMap&lt;&gt;(4, 1);</span>
-<span class="nc" id="L42">        int trainNumber = (int) ((1-testSize)*X.length);</span>
-<span class="nc" id="L43">        int testNumber = X.length-trainNumber;</span>
+<span class="nc" id="L43">        Map&lt;String, double[][]&gt; split = new HashMap&lt;&gt;(4, 1);</span>
+<span class="nc" id="L44">        int trainNumber = (int) ((1-testSize)*X.length);</span>
+<span class="nc" id="L45">        int testNumber = X.length-trainNumber;</span>
 
-<span class="nc" id="L45">        double[][] trainX = new double[trainNumber][X.length];</span>
-<span class="nc" id="L46">        double[][] trainY = new double[trainNumber][y.length];</span>
-<span class="nc" id="L47">        double[][] testX = new double[testNumber][X.length];</span>
-<span class="nc" id="L48">        double[][] testY = new double[testNumber][y.length];</span>
+<span class="nc" id="L47">        double[][] trainX = new double[trainNumber][X.length];</span>
+<span class="nc" id="L48">        double[][] trainY = new double[trainNumber][y.length];</span>
+<span class="nc" id="L49">        double[][] testX = new double[testNumber][X.length];</span>
+<span class="nc" id="L50">        double[][] testY = new double[testNumber][y.length];</span>
 
-<span class="nc" id="L50">        double[][][] shuffle = ArrayUtils.shuffle(X, y); // Shuffle the array.</span>
+<span class="nc" id="L52">        double[][][] shuffle = ArrayUtils.shuffle(X, y); // Shuffle the array.</span>
 
         // Split the dataset based off the computed sizes.
-<span class="nc bnc" id="L53" title="All 2 branches missed.">        for(int i=0; i&lt;X.length; i++) {</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">            if(i&lt;trainNumber) {</span>
-<span class="nc" id="L55">                trainX[i] = shuffle[0][i];</span>
-<span class="nc" id="L56">                trainY[i] = shuffle[1][i];</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        for(int i=0; i&lt;X.length; i++) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            if(i&lt;trainNumber) {</span>
+<span class="nc" id="L57">                trainX[i] = shuffle[0][i];</span>
+<span class="nc" id="L58">                trainY[i] = shuffle[1][i];</span>
             } else {
-<span class="nc" id="L58">                testX[i-trainNumber] = shuffle[0][i];</span>
-<span class="nc" id="L59">                testY[i-trainNumber] = shuffle[1][i];</span>
+<span class="nc" id="L60">                testX[i-trainNumber] = shuffle[0][i];</span>
+<span class="nc" id="L61">                testY[i-trainNumber] = shuffle[1][i];</span>
             }
         }
 
         // Insert all subsets into the hashmap.
-<span class="nc" id="L64">        split.put(&quot;xTrain&quot;, trainX);</span>
-<span class="nc" id="L65">        split.put(&quot;yTrain&quot;, trainY);</span>
-<span class="nc" id="L66">        split.put(&quot;xTest&quot;, testX);</span>
-<span class="nc" id="L67">        split.put(&quot;yTest&quot;, testY);</span>
+<span class="nc" id="L66">        split.put(&quot;xTrain&quot;, trainX);</span>
+<span class="nc" id="L67">        split.put(&quot;yTrain&quot;, trainY);</span>
+<span class="nc" id="L68">        split.put(&quot;xTest&quot;, testX);</span>
+<span class="nc" id="L69">        split.put(&quot;yTest&quot;, testY);</span>
 
-<span class="nc" id="L69">        return split;</span>
+<span class="nc" id="L71">        return split;</span>
     }
+
+    public static void main(String[] args) {
+<span class="nc" id="L75">        String trainFile = &quot;./data/neuralnet_train.csv&quot;;</span>
+<span class="nc" id="L76">        String testFile = &quot;./data/neuralnet_test.csv&quot;;</span>
+
+<span class="nc" id="L78">        List&lt;String[][]&gt; train = DataLoader.loadFeaturesAndTargets(trainFile);</span>
+
+<span class="nc" id="L80">        double[][] features = ArrayUtils.toDouble(train.get(0));</span>
+<span class="nc" id="L81">        double[][] targets = ArrayUtils.toDouble(train.get(1));</span>
+
+<span class="nc" id="L83">        Map&lt;String, double[][]&gt; split = DataSplitter.trainTestSplit(features, targets, 0.2);</span>
+<span class="nc" id="L84">        double[][] X_train = split.get(&quot;xTrain&quot;);</span>
+<span class="nc" id="L85">        double[][] y_train = split.get(&quot;yTrain&quot;);</span>
+<span class="nc" id="L86">        double[][] X_test = split.get(&quot;xTest&quot;);</span>
+<span class="nc" id="L87">        double[][] y_test = split.get(&quot;yTest&quot;);</span>
+<span class="nc" id="L88">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

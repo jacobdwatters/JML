@@ -117,13 +117,13 @@ import java.util.*;
                 // Form the weight matrix for the layer.
 <span class="fc" id="L118">                String[] rows = content.split(&quot;;&quot;);</span>
 <span class="fc" id="L119">                int rowLength = rows[0].split(&quot;,&quot;).length;</span>
-<span class="fc" id="L120">                String[][] vals = new String[rows.length][rowLength];</span>
+<span class="fc" id="L120">                double[][] vals = new double[rows.length][rowLength];</span>
 
 <span class="fc bfc" id="L122" title="All 2 branches covered.">                for(int i=0; i&lt;vals.length; i++) {</span>
 <span class="fc" id="L123">                    String[] rowVals = rows[i].split(&quot;,&quot;);</span>
 
 <span class="fc bfc" id="L125" title="All 2 branches covered.">                    for(int j=0; j&lt;vals[0].length; j++) {</span>
-<span class="fc" id="L126">                        vals[i][j] = rowVals[j];</span>
+<span class="fc" id="L126">                        vals[i][j] = Double.parseDouble(rowVals[j]);</span>
                     }
                 }
 
@@ -132,24 +132,27 @@ import java.util.*;
 <span class="pc bpc" id="L132" title="1 of 2 branches missed.">            } else if(tag.equals(ModelTags.BIAS.toString())) {</span>
                 // Form the bias vector for the layer.
 <span class="fc" id="L134">                String[] v = content.split(&quot;;&quot;);</span>
-<span class="fc" id="L135">                String[][] vals = new String[1][v.length];</span>
-<span class="fc" id="L136">                vals[0] = v;</span>
+<span class="fc" id="L135">                double[][] vals = new double[v.length][1];</span>
 
-<span class="fc" id="L138">                bias = new Matrix(vals).T();</span>
-<span class="fc" id="L139">            }</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">                for(int i=0; i&lt;vals.length; i++) {</span>
+<span class="fc" id="L138">                    vals[i][0] = Double.parseDouble(v[i]);</span>
+                }
+
+<span class="fc" id="L141">                bias = new Matrix(vals);</span>
+<span class="fc" id="L142">            }</span>
         }
 
         // Create the layer
-<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if(type.equals(&quot;Dense&quot;)) {</span>
-<span class="fc" id="L144">            layer = new Dense(inDim, outDim, activation);</span>
-<span class="fc" id="L145">            layer.setBias(bias);</span>
-<span class="fc" id="L146">            layer.setWeights(weights);</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if(type.equals(&quot;Dense&quot;)) {</span>
+<span class="fc" id="L147">            layer = new Dense(inDim, outDim, activation);</span>
+<span class="fc" id="L148">            layer.setBias(bias);</span>
+<span class="fc" id="L149">            layer.setWeights(weights);</span>
 
-<span class="nc bnc" id="L148" title="All 2 branches missed.">        } else if(type.equals(&quot;Dropout&quot;)) {</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        } else if(type.equals(&quot;Dropout&quot;)) {</span>
             // TODO: Implement
         }
 
-<span class="fc" id="L152">        return layer;</span>
+<span class="fc" id="L155">        return layer;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

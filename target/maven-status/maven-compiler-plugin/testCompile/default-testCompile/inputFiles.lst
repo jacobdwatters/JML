@@ -2,6 +2,7 @@ C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\PolynomialRe
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\PerceptronTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\classifiers\LogRegTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\PolynomialRegressionExceptionTest.java
+C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\losses\mseTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\PolyRegSGDTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\LinRegSGDTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\LinearRegressionDatasetOneTest.java
@@ -19,4 +20,3 @@ C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\PolynomialRe
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\MultRegSGDTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\util\ArrayErrorsTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\neural_network\NeuralNetworkTest.java
-C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\core\LossFunctionTest.java

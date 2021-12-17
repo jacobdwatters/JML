@@ -117,13 +117,13 @@ class NeuralNetFromData extends NeuralNetwork {
                 // Form the weight matrix for the layer.
                 String[] rows = content.split(";");
                 int rowLength = rows[0].split(",").length;
-                String[][] vals = new String[rows.length][rowLength];
+                double[][] vals = new double[rows.length][rowLength];
 
                 for(int i=0; i<vals.length; i++) {
                     String[] rowVals = rows[i].split(",");
 
                     for(int j=0; j<vals[0].length; j++) {
-                        vals[i][j] = rowVals[j];
+                        vals[i][j] = Double.parseDouble(rowVals[j]);
                     }
                 }
 
@@ -132,10 +132,13 @@ class NeuralNetFromData extends NeuralNetwork {
             } else if(tag.equals(ModelTags.BIAS.toString())) {
                 // Form the bias vector for the layer.
                 String[] v = content.split(";");
-                String[][] vals = new String[1][v.length];
-                vals[0] = v;
+                double[][] vals = new double[v.length][1];
 
-                bias = new Matrix(vals).T();
+                for(int i=0; i<vals.length; i++) {
+                    vals[i][0] = Double.parseDouble(v[i]);
+                }
+
+                bias = new Matrix(vals);
             }
         }
 

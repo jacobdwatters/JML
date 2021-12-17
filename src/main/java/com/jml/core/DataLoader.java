@@ -76,6 +76,7 @@ public class DataLoader {
             for(int i=0; i< content.length; i++) {
                 features[i][colCount] = content[i][j];
             }
+
             colCount++;
         }
 

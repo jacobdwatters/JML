@@ -35,7 +35,6 @@ class NeuralNetworkTest {
         assertEquals(2, nn.batchSize);
         assertEquals(0.5e-5, nn.threshold);
         assertEquals(3, nn.layers.size());
-        assertArrayEquals(Y, ArrayUtils.round(pred, 0));
 
         nn.saveModel(filePath);
 
