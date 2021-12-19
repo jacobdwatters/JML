@@ -89,4 +89,15 @@ public class Momentum extends Optimizer {
         v = v.scalMult(momentum).add(wGrad.scalMult(learningRate));
         return new Matrix[]{w.sub(v), v};
     }
+
+    /**
+     * Gets the details of this optimizer.
+     *
+     * @return Important details of this optimizer as a string.
+     */
+    @Override
+    public String getDetails() {
+        // TODO:
+        return null;
+    }
 }

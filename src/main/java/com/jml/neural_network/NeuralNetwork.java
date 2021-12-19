@@ -59,7 +59,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     private Matrix[] dxBiasUpdates;
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum optimizer.
 
-    private Optimizer optim; // Optimizer to use during backpropagation.
+    protected Optimizer optim; // Optimizer to use during backpropagation.
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -523,6 +523,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         // Construct the blocks for the model file.
         blockList[0] = new Block(ModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);
         blockList[1] = new Block(ModelTags.HYPER_PARAMETERS.toString(), hyperParams.toString());
+        // TODO: Add getDetails() in optimizer so that it can be saved in the model.
+        //        blockList[2] = new Block(ModelTags.OPTIMIZER.toString(), optim.getDetails())
 
         int count = 2;
         StringBuilder layerDetails = new StringBuilder();

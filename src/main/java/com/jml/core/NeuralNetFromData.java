@@ -65,6 +65,9 @@ class NeuralNetFromData extends NeuralNetwork {
                 }
 
                 neuralNetModel.add(createLayer(layerTags, layerContents)); // Construct layer and add to model.
+
+            } else if(tag.equals(ModelTags.OPTIMIZER.toString())) {
+                // TODO:
             }
             else {
                 throw new IllegalArgumentException("Failed to load model: Unrecognized tag in file: " + tag);
@@ -105,6 +108,11 @@ class NeuralNetFromData extends NeuralNetwork {
                 } else if(content.equalsIgnoreCase("relu")) {
                     // Then we have a ReLU activation.
                     activation = Activations.relu;
+                } else if(content.equalsIgnoreCase("tanh")) {
+                    // Then we have a ReLU activation.
+                    activation = Activations.tanh;
+                } else {
+                    throw new IllegalStateException("Unknown activation function: " + content);
                 }
 
             } else if(tag.equals(ModelTags.DIMENSIONS.toString())) {
@@ -139,6 +147,9 @@ class NeuralNetFromData extends NeuralNetwork {
                 }
 
                 bias = new Matrix(vals);
+
+            } else {
+                throw new IllegalStateException("Unrecognized tag (" + tag + ") encountered for layer.");
             }
         }
 
@@ -148,8 +159,8 @@ class NeuralNetFromData extends NeuralNetwork {
             layer.setBias(bias);
             layer.setWeights(weights);
 
-        } else if(type.equals("Dropout")) {
-            // TODO: Implement
+        } else {
+            throw new IllegalStateException("Unrecognized layer (" + type + ") encountered for neural network.");
         }
 
         return layer;

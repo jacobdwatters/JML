@@ -63,4 +63,15 @@ public class Adam extends Optimizer {
         // TODO: Auto-generated method stub
         return new Matrix[0];
     }
+
+    /**
+     * Gets the details of this optimizer.
+     *
+     * @return Important details of this optimizer as a string.
+     */
+    @Override
+    public String getDetails() {
+        // TODO:
+        return null;
+    }
 }

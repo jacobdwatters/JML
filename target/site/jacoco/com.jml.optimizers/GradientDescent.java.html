@@ -52,5 +52,20 @@ public class GradientDescent  extends Optimizer {
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
 <span class="nc" id="L53">        throw new IllegalStateException(&quot;This step method is not defined for the &quot; + OPTIM_NAME + &quot; optimizer&quot;);</span>
     }
+
+
+    /**
+     * Gets the details of this optimizer.
+     *
+     * @return Important details of this optimizer as a string.
+     */
+    @Override
+    public String getDetails() {
+<span class="nc" id="L64">        StringBuilder details = new StringBuilder();</span>
+
+        // TODO:
+
+<span class="nc" id="L68">        return details.toString();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

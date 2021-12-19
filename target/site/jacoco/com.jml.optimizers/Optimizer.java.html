@@ -36,19 +36,27 @@ import linalg.Matrix;
      */
     public abstract Matrix[] step(Matrix w, Matrix wGrad, Matrix v);
 
+
+    /**
+     * Gets the details of this optimizer.
+     * @return Important details of this optimizer as a string.
+     */
+    public abstract String getDetails();
+
+
     /**
      * Sets the learning rate scheduler for this optimizer.
      * @param schedule Learning rate scheduler.
      */
     public void setScheduler(Scheduler schedule) {
-<span class="fc" id="L44">        this.schedule = schedule;</span>
-<span class="fc" id="L45">    }</span>
+<span class="fc" id="L52">        this.schedule = schedule;</span>
+<span class="fc" id="L53">    }</span>
 
 
     /**
      * Gets the learning rate for this optimizer.
      * @return The learning rate for this optimizer.
      */
-<span class="nc" id="L52">    public double getLearningRate() {return learningRate;}</span>
+<span class="fc" id="L60">    public double getLearningRate() {return learningRate;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
