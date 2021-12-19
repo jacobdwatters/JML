@@ -38,13 +38,14 @@ for this library as well.
 >      - ReLU (rectified linear unit)
 >      - Sigmoid
 >      - tanh (hyperbolic tangent)
->    - Optimizers
->      - Gradient descent
->      - Momentum
 >    - Loss Functions
 >      - Mean squared error
 >      - Binary cross-entropy
 >      - Multi-class cross-entropy
+>- <b>Optimizers</b>
+>  - Gradient descent
+>  - Momentum
+>  - Add learning rate schedulers to optimizer
 >- <b>Use trained models to make predictions on new data</b>
 >- <b>Save and reuse trained models</b>
 >  - Save a trained model to a file for later use

@@ -67,9 +67,9 @@ public class Dense implements Layer {
 <span class="fc" id="L67">        this.paramCount = inDim*outDim+outDim;</span>
 
 <span class="fc" id="L69">        this.values = new Vector(this.outDim);</span>
-<span class="fc" id="L70">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
+<span class="fc" id="L70">        this.weights = Matrix.random(this.outDim, this.inDim, false); // Initialize weights</span>
 
-<span class="fc" id="L72">        this.bias = Matrix.random(this.outDim, 1,-10, 10);</span>
+<span class="fc" id="L72">        this.bias = Matrix.random(this.outDim, 1, false);</span>
 <span class="fc" id="L73">    }</span>
 
 
@@ -80,8 +80,23 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-<span class="fc" id="L83">        values = activation.apply(weights.mult(inputs).add(bias)); // TODO: Add bias</span>
+<span class="fc" id="L83">        values = activation.apply(weights.mult(inputs).add(bias));</span>
 <span class="fc" id="L84">        return values;</span>
+    }
+
+
+    // Computes backward pass of layer.
+    @Override
+    public Matrix[] back(Matrix previousVals, Matrix error) {
+
+<span class="fc" id="L92">        Matrix dxUpdates = activation.slope(values)</span>
+<span class="fc" id="L93">                        .elemMult(error)</span>
+<span class="fc" id="L94">                        .mult(previousVals.T());</span>
+
+<span class="fc" id="L96">        Matrix dxBiasUpdates = activation.slope(bias)</span>
+<span class="fc" id="L97">                        .elemMult(error);</span>
+
+<span class="fc" id="L99">        return new Matrix[]{dxUpdates, dxBiasUpdates};</span>
     }
 
 
@@ -90,7 +105,7 @@ public class Dense implements Layer {
      */
     @Override
     public int getInDim() {
-<span class="fc" id="L93">        return this.inDim;</span>
+<span class="fc" id="L108">        return this.inDim;</span>
     }
 
 
@@ -99,7 +114,7 @@ public class Dense implements Layer {
      */
     @Override
     public int getOutDim() {
-<span class="fc" id="L102">        return this.outDim;</span>
+<span class="fc" id="L117">        return this.outDim;</span>
     }
 
 
@@ -111,10 +126,10 @@ public class Dense implements Layer {
      */
     @Override
     public void updateInDim(int inDim) {
-<span class="fc" id="L114">        this.inDim = inDim;</span>
-<span class="fc" id="L115">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
-<span class="fc" id="L116">        this.paramCount = inDim*outDim + outDim;</span>
-<span class="fc" id="L117">    }</span>
+<span class="fc" id="L129">        this.inDim = inDim;</span>
+<span class="fc" id="L130">        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights</span>
+<span class="fc" id="L131">        this.paramCount = inDim*outDim + outDim;</span>
+<span class="fc" id="L132">    }</span>
 
 
     /**
@@ -123,18 +138,18 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix getWeights() {
-<span class="fc" id="L126">        return this.weights;</span>
+<span class="fc" id="L141">        return this.weights;</span>
     }
 
 
     @Override
     public void setWeights(Matrix w) {
-<span class="fc" id="L132">        this.weights = w.copy();</span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L147">        this.weights = w.copy();</span>
+<span class="fc" id="L148">    }</span>
 
 
     @Override
-<span class="fc" id="L137">    public void setBias(Matrix b) {this.bias = b.copy();}</span>
+<span class="fc" id="L152">    public void setBias(Matrix b) {this.bias = b.copy();}</span>
 
 
     /**
@@ -143,13 +158,13 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix getValues() {
-<span class="fc" id="L146">        return this.values;</span>
+<span class="fc" id="L161">        return this.values;</span>
     }
 
 
     @Override
     public Matrix getBias() {
-<span class="fc" id="L152">        return bias;</span>
+<span class="fc" id="L167">        return bias;</span>
     }
 
     /**
@@ -159,10 +174,10 @@ public class Dense implements Layer {
      */
     @Override
     public String inspect() {
-<span class="fc" id="L162">        StringBuilder details = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
+<span class="fc" id="L177">        StringBuilder details = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
                 + inDim + &quot;,\tOutput size: &quot; + outDim + &quot;, \tTrainable Parameters: &quot; + paramCount +
-<span class="fc" id="L164">                &quot;,\tActivationFunction: &quot; + activation.getName());</span>
-<span class="fc" id="L165">        return details.toString();</span>
+<span class="fc" id="L179">                &quot;,\tActivationFunction: &quot; + activation.getName());</span>
+<span class="fc" id="L180">        return details.toString();</span>
     }
 
 
@@ -174,25 +189,25 @@ public class Dense implements Layer {
      * @return A string containing all information, including trainable parameters needed to recreate the layer.
      */
     @Override
-    public String inspectTemp() {
-<span class="fc" id="L178">        StringBuilder inspection = new StringBuilder();</span>
+    public String getDetails() {
+<span class="fc" id="L193">        StringBuilder inspection = new StringBuilder();</span>
 
         // Create all the blocks for this layer.
-<span class="fc" id="L181">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
-<span class="fc" id="L182">        Block activationBlock = new Block(ModelTags.ACTIVATION.toString(), this.activation.getName());</span>
-<span class="fc" id="L183">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.outDim);</span>
-<span class="fc" id="L184">        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
-<span class="fc" id="L185">        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
+<span class="fc" id="L196">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
+<span class="fc" id="L197">        Block activationBlock = new Block(ModelTags.ACTIVATION.toString(), this.activation.getName());</span>
+<span class="fc" id="L198">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.outDim);</span>
+<span class="fc" id="L199">        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
+<span class="fc" id="L200">        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
 
         // Combine all blocks into a single string.
-<span class="fc" id="L188">        inspection.append(Block.buildFileContent(layerBlock, activationBlock, dimBlock, weightBlock, biasBlock));</span>
+<span class="fc" id="L203">        inspection.append(Block.buildFileContent(layerBlock, activationBlock, dimBlock, weightBlock, biasBlock));</span>
 
-<span class="fc" id="L190">        return inspection.toString();</span>
+<span class="fc" id="L205">        return inspection.toString();</span>
     }
 
     @Override
     public ActivationFunction getActivation() {
-<span class="fc" id="L195">        return this.activation;</span>
+<span class="nc" id="L210">        return this.activation;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

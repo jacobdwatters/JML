@@ -52,4 +52,19 @@ public class GradientDescent  extends Optimizer {
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
         throw new IllegalStateException("This step method is not defined for the " + OPTIM_NAME + " optimizer");
     }
+
+
+    /**
+     * Gets the details of this optimizer.
+     *
+     * @return Important details of this optimizer as a string.
+     */
+    @Override
+    public String getDetails() {
+        StringBuilder details = new StringBuilder();
+
+        // TODO:
+
+        return details.toString();
+    }
 }

@@ -65,6 +65,9 @@ class NeuralNetFromData extends NeuralNetwork {
                 }
 
                 neuralNetModel.add(createLayer(layerTags, layerContents)); // Construct layer and add to model.
+
+            } else if(tag.equals(ModelTags.OPTIMIZER.toString())) {
+                // TODO:
             }
             else {
                 throw new IllegalArgumentException("Failed to load model: Unrecognized tag in file: " + tag);
@@ -105,6 +108,11 @@ class NeuralNetFromData extends NeuralNetwork {
                 } else if(content.equalsIgnoreCase("relu")) {
                     // Then we have a ReLU activation.
                     activation = Activations.relu;
+                } else if(content.equalsIgnoreCase("tanh")) {
+                    // Then we have a ReLU activation.
+                    activation = Activations.tanh;
+                } else {
+                    throw new IllegalStateException("Unknown activation function: " + content);
                 }
 
             } else if(tag.equals(ModelTags.DIMENSIONS.toString())) {
@@ -117,13 +125,13 @@ class NeuralNetFromData extends NeuralNetwork {
                 // Form the weight matrix for the layer.
                 String[] rows = content.split(";");
                 int rowLength = rows[0].split(",").length;
-                String[][] vals = new String[rows.length][rowLength];
+                double[][] vals = new double[rows.length][rowLength];
 
                 for(int i=0; i<vals.length; i++) {
                     String[] rowVals = rows[i].split(",");
 
                     for(int j=0; j<vals[0].length; j++) {
-                        vals[i][j] = rowVals[j];
+                        vals[i][j] = Double.parseDouble(rowVals[j]);
                     }
                 }
 
@@ -132,10 +140,16 @@ class NeuralNetFromData extends NeuralNetwork {
             } else if(tag.equals(ModelTags.BIAS.toString())) {
                 // Form the bias vector for the layer.
                 String[] v = content.split(";");
-                String[][] vals = new String[1][v.length];
-                vals[0] = v;
+                double[][] vals = new double[v.length][1];
 
-                bias = new Matrix(vals).T();
+                for(int i=0; i<vals.length; i++) {
+                    vals[i][0] = Double.parseDouble(v[i]);
+                }
+
+                bias = new Matrix(vals);
+
+            } else {
+                throw new IllegalStateException("Unrecognized tag (" + tag + ") encountered for layer.");
             }
         }
 
@@ -145,8 +159,8 @@ class NeuralNetFromData extends NeuralNetwork {
             layer.setBias(bias);
             layer.setWeights(weights);
 
-        } else if(type.equals("Dropout")) {
-            // TODO: Implement
+        } else {
+            throw new IllegalStateException("Unrecognized layer (" + type + ") encountered for neural network.");
         }
 
         return layer;

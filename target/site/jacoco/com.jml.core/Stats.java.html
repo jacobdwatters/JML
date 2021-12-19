@@ -317,11 +317,11 @@ public class Stats {
      * @throws IllegalArgumentException if &lt;code&gt;p&lt;/code&gt; is not in range [0, 1].
      */
     public static boolean genRandBoolean(double p) {
-<span class="nc bnc" id="L320" title="All 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
+<span class="pc bpc" id="L320" title="2 of 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
 <span class="nc" id="L321">            throw new IllegalArgumentException(&quot;probability must be between 0 and 1 inclusive but got &quot; + p + &quot;.&quot;);</span>
         }
 
-<span class="nc bnc" id="L324" title="All 2 branches missed.">        return random.nextDouble() &lt; p;</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        return random.nextDouble() &lt; p;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -2,18 +2,26 @@ package com.jml.neural_network.layers;
 
 import com.jml.core.Stats;
 import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Activations;
 import linalg.Matrix;
 import linalg.Vector;
 
+import java.util.Random;
+
 
 /**
- * A dropout layer. This layer has a probability of dropping (zeroing out) each element during the forward pass. This
- * is an effective form of regularization. In addition, the outputs of this layer are scaled by 1/(1-p) where p is the
+ * A dropout layer. This layer has a probability of dropping (zeroing out) each element during the forward pass. This is
+ * only done during training. Dropout layers will not be used when making predictions with the final model. <br><br>
+ *
+ * Dropout is an effective form of regularization. In addition, the outputs of this layer are scaled by 1/(1-p) where p is the
  * probability of dropping an element of the layer.
  */
 public class Dropout implements Layer {
 
     public final String LAYER_TYPE = "Dropout";
+    // TODO: Change mask visibility to private
+    public Matrix mask; // Dropout mask
+    private double scale;
 
     /**
      * Probability of element being zeroed.
@@ -34,6 +42,7 @@ public class Dropout implements Layer {
      */
     public Dropout(double p) {
         this.p = p;
+        scale = 1/(1-p);
     }
 
 
@@ -47,6 +56,8 @@ public class Dropout implements Layer {
         this.inDim = inDim;
         this.p = p;
         this.values = new Vector(this.inDim);
+        this.mask = new Vector(this.inDim);
+        scale = 1/(1-p);
     }
 
 
@@ -64,17 +75,17 @@ public class Dropout implements Layer {
                     "Expecting input shape of " + inDim + "x" + 1);
         }
 
-        values = inputs.copy();
+        initMask(); // Initialize the mask
+        values = inputs.copy().elemMult(mask).scalMult(scale); // Apply dropout mask.
+
+        return values;
+    }
 
 
-        // TODO: This needs to be changed to be a mask. That is, it should be the same elements dropped for forward and backward
-        for(int i=0; i<values.numRows(); i++) {
-            if(Stats.genRandBoolean(this.p)) {
-                values.set(0, i, 0); // Then zero entry.
-            }
-        }
-
-        return values.scalDiv(1-p);
+    // Computes backward pass of layer.
+    @Override
+    public Matrix[] back(Matrix previousVals, Matrix error) {
+        return new Matrix[]{previousVals.elemMult(mask).scalMult(scale)};
     }
 
 
@@ -108,12 +119,13 @@ public class Dropout implements Layer {
     public void updateInDim(int inDim) {
         this.inDim = inDim;
         this.values = new Vector(this.inDim);
+        this.mask = new Vector(this.inDim);
     }
 
 
     /**
-     * Gets the weights for the layer.
-     * @return Null Since dropout layers have no weights.
+     * Does nothing. No weights to get.
+     * @return null
      */
     @Override
     public Matrix getWeights() {
@@ -128,8 +140,14 @@ public class Dropout implements Layer {
     @Override
     public void setWeights(Matrix w) {}
 
+
+    /**
+     * Does nothing. No bias to set.
+     * @param b New bias
+     */
     @Override
     public void setBias(Matrix b) {}
+
 
     /**
      * {@inheritDoc}
@@ -140,10 +158,29 @@ public class Dropout implements Layer {
         return this.values;
     }
 
+
+    /**
+     * Does nothing. No bias to get.
+     * @return null
+     */
     @Override
     public Matrix getBias() {
         return null;
     }
+
+
+    // Initialize mask.
+    private void initMask() {
+        boolean drop;
+
+        for(int i=0; i<mask.numRows(); i++) {
+            drop = Stats.genRandBoolean(this.p);
+            if(!drop) {
+                mask.set(1, i, 0);
+            }
+        }
+    }
+
 
     /**
      * Gets the details of this layer as a String.
@@ -155,9 +192,10 @@ public class Dropout implements Layer {
         return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
     }
 
+
     @Override
     // TODO: I think that inspect() and getDetails() names should switch.
-    public String inspectTemp() {
+    public String getDetails() {
         // TODO: Auto-generated method-stub
         return null;
     }
@@ -165,5 +203,13 @@ public class Dropout implements Layer {
     @Override
     public ActivationFunction getActivation() {
         return null;
+    }
+
+
+    public static void main(String[] args) {
+        Layer d = new Dense(10, Activations.tanh);
+//        d.initMask();
+//        System.out.println(d.mask);
+        System.out.println(d instanceof Dropout);
     }
 }

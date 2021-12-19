@@ -20,7 +20,7 @@ import linalg.Matrix;
  */
 public class Momentum extends Optimizer {
     public static final String OPTIM_NAME = &quot;Momentum&quot;;
-<span class="nc" id="L23">    double momentum = 0;</span>
+<span class="pc" id="L23">    double momentum = 0;</span>
 
 
     /**
@@ -29,15 +29,15 @@ public class Momentum extends Optimizer {
      *
      * @param learningRate
      */
-<span class="nc" id="L32">    public Momentum(double learningRate) {</span>
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(learningRate &lt; 0) {</span>
+<span class="fc" id="L32">    public Momentum(double learningRate) {</span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if(learningRate &lt; 0) {</span>
 <span class="nc" id="L34">            throw new IllegalArgumentException(&quot;Learning rate must be non-negative but got &quot; + learningRate + &quot;.&quot;);</span>
         }
 
-<span class="nc" id="L37">        super.learningRate = learningRate;</span>
-<span class="nc" id="L38">        super.name = this.OPTIM_NAME;</span>
-<span class="nc" id="L39">        this.momentum=0.9;</span>
-<span class="nc" id="L40">    }</span>
+<span class="fc" id="L37">        super.learningRate = learningRate;</span>
+<span class="fc" id="L38">        super.name = this.OPTIM_NAME;</span>
+<span class="fc" id="L39">        this.momentum=0.9;</span>
+<span class="fc" id="L40">    }</span>
 
 
     /**
@@ -86,8 +86,19 @@ public class Momentum extends Optimizer {
      */
     @Override
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-<span class="nc" id="L89">        v = v.scalMult(momentum).add(wGrad.scalMult(learningRate));</span>
-<span class="nc" id="L90">        return new Matrix[]{w.sub(v), v};</span>
+<span class="fc" id="L89">        v = v.scalMult(momentum).add(wGrad.scalMult(learningRate));</span>
+<span class="fc" id="L90">        return new Matrix[]{w.sub(v), v};</span>
+    }
+
+    /**
+     * Gets the details of this optimizer.
+     *
+     * @return Important details of this optimizer as a string.
+     */
+    @Override
+    public String getDetails() {
+        // TODO:
+<span class="nc" id="L101">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -20,9 +20,9 @@ public class LossFunctions {
 
     /**
      * The sum of mean squared-errors loss function.<br>
-     * That is <code>mse = (1/n)sum(x<sub>i</sub> - y<sub>i</sub>)<sup>2</sup></code>
-     * where <code>x<code/> and <code>y<code/> are datasets of length <code>n<code/>,
-     * and <code>x<code/> is the actual data and <code>y<code/> is the predicted data.
+     * That is <code>mse = (1/n)*sum(x<sub>i</sub> - y<sub>i</sub>)<sup>2</sup></code>
+     * where <code>x</code> and <code>y</code> are datasets of length <code>n</code>,
+     * and <code>x</code> is the actual data and <code>y</code> is the predicted data.
      */
     public static Function mse = (Matrix y, Matrix yPred) -> {
         return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());
@@ -32,8 +32,8 @@ public class LossFunctions {
     /**
      * The sum of squared-errors loss function.<br>
      * That is <code>sse = sum(x<sub>i</sub> - y<sub>i</sub>)<sup>2</sup></code>
-     * where <code>x<code/> and <code>y<code/> are datasets of length <code>n<code/>,
-     * and <code>x<code/> is the actual data and <code>y<code/> is the predicted data.
+     * where <code>x</code> and <code>y<code/> are datasets of length <code>n</code>,
+     * and <code>x</code> is the actual data and <code>y</code> is the predicted data.
      */
     public static Function sse = (Matrix y, Matrix yPred) -> {
         return yPred.sub(y).T().mult(yPred.sub(y));

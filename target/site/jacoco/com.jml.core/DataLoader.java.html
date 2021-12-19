@@ -76,21 +76,22 @@ public class DataLoader {
 <span class="fc bfc" id="L76" title="All 2 branches covered.">            for(int i=0; i&lt; content.length; i++) {</span>
 <span class="fc" id="L77">                features[i][colCount] = content[i][j];</span>
             }
-<span class="fc" id="L79">            colCount++;</span>
+
+<span class="fc" id="L80">            colCount++;</span>
         }
 
-<span class="fc" id="L82">        colCount=0;</span>
-<span class="fc bfc" id="L83" title="All 2 branches covered.">        for(int j : targetColumns) {</span>
-<span class="fc bfc" id="L84" title="All 2 branches covered.">            for(int i=0; i&lt; content.length; i++) {</span>
-<span class="fc" id="L85">                targets[i][colCount] = content[i][j];</span>
+<span class="fc" id="L83">        colCount=0;</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        for(int j : targetColumns) {</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            for(int i=0; i&lt; content.length; i++) {</span>
+<span class="fc" id="L86">                targets[i][colCount] = content[i][j];</span>
             }
-<span class="fc" id="L87">            colCount++;</span>
+<span class="fc" id="L88">            colCount++;</span>
         }
 
-<span class="fc" id="L90">        data.add(features);</span>
-<span class="fc" id="L91">        data.add(targets);</span>
+<span class="fc" id="L91">        data.add(features);</span>
+<span class="fc" id="L92">        data.add(targets);</span>
 
-<span class="fc" id="L93">        return data;</span>
+<span class="fc" id="L94">        return data;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

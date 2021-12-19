@@ -3,9 +3,11 @@
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.Random;
 
-<span class="nc" id="L7">public class ArrayUtils {</span>
-
+<span class="nc" id="L9">public class ArrayUtils {</span>
+<span class="fc" id="L10">    static Random rand = new Random();</span>
 
     /**
      * Rounds all numbers in array to n decimal places.
@@ -15,15 +17,15 @@ import java.math.RoundingMode;
      * @return Array with rounded numbers.
      */
     public static double[] round(double[] arr, int n) {
-<span class="fc" id="L18">        double[] result = new double[arr.length];</span>
+<span class="fc" id="L20">        double[] result = new double[arr.length];</span>
         BigDecimal bd;
 
-<span class="fc bfc" id="L21" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L22">            bd = BigDecimal.valueOf(arr[i]).setScale(n, RoundingMode.HALF_UP);</span>
-<span class="fc" id="L23">            result[i] = bd.doubleValue();</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L24">            bd = BigDecimal.valueOf(arr[i]).setScale(n, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L25">            result[i] = bd.doubleValue();</span>
         }
 
-<span class="fc" id="L26">        return result;</span>
+<span class="fc" id="L28">        return result;</span>
     }
 
 
@@ -35,13 +37,13 @@ import java.math.RoundingMode;
      * @return Array with rounded numbers.
      */
     public static double[][] round(double[][] arr, int n) {
-<span class="fc" id="L38">        double[][] result = new double[arr.length][arr[0].length];</span>
+<span class="fc" id="L40">        double[][] result = new double[arr.length][arr[0].length];</span>
 
-<span class="fc bfc" id="L40" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L41">            result[i] = round(arr[i], n);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L43">            result[i] = round(arr[i], n);</span>
         }
 
-<span class="fc" id="L44">        return result;</span>
+<span class="fc" id="L46">        return result;</span>
     }
 
 
@@ -52,7 +54,7 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString(int[] arr) {
-<span class="nc" id="L55">        return asString(toObject(arr));</span>
+<span class="nc" id="L57">        return asString(toObject(arr));</span>
     }
 
 
@@ -63,7 +65,7 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString(int[][] arr) {
-<span class="nc" id="L66">        return asString(toObject(arr));</span>
+<span class="nc" id="L68">        return asString(toObject(arr));</span>
     }
 
 
@@ -74,7 +76,7 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString(double[] arr) {
-<span class="fc" id="L77">        return asString(toObject(arr));</span>
+<span class="fc" id="L79">        return asString(toObject(arr));</span>
     }
 
 
@@ -85,7 +87,7 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString(double[][] arr) {
-<span class="fc" id="L88">        return asString2D(toObject2D(arr));</span>
+<span class="fc" id="L90">        return asString2D(toObject2D(arr));</span>
     }
 
 
@@ -96,17 +98,17 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString(Object[] arr) {
-<span class="fc" id="L99">        StringBuilder arrAsString = new StringBuilder();</span>
+<span class="fc" id="L101">        StringBuilder arrAsString = new StringBuilder();</span>
 
-<span class="fc bfc" id="L101" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc" id="L102">            arrAsString.append(arr[i].toString());</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc" id="L104">            arrAsString.append(arr[i].toString());</span>
 
-<span class="fc bfc" id="L104" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
-<span class="fc" id="L105">                arrAsString.append(&quot;, &quot;);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
+<span class="fc" id="L107">                arrAsString.append(&quot;, &quot;);</span>
             }
         }
 
-<span class="fc" id="L109">        return arrAsString.toString();</span>
+<span class="fc" id="L111">        return arrAsString.toString();</span>
     }
 
 
@@ -117,24 +119,24 @@ import java.math.RoundingMode;
      * @return The string representation of arr.
      */
     public static String asString2D(Object[][] arr) {
-<span class="fc" id="L120">        StringBuilder arrAsString = new StringBuilder();</span>
+<span class="fc" id="L122">        StringBuilder arrAsString = new StringBuilder();</span>
 
 
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc bfc" id="L124" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
-<span class="fc" id="L125">                arrAsString.append(arr[i][j].toString());</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="fc" id="L127">                arrAsString.append(arr[i][j].toString());</span>
 
-<span class="fc bfc" id="L127" title="All 2 branches covered.">                if(j!=arr[0].length-1) {</span>
-<span class="fc" id="L128">                    arrAsString.append(&quot;, &quot;);</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">                if(j!=arr[0].length-1) {</span>
+<span class="fc" id="L130">                    arrAsString.append(&quot;, &quot;);</span>
                 }
             }
 
-<span class="fc bfc" id="L132" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
-<span class="fc" id="L133">                arrAsString.append(&quot;;\n&quot;);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            if(i!=arr.length-1) {</span>
+<span class="fc" id="L135">                arrAsString.append(&quot;;\n&quot;);</span>
             }
         }
 
-<span class="fc" id="L137">        return arrAsString.toString();</span>
+<span class="fc" id="L139">        return arrAsString.toString();</span>
     }
 
 
@@ -143,16 +145,16 @@ import java.math.RoundingMode;
      * @return The array as an object array
      */
     public static Object[] toObject(Object val) {
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (val instanceof Object[])</span>
-<span class="nc" id="L147">            return (Object[])val;</span>
-<span class="fc" id="L148">        int arrlength = Array.getLength(val);</span>
-<span class="fc" id="L149">        Object[] outputArray = new Object[arrlength];</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (val instanceof Object[])</span>
+<span class="nc" id="L149">            return (Object[])val;</span>
+<span class="fc" id="L150">        int arrlength = Array.getLength(val);</span>
+<span class="fc" id="L151">        Object[] outputArray = new Object[arrlength];</span>
 
-<span class="fc bfc" id="L151" title="All 2 branches covered.">        for(int i = 0; i &lt; arrlength; ++i){</span>
-<span class="fc" id="L152">            outputArray[i] = Array.get(val, i);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        for(int i = 0; i &lt; arrlength; ++i){</span>
+<span class="fc" id="L154">            outputArray[i] = Array.get(val, i);</span>
         }
 
-<span class="fc" id="L155">        return outputArray;</span>
+<span class="fc" id="L157">        return outputArray;</span>
     }
 
 
@@ -161,19 +163,19 @@ import java.math.RoundingMode;
      * @return The array as an object array
      */
     public static Object[][] toObject2D(Object val) {
-<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (val instanceof Object[][])</span>
-<span class="nc" id="L165">            return (Object[][])val;</span>
-<span class="fc" id="L166">        int arrlength = Array.getLength(val);</span>
-<span class="fc" id="L167">        int arrlength2 = Array.getLength(Array.get(val, 0));</span>
-<span class="fc" id="L168">        Object[][] outputArray = new Object[arrlength][arrlength2];</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (val instanceof Object[][])</span>
+<span class="nc" id="L167">            return (Object[][])val;</span>
+<span class="fc" id="L168">        int arrlength = Array.getLength(val);</span>
+<span class="fc" id="L169">        int arrlength2 = Array.getLength(Array.get(val, 0));</span>
+<span class="fc" id="L170">        Object[][] outputArray = new Object[arrlength][arrlength2];</span>
 
-<span class="fc bfc" id="L170" title="All 2 branches covered.">        for(int i = 0; i &lt; arrlength; ++i){</span>
-<span class="fc bfc" id="L171" title="All 2 branches covered.">            for(int j=0; j&lt;arrlength2; j++) {</span>
-<span class="fc" id="L172">                outputArray[i][j] = Array.get(Array.get(val, i), j);</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        for(int i = 0; i &lt; arrlength; ++i){</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">            for(int j=0; j&lt;arrlength2; j++) {</span>
+<span class="fc" id="L174">                outputArray[i][j] = Array.get(Array.get(val, i), j);</span>
             }
         }
 
-<span class="fc" id="L176">        return outputArray;</span>
+<span class="fc" id="L178">        return outputArray;</span>
     }
 
 
@@ -185,13 +187,13 @@ import java.math.RoundingMode;
      * @return Content of arr in a double array.
      */
     public static double[] toDouble(String[] arr) {
-<span class="nc" id="L188">        double[] arrAsDouble = new double[arr.length];</span>
+<span class="nc" id="L190">        double[] arrAsDouble = new double[arr.length];</span>
 
-<span class="nc bnc" id="L190" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="nc" id="L191">            arrAsDouble[i] = Double.valueOf(arr[i]);</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="nc" id="L193">            arrAsDouble[i] = Double.valueOf(arr[i]);</span>
         }
 
-<span class="nc" id="L194">        return arrAsDouble;</span>
+<span class="nc" id="L196">        return arrAsDouble;</span>
     }
 
 
@@ -203,15 +205,189 @@ import java.math.RoundingMode;
      * @return Content of arr in a double array.
      */
     public static double[][] toDouble(String[][] arr) {
-<span class="fc" id="L206">        double[][] arrAsDouble = new double[arr.length][arr[0].length];</span>
+<span class="fc" id="L208">        double[][] arrAsDouble = new double[arr.length][arr[0].length];</span>
 
-<span class="fc bfc" id="L208" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="fc bfc" id="L209" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
-<span class="fc" id="L210">                arrAsDouble[i][j] = Double.valueOf(arr[i][j]);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="fc" id="L212">                arrAsDouble[i][j] = Double.valueOf(arr[i][j]);</span>
             }
         }
 
-<span class="fc" id="L214">        return arrAsDouble;</span>
+<span class="fc" id="L216">        return arrAsDouble;</span>
+    }
+
+
+    /**
+     * Converts a String array to an 1D array of doubles.&lt;br&gt;
+     * Also see {@link #toDouble(String[])} for 1D arrays.
+     *
+     * @param arr Array to convert to doubles.
+     * @return Content of arr in a 1D double array.
+     */
+    public static double[] toDoubleFlat(String[][] arr) {
+<span class="nc" id="L228">        double[] arrAsDouble = new double[arr.length*arr[0].length];</span>
+<span class="nc" id="L229">        int result_i = 0;</span>
+
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="nc" id="L233">                arrAsDouble[result_i] = Double.valueOf(arr[i][j]);</span>
+<span class="nc" id="L234">                result_i++;</span>
+            }
+        }
+
+<span class="nc" id="L238">        return arrAsDouble;</span>
+    }
+
+
+    /**
+     * Converts a String array to an 1D array of doubles.&lt;br&gt;
+     * Also see {@link #toDouble(String[])} for 1D arrays.
+     *
+     * @param arr Array to convert to doubles.
+     * @return Content of arr in a 1D double array.
+     */
+    public static int[] toIntFlat(String[][] arr) {
+<span class="nc" id="L250">        int[] arrAsInt = new int[arr.length*arr[0].length];</span>
+<span class="nc" id="L251">        int result_i = 0;</span>
+
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="nc" id="L255">                arrAsInt[result_i] = Double.valueOf(arr[i][j]).intValue();</span>
+<span class="nc" id="L256">                result_i++;</span>
+            }
+        }
+
+<span class="nc" id="L260">        return arrAsInt;</span>
+    }
+
+
+    /**
+     * Converts a double array to an int array. Note, this is not the same as round(arr, 0) as this method does not
+     * round the double value just casts it and any precision after the decimal place is lost.
+     *
+     * @param arr Array to convert to int array.
+     * @return The given array converted to an int array.
+     */
+    public static int[] toInt(double[] arr) {
+<span class="nc" id="L272">        int[] arrAsInt = new int[arr.length];</span>
+
+<span class="nc bnc" id="L274" title="All 2 branches missed.">        for (int i=0; i&lt;arr.length; ++i)</span>
+<span class="nc" id="L275">            arrAsInt[i] = (int) arr[i];</span>
+
+<span class="nc" id="L277">        return arrAsInt;</span>
+    }
+
+
+    /**
+     * Randomly shuffles arrays using the Fisher–Yates algorithm.
+     *
+     * @param arr Arrays to shuffle
+     * @return Arrays with rows randomly shuffled.
+     */
+    public static double[] shuffle(double arr[]) {
+<span class="nc" id="L288">        Random r = new Random();</span>
+<span class="nc" id="L289">        double[] newArr = arr.clone();</span>
+        double temp;
+
+<span class="nc bnc" id="L292" title="All 2 branches missed.">        for (int i = arr.length-1; i&gt;0; i--) {</span>
+
+            // Pick a random index from 0 to i
+<span class="nc" id="L295">            int j = r.nextInt(i+1);</span>
+
+            // Swap arr[i] with the element at random index
+<span class="nc" id="L298">            temp = newArr[i];</span>
+<span class="nc" id="L299">            newArr[i] = newArr[j];</span>
+<span class="nc" id="L300">            newArr[j] = temp;</span>
+        }
+
+<span class="nc" id="L303">        return newArr;</span>
+    }
+
+
+    /**
+     * Randomly shuffles arrays using the Fisher–Yates algorithm.&lt;br&gt;&lt;br&gt;
+     *
+     * If more than one array is passed, the shuffled indices of all arrays will be the same.
+     * I.e. if the following arrays are passed:
+     * &lt;pre&gt;
+     *     arr1: [1, 2, 3, 4, 5]
+     *     arr2: [10, 20, 30, 40, 50]
+     *
+     *     Then, if arr1 is shuffled to: [3, 1, 2, 5, 4]
+     *     arr2 will be shuffled to: [30, 10, 20, 50, 40]
+     * &lt;/pre&gt;
+     *
+     *
+     * @param arr Arrays to shuffle
+     * @return Arrays with rows randomly shuffled.
+     */
+    public static double[][] shuffle(double[]... arr) {
+<span class="nc" id="L325">        double[][] newArr = arr.clone();</span>
+        double temp;
+
+<span class="nc bnc" id="L328" title="All 2 branches missed.">        for (int i = arr[0].length-1; i&gt;0; i--) {</span>
+
+            // Pick a random index from 0 to i
+<span class="nc" id="L331">            int j = rand.nextInt(i+1);</span>
+
+<span class="nc bnc" id="L333" title="All 2 branches missed.">            for(int k=0; k&lt;arr.length; k++) { // Swap same element for all rows.</span>
+                // Swap arr[i] with the element at random index
+<span class="nc" id="L335">                temp = newArr[k][i];</span>
+<span class="nc" id="L336">                newArr[k][i] = newArr[k][j];</span>
+<span class="nc" id="L337">                newArr[k][j] = temp;</span>
+            }
+        }
+
+<span class="nc" id="L341">        return newArr;</span>
+    }
+
+
+    /**
+     * Randomly shuffles 2D arrays by rows using the Fisher–Yates algorithm.&lt;br&gt;&lt;br&gt;
+     *
+     * If more than one array is passed, the shuffled row indices of all arrays will be the same.
+     * I.e. if the following arrays are passed:
+     * &lt;pre&gt;
+     *     arr1: [1, 2, 3],
+     *           [4, 5, 6],
+     *           [7, 8, 9]
+     *
+     *     arr2: [10, 20, 30],
+     *           [40, 50, 60],
+     *           [70, 80, 90]
+     *
+     *     Then, if arr1 is shuffled to: [4, 5, 6],
+     *                                   [1, 2, 3],
+     *                                   [7, 8, 9]
+     *
+     *     arr2 will be shuffled to: [40, 50, 60],
+     *                               [10, 20, 30],
+     *                               [70, 80, 90]
+     * &lt;/pre&gt;
+     *
+     *
+     * @param arr 2D Arrays to shuffle
+     * @return Arrays with rows randomly shuffled.
+     */
+    public static double[][][] shuffle(double[][]... arr) {
+<span class="nc" id="L373">        double[][][] newArr = arr.clone();</span>
+        double[] temp;
+
+<span class="nc bnc" id="L376" title="All 2 branches missed.">        for (int i = arr[0].length-1; i&gt;0; i--) {</span>
+
+            // Pick a random index from 0 to i
+<span class="nc" id="L379">            int j = rand.nextInt(i+1);</span>
+
+
+<span class="nc bnc" id="L382" title="All 2 branches missed.">            for(int k=0; k&lt;arr.length; k++) { // Swap same row for entire depth.</span>
+                // Swap arr[i] with the element at random index
+<span class="nc" id="L384">                temp = newArr[k][i];</span>
+<span class="nc" id="L385">                newArr[k][i] = newArr[k][j];</span>
+<span class="nc" id="L386">                newArr[k][j] = temp;</span>
+            }
+        }
+
+<span class="nc" id="L390">        return newArr;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

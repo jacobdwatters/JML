@@ -57,5 +57,30 @@ public class Metrics {
 
 <span class="fc" id="L58">        return accuracy/predictions.length;</span>
     }
+
+
+    /**
+     * Computes the accuracy between predictions and the true targets.
+     *
+     * @param predictions Predictions of the true targets.
+     * @param targets True targets.
+     * @return The percentage of correct predictions
+     */
+    public static double accuracy(int[] predictions, int[] targets) {
+<span class="nc" id="L70">        double accuracy = 0;</span>
+
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if(predictions.length!= targets.length) {</span>
+<span class="nc" id="L73">            throw new IllegalArgumentException(&quot;Predictions and targets must have the same number of samples but got &quot; +</span>
+                    predictions.length + &quot; and &quot; + targets.length);
+        }
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        for(int i=0; i&lt;predictions.length; i++) {</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if(predictions[i]==targets[i]) {</span>
+<span class="nc" id="L79">                accuracy++;</span>
+            }
+        }
+
+<span class="nc" id="L83">        return accuracy/predictions.length;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

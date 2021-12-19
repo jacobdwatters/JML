@@ -9,6 +9,7 @@ com\jml\util\ArrayUtils.class
 com\jml\classifiers\KDTree.class
 com\jml\core\LinRegFromData.class
 com\jml\losses\LossFunctions.class
+com\jml\preprocessing\DataSplitter.class
 com\jml\neural_network\layers\Dropout.class
 com\jml\neural_network\NeuralNetwork.class
 com\jml\neural_network\activations\Linear.class
@@ -44,8 +45,10 @@ com\jml\core\NeuralNetFromData.class
 com\jml\linear_models\LinearModelTags.class
 com\jml\core\PolyRegFromData.class
 com\jml\linear_models\LinearRegressionSGD.class
+com\jml\optimizers\Adam.class
 com\jml\classifiers\ClassifierTags.class
 com\jml\core\LogRegFromData.class
 com\jml\core\Model.class
 com\jml\optimizers\Momentum.class
+com\jml\neural_network\activations\Tanh.class
 com\jml\core\Block.class

@@ -36,6 +36,14 @@ public abstract class Optimizer {
      */
     public abstract Matrix[] step(Matrix w, Matrix wGrad, Matrix v);
 
+
+    /**
+     * Gets the details of this optimizer.
+     * @return Important details of this optimizer as a string.
+     */
+    public abstract String getDetails();
+
+
     /**
      * Sets the learning rate scheduler for this optimizer.
      * @param schedule Learning rate scheduler.
