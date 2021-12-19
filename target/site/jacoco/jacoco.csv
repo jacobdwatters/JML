@@ -41,7 +41,7 @@ java-machine-learning,com.jml.preprocessing,Normalize,33,212,0,16,6,38,2,15,2,7
 java-machine-learning,com.jml.preprocessing,DataSplitter,13,130,2,6,3,20,3,3,1,1
 java-machine-learning,com.jml.preprocessing,Encoder,18,104,0,10,5,19,2,7,2,2
 java-machine-learning,com.jml.losses,LossFunctions,7,201,0,16,2,32,1,13,1,5
-java-machine-learning,com.jml.util,ArrayUtils,236,312,20,32,43,54,20,26,9,11
+java-machine-learning,com.jml.util,ArrayUtils,232,312,20,32,42,54,20,26,9,11
 java-machine-learning,com.jml.util,FileManager,23,110,1,5,8,24,3,6,2,4
 java-machine-learning,com.jml.util,ValueError,15,8,2,2,2,1,3,2,2,1
 java-machine-learning,com.jml.util,ArrayErrors,7,24,0,4,2,6,1,4,1,2

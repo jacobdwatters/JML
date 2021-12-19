@@ -285,14 +285,13 @@ public class ArrayUtils {
      * @return Arrays with rows randomly shuffled.
      */
     public static double[] shuffle(double arr[]) {
-        Random r = new Random();
         double[] newArr = arr.clone();
         double temp;
 
         for (int i = arr.length-1; i>0; i--) {
 
             // Pick a random index from 0 to i
-            int j = r.nextInt(i+1);
+            int j = rand.nextInt(i+1);
 
             // Swap arr[i] with the element at random index
             temp = newArr[i];
