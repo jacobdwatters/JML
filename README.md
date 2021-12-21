@@ -5,7 +5,7 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=jacobdwatters_JML&metric=ncloc)](https://sonarcloud.io/dashboard?id=jacobdwatters_JML
 )
 
-# Mod-ML
+# JML
 A simple, easy-to-use modular machine learning library for Java. This library uses the [Java-Linear-Algebra](https://github.com/jacobdwatters/Java-Linear-Algebra)
 library to satisfy any linear algebra needs. It is highly recommended that you also have the .jar file
 for this library as well.
