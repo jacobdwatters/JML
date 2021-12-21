@@ -28,7 +28,6 @@ for this library as well.
 >    - K-Nearest neighbors
 >    - Logistic Regression
 >    - preceptors
->    - Neural Networks
 >  - <b>Neural networks</b>
 >    - Layers
 >      - Dense
