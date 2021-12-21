@@ -48,8 +48,8 @@ for this library as well.
 >     - Add learning rate schedulers to optimizer
 >- <b>Use trained models to make predictions on new data</b>
 >- <b>Save and reuse trained models</b>
->  - Save a trained model to a file for later use
->  - Load a saved model and make predictions with it
+>     - Save a trained model to a file for later use
+>     - Load a saved model and make predictions with it
 >- <b>Manipulate Data</b>
 >    - Read and write data from and to a file
 >    - Encode text labels
