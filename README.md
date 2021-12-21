@@ -57,11 +57,11 @@ for this library as well.
 >    - Normalize data
 >    - Standardize data
 >- <b>Compute statistics of data</b>
->  - Mean
->  - Median
->  - Mode
->  - Standard Deviation
->  - Variance
+>     - Mean
+>     - Median
+>     - Mode
+>     - Standard Deviation
+>     - Variance
 
 Please not this library is still under development. Optimizations and new features are planned.
 
