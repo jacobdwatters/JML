@@ -29,7 +29,7 @@ public class GradientDescent  extends Optimizer {
      * Steps the optimizer a single iteration by applying the update rule of
      * the optimizer to the matrix w.
      *
-     * @param w A matrix contain the
+     * @param w A matrix containg the weights to apply the update to.
      * @param wGrad The gradient of w.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
