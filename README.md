@@ -43,9 +43,9 @@ for this library as well.
 >      - Binary cross-entropy
 >      - Multi-class cross-entropy
 >- <b>Optimizers</b>
->  - Gradient descent
->  - Momentum
->  - Add learning rate schedulers to optimizer
+>     - Gradient descent
+>     - Momentum
+>     - Add learning rate schedulers to optimizer
 >- <b>Use trained models to make predictions on new data</b>
 >- <b>Save and reuse trained models</b>
 >  - Save a trained model to a file for later use
