@@ -9,7 +9,7 @@ import java.util.List;
 
 
 /**
- * This interface specified the requirements for a machine learning model.
+ * This interface specifies the requirements for a machine learning model.
  *
  * @param <X> The type of the features dataset.
  * @param <Y> The type of the targets dataset.
