@@ -27,7 +27,7 @@ for this library as well.
 >  - <b>Classification models</b>
 >    - K-Nearest neighbors
 >    - Logistic Regression
->    - preceptrons
+>    - perceptrons
 >  - <b>Neural networks</b>
 >    - Layers
 >      - Dense
