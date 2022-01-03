@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TimeDecay.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.optimizers</a> &gt; <span class="el_source">TimeDecay.java</span></div><h1>TimeDecay.java</h1><pre class="source lang-java linenums">package com.jml.optimizers;
+
+
+/**
+ * TimeDecay is a {@link Scheduler} that decays the learning rate through time. That is, decays the learning rate
+ * over epochs. &lt;br&gt;&lt;br&gt;
+ *
+ * The following rule is applied by the TimeDecay {@link Scheduler}:
+ * &lt;pre&gt;
+ *      learning_rate = learning_rate / (1 + decay*epoch)
+ * &lt;/pre&gt;
+ *
+ * By default, &lt;code&gt;decay = initial_learning_rate / total_epochs&lt;/code&gt; but a custom value can be specified.
+ */
+public class TimeDecay extends Scheduler {
+
+    private double decay; // Decay rate.
+    private int epochCount; // Counts the number of epochs.
+
+
+    /**
+     * Creates a TimeDecay scheduler with &lt;code&gt;decay = initial_learning_rate / total_epochs&lt;/code&gt;.
+     * @param totalEpochs Total number of epochs the optimizer will run.
+     */
+<span class="nc" id="L25">    public TimeDecay(int totalEpochs) {</span>
+<span class="nc" id="L26">        decay = optim.learningRate / totalEpochs;</span>
+<span class="nc" id="L27">    }</span>
+
+
+    /**
+     * Creates a TimeDecay scheduler with specified decay rate.
+     *
+     * @param totalEpochs Total number of epochs the optimizer will run.
+     * @param decay Decay-rate for this scheduler.
+     */
+<span class="nc" id="L36">    public TimeDecay(int totalEpochs, double decay) {</span>
+<span class="nc" id="L37">        this.decay = decay;</span>
+<span class="nc" id="L38">    }</span>
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void step() {
+<span class="nc" id="L46">        optim.learningRate = optim.learningRate / (1+decay*epochCount);</span>
+<span class="nc" id="L47">        epochCount++;</span>
+<span class="nc" id="L48">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
