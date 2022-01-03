@@ -29,7 +29,7 @@ public class GradientDescent  extends Optimizer {
      * Steps the optimizer a single iteration by applying the update rule of
      * the optimizer to the matrix w.
      *
-     * @param w A matrix contain the
+     * @param w A matrix containing the weights to apply the update to.
      * @param wGrad The gradient of w.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
@@ -37,6 +37,7 @@ public class GradientDescent  extends Optimizer {
     public Matrix step(Matrix w, Matrix wGrad) {
 <span class="fc" id="L38">        return w.sub(wGrad.scalMult(learningRate));</span>
     }
+
 
     /**
      * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
@@ -50,7 +51,7 @@ public class GradientDescent  extends Optimizer {
      */
     @Override
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-<span class="nc" id="L53">        throw new IllegalStateException(&quot;This step method is not defined for the &quot; + OPTIM_NAME + &quot; optimizer&quot;);</span>
+<span class="nc" id="L54">        throw new IllegalStateException(&quot;This step method is not defined for the &quot; + OPTIM_NAME + &quot; optimizer&quot;);</span>
     }
 
 
@@ -61,11 +62,11 @@ public class GradientDescent  extends Optimizer {
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L64">        StringBuilder details = new StringBuilder();</span>
+<span class="nc" id="L65">        StringBuilder details = new StringBuilder();</span>
 
         // TODO:
 
-<span class="nc" id="L68">        return details.toString();</span>
+<span class="nc" id="L69">        return details.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -7,7 +7,6 @@ import linalg.Matrix;
  */
 public abstract class Optimizer {
     double learningRate; // Learning rate of the optimizer.
-    public Scheduler schedule; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
     public String name;
 
     /**
@@ -42,15 +41,6 @@ public abstract class Optimizer {
      * @return Important details of this optimizer as a string.
      */
     public abstract String getDetails();
-
-
-    /**
-     * Sets the learning rate scheduler for this optimizer.
-     * @param schedule Learning rate scheduler.
-     */
-    public void setScheduler(Scheduler schedule) {
-        this.schedule = schedule;
-    }
 
 
     /**

@@ -1,7 +1,5 @@
 package com.jml.linear_models;
 
-import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StepLearningRate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +32,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -50,7 +47,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -67,7 +63,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -83,7 +78,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
     @Test
@@ -98,29 +92,13 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
-    @Test
-    void ConstructorFourTestCase() {
-        int degree = 3;
-        double learningRate = 0.012;
-        double threshold = 0.0005;
-        int maxIterations = 1024;
-        Scheduler schedule = new StepLearningRate(0.8);
-
-        model = new PolynomialRegressionSGD(degree, learningRate, maxIterations, threshold, schedule);
-
-        assertEquals(learningRate, model.learningRate);
-        assertEquals(threshold, model.threshold);
-        assertEquals(maxIterations, model.maxIterations);
-        assertEquals(schedule, model.schedule);
-    }
 
     @Test
     void dataFitTest() {
         int degree = 2;
-        double learningRate = 0.051;
+        double learningRate = 0.0025;
         double threshold = 0.5e-5;
         int maxIterations = 200;
 
@@ -132,7 +110,6 @@ class PolyRegSGDTest {
         double[] lossHist = model.getLossHist();
 
         assertTrue(model.isFit);
-        assertTrue(aveSlope(lossHist) < 0);
     }
 
 

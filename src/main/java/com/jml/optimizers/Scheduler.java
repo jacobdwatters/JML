@@ -8,10 +8,35 @@ package com.jml.optimizers;
  */
 public abstract class Scheduler {
 
+    // TODO: Add minLearningRate which will specify a lower bound for the learning rate.
+
+    /**
+     * Optimizer to apply scheduler to.
+     */
+    Optimizer optim;
+
     /**
      * Applies the specified scheduler rule to the learning rate of the optimizer.
-     *
-     * @param optm Optimizer to apply this Scheduler to.
      */
-    public abstract void step(Optimizer optm);
+    public abstract void step();
+
+
+    /**
+     * Sets the {@link Optimizer} for this Scheduler. This will replace the current optimizer of this
+     * Scheduler.
+     *
+     * @param optim {@link Optimizer} for this Scheduler.
+     */
+    public void setOptim(Optimizer optim) {
+        this.optim = optim;
+    }
+
+
+    /**
+     * Gets the {@link Optimizer} for this Scheduler.
+     * @return The optimizer of this Scheduler.
+     */
+    public Optimizer getOptim() {
+        return this.optim;
+    }
 }

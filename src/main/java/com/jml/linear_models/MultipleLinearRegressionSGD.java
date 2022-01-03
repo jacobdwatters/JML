@@ -28,7 +28,6 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
     private Optimizer GD;
-    protected Scheduler schedule;
     private List<Double> lossHist = new ArrayList<>();
 
     // TODO: Currently using standard gradient descent. Need to change to actual stochastic gradient descent.
@@ -41,38 +40,17 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     }
 
 
-    /**
-     *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
-     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
-     *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param maxIterations Maximum number of iterations to run for during.
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
-     *                  If the loss is less than the specified threshold, gradient descent will stop early.
-     * @param schedule Learning rate scheduler.
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
-     */
-    public MultipleLinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {
-        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
-        this.learningRate = learningRate;
-        this.maxIterations = maxIterations;
-        this.threshold = threshold;
-        this.schedule = schedule;
-        paramCheck();
-    }
-
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public MultipleLinearRegressionSGD(double learningRate, int maxIterations, double threshold) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
@@ -85,12 +63,12 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public MultipleLinearRegressionSGD(double learningRate, int maxIterations) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
@@ -102,10 +80,10 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public MultipleLinearRegressionSGD(double learningRate) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
@@ -116,11 +94,11 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public MultipleLinearRegressionSGD(int maxIterations) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
@@ -135,7 +113,6 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     @Override
     public MultipleLinearRegressionSGD fit(double[][] features, double[] targets) {
         GD = new GradientDescent(learningRate);
-        GD.setScheduler(this.schedule);
 
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
@@ -145,10 +122,11 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
         for(int i=0; i<maxIterations; i++) {
-            wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients
-            w = GD.step(w, wGrad); // Apply gradient descent update rule.
-
-            // TODO: Need to apply scheduler.
+            for(int j=0; j<X.numRows(); j++) {
+                // TODO: No need to numerically compute gradient here.
+                wGrad = Gradient.compute(w, X.getRowAsVector(j), y.getRowAsVector(j), LossFunctions.sse, this); // Compute gradients
+                w = GD.step(w, wGrad); // Apply gradient descent update rule.
+            }
 
             // Append loss to the loss history.
             lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));

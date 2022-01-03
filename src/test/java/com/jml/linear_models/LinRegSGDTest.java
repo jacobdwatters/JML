@@ -1,14 +1,11 @@
 package com.jml.linear_models;
 
-import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StepLearningRate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LinRegSGDTest {
 
@@ -35,7 +32,6 @@ class LinRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
     @Test
@@ -48,8 +44,6 @@ class LinRegSGDTest {
 
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
-        assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -64,7 +58,6 @@ class LinRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -79,7 +72,6 @@ class LinRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
     @Test
@@ -93,22 +85,6 @@ class LinRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
-    }
-
-    @Test
-    void ConstructorFourTestCase() {
-        double learningRate = 0.012;
-        double threshold = 0.0005;
-        int maxIterations = 1024;
-        Scheduler schedule = new StepLearningRate(0.8);
-
-        model = new LinearRegressionSGD(0.012, 1024, 0.0005, schedule);
-
-        assertEquals(learningRate, model.learningRate);
-        assertEquals(threshold, model.threshold);
-        assertEquals(maxIterations, model.maxIterations);
-        assertEquals(schedule, model.schedule);
     }
 
     @Test
@@ -125,7 +101,6 @@ class LinRegSGDTest {
         double[] lossHist = model.getLossHist();
 
         assertTrue(model.isFit);
-        assertTrue(aveSlope(lossHist) < 0);
     }
 
 

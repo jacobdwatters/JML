@@ -28,105 +28,83 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 <span class="fc" id="L28">    protected double threshold = 0.5e-5;</span>
 <span class="fc" id="L29">    protected int maxIterations = 1000;</span>
     private Optimizer GD;
-    protected Scheduler schedule;
-<span class="fc" id="L32">    private List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L31">    private List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
 
     // TODO: Currently using standard gradient descent. Need to change to actual stochastic gradient descent.
 
     /**
      * Creates a {@link MultipleLinearRegressionSGD} model.  This will use a default learning rate of 0.002.
      */
-<span class="fc" id="L39">    public MultipleLinearRegressionSGD() {</span>
-<span class="fc" id="L40">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L41">    }</span>
+<span class="fc" id="L38">    public MultipleLinearRegressionSGD() {</span>
+<span class="fc" id="L39">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L40">    }</span>
+
 
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param maxIterations Maximum number of iterations to run for during.
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
-     *                  If the loss is less than the specified threshold, gradient descent will stop early.
-     * @param schedule Learning rate scheduler.
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
-     */
-<span class="fc" id="L56">    public MultipleLinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {</span>
-<span class="fc" id="L57">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L58">        this.learningRate = learningRate;</span>
-<span class="fc" id="L59">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L60">        this.threshold = threshold;</span>
-<span class="fc" id="L61">        this.schedule = schedule;</span>
-<span class="fc" id="L62">        paramCheck();</span>
-<span class="fc" id="L63">    }</span>
-
-
-    /**
-     *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
-     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
-     *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L77">    public MultipleLinearRegressionSGD(double learningRate, int maxIterations, double threshold) {</span>
-<span class="fc" id="L78">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L79">        this.learningRate = learningRate;</span>
-<span class="fc" id="L80">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L81">        this.threshold = threshold;</span>
-<span class="fc" id="L82">        paramCheck();</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L55">    public MultipleLinearRegressionSGD(double learningRate, int maxIterations, double threshold) {</span>
+<span class="fc" id="L56">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L57">        this.learningRate = learningRate;</span>
+<span class="fc" id="L58">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L59">        this.threshold = threshold;</span>
+<span class="fc" id="L60">        paramCheck();</span>
+<span class="fc" id="L61">    }</span>
 
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L95">    public MultipleLinearRegressionSGD(double learningRate, int maxIterations) {</span>
-<span class="fc" id="L96">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L97">        this.learningRate = learningRate;</span>
-<span class="fc" id="L98">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L99">        paramCheck();</span>
-<span class="fc" id="L100">    }</span>
+<span class="fc" id="L73">    public MultipleLinearRegressionSGD(double learningRate, int maxIterations) {</span>
+<span class="fc" id="L74">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L75">        this.learningRate = learningRate;</span>
+<span class="fc" id="L76">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L77">        paramCheck();</span>
+<span class="fc" id="L78">    }</span>
 
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L110">    public MultipleLinearRegressionSGD(double learningRate) {</span>
-<span class="fc" id="L111">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L112">        this.learningRate = learningRate;</span>
-<span class="fc" id="L113">        paramCheck();</span>
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L88">    public MultipleLinearRegressionSGD(double learningRate) {</span>
+<span class="fc" id="L89">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L90">        this.learningRate = learningRate;</span>
+<span class="fc" id="L91">        paramCheck();</span>
+<span class="fc" id="L92">    }</span>
 
 
     /**
      *  Creates a {@link MultipleLinearRegressionSGD} model. When the {@link #fit(double[][], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L125">    public MultipleLinearRegressionSGD(int maxIterations) {</span>
-<span class="fc" id="L126">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L127">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L128">        paramCheck();</span>
-<span class="fc" id="L129">    }</span>
+<span class="fc" id="L103">    public MultipleLinearRegressionSGD(int maxIterations) {</span>
+<span class="fc" id="L104">        super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();</span>
+<span class="fc" id="L105">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L106">        paramCheck();</span>
+<span class="fc" id="L107">    }</span>
 
 
     /**
@@ -134,35 +112,35 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
      */
     @Override
     public MultipleLinearRegressionSGD fit(double[][] features, double[] targets) {
-<span class="fc" id="L137">        GD = new GradientDescent(learningRate);</span>
-<span class="fc" id="L138">        GD.setScheduler(this.schedule);</span>
+<span class="fc" id="L115">        GD = new GradientDescent(learningRate);</span>
 
         // Convert features and targets to matrix representations.
-<span class="fc" id="L141">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
-<span class="fc" id="L142">        Matrix y = new Vector(targets);</span>
+<span class="fc" id="L118">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
+<span class="fc" id="L119">        Matrix y = new Vector(targets);</span>
 
         Matrix wGrad;
-<span class="fc" id="L145">        w = Matrix.randn(X.numCols(), 1, false); // initialize w.</span>
+<span class="fc" id="L122">        w = Matrix.randn(X.numCols(), 1, false); // initialize w.</span>
 
-<span class="fc bfc" id="L147" title="All 2 branches covered.">        for(int i=0; i&lt;maxIterations; i++) {</span>
-<span class="fc" id="L148">            wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients</span>
-<span class="fc" id="L149">            w = GD.step(w, wGrad); // Apply gradient descent update rule.</span>
-
-            // TODO: Need to apply scheduler.
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        for(int i=0; i&lt;maxIterations; i++) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            for(int j=0; j&lt;X.numRows(); j++) {</span>
+                // TODO: No need to numerically compute gradient here.
+<span class="fc" id="L127">                wGrad = Gradient.compute(w, X.getRowAsVector(j), y.getRowAsVector(j), LossFunctions.sse, this); // Compute gradients</span>
+<span class="fc" id="L128">                w = GD.step(w, wGrad); // Apply gradient descent update rule.</span>
+            }
 
             // Append loss to the loss history.
-<span class="fc" id="L154">            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));</span>
+<span class="fc" id="L132">            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));</span>
 
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">            if(lossHist.get(lossHist.size()-1)&lt;threshold) {</span>
-<span class="nc" id="L157">                break; // Then stop the training early</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">            if(lossHist.get(lossHist.size()-1)&lt;threshold) {</span>
+<span class="nc" id="L135">                break; // Then stop the training early</span>
             }
         }
 
-<span class="fc" id="L161">        super.coefficients = w.T().getValuesAsDouble()[0];</span>
-<span class="fc" id="L162">        super.isFit=true;</span>
-<span class="fc" id="L163">        super.buildDetails();</span>
+<span class="fc" id="L139">        super.coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L140">        super.isFit=true;</span>
+<span class="fc" id="L141">        super.buildDetails();</span>
 
-<span class="fc" id="L165">        return this;</span>
+<span class="fc" id="L143">        return this;</span>
     }
 
 
@@ -172,22 +150,22 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
      * corresponds to the iteration the loss was computed for.
      */
     public double[] getLossHist() {
-<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L176">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L154">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
         }
 
-<span class="fc" id="L179">        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();</span>
+<span class="fc" id="L157">        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();</span>
     }
 
 
     // Ensure parameters are valid.
     private void paramCheck() {
-<span class="fc bfc" id="L185" title="All 2 branches covered.">        if(!ValueError.isNonNegative(maxIterations))</span>
-<span class="fc" id="L186">            throw new IllegalArgumentException(&quot;maxIterations must be non-negative but got &quot; + maxIterations);</span>
-<span class="fc bfc" id="L187" title="All 2 branches covered.">        if(!ValueError.isNonNegative(learningRate))</span>
-<span class="fc" id="L188">            throw new IllegalArgumentException(&quot;learningRate must be non-negative but got &quot; + learningRate);</span>
-<span class="fc bfc" id="L189" title="All 2 branches covered.">        if(!ValueError.isNonNegative(threshold))</span>
-<span class="fc" id="L190">            throw new IllegalArgumentException(&quot;threshold must be non-negative but got &quot; + threshold);</span>
-<span class="fc" id="L191">    }</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if(!ValueError.isNonNegative(maxIterations))</span>
+<span class="fc" id="L164">            throw new IllegalArgumentException(&quot;maxIterations must be non-negative but got &quot; + maxIterations);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if(!ValueError.isNonNegative(learningRate))</span>
+<span class="fc" id="L166">            throw new IllegalArgumentException(&quot;learningRate must be non-negative but got &quot; + learningRate);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if(!ValueError.isNonNegative(threshold))</span>
+<span class="fc" id="L168">            throw new IllegalArgumentException(&quot;threshold must be non-negative but got &quot; + threshold);</span>
+<span class="fc" id="L169">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

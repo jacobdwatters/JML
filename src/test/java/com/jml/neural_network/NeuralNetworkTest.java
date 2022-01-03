@@ -4,10 +4,7 @@ import com.jml.core.Model;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Dropout;
-import com.jml.optimizers.GradientDescent;
-import com.jml.optimizers.Momentum;
-import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.StepLearningRate;
+import com.jml.optimizers.*;
 import org.junit.jupiter.api.Test;
 
 
@@ -168,9 +165,11 @@ class NeuralNetworkTest {
     void schedTest() {
         String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN3.mdl";
         Optimizer optim = new GradientDescent(0.01);
-        optim.setScheduler(new StepLearningRate(0.9, 100));
+        Scheduler schedule = new StepLearningRate(optim, 0.5, 100);
 
         nn = new NeuralNetwork(optim, 1000, 10);
+        nn.setScheduler(schedule);
+
         nn.add(new Dense(2, 10, Activations.sigmoid));
         nn.add(new Dense(10, Activations.relu));
         nn.add(new Dense(1, Activations.sigmoid));

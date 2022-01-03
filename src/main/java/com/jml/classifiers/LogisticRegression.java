@@ -8,7 +8,6 @@ import com.jml.linear_models.LinearModelTags;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.Scheduler;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 import linalg.Matrix;
@@ -36,7 +35,6 @@ public class LogisticRegression extends Model<double[][], double[]> {
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
     private final Optimizer GD;
-    protected Scheduler schedule;
 
     private List<Double> lossHist = new ArrayList<>();
 
@@ -51,7 +49,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
     /**
      * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate. Defaults to a learning rate of 0.002, 1000 max iterations and a threshold of 0.5e-5.
      */
     public LogisticRegression() {
@@ -61,28 +59,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
     /**
      * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
-     * learning rate, max iterations, threshold, and schedule.
-     *
-     * @param learningRate Learning rate to use during optimization.
-     * @param maxIterations Maximum iterations to run optimizer for.
-     * @param threshold Threshold for stopping the optimizer. If the loss becomes less than this value, the optimizer
-     *                  will stop early.
-     * @param schedule learning rate scheduler for optimization.
-     */
-    public LogisticRegression(double learningRate, int maxIterations, double threshold, Scheduler schedule) {
-        this.learningRate = learningRate;
-        this.maxIterations = maxIterations;
-        this.threshold = threshold;
-        this.schedule = schedule;
-        GD = new GradientDescent(learningRate);
-        GD.setScheduler(this.schedule);
-    }
-
-
-    /**
-     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate, max iterations, and threshold.
      *
      * @param learningRate Learning rate to use during optimization.
@@ -100,7 +77,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
     /**
      * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate, max iterations. Defaults to a threshold of 0.5e-5.
      *
      * @param learningRate Learning rate to use during optimization.
@@ -115,7 +92,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
     /**
      * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate. Defaults to 1000 max iterations and a threshold of 0.5e-5.
      *
      * @param learningRate Learning rate to use during optimization.
@@ -151,8 +128,6 @@ public class LogisticRegression extends Model<double[][], double[]> {
         for(int i=0; i<maxIterations; i++) {
             wGrad = Gradient.compute(w, X, y, LossFunctions.binCrossEntropy, this); // Compute gradients
             w = GD.step(w, wGrad); // Apply gradient descent update rule.
-
-            // TODO: Need to apply scheduler.
 
             // Append loss to the loss history.
             lossHist.add(LossFunctions.binCrossEntropy.compute(y, this.predict(X, w)).getAsDouble(0, 0));

@@ -4,7 +4,8 @@ package com.jml.linear_models;
 import com.jml.core.Gradient;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
-import com.jml.optimizers.*;
+import com.jml.optimizers.GradientDescent;
+import com.jml.optimizers.Optimizer;
 import linalg.Matrix;
 import linalg.Vector;
 import com.jml.util.ValueError;
@@ -26,10 +27,8 @@ public class LinearRegressionSGD extends LinearRegression {
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
     protected Optimizer GD;
-    protected Scheduler schedule;
     private List<Double> lossHist = new ArrayList<>();
 
-    // TODO: This is using just gradient descent, need to change to true stochastic gradient descent.
 
     /**
      * Creates a {@link LinearRegressionSGD} model.<br>
@@ -39,32 +38,10 @@ public class LinearRegressionSGD extends LinearRegression {
      *    Threshold: 0.5e-5
      *    Maximum Iterations: 1000
      *    Scheduler: None
-     * <pre/>
+     * </pre>
      */
     public LinearRegressionSGD() {
         super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
-    }
-
-
-    /**
-     *  Creates a {@link LinearRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
-     *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
-     *
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
-     *                  If the loss is less than the specified threshold, gradient descent will stop early.
-     * @param maxIterations Maximum number of iterations to run for during
-     * @param schedule Learning rate scheduler.
-     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
-     */
-    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold, Scheduler schedule) {
-        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
-        this.learningRate = learningRate;
-        this.maxIterations = maxIterations;
-        this.threshold = threshold;
-        this.schedule = schedule;
-        paramCheck();
     }
 
 
@@ -148,7 +125,6 @@ public class LinearRegressionSGD extends LinearRegression {
     @Override
     public LinearRegressionSGD fit(double[] features, double[] targets) {
         GD = new GradientDescent(learningRate);
-        GD.setScheduler(this.schedule); // Need to actually step this scheduler in the loop...
 
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));
@@ -158,10 +134,11 @@ public class LinearRegressionSGD extends LinearRegression {
         w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
         for(int i=0; i<maxIterations; i++) {
-            wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients
-            w = GD.step(w, wGrad); // Apply gradient descent update rule.
-
-            // TODO: Need to apply scheduler.
+            for(int j=0; j<X.numRows(); j++) {
+                // TODO: No need to numerically compute gradient here.
+                wGrad = Gradient.compute(w, X.getRowAsVector(j), y.getRowAsVector(j), LossFunctions.sse, this); // Compute gradients
+                w = GD.step(w, wGrad); // Apply gradient descent update rule.
+            }
 
             // Append loss to the loss history.
             lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));

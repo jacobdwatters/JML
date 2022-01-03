@@ -8,11 +8,36 @@
  */
 <span class="fc" id="L9">public abstract class Scheduler {</span>
 
+    // TODO: Add minLearningRate which will specify a lower bound for the learning rate.
+
+    /**
+     * Optimizer to apply scheduler to.
+     */
+    Optimizer optim;
+
     /**
      * Applies the specified scheduler rule to the learning rate of the optimizer.
-     *
-     * @param optm Optimizer to apply this Scheduler to.
      */
-    public abstract void step(Optimizer optm);
+    public abstract void step();
+
+
+    /**
+     * Sets the {@link Optimizer} for this Scheduler. This will replace the current optimizer of this
+     * Scheduler.
+     *
+     * @param optim {@link Optimizer} for this Scheduler.
+     */
+    public void setOptim(Optimizer optim) {
+<span class="nc" id="L31">        this.optim = optim;</span>
+<span class="nc" id="L32">    }</span>
+
+
+    /**
+     * Gets the {@link Optimizer} for this Scheduler.
+     * @return The optimizer of this Scheduler.
+     */
+    public Optimizer getOptim() {
+<span class="fc" id="L40">        return this.optim;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

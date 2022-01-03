@@ -7,7 +7,6 @@ import linalg.Matrix;
  */
 <span class="fc" id="L8">public abstract class Optimizer {</span>
     double learningRate; // Learning rate of the optimizer.
-    public Scheduler schedule; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
     public String name;
 
     /**
@@ -45,18 +44,9 @@ import linalg.Matrix;
 
 
     /**
-     * Sets the learning rate scheduler for this optimizer.
-     * @param schedule Learning rate scheduler.
-     */
-    public void setScheduler(Scheduler schedule) {
-<span class="fc" id="L52">        this.schedule = schedule;</span>
-<span class="fc" id="L53">    }</span>
-
-
-    /**
      * Gets the learning rate for this optimizer.
      * @return The learning rate for this optimizer.
      */
-<span class="fc" id="L60">    public double getLearningRate() {return learningRate;}</span>
+<span class="fc" id="L50">    public double getLearningRate() {return learningRate;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

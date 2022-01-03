@@ -60,7 +60,6 @@ class LogRegTest {
         assertEquals(learningRate, logReg.learningRate);
         assertEquals(threshold, logReg.threshold);
         assertEquals(maxIterations, logReg.maxIterations);
-        assertNull(logReg.schedule);
         assertTrue(logReg.isFit);
         assertEquals(loadedMdl.inspect(), logReg.inspect());
     }
@@ -107,14 +106,6 @@ class LogRegTest {
         assertEquals(0.002, logReg.learningRate);
         assertEquals(0.2E-2, logReg.threshold);
         assertEquals(1500, logReg.maxIterations);
-
-        Scheduler schedule = new StepLearningRate(0.8, 2);
-        logReg = new LogisticRegression(0.012, 1600, 0.004, schedule);
-        assertEquals(0.012, logReg.learningRate);
-        assertEquals(0.004, logReg.threshold);
-        assertEquals(1600, logReg.maxIterations);
-        assertEquals(schedule, logReg.schedule);
-        assertEquals(logReg.toString(), logReg.inspect());
     }
 
 

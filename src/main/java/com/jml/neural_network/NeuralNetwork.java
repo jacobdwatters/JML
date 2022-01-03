@@ -9,6 +9,7 @@ import com.jml.neural_network.layers.Layer;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Momentum;
 import com.jml.optimizers.Optimizer;
+import com.jml.optimizers.Scheduler;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 import linalg.Matrix;
@@ -43,7 +44,7 @@ import java.util.List;
  */
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
-    protected String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
+    protected final String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
     protected final List<Layer> layers;
     protected double learningRate;
     protected double threshold;
@@ -60,6 +61,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum optimizer.
 
     protected Optimizer optim; // Optimizer to use during backpropagation.
+    protected Scheduler schedule;
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -213,6 +215,22 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
 
     /**
+     * Sets the {@link Scheduler learning rate scheduler} for the neural network.
+     * Note that this method will force the optimizer of the scheduler to be the optimizer of
+     * the neural network.
+     *
+     * @param schedule learning rate scheduler for the neural network.
+     */
+    public void setScheduler(Scheduler schedule) {
+        this.schedule = schedule;
+
+        if(!this.schedule.getOptim().equals(this.optim)) {
+            this.schedule.setOptim(this.optim); // Ensure the scheduler is using the correct optimizer.
+        }
+    }
+
+
+    /**
      * Fits or trains the model with the given features and targets.
      *
      * @param features The features of the training set.
@@ -257,8 +275,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 break; // Then stop training since the loss has dropped below the stopping threshold.
             }
 
-            if(optim.schedule!=null) { // Apply learning rate scheduler if applicable
-                optim.schedule.step(optim);
+            if(schedule!=null) { // Apply learning rate scheduler if applicable
+                schedule.step();
             }
         }
 
