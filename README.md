@@ -5,7 +5,7 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=jacobdwatters_JML&metric=ncloc)](https://sonarcloud.io/dashboard?id=jacobdwatters_JML
 )
 
-# Mod-ML
+# JML
 A simple, easy-to-use modular machine learning library for Java. This library uses the [Java-Linear-Algebra](https://github.com/jacobdwatters/Java-Linear-Algebra)
 library to satisfy any linear algebra needs. It is highly recommended that you also have the .jar file
 for this library as well.
@@ -27,8 +27,7 @@ for this library as well.
 >  - <b>Classification models</b>
 >    - K-Nearest neighbors
 >    - Logistic Regression
->    - preceptors
->    - Neural Networks
+>    - perceptrons
 >  - <b>Neural networks</b>
 >    - Layers
 >      - Dense
@@ -43,13 +42,13 @@ for this library as well.
 >      - Binary cross-entropy
 >      - Multi-class cross-entropy
 >- <b>Optimizers</b>
->  - Gradient descent
->  - Momentum
->  - Add learning rate schedulers to optimizer
+>     - Gradient descent
+>     - Momentum
+>     - Add learning rate schedulers to optimizer
 >- <b>Use trained models to make predictions on new data</b>
 >- <b>Save and reuse trained models</b>
->  - Save a trained model to a file for later use
->  - Load a saved model and make predictions with it
+>     - Save a trained model to a file for later use
+>     - Load a saved model and make predictions with it
 >- <b>Manipulate Data</b>
 >    - Read and write data from and to a file
 >    - Encode text labels
@@ -57,11 +56,11 @@ for this library as well.
 >    - Normalize data
 >    - Standardize data
 >- <b>Compute statistics of data</b>
->  - Mean
->  - Median
->  - Mode
->  - Standard Deviation
->  - Variance
+>     - Mean
+>     - Median
+>     - Mode
+>     - Standard Deviation
+>     - Variance
 
 Please not this library is still under development. Optimizations and new features are planned.
 
