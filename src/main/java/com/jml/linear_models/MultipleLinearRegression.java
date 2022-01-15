@@ -56,7 +56,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                     "Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.");
         }
 
-        w = Solvers.solve(A, b); // Compute the model parameters
+        w = Solvers.solveQR(A, b); // Compute the model parameters
 
         this.coefficients = w.T().getValuesAsDouble()[0];
 

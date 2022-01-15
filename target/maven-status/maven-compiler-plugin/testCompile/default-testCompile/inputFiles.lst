@@ -18,6 +18,7 @@ C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\neural_network\NeuralNetwo
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\losses\mseTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\losses\binCrossEntTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\linear_models\LinearRegressionDatasetOneTest.java
+C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\preprocessing\DataSplitterTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\core\StatsTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\preprocessing\NormalizationExceptionTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\preprocessing\NormalizationTest.java

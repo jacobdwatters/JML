@@ -66,7 +66,7 @@ public class DataLoader {
             throw new IllegalArgumentException("Total number of passed feature and target columns must match "
             + "the number of columns in the file. However, got (" + featureColumns.length + ", " + targetColumns.length +
                     ") and total columns in the csv file " + content[0].length);
-        }
+        } // TODO: This is not necessary, user should be able to select a subset of the file columns.
 
         String[][] features = new String[content.length][featureColumns.length];
         String[][] targets = new String[content.length][targetColumns.length];

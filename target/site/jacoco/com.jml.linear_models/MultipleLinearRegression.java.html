@@ -56,7 +56,7 @@ import linalg.Vector;
                     &quot;Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.&quot;);
         }
 
-<span class="fc" id="L59">        w = Solvers.solve(A, b); // Compute the model parameters</span>
+<span class="fc" id="L59">        w = Solvers.solveQR(A, b); // Compute the model parameters</span>
 
 <span class="fc" id="L61">        this.coefficients = w.T().getValuesAsDouble()[0];</span>
 

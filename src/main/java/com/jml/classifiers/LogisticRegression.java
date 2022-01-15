@@ -1,20 +1,19 @@
 package com.jml.classifiers;
 
-import com.jml.core.Block;
-import com.jml.core.Gradient;
-import com.jml.core.Model;
-import com.jml.core.ModelTypes;
+import com.jml.core.*;
 import com.jml.linear_models.LinearModelTags;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
 import com.jml.optimizers.Scheduler;
+import com.jml.preprocessing.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,11 +31,10 @@ public class LogisticRegression extends Model<double[][], double[]> {
     protected double[] coefficients;
 
     // Variables for optimization.
-    protected double learningRate = 0.002;
+    protected double learningRate = 0.01;
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
     private final Optimizer GD;
-    protected Scheduler schedule;
 
     private List<Double> lossHist = new ArrayList<>();
 
@@ -50,8 +48,8 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
 
     /**
-     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[]) fit} using a
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate. Defaults to a learning rate of 0.002, 1000 max iterations and a threshold of 0.5e-5.
      */
     public LogisticRegression() {
@@ -60,29 +58,8 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
 
     /**
-     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
-     * learning rate, max iterations, threshold, and schedule.
-     *
-     * @param learningRate Learning rate to use during optimization.
-     * @param maxIterations Maximum iterations to run optimizer for.
-     * @param threshold Threshold for stopping the optimizer. If the loss becomes less than this value, the optimizer
-     *                  will stop early.
-     * @param schedule learning rate scheduler for optimization.
-     */
-    public LogisticRegression(double learningRate, int maxIterations, double threshold, Scheduler schedule) {
-        this.learningRate = learningRate;
-        this.maxIterations = maxIterations;
-        this.threshold = threshold;
-        this.schedule = schedule;
-        GD = new GradientDescent(learningRate);
-        GD.setScheduler(this.schedule);
-    }
-
-
-    /**
-     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[]) fit} using a
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate, max iterations, and threshold.
      *
      * @param learningRate Learning rate to use during optimization.
@@ -99,8 +76,8 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
 
     /**
-     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[]) fit} using a
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate, max iterations. Defaults to a threshold of 0.5e-5.
      *
      * @param learningRate Learning rate to use during optimization.
@@ -114,8 +91,8 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
 
     /**
-     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[])} using a
-     * {@link com.jml.optimizers.StochasticGradientDescent stochastic gradient descent} optimizer with specified
+     * Creates a logistic regression model. The model will be {@link #fit(double[][], double[]) fit} using a
+     * {@link com.jml.optimizers.GradientDescent stochastic gradient descent} optimizer with specified
      * learning rate. Defaults to 1000 max iterations and a threshold of 0.5e-5.
      *
      * @param learningRate Learning rate to use during optimization.
@@ -149,10 +126,8 @@ public class LogisticRegression extends Model<double[][], double[]> {
         w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
         for(int i=0; i<maxIterations; i++) {
-            wGrad = Gradient.compute(w, X, y, LossFunctions.binCrossEntropy, this); // Compute gradients
+            wGrad = grad(X, y, w); // Compute gradients
             w = GD.step(w, wGrad); // Apply gradient descent update rule.
-
-            // TODO: Need to apply scheduler.
 
             // Append loss to the loss history.
             lossHist.add(LossFunctions.binCrossEntropy.compute(y, this.predict(X, w)).getAsDouble(0, 0));
@@ -169,6 +144,34 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
         return this;
     }
+
+
+    /**
+     * Compute gradients w.r.t. all weights of binary cross entropy loss function for logistic regression model.
+     * @param X Input matrix of model.
+     * @param y Output matrix of model.
+     * @param w Current weights of model.
+     * @return The gradients w.r.t. all weights of the model.
+     */
+    private Matrix grad(Matrix X, Matrix y, Matrix w) {
+        Matrix wGrad = new Matrix(X.numCols(), 1);
+        Matrix yPred = predict(X, w);
+        double sum;
+
+        for(int j=0; j<wGrad.numRows(); j++) {
+            sum = 0;
+
+            // Compute dL/dw_j
+            for(int i=0; i<y.numRows(); i++) {
+                sum += (yPred.getAsDouble(i, 0) - y.getAsDouble(i, 0))*X.getAsDouble(i, j);
+            }
+
+            wGrad.set(sum, j, 0);
+        }
+
+        return wGrad;
+    }
+
 
     /**
      * Uses fitted/trained model to make prediction on single feature.

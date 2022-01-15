@@ -48,5 +48,5 @@ java-machine-learning,com.jml.util,ArrayErrors,7,24,0,4,2,6,1,4,1,2
 java-machine-learning,com.jml.classifiers,KDTree,0,123,1,15,0,31,1,11,0,4
 java-machine-learning,com.jml.classifiers,KNearestNeighbors,14,310,0,14,3,55,3,15,3,8
 java-machine-learning,com.jml.classifiers,ClassifierTags,0,33,0,0,0,2,0,1,0,1
-java-machine-learning,com.jml.classifiers,LogisticRegression,2,580,4,26,1,87,4,25,0,14
+java-machine-learning,com.jml.classifiers,LogisticRegression,5,575,4,30,2,86,5,26,1,13
 java-machine-learning,com.jml.classifiers,KDTree.PointNode,9,22,1,1,1,6,1,3,0,3
