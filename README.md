@@ -17,6 +17,10 @@ for this library as well.
 3) Add the Jar(s) to your project in your IDE of choice. 
 4) You are ready to being developing machine learning models in Java!
 
+### Documentation and Use
+1) The Javadoc for the JML library can be found [here](https://jacobdwatters.github.io/JML/index.html). 
+2) Examples of using the library can be found on my personal website [here](https://www.worldofjacobwatters.com/java-machine-learning-use).
+
 ## Features
 >This library allows the user to do the following and more:
 >- <b>Fit and train a variety of models</b>
