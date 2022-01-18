@@ -15,7 +15,7 @@ import java.util.List;
 
 
 /**
- * Model for least squares regression of polynomials using {@link StochasticGradientDescent Stochastic Gradient Descent}.<br><br>
+ * Model for least squares regression of polynomials using {@link GradientDescent Stochastic Gradient Descent}.<br><br>
  *
  * PolynomialRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x  + b<sub>2</sub>x<sup>2</sup> + ... +
  * b<sub>n</sub>x<sup>n</sup> to the datasets by minimizing
@@ -43,16 +43,16 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
 
     /**
      *  Creates a {@link PolynomialRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
      * @param degree Degree of the polynomial to fit.
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
      * @param schedule Learning rate scheduler to apply during gradient descent.
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public PolynomialRegressionSGD(int degree, double learningRate, int maxIterations, double threshold, Scheduler schedule) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
@@ -67,15 +67,15 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
 
     /**
      *  Creates a {@link PolynomialRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge within the threshold by the specified number of max iterations.
      *
      * @param degree Degree of the polynomial to fit.
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}
-     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}
+     * @param threshold Threshold for early stopping during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      *                  If the loss is less than the specified threshold, gradient descent will stop early.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public PolynomialRegressionSGD(int degree, double learningRate, int maxIterations, double threshold) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
@@ -89,13 +89,13 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
 
     /**
      *  Creates a {@link PolynomialRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
      * @param degree Degree of the polynomial to fit.
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      * @param maxIterations Maximum number of iterations to run for during
-     * {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public PolynomialRegressionSGD(int degree, double learningRate, int maxIterations) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
@@ -108,11 +108,11 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
 
     /**
      *  Creates a {@link PolynomialRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will use the
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will use the
      *  provided learning rate and will stop if it does not converge by the specified number of max iterations.
      *
      * @param degree Degree of the polynomial to fit.
-     * @param learningRate Learning rate to use during {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent}.
+     * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
     public PolynomialRegressionSGD(int degree, double learningRate) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
@@ -124,7 +124,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
 
     /**
      *  Creates a {@link PolynomialRegressionSGD} model. When the {@link #fit(double[], double[]) fit}
-     *  method is called, {@link com.jml.optimizers.StochasticGradientDescent Stochastic Gradient Descent} will fit a
+     *  method is called, {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent} will fit a
      *  polynomial of the specified degree using gradient descent.
      *
      * @param degree Degree of the polynomial to fit.
@@ -160,6 +160,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
         for(int i=0; i<maxIterations; i++) {
+            // TODO: Change to explicit gradient. No need to numerically compute it here.
             wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients
             w = GD.step(w, wGrad); // Apply gradient descent update rule.
 

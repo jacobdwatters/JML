@@ -29,8 +29,6 @@ public class LinearRegressionSGD extends LinearRegression {
     protected Scheduler schedule;
     private List<Double> lossHist = new ArrayList<>();
 
-    // TODO: This is using just gradient descent, need to change to true stochastic gradient descent.
-
     /**
      * Creates a {@link LinearRegressionSGD} model.<br>
      * This will use default settings for gradient descent:
@@ -158,6 +156,7 @@ public class LinearRegressionSGD extends LinearRegression {
         w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
         for(int i=0; i<maxIterations; i++) {
+            // TODO: Change to explicit gradient. No need to numerically compute it here.
             wGrad = Gradient.compute(w, X, y, LossFunctions.sse, this); // Compute gradients
             w = GD.step(w, wGrad); // Apply gradient descent update rule.
 
