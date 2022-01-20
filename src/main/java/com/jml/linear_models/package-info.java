@@ -8,7 +8,7 @@
  *     {@link com.jml.linear_models.PolynomialRegression Polynomial Regression}
  *     {@link com.jml.linear_models.LinearRegressionSGD Linear Regression with Stochastic Gradient Descent}
  *     {@link com.jml.linear_models.MultipleLinearRegressionSGD Multiple Linear Regression with Stochastic Gradient Descent}
- *     {@link com.jml.linear_models.PolynomialRegressionSGD Polynomial Regression with Stochastic Gradient Descent
+ *     {@link com.jml.linear_models.PolynomialRegressionSGD Polynomial Regression with Stochastic Gradient Descent}
  *     {@link com.jml.linear_models.Perceptron  Perceptron}
  * </pre>
  */
