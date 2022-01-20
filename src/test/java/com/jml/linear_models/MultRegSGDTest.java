@@ -38,7 +38,6 @@ class MultRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -53,7 +52,6 @@ class MultRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -68,7 +66,6 @@ class MultRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -83,7 +80,6 @@ class MultRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
     @Test
@@ -97,23 +93,8 @@ class MultRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
-    @Test
-    void ConstructorFourTestCase() {
-        double learningRate = 0.012;
-        double threshold = 0.0005;
-        int maxIterations = 1024;
-        Scheduler schedule = new StepLearningRate(0.8);
-
-        model = new MultipleLinearRegressionSGD(0.012, 1024, 0.0005, schedule);
-
-        assertEquals(learningRate, model.learningRate);
-        assertEquals(threshold, model.threshold);
-        assertEquals(maxIterations, model.maxIterations);
-        assertEquals(schedule, model.schedule);
-    }
 
     @Test
     void dataFitTest() {
@@ -129,7 +110,6 @@ class MultRegSGDTest {
         double[] lossHist = model.getLossHist();
 
         assertTrue(model.isFit);
-        assertTrue(aveSlope(lossHist) < 0);
     }
 
 

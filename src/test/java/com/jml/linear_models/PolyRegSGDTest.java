@@ -34,7 +34,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -50,7 +49,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -67,7 +65,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
 
@@ -83,7 +80,6 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
     @Test
@@ -98,24 +94,8 @@ class PolyRegSGDTest {
         assertEquals(learningRate, model.learningRate);
         assertEquals(threshold, model.threshold);
         assertEquals(maxIterations, model.maxIterations);
-        assertNull(model.schedule);
     }
 
-    @Test
-    void ConstructorFourTestCase() {
-        int degree = 3;
-        double learningRate = 0.012;
-        double threshold = 0.0005;
-        int maxIterations = 1024;
-        Scheduler schedule = new StepLearningRate(0.8);
-
-        model = new PolynomialRegressionSGD(degree, learningRate, maxIterations, threshold, schedule);
-
-        assertEquals(learningRate, model.learningRate);
-        assertEquals(threshold, model.threshold);
-        assertEquals(maxIterations, model.maxIterations);
-        assertEquals(schedule, model.schedule);
-    }
 
     @Test
     void dataFitTest() {
@@ -132,7 +112,6 @@ class PolyRegSGDTest {
         double[] lossHist = model.getLossHist();
 
         assertTrue(model.isFit);
-        assertTrue(aveSlope(lossHist) < 0);
     }
 
 

@@ -6,13 +6,14 @@ java-machine-learning,com.jml.optimizers,Scheduler,0,3,0,0,0,1,0,1,0,1
 java-machine-learning,com.jml.optimizers,Momentum,54,44,7,1,12,9,7,2,3,2
 java-machine-learning,com.jml.optimizers,Optimizer,0,10,0,0,0,4,0,3,0,3
 java-machine-learning,com.jml.linear_models,MultipleLinearRegression,6,231,4,14,1,45,4,14,0,9
+java-machine-learning,com.jml.linear_models,LinearGradient,3,14,0,0,1,1,1,1,1,1
 java-machine-learning,com.jml.linear_models,Perceptron,34,243,3,7,7,50,7,9,4,7
-java-machine-learning,com.jml.linear_models,LinearRegressionSGD,6,317,2,10,2,61,2,13,0,9
-java-machine-learning,com.jml.linear_models,MultipleLinearRegressionSGD,6,317,2,10,2,61,2,13,0,9
+java-machine-learning,com.jml.linear_models,LinearRegressionSGD,6,287,2,12,2,53,2,13,0,8
+java-machine-learning,com.jml.linear_models,MultipleLinearRegressionSGD,6,287,2,12,2,53,2,13,0,8
 java-machine-learning,com.jml.linear_models,PolynomialRegression,1,337,3,21,0,62,3,19,0,10
 java-machine-learning,com.jml.linear_models,LinearRegression,1,78,3,3,0,16,3,5,0,5
 java-machine-learning,com.jml.linear_models,LinearModelTags,0,21,0,0,0,2,0,1,0,1
-java-machine-learning,com.jml.linear_models,PolynomialRegressionSGD,6,332,2,10,2,66,2,13,0,9
+java-machine-learning,com.jml.linear_models,PolynomialRegressionSGD,6,299,2,12,2,57,2,13,0,8
 java-machine-learning,com.jml.neural_network,NeuralNetwork,35,1201,7,67,7,198,9,49,2,19
 java-machine-learning,com.jml.neural_network,ModelTags,0,57,0,0,0,2,0,1,0,1
 java-machine-learning,com.jml.neural_network.layers,Dropout,47,134,3,5,11,30,10,11,8,9
