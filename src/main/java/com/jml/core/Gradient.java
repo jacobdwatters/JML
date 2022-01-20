@@ -5,7 +5,8 @@ import linalg.Matrix;
 
 /**
  * Allows for computation of the gradient of a function. Functions are assumed to be dependent on a matrix w.
- */
+ * @deprecated
+ **/
 public class Gradient {
 
     private static final double eps = 0.5e-8;
@@ -14,6 +15,7 @@ public class Gradient {
         throw new IllegalStateException("Utility method cannot be instantiated.");
     }
 
+    // TODO: This class is no longer needed
 
     /**
      * Numerically computes the gradient of a loss function for a specified model. This is computed
@@ -26,7 +28,7 @@ public class Gradient {
      * @param model Model to use for gradient computation.
      * @return Gradient with respect to w for the specified function.
      */
-    // TODO: Only take function. i.e. yPred should be computed before and passed to this method.
+    // TODO: Only take function as a lambda. i.e. yPred should be computed before and passed to this method.
     public static Matrix compute(Matrix w, Matrix X, Matrix y, Function F, Model model) {
 
         Matrix grad = new Matrix(w.shape());

@@ -1,11 +1,9 @@
 package com.jml.linear_models;
 
-import com.jml.core.Gradient;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.Scheduler;
 import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
@@ -28,8 +26,6 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     protected int maxIterations = 1000;
     private Optimizer GD;
     private List<Double> lossHist = new ArrayList<>();
-
-    // TODO: Currently using standard gradient descent. Need to change to actual stochastic gradient descent.
 
     /**
      * Creates a {@link PolynomialRegressionSGD} model. This will use a default learning rate of 0.002.
