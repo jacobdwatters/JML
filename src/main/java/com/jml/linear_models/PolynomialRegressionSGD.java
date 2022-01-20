@@ -129,8 +129,9 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         Matrix wGrad;
         w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
-        for(int i=0; i<maxIterations; i++) {
-            for(int j=0; j<X.numRows(); j++) {
+        for(int i=0; i<maxIterations; i++) { // Apply stochastic gradient descent.
+
+            for(int j=0; j<X.numRows(); j++) { // Compute gradient a single sample at a time.
                 wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients
                 w = GD.step(w, wGrad); // Apply gradient descent update rule.
             }
