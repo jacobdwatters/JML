@@ -85,7 +85,13 @@ public class Dense implements Layer {
     }
 
 
-    // Computes backward pass of layer.
+    // Computes backward pass of the layer.
+    /**
+     * {@inheritDoc}
+     * @param previousVals Values of the previous layer in the network (or input values for first layer).
+     * @param error Error for this layer.
+     * @return The weight and bias updates for this layer in a Matrix array.
+     */
     @Override
     public Matrix[] back(Matrix previousVals, Matrix error) {
 

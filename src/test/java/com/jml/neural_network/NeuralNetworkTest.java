@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NeuralNetworkTest {
     NeuralNetwork nn;
-    double[][] X = {{0, 0},
+    final double[][] X = {{0, 0},
             {0, 1},
             {1, 0},
             {1, 1}};
-    double[][] Y = {{0}, {1}, {1}, {0}};
+    final double[][] Y = {{0}, {1}, {1}, {0}};
 
 
     @Test

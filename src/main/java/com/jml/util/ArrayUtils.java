@@ -3,11 +3,10 @@ package com.jml.util;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
 import java.util.Random;
 
 public class ArrayUtils {
-    static Random rand = new Random();
+    static final Random rand = new Random();
 
     /**
      * Rounds all numbers in array to n decimal places.
@@ -284,7 +283,7 @@ public class ArrayUtils {
      * @param arr Arrays to shuffle
      * @return Arrays with rows randomly shuffled.
      */
-    public static double[] shuffle(double arr[]) {
+    public static double[] shuffle(double[] arr) {
         double[] newArr = arr.clone();
         double temp;
 

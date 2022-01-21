@@ -33,9 +33,7 @@ public class DataLoader {
         String[][] targets = new String[content.length][1];
 
         for(int i=0; i< content.length; i++) {
-            for(int j=0; j< content[0].length-1; j++) {
-                features[i][j] = content[i][j];
-            }
+            if (content[0].length - 1 >= 0) System.arraycopy(content[i], 0, features[i], 0, content[0].length - 1);
 
             targets[i][0] = content[i][content[0].length-1];
         }

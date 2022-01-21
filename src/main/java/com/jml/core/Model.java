@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/* TODO: This is a top level interface for all models.
+        As such, it should not limit the input and output type of the model.
+ */
+
 
 /**
  * This interface specifies the requirements for a machine learning model.

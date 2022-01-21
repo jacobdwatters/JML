@@ -4,7 +4,6 @@ import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.Scheduler;
 import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
@@ -27,7 +26,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
     private Optimizer GD;
-    private List<Double> lossHist = new ArrayList<>();
+    private final List<Double> lossHist = new ArrayList<>();
 
     // TODO: Currently using standard gradient descent. Need to change to actual stochastic gradient descent.
 

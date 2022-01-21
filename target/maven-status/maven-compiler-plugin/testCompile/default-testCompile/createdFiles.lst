@@ -1,8 +1,8 @@
-com/jml/linear_models/LinearRegressionDatasetOneTest.class
-com/jml/linear_models/PolynomialRegressionSaveAndLoadTest.class
-com/jml/linear_models/PolynomialRegressionDatasetOneTest.class
-com/jml/linear_models/PerceptronTest.class
-com/jml/linear_models/PolynomialRegressionExceptionTest.class
-com/jml/linear_models/MultipleRegressionDatasetOneTest.class
-com/jml/linear_models/LinearRegressionSaveAndLoadTest.class
-com/jml/linear_models/LinRegSGDTest.class
+com\jml\linear_models\PolynomialRegressionExceptionTest.class
+com\jml\linear_models\PolynomialRegressionDatasetOneTest.class
+com\jml\linear_models\MultipleRegressionDatasetOneTest.class
+com\jml\linear_models\LinearRegressionDatasetOneTest.class
+com\jml\linear_models\LinRegSGDTest.class
+com\jml\linear_models\PerceptronTest.class
+com\jml\linear_models\PolynomialRegressionSaveAndLoadTest.class
+com\jml\linear_models\LinearRegressionSaveAndLoadTest.class

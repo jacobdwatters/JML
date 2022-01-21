@@ -22,7 +22,7 @@ public class GradientDescent  extends Optimizer {
         }
 
         this.learningRate = learningRate;
-        super.name = this.OPTIM_NAME;
+        super.name = OPTIM_NAME;
     }
 
     /**

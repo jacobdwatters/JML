@@ -25,7 +25,7 @@ public class LinearRegressionSGD extends LinearRegression {
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
     protected Optimizer GD;
-    private List<Double> lossHist = new ArrayList<>();
+    private final List<Double> lossHist = new ArrayList<>();
 
     /**
      * Creates a {@link LinearRegressionSGD} model.<br>

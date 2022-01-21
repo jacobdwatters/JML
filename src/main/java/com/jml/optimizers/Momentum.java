@@ -27,7 +27,7 @@ public class Momentum extends Optimizer {
      * Creates a Momentum optimizer with specified learning rate. A default momentum of 0.9 will be used. To
      * specify a momentum, see {@link #Momentum(double, double)}.
      *
-     * @param learningRate
+     * @param learningRate The learning rate to use in the update rule of the Momentum optimizer.
      */
     public Momentum(double learningRate) {
         if(learningRate < 0) {
@@ -35,7 +35,7 @@ public class Momentum extends Optimizer {
         }
 
         super.learningRate = learningRate;
-        super.name = this.OPTIM_NAME;
+        super.name = OPTIM_NAME;
         this.momentum=0.9;
     }
 
@@ -55,7 +55,7 @@ public class Momentum extends Optimizer {
         }
 
         super.learningRate = learningRate;
-        super.name = this.OPTIM_NAME;
+        super.name = OPTIM_NAME;
         this.momentum=momentum;
     }
 

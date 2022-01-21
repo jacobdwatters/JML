@@ -3,8 +3,6 @@ package com.jml.classifiers;
 import com.jml.core.DataLoader;
 import com.jml.core.Model;
 import com.jml.core.Stats;
-import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StepLearningRate;
 import com.jml.preprocessing.Normalize;
 import com.jml.util.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LogRegTest {
 

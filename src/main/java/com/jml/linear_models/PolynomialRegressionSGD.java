@@ -25,7 +25,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     protected double threshold = 0.5e-5;
     protected int maxIterations = 1000;
     private Optimizer GD;
-    private List<Double> lossHist = new ArrayList<>();
+    private final List<Double> lossHist = new ArrayList<>();
 
     /**
      * Creates a {@link PolynomialRegressionSGD} model. This will use a default learning rate of 0.002.

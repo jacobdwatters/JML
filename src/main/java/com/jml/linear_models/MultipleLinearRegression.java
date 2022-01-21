@@ -142,10 +142,10 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
         if(isFit && coefficients!=null) {
             details.append("Coefficients: ");
             details.append(ArrayUtils.asString(coefficients));
-            details.append("\nHyperplane: y = " + coefficients[0] + " + ");
+            details.append("\nHyperplane: y = ").append(coefficients[0]).append(" + ");
 
             for(int i=1; i<coefficients.length; i++) {
-                details.append(coefficients[i] + "x_" + i);
+                details.append(coefficients[i]).append("x_").append(i);
 
                 if(i<coefficients.length-1) {
                     details.append(" + ");

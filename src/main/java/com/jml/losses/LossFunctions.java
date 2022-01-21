@@ -24,9 +24,7 @@ public class LossFunctions {
      * where <code>x</code> and <code>y</code> are datasets of length <code>n</code>,
      * and <code>x</code> is the actual data and <code>y</code> is the predicted data.
      */
-    public static Function mse = (Matrix y, Matrix yPred) -> {
-        return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());
-    };
+    public static final Function mse = (Matrix y, Matrix yPred) -> yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());
 
 
     /**
@@ -35,9 +33,7 @@ public class LossFunctions {
      * where <code>x</code> and <code>y<code/> are datasets of length <code>n</code>,
      * and <code>x</code> is the actual data and <code>y</code> is the predicted data.
      */
-    public static Function sse = (Matrix y, Matrix yPred) -> {
-        return yPred.sub(y).T().mult(yPred.sub(y));
-    };
+    public static final Function sse = (Matrix y, Matrix yPred) -> yPred.sub(y).T().mult(yPred.sub(y));
 
 
     /**
@@ -45,7 +41,7 @@ public class LossFunctions {
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
      * appropriate.
      */
-    public static Function binCrossEntropy = (Matrix y, Matrix yPred) -> {
+    public static final Function binCrossEntropy = (Matrix y, Matrix yPred) -> {
         double eps = 1e-15;
         double loss = 0;
         Matrix result = new Matrix(1);
@@ -78,7 +74,7 @@ public class LossFunctions {
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
      * appropriate.
      */
-    public static Function crossEntropy = (Matrix y, Matrix yPred) -> {
+    public static final Function crossEntropy = (Matrix y, Matrix yPred) -> {
         double eps = 1e-15;
         double loss = 0;
         Matrix result = new Matrix(1);

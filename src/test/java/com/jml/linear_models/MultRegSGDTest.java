@@ -1,7 +1,5 @@
 package com.jml.linear_models;
 
-import com.jml.optimizers.Scheduler;
-import com.jml.optimizers.StepLearningRate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -5,15 +5,12 @@ import com.jml.linear_models.LinearModelTags;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.Scheduler;
-import com.jml.preprocessing.Normalize;
 import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
 import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -26,7 +23,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
     protected boolean isFit = false;
 
-    protected String MODEL_TYPE = ModelTypes.LOGISTIC_REGRESSION.toString();
+    protected final String MODEL_TYPE = ModelTypes.LOGISTIC_REGRESSION.toString();
     protected Matrix w;
     protected double[] coefficients;
 
@@ -36,7 +33,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
     protected int maxIterations = 1000;
     private final Optimizer GD;
 
-    private List<Double> lossHist = new ArrayList<>();
+    private final List<Double> lossHist = new ArrayList<>();
 
     // Details of model in human-readable format.
     private StringBuilder details = new StringBuilder(
@@ -71,7 +68,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
         this.threshold = threshold;
-        GD = new GradientDescent(learningRate);;
+        GD = new GradientDescent(learningRate);
     }
 
 
@@ -289,10 +286,10 @@ public class LogisticRegression extends Model<double[][], double[]> {
         if(isFit && coefficients!=null) {
             details.append("Coefficients: ");
             details.append(ArrayUtils.asString(coefficients));
-            details.append("\nlogistic curve: y = 1 / [1+e^-{" + coefficients[0] + " + ");
+            details.append("\nlogistic curve: y = 1 / [1+e^-{").append(coefficients[0]).append(" + ");
 
             for(int i=1; i<coefficients.length; i++) {
-                details.append(coefficients[i] + "*x_" + i);
+                details.append(coefficients[i]).append("*x_").append(i);
 
                 if(i<coefficients.length-1) {
                     details.append(" + ");

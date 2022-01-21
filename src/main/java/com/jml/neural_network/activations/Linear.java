@@ -27,7 +27,7 @@ public class Linear implements ActivationFunction {
      * Applies the derivative of the activation function, element-wise, to a matrix.
      *
      * @param data The matrix to apply the derivative of the activation function to.
-     * @return
+     * @return The slope of the activation function evaluated, element-wise, of the matrix.
      */
     @Override
     public Matrix slope(Matrix data) {

@@ -11,7 +11,7 @@ package com.jml.optimizers;
  */
 public class StepLearningRate extends Scheduler {
 
-    double stepFactor;
+    final double stepFactor;
     int interval;
     int iterations;
 

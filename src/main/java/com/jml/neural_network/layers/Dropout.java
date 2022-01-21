@@ -2,11 +2,8 @@ package com.jml.neural_network.layers;
 
 import com.jml.core.Stats;
 import com.jml.neural_network.activations.ActivationFunction;
-import com.jml.neural_network.activations.Activations;
 import linalg.Matrix;
 import linalg.Vector;
-
-import java.util.Random;
 
 
 /**
@@ -21,12 +18,12 @@ public class Dropout implements Layer {
     public final String LAYER_TYPE = "Dropout";
     // TODO: Change mask visibility to private
     public Matrix mask; // Dropout mask
-    private double scale;
+    private final double scale;
 
     /**
      * Probability of element being zeroed.
      */
-    double p;
+    final double p;
     int inDim = -1; // Input size for the layer. The output size will be the same.
 
     // TODO: is this needed? We will just pass through the values zeroing some
@@ -203,13 +200,5 @@ public class Dropout implements Layer {
     @Override
     public ActivationFunction getActivation() {
         return null;
-    }
-
-
-    public static void main(String[] args) {
-        Layer d = new Dense(10, Activations.tanh);
-//        d.initMask();
-//        System.out.println(d.mask);
-        System.out.println(d instanceof Dropout);
     }
 }

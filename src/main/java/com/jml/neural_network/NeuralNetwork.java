@@ -2,15 +2,13 @@ package com.jml.neural_network;
 
 import com.jml.core.*;
 import com.jml.losses.LossFunctions;
-import com.jml.neural_network.activations.Activations;
-import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.Layer;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Momentum;
 import com.jml.optimizers.Optimizer;
-import com.jml.util.ArrayUtils;
 import com.jml.util.FileManager;
+
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -43,7 +41,7 @@ import java.util.List;
  */
 public class NeuralNetwork extends Model<double[][], double[][]> {
 
-    protected String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
+    protected final String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
     protected final List<Layer> layers;
     protected double learningRate;
     protected double threshold;
@@ -53,13 +51,13 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     private int trainableLayers=0;
 
     protected boolean isFit = false;
-    List<Double> lossHist = new ArrayList<>();
+    final List<Double> lossHist = new ArrayList<>();
 
     private Matrix[] dxUpdates;
     private Matrix[] dxBiasUpdates;
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum optimizer.
 
-    protected Optimizer optim; // Optimizer to use during backpropagation.
+    protected final Optimizer optim; // Optimizer to use during backpropagation.
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -515,9 +513,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         blockList = new Block[2 + trainableLayers];
 
         StringBuilder hyperParams = new StringBuilder();
-        hyperParams.append(this.learningRate + ", ");
-        hyperParams.append(this.epochs + ", ");
-        hyperParams.append(this.batchSize + ", ");
+        hyperParams.append(this.learningRate).append(", ");
+        hyperParams.append(this.epochs).append(", ");
+        hyperParams.append(this.batchSize).append(", ");
         hyperParams.append(this.threshold);
 
         // Construct the blocks for the model file.
@@ -547,16 +545,16 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                         "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
         );
 
-        details.append("Learning Rate: " + this.learningRate + "\n");
-        details.append("Batch Size: " + this.batchSize + "\n");
-        details.append("Optimizer: " + this.optim.name + "\n");
+        details.append("Learning Rate: ").append(this.learningRate).append("\n");
+        details.append("Batch Size: ").append(this.batchSize).append("\n");
+        details.append("Optimizer: ").append(this.optim.name).append("\n");
 
         if(!layers.isEmpty()) {
-            details.append("Layers (" + layers.size() + "):\n" + "------------\n");
+            details.append("Layers (").append(layers.size()).append("):\n").append("------------\n");
 
             int layerCount = 1;
             for(Layer layer : this.layers) {
-                details.append("\t" + layerCount + "\t" + layer.inspect() + "\n");
+                details.append("\t").append(layerCount).append("\t").append(layer.inspect()).append("\n");
                 layerCount++;
             }
         }
