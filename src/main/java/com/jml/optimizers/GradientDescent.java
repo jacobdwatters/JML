@@ -25,6 +25,7 @@ public class GradientDescent  extends Optimizer {
         super.name = OPTIM_NAME;
     }
 
+
     /**
      * Steps the optimizer a single iteration by applying the update rule of
      * the optimizer to the matrix w.
@@ -38,6 +39,7 @@ public class GradientDescent  extends Optimizer {
         return w.sub(wGrad.scalMult(learningRate));
     }
 
+
     /**
      * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
      * step method should be used for momentum.
@@ -50,6 +52,23 @@ public class GradientDescent  extends Optimizer {
      */
     @Override
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
+        throw new IllegalStateException("This step method is not defined for the " + OPTIM_NAME + " optimizer");
+    }
+
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This step
+     * method should only be used for Adam.
+     *
+     * @param w            A matrix containing the weights to apply the update rule to.
+     * @param wGrad        The gradient of the function with respect to w.
+     * @param v            Vector to hold first moment estimations.
+     * @param m            Vector to hold second moment estimations.
+     * @param increaseTime If true, increase time step for optimizer. If false, do nothing.
+     * @return The result of applying the update rule of the optimizer to w.
+     */
+    @Override
+    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
         throw new IllegalStateException("This step method is not defined for the " + OPTIM_NAME + " optimizer");
     }
 

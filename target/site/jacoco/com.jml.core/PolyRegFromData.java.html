@@ -3,13 +3,12 @@
 import com.jml.linear_models.LinearModelTags;
 import com.jml.linear_models.PolynomialRegression;
 import linalg.Matrix;
-import linalg.Vector;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-<span class="fc" id="L12">class PolyRegFromData extends PolynomialRegression {</span>
+<span class="fc" id="L11">class PolyRegFromData extends PolynomialRegression {</span>
 
     private static Scanner scanner;
 
@@ -19,39 +18,39 @@ import java.util.Scanner;
      * @return The polynomial regression model specified by the data.
      */
     static Model create(List&lt;String&gt; tags, List&lt;String&gt; contents) {
-<span class="fc" id="L22">        PolyRegFromData polyRegModel = new PolyRegFromData();</span>
-<span class="fc" id="L23">        polyRegModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
+<span class="fc" id="L21">        PolyRegFromData polyRegModel = new PolyRegFromData();</span>
+<span class="fc" id="L22">        polyRegModel.isFit = true; // Since we are loading a pretrained model, set to true.</span>
 
-<span class="pc bpc" id="L25" title="1 of 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
+<span class="pc bpc" id="L24" title="1 of 4 branches missed.">        while(!tags.isEmpty() &amp;&amp; !contents.isEmpty()) {</span>
             // Get the tag/content pair
-<span class="fc" id="L27">            String tag = tags.remove(0);</span>
-<span class="fc" id="L28">            String content = contents.remove(0);</span>
-<span class="fc" id="L29">            scanner = new Scanner(content);</span>
+<span class="fc" id="L26">            String tag = tags.remove(0);</span>
+<span class="fc" id="L27">            String content = contents.remove(0);</span>
+<span class="fc" id="L28">            scanner = new Scanner(content);</span>
 
-<span class="fc bfc" id="L31" title="All 2 branches covered.">            if(tag.equals(LinearModelTags.DEGREE.toString())) {</span>
-<span class="fc" id="L32">                polyRegModel.degree = scanner.nextInt();</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            if(tag.equals(LinearModelTags.DEGREE.toString())) {</span>
+<span class="fc" id="L31">                polyRegModel.degree = scanner.nextInt();</span>
 
-<span class="pc bpc" id="L34" title="1 of 2 branches missed.">            } else if(tag.equals(LinearModelTags.PARAMETERS.toString())) {</span>
-<span class="fc" id="L35">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">            } else if(tag.equals(LinearModelTags.PARAMETERS.toString())) {</span>
+<span class="fc" id="L34">                String[] coeffStrings = content.split(&quot;,&quot;);</span>
 
-<span class="fc" id="L37">                polyRegModel.coefficients = Arrays.stream(coeffStrings)</span>
-<span class="fc" id="L38">                        .mapToDouble(Double::parseDouble)</span>
-<span class="fc" id="L39">                        .toArray();</span>
+<span class="fc" id="L36">                polyRegModel.coefficients = Arrays.stream(coeffStrings)</span>
+<span class="fc" id="L37">                        .mapToDouble(Double::parseDouble)</span>
+<span class="fc" id="L38">                        .toArray();</span>
 
-<span class="fc" id="L41">                polyRegModel.w = new Matrix( polyRegModel.coefficients.length, 1);</span>
-<span class="fc" id="L42">                polyRegModel.w.setCol( polyRegModel.coefficients, 0);</span>
+<span class="fc" id="L40">                polyRegModel.w = new Matrix( polyRegModel.coefficients.length, 1);</span>
+<span class="fc" id="L41">                polyRegModel.w.setCol( polyRegModel.coefficients, 0);</span>
 
-<span class="fc" id="L44">            } else {</span>
-<span class="nc" id="L45">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>
+<span class="fc" id="L43">            } else {</span>
+<span class="nc" id="L44">                throw new IllegalArgumentException(&quot;Failed to load model. Unrecognized tag in file.&quot;);</span>
             }
 
-<span class="fc" id="L48">            scanner.close();</span>
-<span class="fc" id="L49">        }</span>
+<span class="fc" id="L47">            scanner.close();</span>
+<span class="fc" id="L48">        }</span>
 
-<span class="fc" id="L51">        polyRegModel.buildDetails();</span>
-<span class="fc" id="L52">        Class&lt;PolynomialRegression&gt; clazz = PolynomialRegression.class;</span>
+<span class="fc" id="L50">        polyRegModel.buildDetails();</span>
+<span class="fc" id="L51">        Class&lt;PolynomialRegression&gt; clazz = PolynomialRegression.class;</span>
 
-<span class="fc" id="L54">        return clazz.cast(polyRegModel);</span>
+<span class="fc" id="L53">        return clazz.cast(polyRegModel);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

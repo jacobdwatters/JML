@@ -14,6 +14,9 @@ import linalg.Vector;
  * {@link com.jml.neural_network.activations.ActivationFunction activation function} used in the layer.
  */
 public class Dense implements Layer {
+
+    // TODO: Add ability to specify weight initializer. Allow for one to be specified for bias and weights individually
+
     public final String LAYER_TYPE = "Dense";
     public int inDim = -1; // Size of the input.
     public int outDim; // Size of the output.
@@ -24,6 +27,7 @@ public class Dense implements Layer {
     Matrix weights; // Weights for the layer.
     Matrix bias; // Bias for the layer.
 
+    private double std = 0.5;
 
     /**
      * Constructs a dense layer for a neural network.<br>
@@ -42,7 +46,7 @@ public class Dense implements Layer {
         this.outDim = outDim;
         this.activation = activation;
 
-        this.bias = Matrix.random(this.outDim, 1);
+        this.bias = new Matrix(this.outDim, 1);
     }
 
 
@@ -67,9 +71,9 @@ public class Dense implements Layer {
         this.paramCount = inDim*outDim+outDim;
 
         this.values = new Vector(this.outDim);
-        this.weights = Matrix.random(this.outDim, this.inDim, false); // Initialize weights
 
-        this.bias = Matrix.random(this.outDim, 1, false);
+        this.weights = Initializers.randn(this.outDim, this.inDim, this.std); // Initialize weights.
+        this.bias = new Matrix(this.outDim, 1); // Initialize bias terms to zero.
     }
 
 
@@ -133,7 +137,7 @@ public class Dense implements Layer {
     @Override
     public void updateInDim(int inDim) {
         this.inDim = inDim;
-        this.weights = Matrix.random(this.outDim, this.inDim, -10, 10); // Initialize weights
+        this.weights = Initializers.randn(this.outDim, this.inDim, std); // Initialize weights
         this.paramCount = inDim*outDim + outDim;
     }
 

@@ -142,10 +142,10 @@ import linalg.Vector;
 <span class="pc bpc" id="L142" title="2 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
 <span class="fc" id="L143">            details.append(&quot;Coefficients: &quot;);</span>
 <span class="fc" id="L144">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L145">            details.append(&quot;\nHyperplane: y = &quot; + coefficients[0] + &quot; + &quot;);</span>
+<span class="fc" id="L145">            details.append(&quot;\nHyperplane: y = &quot;).append(coefficients[0]).append(&quot; + &quot;);</span>
 
 <span class="fc bfc" id="L147" title="All 2 branches covered.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L148">                details.append(coefficients[i] + &quot;x_&quot; + i);</span>
+<span class="fc" id="L148">                details.append(coefficients[i]).append(&quot;x_&quot;).append(i);</span>
 
 <span class="fc bfc" id="L150" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
 <span class="fc" id="L151">                    details.append(&quot; + &quot;);</span>

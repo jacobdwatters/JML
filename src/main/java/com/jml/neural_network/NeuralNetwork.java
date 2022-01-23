@@ -4,6 +4,7 @@ import com.jml.core.*;
 import com.jml.losses.LossFunctions;
 import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.Layer;
+import com.jml.optimizers.Adam;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Momentum;
 import com.jml.optimizers.Optimizer;
@@ -55,7 +56,10 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     private Matrix[] dxUpdates;
     private Matrix[] dxBiasUpdates;
-    private Matrix[] V; // Momentum update matrices. Only used for the Momentum optimizer.
+
+    // TODO: Should these be moved to the layer?
+    private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
+    private Matrix[] M; // Adam moment update matrices.
 
     protected final Optimizer optim; // Optimizer to use during backpropagation.
 
@@ -225,6 +229,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     public NeuralNetwork fit(double[][] features, double[][] targets) {
         if(optim instanceof Momentum) {
             initMomentum(); // Then initialize momentum matrices.
+        } else if(optim instanceof Adam) {
+            initAdam(); // Then initialize Adam matrices.
         }
 
         dxUpdates = new Matrix[trainableLayers]; // Weight updates
@@ -365,12 +371,44 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                     param_i++;
                 }
             }
+
+        } else if(optim instanceof Adam) {
+            int vi = 0;
+
+            Matrix[] wvm; // Holds new weight and momentum matrices.
+            Matrix[] bvm; // Holds new bias and momentum matrices.
+
+            for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
+                // Apply the optimizer update rule to the weights and bias terms.
+
+                if(!(layers.get(i) instanceof Dropout)) {
+                    wvm = optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize),
+                            V[vi], M[vi], true);
+                    bvm = optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize),
+                            V[vi+1], M[vi+1], false);
+
+                    // Apply updates to weight, bias, and momentum matrices.
+                    layers.get(i).setWeights(wvm[0]);
+                    layers.get(i).setBias(bvm[0]);
+
+                    V[vi] = wvm[1];
+                    V[vi+1] = bvm[1];
+
+                    M[vi] = wvm[2];
+                    M[vi+1] = bvm[2];
+
+                    vi+=2;
+                    param_i++;
+                }
+            }
+
         } else {
             throw new IllegalStateException("Unknown optimizer: " + optim.getClass());
         }
 
         resetDx(); // Reset dx's for next epoch.
 //        initMomentum(); // Reset momentum matrices for next epoch.
+//        initAdam();
     }
 
 
@@ -390,7 +428,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     // initialize momentum matrices if momentum optimizer is being used.
     private void initMomentum() {
-        if(!optim.name.equals(Momentum.OPTIM_NAME)) {
+        if(!(optim instanceof Momentum)) {
             throw new IllegalStateException("Can not initialize momentum vectors for optimizer " + this.optim.getClass());
         }
 
@@ -402,6 +440,31 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             if(!(layers.get(i) instanceof Dropout)) {
                 V[vi] = new Matrix(layers.get(i).getWeights().shape());
                 V[vi+1] = new Matrix(layers.get(i).getBias().shape());
+                vi+=2;
+            }
+        }
+    }
+
+
+    // initialize moment matrices if Adam optimizer is being used.
+    private void initAdam() {
+        if(!(optim instanceof Adam)) {
+            throw new IllegalStateException("Can not initialize momentum vectors for optimizer " + this.optim.getClass());
+        }
+
+        V = new Matrix[trainableLayers*2]; // Create a V for each weight and bias matrix
+        M = new Matrix[trainableLayers*2]; // Create a M for each weight and bias matrix
+        int vi = 0;
+
+        for(int i=0; i<layers.size(); i++) {
+
+            if(!(layers.get(i) instanceof Dropout)) {
+                V[vi] = new Matrix(layers.get(i).getWeights().shape());
+                V[vi+1] = new Matrix(layers.get(i).getBias().shape());
+
+                M[vi] = new Matrix(layers.get(i).getWeights().shape());
+                M[vi+1] = new Matrix(layers.get(i).getBias().shape());
+
                 vi+=2;
             }
         }
@@ -490,6 +553,11 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         layers.add(layer);
         buildDetails();
+    }
+
+
+    public List<Double> getLossHist() {
+        return lossHist;
     }
 
 

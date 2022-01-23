@@ -25,7 +25,7 @@ public class LinearRegressionSGD extends LinearRegression {
 <span class="fc" id="L25">    protected double threshold = 0.5e-5;</span>
 <span class="fc" id="L26">    protected int maxIterations = 1000;</span>
     protected Optimizer GD;
-<span class="fc" id="L28">    private List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L28">    private final List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
 
     /**
      * Creates a {@link LinearRegressionSGD} model.&lt;br&gt;
@@ -130,26 +130,27 @@ public class LinearRegressionSGD extends LinearRegression {
         Matrix wGrad;
 <span class="fc" id="L131">        w = Matrix.randn(X.numCols(), 1, false); // initialize w.</span>
 
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        for(int i=0; i&lt;maxIterations; i++) {</span>
-<span class="fc bfc" id="L134" title="All 2 branches covered.">            for(int j=0; j&lt;X.numRows(); j++) {</span>
-<span class="fc" id="L135">                wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients</span>
-<span class="fc" id="L136">                w = GD.step(w, wGrad); // Apply gradient descent update rule.</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        for(int i=0; i&lt;maxIterations; i++) { // Apply stochastic gradient descent.</span>
+
+<span class="fc bfc" id="L135" title="All 2 branches covered.">            for(int j=0; j&lt;X.numRows(); j++) { // Compute gradient a single sample at a time.</span>
+<span class="fc" id="L136">                wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients</span>
+<span class="fc" id="L137">                w = GD.step(w, wGrad); // Apply gradient descent update rule.</span>
             }
 
             // Append loss to the loss history.
-<span class="fc" id="L140">            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));</span>
+<span class="fc" id="L141">            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));</span>
 
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">            if(lossHist.get(lossHist.size()-1)&lt;threshold) {</span>
-<span class="nc" id="L143">                break; // Then stop the training early</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">            if(lossHist.get(lossHist.size()-1)&lt;threshold) {</span>
+<span class="nc" id="L144">                break; // Then stop the training early</span>
             }
         }
 
         // Update the model details
-<span class="fc" id="L148">        super.coefficients = w.T().getValuesAsDouble()[0];</span>
-<span class="fc" id="L149">        super.isFit=true;</span>
-<span class="fc" id="L150">        buildDetails();</span>
+<span class="fc" id="L149">        super.coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L150">        super.isFit=true;</span>
+<span class="fc" id="L151">        buildDetails();</span>
 
-<span class="fc" id="L152">        return this;</span>
+<span class="fc" id="L153">        return this;</span>
     }
 
 
@@ -159,20 +160,20 @@ public class LinearRegressionSGD extends LinearRegression {
      * @return The loss of every iteration stored in a List.
      */
     public double[] getLossHist() {
-<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L163">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L164">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
         }
 
-<span class="fc" id="L166">        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();</span>
+<span class="fc" id="L167">        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();</span>
     }
 
     private void paramCheck() {
-<span class="fc bfc" id="L170" title="All 2 branches covered.">        if(!ValueError.isNonNegative(maxIterations))</span>
-<span class="fc" id="L171">            throw new IllegalArgumentException(&quot;maxIterations must be non-negative but got &quot; + maxIterations);</span>
-<span class="fc bfc" id="L172" title="All 2 branches covered.">        if(!ValueError.isNonNegative(learningRate))</span>
-<span class="fc" id="L173">            throw new IllegalArgumentException(&quot;learningRate must be non-negative but got &quot; + learningRate);</span>
-<span class="fc bfc" id="L174" title="All 2 branches covered.">        if(!ValueError.isNonNegative(threshold))</span>
-<span class="fc" id="L175">            throw new IllegalArgumentException(&quot;threshold must be non-negative but got &quot; + threshold);</span>
-<span class="fc" id="L176">    }</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if(!ValueError.isNonNegative(maxIterations))</span>
+<span class="fc" id="L172">            throw new IllegalArgumentException(&quot;maxIterations must be non-negative but got &quot; + maxIterations);</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        if(!ValueError.isNonNegative(learningRate))</span>
+<span class="fc" id="L174">            throw new IllegalArgumentException(&quot;learningRate must be non-negative but got &quot; + learningRate);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if(!ValueError.isNonNegative(threshold))</span>
+<span class="fc" id="L176">            throw new IllegalArgumentException(&quot;threshold must be non-negative but got &quot; + threshold);</span>
+<span class="fc" id="L177">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -38,6 +38,20 @@ public abstract class Optimizer {
 
 
     /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This step
+     * method should only be used for Adam.
+     *
+     * @param w A matrix containing the weights to apply the update rule to.
+     * @param wGrad The gradient of the function with respect to w.
+     * @param v Vector to hold first moment estimations.
+     * @param m Vector to hold second moment estimations.
+     * @param increaseTime If true, increase time step for optimizer. If false, do nothing.
+     * @return The result of applying the update rule of the optimizer to w.
+     */
+    public abstract Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime);
+
+
+    /**
      * Gets the details of this optimizer.
      * @return Important details of this optimizer as a string.
      */

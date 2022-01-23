@@ -38,6 +38,20 @@ import linalg.Matrix;
 
 
     /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This step
+     * method should only be used for Adam.
+     *
+     * @param w A matrix containing the weights to apply the update rule to.
+     * @param wGrad The gradient of the function with respect to w.
+     * @param v Vector to hold first moment estimations.
+     * @param m Vector to hold second moment estimations.
+     * @param increaseTime If true, increase time step for optimizer. If false, do nothing.
+     * @return The result of applying the update rule of the optimizer to w.
+     */
+    public abstract Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime);
+
+
+    /**
      * Gets the details of this optimizer.
      * @return Important details of this optimizer as a string.
      */
@@ -49,14 +63,14 @@ import linalg.Matrix;
      * @param schedule Learning rate scheduler.
      */
     public void setScheduler(Scheduler schedule) {
-<span class="fc" id="L52">        this.schedule = schedule;</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L66">        this.schedule = schedule;</span>
+<span class="fc" id="L67">    }</span>
 
 
     /**
      * Gets the learning rate for this optimizer.
      * @return The learning rate for this optimizer.
      */
-<span class="fc" id="L60">    public double getLearningRate() {return learningRate;}</span>
+<span class="fc" id="L74">    public double getLearningRate() {return learningRate;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

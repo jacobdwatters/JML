@@ -2,11 +2,8 @@
 
 import com.jml.core.Stats;
 import com.jml.neural_network.activations.ActivationFunction;
-import com.jml.neural_network.activations.Activations;
 import linalg.Matrix;
 import linalg.Vector;
-
-import java.util.Random;
 
 
 /**
@@ -18,16 +15,16 @@ import java.util.Random;
  */
 public class Dropout implements Layer {
 
-<span class="fc" id="L21">    public final String LAYER_TYPE = &quot;Dropout&quot;;</span>
+<span class="fc" id="L18">    public final String LAYER_TYPE = &quot;Dropout&quot;;</span>
     // TODO: Change mask visibility to private
     public Matrix mask; // Dropout mask
-    private double scale;
+    private final double scale;
 
     /**
      * Probability of element being zeroed.
      */
-    double p;
-<span class="fc" id="L30">    int inDim = -1; // Input size for the layer. The output size will be the same.</span>
+    final double p;
+<span class="fc" id="L27">    int inDim = -1; // Input size for the layer. The output size will be the same.</span>
 
     // TODO: is this needed? We will just pass through the values zeroing some
     Matrix values; // Holds node values for layer.
@@ -40,10 +37,10 @@ public class Dropout implements Layer {
      *
      * @param p The probability of an element being zeroed.
      */
-<span class="fc" id="L43">    public Dropout(double p) {</span>
-<span class="fc" id="L44">        this.p = p;</span>
-<span class="fc" id="L45">        scale = 1/(1-p);</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L40">    public Dropout(double p) {</span>
+<span class="fc" id="L41">        this.p = p;</span>
+<span class="fc" id="L42">        scale = 1/(1-p);</span>
+<span class="fc" id="L43">    }</span>
 
 
     /**
@@ -52,13 +49,13 @@ public class Dropout implements Layer {
      * @param inDim Input dimension of the layer.
      * @param p The probability of an element being zeroed.
      */
-<span class="fc" id="L55">    public Dropout(int inDim, double p) {</span>
-<span class="fc" id="L56">        this.inDim = inDim;</span>
-<span class="fc" id="L57">        this.p = p;</span>
-<span class="fc" id="L58">        this.values = new Vector(this.inDim);</span>
-<span class="fc" id="L59">        this.mask = new Vector(this.inDim);</span>
-<span class="fc" id="L60">        scale = 1/(1-p);</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L52">    public Dropout(int inDim, double p) {</span>
+<span class="fc" id="L53">        this.inDim = inDim;</span>
+<span class="fc" id="L54">        this.p = p;</span>
+<span class="fc" id="L55">        this.values = new Vector(this.inDim);</span>
+<span class="fc" id="L56">        this.mask = new Vector(this.inDim);</span>
+<span class="fc" id="L57">        scale = 1/(1-p);</span>
+<span class="fc" id="L58">    }</span>
 
 
     /**
@@ -70,22 +67,22 @@ public class Dropout implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-<span class="pc bpc" id="L73" title="3 of 4 branches missed.">        if(inputs.numRows()!=inDim &amp;&amp; inputs.numCols()!=1) {</span>
-<span class="nc" id="L74">            throw new IllegalArgumentException(&quot;Invalid input shape of &quot; + inputs.shape() + &quot;. &quot; +</span>
+<span class="pc bpc" id="L70" title="3 of 4 branches missed.">        if(inputs.numRows()!=inDim &amp;&amp; inputs.numCols()!=1) {</span>
+<span class="nc" id="L71">            throw new IllegalArgumentException(&quot;Invalid input shape of &quot; + inputs.shape() + &quot;. &quot; +</span>
                     &quot;Expecting input shape of &quot; + inDim + &quot;x&quot; + 1);
         }
 
-<span class="fc" id="L78">        initMask(); // Initialize the mask</span>
-<span class="fc" id="L79">        values = inputs.copy().elemMult(mask).scalMult(scale); // Apply dropout mask.</span>
+<span class="fc" id="L75">        initMask(); // Initialize the mask</span>
+<span class="fc" id="L76">        values = inputs.copy().elemMult(mask).scalMult(scale); // Apply dropout mask.</span>
 
-<span class="fc" id="L81">        return values;</span>
+<span class="fc" id="L78">        return values;</span>
     }
 
 
     // Computes backward pass of layer.
     @Override
     public Matrix[] back(Matrix previousVals, Matrix error) {
-<span class="nc" id="L88">        return new Matrix[]{previousVals.elemMult(mask).scalMult(scale)};</span>
+<span class="nc" id="L85">        return new Matrix[]{previousVals.elemMult(mask).scalMult(scale)};</span>
     }
 
 
@@ -95,7 +92,7 @@ public class Dropout implements Layer {
      */
     @Override
     public int getInDim() {
-<span class="fc" id="L98">        return this.inDim;</span>
+<span class="fc" id="L95">        return this.inDim;</span>
     }
 
 
@@ -105,7 +102,7 @@ public class Dropout implements Layer {
      */
     @Override
     public int getOutDim() {
-<span class="fc" id="L108">        return this.inDim;</span>
+<span class="fc" id="L105">        return this.inDim;</span>
     }
 
 
@@ -117,10 +114,10 @@ public class Dropout implements Layer {
      */
     @Override
     public void updateInDim(int inDim) {
-<span class="fc" id="L120">        this.inDim = inDim;</span>
-<span class="fc" id="L121">        this.values = new Vector(this.inDim);</span>
-<span class="fc" id="L122">        this.mask = new Vector(this.inDim);</span>
-<span class="fc" id="L123">    }</span>
+<span class="fc" id="L117">        this.inDim = inDim;</span>
+<span class="fc" id="L118">        this.values = new Vector(this.inDim);</span>
+<span class="fc" id="L119">        this.mask = new Vector(this.inDim);</span>
+<span class="fc" id="L120">    }</span>
 
 
     /**
@@ -129,7 +126,7 @@ public class Dropout implements Layer {
      */
     @Override
     public Matrix getWeights() {
-<span class="nc" id="L132">        return null;</span>
+<span class="nc" id="L129">        return null;</span>
     }
 
 
@@ -138,7 +135,7 @@ public class Dropout implements Layer {
      * @param w New weights
      */
     @Override
-<span class="nc" id="L141">    public void setWeights(Matrix w) {}</span>
+<span class="nc" id="L138">    public void setWeights(Matrix w) {}</span>
 
 
     /**
@@ -146,7 +143,7 @@ public class Dropout implements Layer {
      * @param b New bias
      */
     @Override
-<span class="nc" id="L149">    public void setBias(Matrix b) {}</span>
+<span class="nc" id="L146">    public void setBias(Matrix b) {}</span>
 
 
     /**
@@ -155,7 +152,7 @@ public class Dropout implements Layer {
      */
     @Override
     public Matrix getValues() {
-<span class="fc" id="L158">        return this.values;</span>
+<span class="fc" id="L155">        return this.values;</span>
     }
 
 
@@ -165,7 +162,7 @@ public class Dropout implements Layer {
      */
     @Override
     public Matrix getBias() {
-<span class="nc" id="L168">        return null;</span>
+<span class="nc" id="L165">        return null;</span>
     }
 
 
@@ -173,13 +170,13 @@ public class Dropout implements Layer {
     private void initMask() {
         boolean drop;
 
-<span class="fc bfc" id="L176" title="All 2 branches covered.">        for(int i=0; i&lt;mask.numRows(); i++) {</span>
-<span class="fc" id="L177">            drop = Stats.genRandBoolean(this.p);</span>
-<span class="fc bfc" id="L178" title="All 2 branches covered.">            if(!drop) {</span>
-<span class="fc" id="L179">                mask.set(1, i, 0);</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        for(int i=0; i&lt;mask.numRows(); i++) {</span>
+<span class="fc" id="L174">            drop = Stats.genRandBoolean(this.p);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">            if(!drop) {</span>
+<span class="fc" id="L176">                mask.set(1, i, 0);</span>
             }
         }
-<span class="fc" id="L182">    }</span>
+<span class="fc" id="L179">    }</span>
 
 
     /**
@@ -189,7 +186,7 @@ public class Dropout implements Layer {
      */
     @Override
     public String inspect() {
-<span class="fc" id="L192">        return &quot;Type: &quot; + this.LAYER_TYPE + &quot;,\tInput size: &quot; + this.inDim + &quot;,\tOutput size: &quot; + this.inDim + &quot;, \tTrainable Parameters: &quot; + 0;</span>
+<span class="fc" id="L189">        return &quot;Type: &quot; + this.LAYER_TYPE + &quot;,\tInput size: &quot; + this.inDim + &quot;,\tOutput size: &quot; + this.inDim + &quot;, \tTrainable Parameters: &quot; + 0;</span>
     }
 
 
@@ -197,20 +194,12 @@ public class Dropout implements Layer {
     // TODO: I think that inspect() and getDetails() names should switch.
     public String getDetails() {
         // TODO: Auto-generated method-stub
-<span class="nc" id="L200">        return null;</span>
+<span class="nc" id="L197">        return null;</span>
     }
 
     @Override
     public ActivationFunction getActivation() {
-<span class="nc" id="L205">        return null;</span>
+<span class="nc" id="L202">        return null;</span>
     }
-
-
-    public static void main(String[] args) {
-<span class="nc" id="L210">        Layer d = new Dense(10, Activations.tanh);</span>
-//        d.initMask();
-//        System.out.println(d.mask);
-<span class="nc" id="L213">        System.out.println(d instanceof Dropout);</span>
-<span class="nc" id="L214">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

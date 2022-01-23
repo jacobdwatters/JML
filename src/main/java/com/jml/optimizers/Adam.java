@@ -28,6 +28,26 @@ import linalg.Matrix;
  */
 public class Adam extends Optimizer {
 
+    final static double eps = 1E-7;
+    double beta1, beta2;
+    double t; // Time step
+    public static final String OPTIM_NAME = "Adam";
+
+    /**
+     * Creates a Adam optimizer with specified learning rate and parameters.
+     *
+     * @param learningRate Learning rate for the Adam optimizer.
+     * @param beta1 Exponential decay rate for first moment estimate. Must be in [0, 1)
+     * @param beta2 Exponential decay rate for second moment estimate. Must be in [0, 1)
+     */
+    public Adam(double learningRate, double beta1, double beta2) {
+        super.learningRate = learningRate;
+        this.beta1 = beta1;
+        this.beta2 = beta2;
+        t=0;
+        super.name = OPTIM_NAME;
+    }
+
 
     /**
      * Steps the optimizer a single iteration by applying the update rule of
@@ -42,8 +62,7 @@ public class Adam extends Optimizer {
      */
     @Override
     public Matrix step(Matrix w, Matrix wGrad) {
-        // TODO: Auto-generated method stub
-        return null;
+        throw new IllegalArgumentException("This step method is not defined for Adam.");
     }
 
 
@@ -60,9 +79,28 @@ public class Adam extends Optimizer {
      */
     @Override
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-        // TODO: Auto-generated method stub
-        return new Matrix[0];
+        throw new IllegalArgumentException("This step method is not defined for Adam.");
     }
+
+    // TODO: Javadoc
+    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
+        Matrix v_hat, m_hat;
+
+        if(increaseTime) {
+            t++;
+        }
+
+        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));
+        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));
+
+        m_hat = m.scalDiv(1-Math.pow(beta1, t));
+        v_hat = v.scalDiv(1-Math.pow(beta2, t));
+
+        w = w.sub(m_hat.scalMult(learningRate).elemDiv(v_hat.sqrt().add(eps)));
+
+        return new Matrix[]{w, v, m};
+    }
+
 
     /**
      * Gets the details of this optimizer.

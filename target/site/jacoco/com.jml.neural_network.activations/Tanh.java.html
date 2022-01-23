@@ -7,7 +7,7 @@ import linalg.Matrix;
  * The hyperbolic tangent activation function.
  * &lt;code&gt;f(x) = tanh(x) = (e&lt;sup&gt;x&lt;/sup&gt; - e&lt;sup&gt;-x&lt;/sup&gt;) / (e&lt;sup&gt;x&lt;/sup&gt; + e&lt;sup&gt;-x&lt;/sup&gt;)&lt;/code&gt;
  */
-<span class="fc" id="L10">public class Tanh implements ActivationFunction{</span>
+<span class="fc" id="L10">public class Tanh implements ActivationFunction {</span>
     public static final String NAME = &quot;tanh&quot;;
 
 
@@ -20,18 +20,17 @@ import linalg.Matrix;
     @Override
     public Matrix apply(Matrix data) {
 <span class="fc" id="L22">        double[][] result = new double[data.numRows()][data.numCols()];</span>
-        double exp, negExp;
+        double exp;
 
 <span class="fc bfc" id="L25" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
 <span class="fc bfc" id="L26" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="fc" id="L27">                exp = Math.exp(data.getAsDouble(i, j));</span>
-<span class="fc" id="L28">                negExp = Math.exp(data.getAsDouble(i, j));</span>
+<span class="fc" id="L27">                exp = Math.exp(data.getAsDouble(i, j)*2);</span>
 
-<span class="fc" id="L30">                result[i][j] =  (exp - negExp) / (exp + negExp);</span>
+<span class="fc" id="L29">                result[i][j] =  (exp - 1) / (exp + 1);</span>
             }
         }
 
-<span class="fc" id="L34">        return new Matrix(result);</span>
+<span class="fc" id="L33">        return new Matrix(result);</span>
     }
 
 
@@ -39,23 +38,22 @@ import linalg.Matrix;
      * Applies the derivative of the activation function, element-wise, to a matrix.
      *
      * @param data The matrix to apply the derivative of the activation function to.
-     * @return
+     * @return The slope of the activation function, evaluated element-wise, of the matrix.
      */
     @Override
     public Matrix slope(Matrix data) {
-<span class="fc" id="L46">        double[][] result = new double[data.numRows()][data.numCols()];</span>
-        double exp, negExp;
+<span class="fc" id="L45">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+        double exp;
 
-<span class="fc bfc" id="L49" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="fc bfc" id="L50" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="fc" id="L51">                exp = Math.exp(data.getAsDouble(i, j));</span>
-<span class="fc" id="L52">                negExp = Math.exp(data.getAsDouble(i, j));</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="fc" id="L50">                exp = Math.exp(data.getAsDouble(i, j)*2);</span>
 
-<span class="fc" id="L54">                result[i][j] =  4 / Math.pow(exp + negExp, 2);</span>
+<span class="fc" id="L52">                result[i][j] =  4*exp / Math.pow(exp+1, 2);</span>
             }
         }
 
-<span class="fc" id="L58">        return new Matrix(result);</span>
+<span class="fc" id="L56">        return new Matrix(result);</span>
     }
 
 
@@ -66,7 +64,7 @@ import linalg.Matrix;
      */
     @Override
     public String getName() {
-<span class="fc" id="L69">        return NAME;</span>
+<span class="fc" id="L67">        return NAME;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

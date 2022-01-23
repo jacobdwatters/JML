@@ -27,7 +27,7 @@ public class Momentum extends Optimizer {
      * Creates a Momentum optimizer with specified learning rate. A default momentum of 0.9 will be used. To
      * specify a momentum, see {@link #Momentum(double, double)}.
      *
-     * @param learningRate
+     * @param learningRate The learning rate to use in the update rule of the Momentum optimizer.
      */
 <span class="fc" id="L32">    public Momentum(double learningRate) {</span>
 <span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if(learningRate &lt; 0) {</span>
@@ -35,7 +35,7 @@ public class Momentum extends Optimizer {
         }
 
 <span class="fc" id="L37">        super.learningRate = learningRate;</span>
-<span class="fc" id="L38">        super.name = this.OPTIM_NAME;</span>
+<span class="fc" id="L38">        super.name = OPTIM_NAME;</span>
 <span class="fc" id="L39">        this.momentum=0.9;</span>
 <span class="fc" id="L40">    }</span>
 
@@ -55,7 +55,7 @@ public class Momentum extends Optimizer {
         }
 
 <span class="nc" id="L57">        super.learningRate = learningRate;</span>
-<span class="nc" id="L58">        super.name = this.OPTIM_NAME;</span>
+<span class="nc" id="L58">        super.name = OPTIM_NAME;</span>
 <span class="nc" id="L59">        this.momentum=momentum;</span>
 <span class="nc" id="L60">    }</span>
 
@@ -90,6 +90,24 @@ public class Momentum extends Optimizer {
 <span class="fc" id="L90">        return new Matrix[]{w.sub(v), v};</span>
     }
 
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This step
+     * method should only be used for Adam.
+     *
+     * @param w            A matrix containing the weights to apply the update rule to.
+     * @param wGrad        The gradient of the function with respect to w.
+     * @param v            Vector to hold first moment estimations.
+     * @param m            Vector to hold second moment estimations.
+     * @param increaseTime If true, increase time step for optimizer. If false, do nothing.
+     * @return The result of applying the update rule of the optimizer to w.
+     */
+    @Override
+    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
+<span class="nc" id="L107">        throw new IllegalArgumentException(&quot;This step method is not defined for momentum.&quot;);</span>
+    }
+
+
     /**
      * Gets the details of this optimizer.
      *
@@ -98,7 +116,7 @@ public class Momentum extends Optimizer {
     @Override
     public String getDetails() {
         // TODO:
-<span class="nc" id="L101">        return null;</span>
+<span class="nc" id="L119">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
