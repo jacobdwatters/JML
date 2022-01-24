@@ -1,1 +1,2 @@
 com\jml\neural_network\layers\Initializers.class
+com\jml\neural_network\activations\Softmax.class
