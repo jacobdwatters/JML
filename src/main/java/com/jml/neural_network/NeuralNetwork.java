@@ -227,6 +227,10 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
+        if(this.layers.size()==0) {
+            throw new IllegalStateException("Neural Network has no layers. Neural Networks with no layers can not be trained.");
+        }
+
         if(optim instanceof Momentum) {
             initMomentum(); // Then initialize momentum matrices.
         } else if(optim instanceof Adam) {
@@ -244,7 +248,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         Matrix predictions;
 
         for(int i=0; i<epochs; i++) {
-            for(int j=0; j<feature.numRows(); j++) {
+            for(int j=0; j<feature.numRows(); j+=batchSize) {
                 for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) {
                     input = feature.getRowAsVector(j+k).T();
                     output = feedForward(input); // Apply the forward pass on the network.
@@ -303,6 +307,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * @param output Output of the neural network. i.e. the result of the feed forward operation.
      */
     protected void back(Matrix target, Matrix output, Matrix input) {
+        /* TODO: Initial error is currently the derivative of MSE but should be the derivative of any loss function
+                Should allow the use of a specified loss function and replace this initial error with the derivative
+                 of the loss function.*/
         Matrix error = target.sub(output); // initial error.
         Matrix[] updates;
         Matrix previousValues;

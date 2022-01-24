@@ -4,7 +4,7 @@ import linalg.Matrix;
 
 
 /**
- * The sigmoid activation function. 1/(1+exp(-x))
+ * The sigmoid activation function. f(x) = 1/(1+exp(-x))
  */
 class Sigmoid implements ActivationFunction {
 

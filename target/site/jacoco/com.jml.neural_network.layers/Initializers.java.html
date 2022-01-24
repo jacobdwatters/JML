@@ -5,18 +5,20 @@ import linalg.Matrix;
 import java.util.Random;
 
 <span class="nc" id="L7">public class Initializers {</span>
-<span class="fc" id="L8">    static Random r = new Random();</span>
+    // TODO: Make initializers a private interface with one init(int m, int n) method. randn, randUniform etc. will extend it.
+
+<span class="fc" id="L10">    static Random r = new Random();</span>
 
     static Matrix randn(int m, int n, double std) {
-<span class="fc" id="L11">        Matrix random = new Matrix(m, n);</span>
+<span class="fc" id="L13">        Matrix random = new Matrix(m, n);</span>
 
-<span class="fc bfc" id="L13" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
-<span class="fc bfc" id="L14" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
-<span class="fc" id="L15">                random.set(r.nextGaussian()*std, i, j);</span>
+<span class="fc bfc" id="L15" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="fc" id="L17">                random.set(r.nextGaussian()*std, i, j);</span>
             }
         }
 
-<span class="fc" id="L19">        return random;</span>
+<span class="fc" id="L21">        return random;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
