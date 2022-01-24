@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Softmax.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.activations</a> &gt; <span class="el_source">Softmax.java</span></div><h1>Softmax.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.activations;
+
+import linalg.Matrix;
+import linalg.Vector;
+
+
+/**
+ * The softmax activation function. f(&lt;b&gt;x&lt;/b&gt;)&lt;sub&gt;i&lt;/sub&gt; = exp(&lt;b&gt;x&lt;/b&gt;_i) / sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt;( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) where
+ * &lt;b&gt;x&lt;/b&gt; is a vector of length m and sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt; ( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) = exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;1&lt;/sub&gt;) + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;2&lt;/sub&gt;) + ... + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;m&lt;/sub&gt;).
+ */
+<span class="nc" id="L11">public class Softmax implements ActivationFunction {</span>
+
+<span class="nc" id="L13">    public final String NAME = &quot;Softmax&quot;;</span>
+
+    /**
+     * Applies the activation function, element-wise, to a matrix.
+     *
+     * @param data The matrix to apply activation function to.
+     * @return The result of the element-wise activation function applied to the matrix.
+     */
+    @Override
+    public Matrix apply(Matrix data) {
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        if(data.numCols()&gt;1) {</span>
+<span class="nc" id="L24">            throw new IllegalArgumentException(&quot;Expecting column matrix for &quot; + NAME + &quot; activation but got shape &quot; + data.shape());</span>
+        }
+
+<span class="nc" id="L27">        double[] result = new double[data.numRows()];</span>
+<span class="nc" id="L28">        double sum = 0;</span>
+
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) { // Compute denominator.</span>
+<span class="nc" id="L31">            sum += Math.exp(data.getAsDouble(i, 0));</span>
+        }
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) { // Compute each entry for the resulting vector.</span>
+<span class="nc" id="L35">            result[i] = Math.exp(data.getAsDouble(i, 0)) / sum;</span>
+        }
+
+<span class="nc" id="L38">        return new Vector(result); // Return Softmax activation result as a column vector.</span>
+    }
+
+    /**
+     * Applies the derivative of the activation function, element-wise, to a matrix.
+     *
+     * @param data The matrix to apply the derivative of the activation function to.
+     * @return The slope of the activation function, evaluated element-wise, of the data matrix.
+     */
+    @Override
+    public Matrix slope(Matrix data) {
+<span class="nc" id="L49">        return null;</span>
+    }
+
+    /**
+     * Gets the name of the activation function.
+     *
+     * @return The name of the activation function as a String.
+     */
+    @Override
+    public String getName() {
+<span class="nc" id="L59">        return this.NAME;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
