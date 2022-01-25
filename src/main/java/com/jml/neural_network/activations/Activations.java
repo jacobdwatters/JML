@@ -29,4 +29,11 @@ public abstract class Activations {
      * <code>f(x) = tanh(x) = (e<sup>x</sup> - e<sup>-x</sup>) / (e<sup>x</sup> + e<sup>-x</sup>)</code>
      */
     public static final ActivationFunction tanh = new Tanh();
+
+
+    /**
+     * The softmax activation function. f(<b>x</b>)<sub>i</sub> = exp(<b>x</b>_i) / sum<sub>j=1</sub><sup>m</sup>( exp(<b>x</b><sub>j</sub>) ) where
+     * <b>x</b> is a vector of length m and sum<sub>j=1</sub><sup>m</sup> ( exp(<b>x</b><sub>j</sub>) ) = exp(<b>x</b><sub>1</sub>) + exp(<b>x</b><sub>2</sub>) + ... + exp(<b>x</b><sub>m</sub>).
+     */
+    public static final ActivationFunction softmax = new Softmax();
 }

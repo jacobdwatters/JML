@@ -57,7 +57,7 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
     private Matrix[] dxUpdates;
     private Matrix[] dxBiasUpdates;
 
-    // TODO: Should these be moved to the layer?
+    // TODO: Should these be moved to the layer? Probably yes!
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
 
@@ -349,8 +349,8 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
 <span class="fc bfc" id="L349" title="All 2 branches covered.">            for(int i=0; i&lt;layers.size(); i++) { // Update the weights for each layer.</span>
                 // Apply the optimizer update rule to the weights and bias terms.
 <span class="fc bfc" id="L351" title="All 2 branches covered.">                if(!(layers.get(i) instanceof Dropout)) {</span>
-<span class="fc" id="L352">                    layers.get(i).setWeights(optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize)));</span>
-<span class="fc" id="L353">                    layers.get(i).setBias(optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize)));</span>
+<span class="fc" id="L352">                    layers.get(i).setWeights(optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize))[0]);</span>
+<span class="fc" id="L353">                    layers.get(i).setBias(optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize))[0]);</span>
 <span class="fc" id="L354">                    param_i++;</span>
                 }
             }
@@ -390,9 +390,9 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
 
 <span class="nc bnc" id="L391" title="All 2 branches missed.">                if(!(layers.get(i) instanceof Dropout)) {</span>
 <span class="nc" id="L392">                    wvm = optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize),</span>
-                            V[vi], M[vi], true);
-<span class="nc" id="L394">                    bvm = optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize),</span>
-                            V[vi+1], M[vi+1], false);
+                            V[vi], M[vi]);
+<span class="nc" id="L394">                    bvm = optim.step(false, layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize),</span>
+                            V[vi+1], M[vi+1]);
 
                     // Apply updates to weight, bias, and momentum matrices.
 <span class="nc" id="L398">                    layers.get(i).setWeights(wvm[0]);</span>

@@ -51,58 +51,52 @@ public class Adam extends Optimizer {
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of
-     * the optimizer to the matrix w.&lt;br&gt;&lt;br&gt;
-     * &lt;p&gt;
-     * WARNING: If this step method is called for the {@link Momentum} optimizer an exception will be thrown.
-     * Use {@link #step(Matrix, Matrix, Matrix)} instead.
-     *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
+     * Note, this will increase the time step of the Adam optimizer. To not increase the time step see
+     * {@link #step(boolean, Matrix[])}.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    @Override
-    public Matrix step(Matrix w, Matrix wGrad) {
-<span class="nc" id="L66">        throw new IllegalArgumentException(&quot;This step method is not defined for Adam.&quot;);</span>
+    public Matrix[] step(Matrix... params) {
+<span class="nc" id="L64">        return step(true, params);</span>
     }
-
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
      *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *              no effect.
+     * @param increaseTime Flag for increasing the timestamp of the Adam optimizer.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-<span class="nc" id="L83">        throw new IllegalArgumentException(&quot;This step method is not defined for Adam.&quot;);</span>
-    }
-
-    // TODO: Javadoc
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
-        Matrix v_hat, m_hat;
-
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(increaseTime) {</span>
-<span class="nc" id="L91">            t++;</span>
+    public Matrix[] step(boolean increaseTime, Matrix... params) {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if(params.length != 4) {</span>
+<span class="nc" id="L80">            throw new IllegalArgumentException(&quot;Step method for &quot; + OPTIM_NAME +</span>
+                    &quot; expecting 4 matrices but got &quot; + params.length);
         }
 
-<span class="nc" id="L94">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
-<span class="nc" id="L95">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
+<span class="nc" id="L84">        Matrix w = params[0];</span>
+<span class="nc" id="L85">        Matrix wGrad = params[1];</span>
+<span class="nc" id="L86">        Matrix v = params[2];</span>
+<span class="nc" id="L87">        Matrix m = params[3];</span>
 
-//        m_hat = m.scalDiv(1-Math.pow(beta1, t));
-//        v_hat = v.scalDiv(1-Math.pow(beta2, t));
-//
-//        w = w.sub(m_hat.scalMult(learningRate).elemDiv(v_hat.sqrt().add(eps)));
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if(increaseTime) {</span>
+<span class="nc" id="L90">            t++;</span>
+        }
 
-<span class="nc" id="L102">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
-<span class="nc" id="L103">        w = w.sub(m.scalMult(learningRate).elemDiv(v.sqrt().add(eps)));</span>
+<span class="nc" id="L93">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
+<span class="nc" id="L94">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
 
-<span class="nc" id="L105">        return new Matrix[]{w, v, m};</span>
+<span class="nc" id="L96">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
+<span class="nc" id="L97">        w = w.sub(m.scalMult(learningRate).elemDiv(v.sqrt().add(eps)));</span>
+
+<span class="nc" id="L99">        return new Matrix[]{w, v, m};</span>
     }
 
 
@@ -114,7 +108,7 @@ public class Adam extends Optimizer {
     @Override
     public String getDetails() {
         // TODO:
-<span class="nc" id="L117">        return null;</span>
+<span class="nc" id="L111">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

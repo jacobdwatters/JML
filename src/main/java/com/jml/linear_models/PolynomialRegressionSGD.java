@@ -133,7 +133,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
 
             for(int j=0; j<X.numRows(); j++) { // Compute gradient a single sample at a time.
                 wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients
-                w = GD.step(w, wGrad); // Apply gradient descent update rule.
+                w = GD.step(w, wGrad)[0]; // Apply gradient descent update rule.
             }
 
             // Append loss to the loss history.

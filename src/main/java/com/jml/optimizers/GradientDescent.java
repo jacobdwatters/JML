@@ -47,6 +47,7 @@ public class GradientDescent  extends Optimizer {
         return new Matrix[]{w.sub(wGrad.scalMult(learningRate))};
     }
 
+
     /**
      * Steps the optimizer a single iteration by applying the update rule of
      * the optimizer to the matrix w.

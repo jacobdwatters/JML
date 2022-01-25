@@ -99,6 +99,8 @@ public class Dense implements Layer {
     @Override
     public Matrix[] back(Matrix previousVals, Matrix error) {
 
+        System.out.println("Error shape: " + error.shape());
+
         Matrix dxUpdates = activation.slope(values)
                         .elemMult(error)
                         .mult(previousVals.T());
