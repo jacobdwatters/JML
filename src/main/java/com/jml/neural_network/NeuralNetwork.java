@@ -57,7 +57,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     private Matrix[] dxUpdates;
     private Matrix[] dxBiasUpdates;
 
-    // TODO: Should these be moved to the layer?
+    // TODO: Should these be moved to the layer? Probably yes!
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
 
@@ -349,8 +349,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             for(int i=0; i<layers.size(); i++) { // Update the weights for each layer.
                 // Apply the optimizer update rule to the weights and bias terms.
                 if(!(layers.get(i) instanceof Dropout)) {
-                    layers.get(i).setWeights(optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize)));
-                    layers.get(i).setBias(optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize)));
+                    layers.get(i).setWeights(optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize))[0]);
+                    layers.get(i).setBias(optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize))[0]);
                     param_i++;
                 }
             }
@@ -390,9 +390,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
                 if(!(layers.get(i) instanceof Dropout)) {
                     wvm = optim.step(layers.get(i).getWeights(), dxUpdates[param_i].scalDiv(batchSize),
-                            V[vi], M[vi], true);
-                    bvm = optim.step(layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize),
-                            V[vi+1], M[vi+1], false);
+                            V[vi], M[vi]);
+                    bvm = optim.step(false, layers.get(i).getBias(), dxBiasUpdates[param_i].scalDiv(batchSize),
+                            V[vi+1], M[vi+1]);
 
                     // Apply updates to weight, bias, and momentum matrices.
                     layers.get(i).setWeights(wvm[0]);

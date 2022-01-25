@@ -61,50 +61,43 @@ public class Momentum extends Optimizer {
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of
-     * the optimizer to the matrix w.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
      *
-     * @param w     A matrix contain the
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @param params An array of matrices containing strictly {w, wGrad, v} where
+     * w is a matrix containing the weights to apply the update to,
+     * wGrad is the gradient of the objective function with respect to w,
+     * and v is the update vector for the momentum optimizer.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     @Override
-    public Matrix step(Matrix w, Matrix wGrad) {
-        throw new IllegalArgumentException("This step method is not defined for momentum.");
-    }
+    public Matrix[] step(Matrix... params) {
+        if(params.length != 3) {
+            throw new IllegalArgumentException("Step method for " + OPTIM_NAME +
+                    " expecting 3 matrices but got " + params.length);
+        }
 
+        Matrix w = params[0];
+        Matrix wGrad = params[1];
+        Matrix v = params[2];
 
-    /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
-     *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *              no effect.
-     * @return The result of applying the update rule of the optimizer to the matrix w.
-     */
-    @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
         v = v.scalMult(momentum).add(wGrad.scalMult(learningRate));
         return new Matrix[]{w.sub(v), v};
     }
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This step
-     * method should only be used for Adam.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
      *
-     * @param w            A matrix containing the weights to apply the update rule to.
-     * @param wGrad        The gradient of the function with respect to w.
-     * @param v            Vector to hold first moment estimations.
-     * @param m            Vector to hold second moment estimations.
-     * @param increaseTime If true, increase time step for optimizer. If false, do nothing.
-     * @return The result of applying the update rule of the optimizer to w.
+     * @param flag Does nothing for the momentum optimizer.
+     * @param params An array of matrices containing strictly {w, wGrad, v} where
+     * w is a matrix containing the weights to apply the update to,
+     * wGrad is the gradient of the objective function with respect to w,
+     * and v is the update vector for the momentum optimizer.
+     * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
-        throw new IllegalArgumentException("This step method is not defined for momentum.");
+    public Matrix[] step(boolean flag, Matrix... params) {
+        return step(params);
     }
 
 

@@ -51,41 +51,40 @@ public class Adam extends Optimizer {
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of
-     * the optimizer to the matrix w.<br><br>
-     * <p>
-     * WARNING: If this step method is called for the {@link Momentum} optimizer an exception will be thrown.
-     * Use {@link #step(Matrix, Matrix, Matrix)} instead.
-     *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
+     * Note, this will increase the time step of the Adam optimizer. To not increase the time step see
+     * {@link #step(boolean, Matrix[])}.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    @Override
-    public Matrix step(Matrix w, Matrix wGrad) {
-        throw new IllegalArgumentException("This step method is not defined for Adam.");
+    public Matrix[] step(Matrix... params) {
+        return step(true, params);
     }
-
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
      *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *              no effect.
+     * @param increaseTime Flag for increasing the timestamp of the Adam optimizer.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-        throw new IllegalArgumentException("This step method is not defined for Adam.");
-    }
+    public Matrix[] step(boolean increaseTime, Matrix... params) {
+        if(params.length != 4) {
+            throw new IllegalArgumentException("Step method for " + OPTIM_NAME +
+                    " expecting 4 matrices but got " + params.length);
+        }
 
-    // TODO: Javadoc
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
-        Matrix v_hat, m_hat;
+        Matrix w = params[0];
+        Matrix wGrad = params[1];
+        Matrix v = params[2];
+        Matrix m = params[3];
 
         if(increaseTime) {
             t++;
