@@ -31,6 +31,7 @@ public class Adam extends Optimizer {
     final static double eps = 1E-7;
     double beta1, beta2;
     double t; // Time step
+    double alpha;
     public static final String OPTIM_NAME = &quot;Adam&quot;;
 
     /**
@@ -40,13 +41,13 @@ public class Adam extends Optimizer {
      * @param beta1 Exponential decay rate for first moment estimate. Must be in [0, 1)
      * @param beta2 Exponential decay rate for second moment estimate. Must be in [0, 1)
      */
-<span class="nc" id="L43">    public Adam(double learningRate, double beta1, double beta2) {</span>
-<span class="nc" id="L44">        super.learningRate = learningRate;</span>
-<span class="nc" id="L45">        this.beta1 = beta1;</span>
-<span class="nc" id="L46">        this.beta2 = beta2;</span>
-<span class="nc" id="L47">        t=0;</span>
-<span class="nc" id="L48">        super.name = OPTIM_NAME;</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L44">    public Adam(double learningRate, double beta1, double beta2) {</span>
+<span class="nc" id="L45">        super.learningRate = learningRate;</span>
+<span class="nc" id="L46">        this.beta1 = beta1;</span>
+<span class="nc" id="L47">        this.beta2 = beta2;</span>
+<span class="nc" id="L48">        t=0;</span>
+<span class="nc" id="L49">        super.name = OPTIM_NAME;</span>
+<span class="nc" id="L50">    }</span>
 
 
     /**
@@ -62,7 +63,7 @@ public class Adam extends Optimizer {
      */
     @Override
     public Matrix step(Matrix w, Matrix wGrad) {
-<span class="nc" id="L65">        throw new IllegalArgumentException(&quot;This step method is not defined for Adam.&quot;);</span>
+<span class="nc" id="L66">        throw new IllegalArgumentException(&quot;This step method is not defined for Adam.&quot;);</span>
     }
 
 
@@ -79,26 +80,29 @@ public class Adam extends Optimizer {
      */
     @Override
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-<span class="nc" id="L82">        throw new IllegalArgumentException(&quot;This step method is not defined for Adam.&quot;);</span>
+<span class="nc" id="L83">        throw new IllegalArgumentException(&quot;This step method is not defined for Adam.&quot;);</span>
     }
 
     // TODO: Javadoc
     public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
         Matrix v_hat, m_hat;
 
-<span class="nc bnc" id="L89" title="All 2 branches missed.">        if(increaseTime) {</span>
-<span class="nc" id="L90">            t++;</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(increaseTime) {</span>
+<span class="nc" id="L91">            t++;</span>
         }
 
-<span class="nc" id="L93">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
-<span class="nc" id="L94">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
+<span class="nc" id="L94">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
+<span class="nc" id="L95">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
 
-<span class="nc" id="L96">        m_hat = m.scalDiv(1-Math.pow(beta1, t));</span>
-<span class="nc" id="L97">        v_hat = v.scalDiv(1-Math.pow(beta2, t));</span>
+//        m_hat = m.scalDiv(1-Math.pow(beta1, t));
+//        v_hat = v.scalDiv(1-Math.pow(beta2, t));
+//
+//        w = w.sub(m_hat.scalMult(learningRate).elemDiv(v_hat.sqrt().add(eps)));
 
-<span class="nc" id="L99">        w = w.sub(m_hat.scalMult(learningRate).elemDiv(v_hat.sqrt().add(eps)));</span>
+<span class="nc" id="L102">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
+<span class="nc" id="L103">        w = w.sub(m.scalMult(learningRate).elemDiv(v.sqrt().add(eps)));</span>
 
-<span class="nc" id="L101">        return new Matrix[]{w, v, m};</span>
+<span class="nc" id="L105">        return new Matrix[]{w, v, m};</span>
     }
 
 
@@ -110,7 +114,7 @@ public class Adam extends Optimizer {
     @Override
     public String getDetails() {
         // TODO:
-<span class="nc" id="L113">        return null;</span>
+<span class="nc" id="L117">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

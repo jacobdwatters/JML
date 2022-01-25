@@ -248,8 +248,8 @@ public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
         Matrix predictions;
 
 <span class="fc bfc" id="L250" title="All 2 branches covered.">        for(int i=0; i&lt;epochs; i++) {</span>
-<span class="fc bfc" id="L251" title="All 2 branches covered.">            for(int j=0; j&lt;feature.numRows(); j+=batchSize) {</span>
-<span class="fc bfc" id="L252" title="All 4 branches covered.">                for(int k=0; k&lt;batchSize &amp;&amp; (j+k)&lt;feature.numRows(); k++) {</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">            for(int j=0; j&lt;feature.numRows(); j+=batchSize) { // Iterate over all samples</span>
+<span class="fc bfc" id="L252" title="All 4 branches covered.">                for(int k=0; k&lt;batchSize &amp;&amp; (j+k)&lt;feature.numRows(); k++) { // Iterate over the batch.</span>
 <span class="fc" id="L253">                    input = feature.getRowAsVector(j+k).T();</span>
 <span class="fc" id="L254">                    output = feedForward(input); // Apply the forward pass on the network.</span>
 <span class="fc" id="L255">                    back(target.getRowAsVector(j+k).T(), output, input); // Apply the backward pass of the network.</span>

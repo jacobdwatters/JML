@@ -8,7 +8,12 @@ import linalg.Matrix;
 <span class="fc" id="L8">public abstract class Optimizer {</span>
     double learningRate; // Learning rate of the optimizer.
     public Scheduler schedule; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
-    public String name;
+    public String name; // Name of the optimizer.
+
+    // TODO: Replace all step(...) methods with the following two.
+//    public abstract Matrix[] step(Matrix... args);
+//    public abstract Matrix[] step(boolean flag, Matrix... args);
+
 
     /**
      * Steps the optimizer a single iteration by applying the update rule of
@@ -63,14 +68,14 @@ import linalg.Matrix;
      * @param schedule Learning rate scheduler.
      */
     public void setScheduler(Scheduler schedule) {
-<span class="fc" id="L66">        this.schedule = schedule;</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L71">        this.schedule = schedule;</span>
+<span class="fc" id="L72">    }</span>
 
 
     /**
      * Gets the learning rate for this optimizer.
      * @return The learning rate for this optimizer.
      */
-<span class="fc" id="L74">    public double getLearningRate() {return learningRate;}</span>
+<span class="fc" id="L79">    public double getLearningRate() {return learningRate;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
