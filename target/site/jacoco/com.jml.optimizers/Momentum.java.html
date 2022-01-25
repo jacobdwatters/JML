@@ -61,50 +61,43 @@ public class Momentum extends Optimizer {
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of
-     * the optimizer to the matrix w.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
      *
-     * @param w     A matrix contain the
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @param params An array of matrices containing strictly {w, wGrad, v} where
+     * w is a matrix containing the weights to apply the update to,
+     * wGrad is the gradient of the objective function with respect to w,
+     * and v is the update vector for the momentum optimizer.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     @Override
-    public Matrix step(Matrix w, Matrix wGrad) {
-<span class="nc" id="L73">        throw new IllegalArgumentException(&quot;This step method is not defined for momentum.&quot;);</span>
+    public Matrix[] step(Matrix... params) {
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if(params.length != 3) {</span>
+<span class="nc" id="L75">            throw new IllegalArgumentException(&quot;Step method for &quot; + OPTIM_NAME +</span>
+                    &quot; expecting 3 matrices but got &quot; + params.length);
+        }
+
+<span class="fc" id="L79">        Matrix w = params[0];</span>
+<span class="fc" id="L80">        Matrix wGrad = params[1];</span>
+<span class="fc" id="L81">        Matrix v = params[2];</span>
+
+<span class="fc" id="L83">        v = v.scalMult(momentum).add(wGrad.scalMult(learningRate));</span>
+<span class="fc" id="L84">        return new Matrix[]{w.sub(v), v};</span>
     }
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
      *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *              no effect.
+     * @param flag Does nothing for the momentum optimizer.
+     * @param params An array of matrices containing strictly {w, wGrad, v} where
+     * w is a matrix containing the weights to apply the update to,
+     * wGrad is the gradient of the objective function with respect to w,
+     * and v is the update vector for the momentum optimizer.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-<span class="fc" id="L89">        v = v.scalMult(momentum).add(wGrad.scalMult(learningRate));</span>
-<span class="fc" id="L90">        return new Matrix[]{w.sub(v), v};</span>
-    }
-
-
-    /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This step
-     * method should only be used for Adam.
-     *
-     * @param w            A matrix containing the weights to apply the update rule to.
-     * @param wGrad        The gradient of the function with respect to w.
-     * @param v            Vector to hold first moment estimations.
-     * @param m            Vector to hold second moment estimations.
-     * @param increaseTime If true, increase time step for optimizer. If false, do nothing.
-     * @return The result of applying the update rule of the optimizer to w.
-     */
-    @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
-<span class="nc" id="L107">        throw new IllegalArgumentException(&quot;This step method is not defined for momentum.&quot;);</span>
+    public Matrix[] step(boolean flag, Matrix... params) {
+<span class="nc" id="L100">        return step(params);</span>
     }
 
 
@@ -116,7 +109,7 @@ public class Momentum extends Optimizer {
     @Override
     public String getDetails() {
         // TODO:
-<span class="nc" id="L119">        return null;</span>
+<span class="nc" id="L112">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

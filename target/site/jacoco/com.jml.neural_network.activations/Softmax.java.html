@@ -8,9 +8,9 @@ import linalg.Vector;
  * The softmax activation function. f(&lt;b&gt;x&lt;/b&gt;)&lt;sub&gt;i&lt;/sub&gt; = exp(&lt;b&gt;x&lt;/b&gt;_i) / sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt;( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) where
  * &lt;b&gt;x&lt;/b&gt; is a vector of length m and sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt; ( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) = exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;1&lt;/sub&gt;) + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;2&lt;/sub&gt;) + ... + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;m&lt;/sub&gt;).
  */
-<span class="nc" id="L11">public class Softmax implements ActivationFunction {</span>
+<span class="fc" id="L11">class Softmax implements ActivationFunction {</span>
 
-<span class="nc" id="L13">    public final String NAME = &quot;Softmax&quot;;</span>
+<span class="fc" id="L13">    public final String NAME = &quot;Softmax&quot;;</span>
 
     /**
      * Applies the activation function, element-wise, to a matrix.
@@ -46,7 +46,8 @@ import linalg.Vector;
      */
     @Override
     public Matrix slope(Matrix data) {
-<span class="nc" id="L49">        return null;</span>
+        // TODO:
+<span class="nc" id="L50">        return null;</span>
     }
 
     /**
@@ -56,7 +57,7 @@ import linalg.Vector;
      */
     @Override
     public String getName() {
-<span class="nc" id="L59">        return this.NAME;</span>
+<span class="nc" id="L60">        return this.NAME;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

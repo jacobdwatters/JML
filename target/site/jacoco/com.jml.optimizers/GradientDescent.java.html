@@ -30,46 +30,37 @@ public class GradientDescent  extends Optimizer {
      * Steps the optimizer a single iteration by applying the update rule of
      * the optimizer to the matrix w.
      *
-     * @param w A matrix containg the weights to apply the update to.
-     * @param wGrad The gradient of w.
+     * @param params An array of Matrices strictly containing {w, wGrad}
+     * where w is a matrix contain the weights to apply the update to
+     * and wGrad is the gradient of the objective function with respect to w.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     @Override
-    public Matrix step(Matrix w, Matrix wGrad) {
-<span class="fc" id="L39">        return w.sub(wGrad.scalMult(learningRate));</span>
+    public Matrix[] step(Matrix... params) {
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if(params.length != 2) {</span>
+<span class="nc" id="L41">            throw new IllegalArgumentException(&quot;Step method for &quot; + OPTIM_NAME +</span>
+                    &quot; expecting two matrices but got &quot; + params.length);
+        }
+
+<span class="fc" id="L45">        Matrix w = params[0];</span>
+<span class="fc" id="L46">        Matrix wGrad = params[1];</span>
+<span class="fc" id="L47">        return new Matrix[]{w.sub(wGrad.scalMult(learningRate))};</span>
     }
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
+     * Steps the optimizer a single iteration by applying the update rule of
+     * the optimizer to the matrix w.
      *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *              no effect.
+     * @param flag Does nothing for gradient descent optimizer.
+     * @param params An array of Matrices strictly containing {w, wGrad}
+     * where w is a matrix contain the weights to apply the update to
+     * and wGrad is the gradient of the objective function with respect to w.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-<span class="nc" id="L55">        throw new IllegalStateException(&quot;This step method is not defined for the &quot; + OPTIM_NAME + &quot; optimizer&quot;);</span>
-    }
-
-
-    /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This step
-     * method should only be used for Adam.
-     *
-     * @param w            A matrix containing the weights to apply the update rule to.
-     * @param wGrad        The gradient of the function with respect to w.
-     * @param v            Vector to hold first moment estimations.
-     * @param m            Vector to hold second moment estimations.
-     * @param increaseTime If true, increase time step for optimizer. If false, do nothing.
-     * @return The result of applying the update rule of the optimizer to w.
-     */
-    @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v, Matrix m, boolean increaseTime) {
-<span class="nc" id="L72">        throw new IllegalStateException(&quot;This step method is not defined for the &quot; + OPTIM_NAME + &quot; optimizer&quot;);</span>
+    public Matrix[] step(boolean flag, Matrix... params) {
+<span class="nc" id="L63">        return step(params);</span>
     }
 
 
@@ -80,11 +71,11 @@ public class GradientDescent  extends Optimizer {
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L83">        StringBuilder details = new StringBuilder();</span>
+<span class="nc" id="L74">        StringBuilder details = new StringBuilder();</span>
 
         // TODO:
 
-<span class="nc" id="L87">        return details.toString();</span>
+<span class="nc" id="L78">        return details.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

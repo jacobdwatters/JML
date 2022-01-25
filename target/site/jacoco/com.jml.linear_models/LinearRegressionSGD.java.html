@@ -134,7 +134,7 @@ public class LinearRegressionSGD extends LinearRegression {
 
 <span class="fc bfc" id="L135" title="All 2 branches covered.">            for(int j=0; j&lt;X.numRows(); j++) { // Compute gradient a single sample at a time.</span>
 <span class="fc" id="L136">                wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients</span>
-<span class="fc" id="L137">                w = GD.step(w, wGrad); // Apply gradient descent update rule.</span>
+<span class="fc" id="L137">                w = GD.step(w, wGrad)[0]; // Apply gradient descent update rule.</span>
             }
 
             // Append loss to the loss history.

@@ -248,6 +248,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         Matrix predictions;
 
         for(int i=0; i<epochs; i++) {
+            // TODO: Ensure the batches are being handled correctly.
             for(int j=0; j<feature.numRows(); j+=batchSize) { // Iterate over all samples
                 for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) { // Iterate over the batch.
                     input = feature.getRowAsVector(j+k).T();

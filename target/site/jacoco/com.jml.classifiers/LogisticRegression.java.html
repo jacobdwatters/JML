@@ -124,7 +124,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
 
 <span class="fc bfc" id="L125" title="All 2 branches covered.">        for(int i=0; i&lt;maxIterations; i++) {</span>
 <span class="fc" id="L126">            wGrad = grad(X, y, w); // Compute gradients</span>
-<span class="fc" id="L127">            w = GD.step(w, wGrad); // Apply gradient descent update rule.</span>
+<span class="fc" id="L127">            w = GD.step(w, wGrad)[0]; // Apply gradient descent update rule.</span>
 
             // Append loss to the loss history.
 <span class="fc" id="L130">            lossHist.add(LossFunctions.binCrossEntropy.compute(y, this.predict(X, w)).getAsDouble(0, 0));</span>

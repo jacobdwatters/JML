@@ -29,5 +29,12 @@
      * &lt;code&gt;f(x) = tanh(x) = (e&lt;sup&gt;x&lt;/sup&gt; - e&lt;sup&gt;-x&lt;/sup&gt;) / (e&lt;sup&gt;x&lt;/sup&gt; + e&lt;sup&gt;-x&lt;/sup&gt;)&lt;/code&gt;
      */
 <span class="fc" id="L31">    public static final ActivationFunction tanh = new Tanh();</span>
+
+
+    /**
+     * The softmax activation function. f(&lt;b&gt;x&lt;/b&gt;)&lt;sub&gt;i&lt;/sub&gt; = exp(&lt;b&gt;x&lt;/b&gt;_i) / sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt;( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) where
+     * &lt;b&gt;x&lt;/b&gt; is a vector of length m and sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt; ( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) = exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;1&lt;/sub&gt;) + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;2&lt;/sub&gt;) + ... + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;m&lt;/sub&gt;).
+     */
+<span class="fc" id="L38">    public static final ActivationFunction softmax = new Softmax();</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
