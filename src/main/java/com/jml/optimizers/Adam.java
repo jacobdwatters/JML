@@ -31,6 +31,7 @@ public class Adam extends Optimizer {
     final static double eps = 1E-7;
     double beta1, beta2;
     double t; // Time step
+    double alpha;
     public static final String OPTIM_NAME = "Adam";
 
     /**
@@ -93,10 +94,8 @@ public class Adam extends Optimizer {
         m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));
         v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));
 
-        m_hat = m.scalDiv(1-Math.pow(beta1, t));
-        v_hat = v.scalDiv(1-Math.pow(beta2, t));
-
-        w = w.sub(m_hat.scalMult(learningRate).elemDiv(v_hat.sqrt().add(eps)));
+        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));
+        w = w.sub(m.scalMult(learningRate).elemDiv(v.sqrt().add(eps)));
 
         return new Matrix[]{w, v, m};
     }

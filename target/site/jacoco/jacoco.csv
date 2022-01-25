@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 java-machine-learning,com.jml.optimizers,GradientDescent,23,20,1,1,5,6,4,2,3,2
-java-machine-learning,com.jml.optimizers,Adam,111,0,2,0,18,0,6,0,5,0
+java-machine-learning,com.jml.optimizers,Adam,112,0,2,0,17,0,6,0,5,0
 java-machine-learning,com.jml.optimizers,StepLearningRate,18,32,0,4,8,8,2,4,2,2
 java-machine-learning,com.jml.optimizers,Scheduler,0,3,0,0,0,1,0,1,0,1
 java-machine-learning,com.jml.optimizers,Momentum,57,42,7,1,13,9,8,2,4,2
@@ -17,7 +17,7 @@ java-machine-learning,com.jml.linear_models,PolynomialRegressionSGD,6,299,2,12,2
 java-machine-learning,com.jml.neural_network,NeuralNetwork,300,1217,23,67,40,197,21,47,4,19
 java-machine-learning,com.jml.neural_network,ModelTags,0,57,0,0,0,2,0,1,0,1
 java-machine-learning,com.jml.neural_network.layers,Dropout,36,134,3,5,8,30,9,11,7,9
-java-machine-learning,com.jml.neural_network.layers,Dense,21,281,3,3,4,52,4,14,1,14
+java-machine-learning,com.jml.neural_network.layers,Dense,21,276,3,3,4,51,4,14,1,14
 java-machine-learning,com.jml.neural_network.layers,Initializers,3,35,0,4,1,6,1,4,1,2
 java-machine-learning,com.jml.core,NeuralNetFromData,44,361,10,36,7,76,9,17,0,3
 java-machine-learning,com.jml.core,Metrics,48,101,6,14,9,14,5,9,2,2

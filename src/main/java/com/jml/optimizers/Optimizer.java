@@ -8,7 +8,12 @@ import linalg.Matrix;
 public abstract class Optimizer {
     double learningRate; // Learning rate of the optimizer.
     public Scheduler schedule; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
-    public String name;
+    public String name; // Name of the optimizer.
+
+    // TODO: Replace all step(...) methods with the following two.
+//    public abstract Matrix[] step(Matrix... args);
+//    public abstract Matrix[] step(boolean flag, Matrix... args);
+
 
     /**
      * Steps the optimizer a single iteration by applying the update rule of
