@@ -18,7 +18,7 @@ public class Tanh implements ActivationFunction {
      * @return The result of the element-wise activation function applied to the matrix.
      */
     @Override
-    public Matrix apply(Matrix data) {
+    public Matrix forward(Matrix data) {
         double[][] result = new double[data.numRows()][data.numCols()];
         double exp;
 
@@ -41,7 +41,7 @@ public class Tanh implements ActivationFunction {
      * @return The slope of the activation function, evaluated element-wise, of the matrix.
      */
     @Override
-    public Matrix slope(Matrix data) {
+    public Matrix back(Matrix data) {
         double[][] result = new double[data.numRows()][data.numCols()];
         double exp;
 

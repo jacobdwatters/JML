@@ -43,7 +43,7 @@ import java.util.List;
 public class NeuralNetwork extends Model&lt;double[][], double[][]&gt; {
 
 <span class="fc" id="L45">    protected final String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();</span>
-    protected final List&lt;Layer&gt; layers;
+    public final List&lt;Layer&gt; layers;
     protected double learningRate;
     protected double threshold;
     protected int epochs;

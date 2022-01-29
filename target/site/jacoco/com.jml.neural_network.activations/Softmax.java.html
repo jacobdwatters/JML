@@ -8,9 +8,10 @@ import linalg.Vector;
  * The softmax activation function. f(&lt;b&gt;x&lt;/b&gt;)&lt;sub&gt;i&lt;/sub&gt; = exp(&lt;b&gt;x&lt;/b&gt;_i) / sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt;( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) where
  * &lt;b&gt;x&lt;/b&gt; is a vector of length m and sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt; ( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) = exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;1&lt;/sub&gt;) + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;2&lt;/sub&gt;) + ... + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;m&lt;/sub&gt;).
  */
-<span class="fc" id="L11">class Softmax implements ActivationFunction {</span>
+<span class="fc" id="L11">public class Softmax implements ActivationFunction {</span>
 
 <span class="fc" id="L13">    public final String NAME = &quot;Softmax&quot;;</span>
+<span class="fc" id="L14">    private Matrix forwardIn = null, forwardOut = null;</span>
 
     /**
      * Applies the activation function, element-wise, to a matrix.
@@ -19,23 +20,30 @@ import linalg.Vector;
      * @return The result of the element-wise activation function applied to the matrix.
      */
     @Override
-    public Matrix apply(Matrix data) {
-<span class="nc bnc" id="L23" title="All 2 branches missed.">        if(data.numCols()&gt;1) {</span>
-<span class="nc" id="L24">            throw new IllegalArgumentException(&quot;Expecting column matrix for &quot; + NAME + &quot; activation but got shape &quot; + data.shape());</span>
+    public Matrix forward(Matrix data) {
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if(data.numCols()&gt;1) {</span>
+<span class="nc" id="L25">            throw new IllegalArgumentException(&quot;Expecting column matrix for &quot; + NAME + &quot; activation but got shape &quot; + data.shape());</span>
         }
 
-<span class="nc" id="L27">        double[] result = new double[data.numRows()];</span>
-<span class="nc" id="L28">        double sum = 0;</span>
+        // TODO: For this to work, each layer will need to be passed new Softmax() and NOT Activations.softmax as this will then
+        //      be shared for all layers. Thus the Activations class should be removed entirely so that the user can not do this.
+<span class="nc" id="L30">        this.forwardIn = data.copy();</span>
 
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) { // Compute denominator.</span>
-<span class="nc" id="L31">            sum += Math.exp(data.getAsDouble(i, 0));</span>
+<span class="nc" id="L32">        double[] result = new double[data.numRows()];</span>
+<span class="nc" id="L33">        double sum = 0;</span>
+<span class="nc" id="L34">        double max = data.maxReal(); // Compute shift for numerical stability</span>
+
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) { // Compute denominator.</span>
+<span class="nc" id="L37">            sum += Math.exp(data.getAsDouble(i, 0) - max);</span>
         }
 
-<span class="nc bnc" id="L34" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) { // Compute each entry for the resulting vector.</span>
-<span class="nc" id="L35">            result[i] = Math.exp(data.getAsDouble(i, 0)) / sum;</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) { // Compute each entry for the resulting vector.</span>
+<span class="nc" id="L41">            result[i] = Math.exp(data.getAsDouble(i, 0) - max) / sum;</span>
         }
 
-<span class="nc" id="L38">        return new Vector(result); // Return Softmax activation result as a column vector.</span>
+<span class="nc" id="L44">        this.forwardOut = new Vector(result);</span>
+
+<span class="nc" id="L46">        return this.forwardOut; // Return Softmax activation result as a column vector.</span>
     }
 
     /**
@@ -45,9 +53,24 @@ import linalg.Vector;
      * @return The slope of the activation function, evaluated element-wise, of the data matrix.
      */
     @Override
-    public Matrix slope(Matrix data) {
-        // TODO:
-<span class="nc" id="L50">        return null;</span>
+    public Matrix back(Matrix data) {
+
+<span class="nc" id="L58">        Matrix softmax = this.forwardOut.copy().T();</span>
+<span class="nc" id="L59">        Matrix grad = data.copy().T();</span>
+<span class="nc" id="L60">        Matrix diag = toDiag(softmax.getValuesAsDouble()[0]);</span>
+<span class="nc" id="L61">        Matrix dSoftmax = diag.sub(softmax.T().mult(softmax));</span>
+
+<span class="nc" id="L63">        return grad.mult(dSoftmax).flatten(1);</span>
+    }
+
+    private Matrix toDiag(double[] values) {
+<span class="nc" id="L67">        double[][] result = new double[values.length][values.length];</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        for(int i = 0; i&lt;values.length; i++) {</span>
+<span class="nc" id="L70">            result[i][i] = values[i];</span>
+        }
+
+<span class="nc" id="L73">        return new Matrix(result);</span>
     }
 
     /**
@@ -57,7 +80,7 @@ import linalg.Vector;
      */
     @Override
     public String getName() {
-<span class="nc" id="L60">        return this.NAME;</span>
+<span class="nc" id="L83">        return this.NAME;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

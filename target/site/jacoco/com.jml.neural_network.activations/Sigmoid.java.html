@@ -17,7 +17,7 @@ import linalg.Matrix;
      * @return The result of the sigmoid activation applied element-wise to the data matrix.
      */
     @Override
-    public Matrix apply(Matrix data) {
+    public Matrix forward(Matrix data) {
 <span class="fc" id="L21">        double[][] result = new double[data.numRows()][data.numCols()];</span>
 
 <span class="fc bfc" id="L23" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
@@ -37,7 +37,7 @@ import linalg.Matrix;
      * @return The result of the derivative of the sigmoid activation applied element-wise to the data.
      */
     @Override
-    public Matrix slope(Matrix data) {
+    public Matrix back(Matrix data) {
 <span class="fc" id="L41">        double[][] result = new double[data.numRows()][data.numCols()];</span>
         double exp;
 

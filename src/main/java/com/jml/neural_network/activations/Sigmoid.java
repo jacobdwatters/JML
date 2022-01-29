@@ -17,7 +17,7 @@ class Sigmoid implements ActivationFunction {
      * @return The result of the sigmoid activation applied element-wise to the data matrix.
      */
     @Override
-    public Matrix apply(Matrix data) {
+    public Matrix forward(Matrix data) {
         double[][] result = new double[data.numRows()][data.numCols()];
 
         for(int i=0; i<data.numRows(); i++) {
@@ -37,7 +37,7 @@ class Sigmoid implements ActivationFunction {
      * @return The result of the derivative of the sigmoid activation applied element-wise to the data.
      */
     @Override
-    public Matrix slope(Matrix data) {
+    public Matrix back(Matrix data) {
         double[][] result = new double[data.numRows()][data.numCols()];
         double exp;
 

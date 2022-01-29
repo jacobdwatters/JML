@@ -3,6 +3,7 @@ package com.jml.neural_network.layers;
 import com.jml.core.Block;
 import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Softmax;
 import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
@@ -23,6 +24,7 @@ public class Dense implements Layer {
     public ActivationFunction activation; // ActivationFunction function for the layer.
     protected int paramCount;
 
+    // TODO: Combine weights and bias terms into a single matrix. i.e. add ones to the values vector and an additional column to the weights matrix.
     Matrix values; // Node values for the layer
     Matrix weights; // Weights for the layer.
     Matrix bias; // Bias for the layer.
@@ -84,7 +86,7 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix forward(Matrix inputs) {
-        values = activation.apply(weights.mult(inputs).add(bias));
+        values = activation.forward(weights.mult(inputs).add(bias));
         return values;
     }
 
@@ -98,13 +100,20 @@ public class Dense implements Layer {
      */
     @Override
     public Matrix[] back(Matrix previousVals, Matrix error) {
+        Matrix dxUpdates = new Matrix();
+        Matrix dxBiasUpdates = new Matrix();
 
-        Matrix dxUpdates = activation.slope(values)
-                        .elemMult(error)
-                        .mult(previousVals.T());
+        if(activation instanceof Softmax) {
+            // TODO:
 
-        Matrix dxBiasUpdates = activation.slope(bias)
-                        .elemMult(error);
+        } else {
+            dxUpdates = activation.back(values)
+                    .elemMult(error)
+                    .mult(previousVals.T());
+
+            dxBiasUpdates = activation.back(bias)
+                    .elemMult(error);
+        }
 
         return new Matrix[]{dxUpdates, dxBiasUpdates};
     }
