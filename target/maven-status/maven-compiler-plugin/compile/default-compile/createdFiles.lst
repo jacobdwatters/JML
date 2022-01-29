@@ -1,2 +1,8 @@
-com\jml\neural_network\layers\Initializers.class
 com\jml\neural_network\activations\Softmax.class
+com\jml\neural_network\layers\initilizers\Constant.class
+com\jml\neural_network\layers\initilizers\Ones.class
+com\jml\neural_network\layers\initilizers\RandomUniform.class
+com\jml\neural_network\layers\initilizers\RandomNormal.class
+com\jml\neural_network\layers\initilizers\Zeros.class
+com\jml\neural_network\layers\initilizers\Initializer.class
+com\jml\neural_network\layers\initilizers\Orthogonal.class

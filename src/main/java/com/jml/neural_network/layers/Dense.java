@@ -4,6 +4,9 @@ import com.jml.core.Block;
 import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Softmax;
+import com.jml.neural_network.layers.initilizers.Initializer;
+import com.jml.neural_network.layers.initilizers.RandomNormal;
+import com.jml.neural_network.layers.initilizers.Zeros;
 import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
@@ -15,21 +18,23 @@ import linalg.Vector;
  * {@link com.jml.neural_network.activations.ActivationFunction activation function} used in the layer.
  */
 public class Dense implements Layer {
-
-    // TODO: Add ability to specify weight initializer. Allow for one to be specified for bias and weights individually
-
     public final String LAYER_TYPE = "Dense";
     public int inDim = -1; // Size of the input.
     public int outDim; // Size of the output.
+    protected int paramCount; // Count of trainable parameters for the layer.
     public ActivationFunction activation; // ActivationFunction function for the layer.
-    protected int paramCount;
+
+    private final double std = 0.5;
+    protected Initializer weightInitializer = new RandomNormal(std);
+    protected Initializer biasInitializer = new RandomNormal(std);
+
 
     // TODO: Combine weights and bias terms into a single matrix. i.e. add ones to the values vector and an additional column to the weights matrix.
     Matrix values; // Node values for the layer
     Matrix weights; // Weights for the layer.
     Matrix bias; // Bias for the layer.
 
-    private double std = 0.5;
+
 
     /**
      * Constructs a dense layer for a neural network.<br>
@@ -47,8 +52,52 @@ public class Dense implements Layer {
 
         this.outDim = outDim;
         this.activation = activation;
+        this.weightInitializer = new RandomNormal(std);
+    }
 
-        this.bias = new Matrix(this.outDim, 1);
+
+    /**
+     * Constructs a dense layer for a neural network.<br>
+     * <b><u>Note</b></u>: this constructor infers the input dimension from the
+     * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
+     * layer use {@link #Dense(int, int, ActivationFunction)} to specify the input dimension.
+     *
+     * @param outDim Layer output dimension.
+     * @param activation ActivationFunction function for layer.
+     * @param weightInitializer Initializer to use for setting initial random values of weights.
+     */
+    public Dense(int outDim, ActivationFunction activation, Initializer weightInitializer) {
+        if(outDim<=0) {
+            throw new IllegalArgumentException("Expecting outDim to be positive but got " + outDim);
+        }
+
+        this.weightInitializer = weightInitializer;
+        this.biasInitializer = new Zeros();
+        this.outDim = outDim;
+        this.activation = activation;
+    }
+
+
+    /**
+     * Constructs a dense layer for a neural network.<br>
+     * <b><u>Note</b></u>: this constructor infers the input dimension from the
+     * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
+     * layer use {@link #Dense(int, int, ActivationFunction)} to specify the input dimension.
+     *
+     * @param outDim Layer output dimension.
+     * @param activation ActivationFunction function for layer.
+     * @param weightInitializer Initializer to use for setting initial random values of weights.
+     * @param biasInitializer Initializer to use for setting initial random values of the bias.
+     */
+    public Dense(int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {
+        if(outDim<=0) {
+            throw new IllegalArgumentException("Expecting output dimension of layer to be positive but got " + outDim);
+        }
+
+        this.weightInitializer = weightInitializer;
+        this.biasInitializer = biasInitializer;
+        this.outDim = outDim;
+        this.activation = activation;
     }
 
 
@@ -72,10 +121,72 @@ public class Dense implements Layer {
         this.activation = activation;
         this.paramCount = inDim*outDim+outDim;
 
+        this.weightInitializer = new RandomNormal(std);
+
         this.values = new Vector(this.outDim);
 
-        this.weights = Initializers.randn(this.outDim, this.inDim, this.std); // Initialize weights.
-        this.bias = new Matrix(this.outDim, 1); // Initialize bias terms to zero.
+        initLayer(); // Initialize weights and bias
+    }
+
+
+    /**
+     * Constructs a dense layer for a neural network.
+     *
+     * @param inDim Layer input dimension.
+     * @param outDim Layer output dimension.
+     * @param activation ActivationFunction function for layer.
+     * @param weightInitializer Initializer to use for setting initial random values of weights.
+     */
+    public Dense(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer) {
+        if(outDim<=0) {
+            throw new IllegalArgumentException("Expecting outDim to be positive but got " + outDim);
+        }
+        if(inDim<=0) {
+            throw new IllegalArgumentException("Expecting inDim to be positive but got " + inDim);
+        }
+
+        this.inDim = inDim;
+        this.outDim = outDim;
+        this.activation = activation;
+        this.paramCount = inDim*outDim+outDim;
+
+        this.weightInitializer = weightInitializer;
+        this.biasInitializer = new Zeros();
+
+        this.values = new Vector(this.outDim);
+
+        initLayer(); // Initialize weights and bias
+    }
+
+
+    /**
+     * Constructs a dense layer for a neural network.
+     *
+     * @param inDim Layer input dimension.
+     * @param outDim Layer output dimension.
+     * @param activation ActivationFunction function for layer.
+     * @param weightInitializer Initializer to use for setting initial random values of weights.
+     * @param biasInitializer Initializer to use for setting initial random values of the bias.
+     */
+    public Dense(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {
+        if(outDim<=0) {
+            throw new IllegalArgumentException("Expecting outDim to be positive but got " + outDim);
+        }
+        if(inDim<=0) {
+            throw new IllegalArgumentException("Expecting inDim to be positive but got " + inDim);
+        }
+
+        this.inDim = inDim;
+        this.outDim = outDim;
+        this.activation = activation;
+        this.paramCount = inDim*outDim+outDim;
+
+        this.weightInitializer = weightInitializer;
+        this.biasInitializer = new Zeros();
+
+        this.values = new Vector(this.outDim);
+
+        initLayer(); // Initialize weights and bias
     }
 
 
@@ -91,7 +202,6 @@ public class Dense implements Layer {
     }
 
 
-    // Computes backward pass of the layer.
     /**
      * {@inheritDoc}
      * @param previousVals Values of the previous layer in the network (or input values for first layer).
@@ -146,7 +256,7 @@ public class Dense implements Layer {
     @Override
     public void updateInDim(int inDim) {
         this.inDim = inDim;
-        this.weights = Initializers.randn(this.outDim, this.inDim, std); // Initialize weights
+        initLayer(); // Initialize weights
         this.paramCount = inDim*outDim + outDim;
     }
 
@@ -185,6 +295,16 @@ public class Dense implements Layer {
     public Matrix getBias() {
         return bias;
     }
+
+
+    /**
+     * Initializes the weights and bias for this layer.
+     */
+    private void initLayer() {
+        this.weights = weightInitializer.init(this.outDim, this.inDim); // Initialize weights
+        this.bias = this.biasInitializer.init(this.outDim, 1); // Initialize bias terms.
+    }
+
 
     /**
      * Gets the details of this layer as a String.
@@ -227,5 +347,14 @@ public class Dense implements Layer {
     @Override
     public ActivationFunction getActivation() {
         return this.activation;
+    }
+
+
+    /**
+     * Gets type of this layer.
+     * @return A string representing the type of this layer.
+     */
+    public String toString() {
+        return this.LAYER_TYPE;
     }
 }
