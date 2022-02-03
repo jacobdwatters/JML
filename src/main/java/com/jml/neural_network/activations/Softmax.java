@@ -37,8 +37,10 @@ public class Softmax implements ActivationFunction {
             sum += Math.exp(data.getAsDouble(i, 0) - max);
         }
 
-        for(int i=0; i<data.numRows(); i++) { // Compute each entry for the resulting vector.
-            result[i] = Math.exp(data.getAsDouble(i, 0) - max) / sum;
+        if(sum!=0) {
+            for(int i=0; i<data.numRows(); i++) { // Compute each entry for the resulting vector.
+                result[i] = Math.exp(data.getAsDouble(i, 0) - max) / sum;
+            }
         }
 
         this.forwardOut = new Vector(result);

@@ -37,13 +37,15 @@ import linalg.Vector;
 <span class="nc" id="L37">            sum += Math.exp(data.getAsDouble(i, 0) - max);</span>
         }
 
-<span class="nc bnc" id="L40" title="All 2 branches missed.">        for(int i=0; i&lt;data.numRows(); i++) { // Compute each entry for the resulting vector.</span>
-<span class="nc" id="L41">            result[i] = Math.exp(data.getAsDouble(i, 0) - max) / sum;</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if(sum!=0) {</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">            for(int i=0; i&lt;data.numRows(); i++) { // Compute each entry for the resulting vector.</span>
+<span class="nc" id="L42">                result[i] = Math.exp(data.getAsDouble(i, 0) - max) / sum;</span>
+            }
         }
 
-<span class="nc" id="L44">        this.forwardOut = new Vector(result);</span>
+<span class="nc" id="L46">        this.forwardOut = new Vector(result);</span>
 
-<span class="nc" id="L46">        return this.forwardOut; // Return Softmax activation result as a column vector.</span>
+<span class="nc" id="L48">        return this.forwardOut; // Return Softmax activation result as a column vector.</span>
     }
 
     /**
@@ -55,22 +57,22 @@ import linalg.Vector;
     @Override
     public Matrix back(Matrix data) {
         // TODO: Ensure this is correct.
-<span class="nc" id="L58">        Matrix softmax = this.forwardOut.copy().T();</span>
-<span class="nc" id="L59">        Matrix grad = data.copy().T();</span>
-<span class="nc" id="L60">        Matrix diag = toDiag(softmax.getValuesAsDouble()[0]);</span>
-<span class="nc" id="L61">        Matrix dSoftmax = diag.sub(softmax.T().mult(softmax));</span>
+<span class="nc" id="L60">        Matrix softmax = this.forwardOut.copy().T();</span>
+<span class="nc" id="L61">        Matrix grad = data.copy().T();</span>
+<span class="nc" id="L62">        Matrix diag = toDiag(softmax.getValuesAsDouble()[0]);</span>
+<span class="nc" id="L63">        Matrix dSoftmax = diag.sub(softmax.T().mult(softmax));</span>
 
-<span class="nc" id="L63">        return grad.mult(dSoftmax).flatten(1);</span>
+<span class="nc" id="L65">        return grad.mult(dSoftmax).flatten(1);</span>
     }
 
     private Matrix toDiag(double[] values) {
-<span class="nc" id="L67">        double[][] result = new double[values.length][values.length];</span>
+<span class="nc" id="L69">        double[][] result = new double[values.length][values.length];</span>
 
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        for(int i = 0; i&lt;values.length; i++) {</span>
-<span class="nc" id="L70">            result[i][i] = values[i];</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        for(int i = 0; i&lt;values.length; i++) {</span>
+<span class="nc" id="L72">            result[i][i] = values[i];</span>
         }
 
-<span class="nc" id="L73">        return new Matrix(result);</span>
+<span class="nc" id="L75">        return new Matrix(result);</span>
     }
 
     /**
@@ -80,7 +82,7 @@ import linalg.Vector;
      */
     @Override
     public String getName() {
-<span class="nc" id="L83">        return this.NAME;</span>
+<span class="nc" id="L85">        return this.NAME;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
