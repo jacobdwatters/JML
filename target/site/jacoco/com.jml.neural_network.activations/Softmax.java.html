@@ -54,7 +54,7 @@ import linalg.Vector;
      */
     @Override
     public Matrix back(Matrix data) {
-
+        // TODO: Ensure this is correct.
 <span class="nc" id="L58">        Matrix softmax = this.forwardOut.copy().T();</span>
 <span class="nc" id="L59">        Matrix grad = data.copy().T();</span>
 <span class="nc" id="L60">        Matrix diag = toDiag(softmax.getValuesAsDouble()[0]);</span>

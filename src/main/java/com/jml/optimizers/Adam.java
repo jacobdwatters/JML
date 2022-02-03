@@ -28,7 +28,7 @@ import linalg.Matrix;
  */
 public class Adam extends Optimizer {
 
-    final static double eps = 1E-7;
+    final static double eps = 1E-8;
     double beta1, beta2;
     double t; // Time step
     double alpha;
@@ -80,23 +80,35 @@ public class Adam extends Optimizer {
             throw new IllegalArgumentException("Step method for " + OPTIM_NAME +
                     " expecting 4 matrices but got " + params.length);
         }
+        if(increaseTime) {
+            t++;
+        }
 
         Matrix w = params[0];
         Matrix wGrad = params[1];
         Matrix v = params[2];
         Matrix m = params[3];
 
-        if(increaseTime) {
-            t++;
-        }
-
         m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));
         v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));
 
         alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));
-        w = w.sub(m.scalMult(learningRate).elemDiv(v.sqrt().add(eps)));
+        w = w.sub(m.scalMult(learningRate).elemDiv(sqrt(v).add(eps)));
 
         return new Matrix[]{w, v, m};
+    }
+
+
+    private Matrix sqrt(Matrix A){
+        double[][] result = A.getValuesAsDouble();
+
+        for(int i=0; i<result.length; i++) {
+            for(int j=0; j< result[0].length; j++) {
+                result[i][j] = Math.sqrt(result[i][j]);
+            }
+        }
+
+        return new Matrix(result);
     }
 
 

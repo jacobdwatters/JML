@@ -28,7 +28,7 @@ import linalg.Matrix;
  */
 public class Adam extends Optimizer {
 
-    final static double eps = 1E-7;
+    final static double eps = 1E-8;
     double beta1, beta2;
     double t; // Time step
     double alpha;
@@ -80,23 +80,35 @@ public class Adam extends Optimizer {
 <span class="nc" id="L80">            throw new IllegalArgumentException(&quot;Step method for &quot; + OPTIM_NAME +</span>
                     &quot; expecting 4 matrices but got &quot; + params.length);
         }
-
-<span class="nc" id="L84">        Matrix w = params[0];</span>
-<span class="nc" id="L85">        Matrix wGrad = params[1];</span>
-<span class="nc" id="L86">        Matrix v = params[2];</span>
-<span class="nc" id="L87">        Matrix m = params[3];</span>
-
-<span class="nc bnc" id="L89" title="All 2 branches missed.">        if(increaseTime) {</span>
-<span class="nc" id="L90">            t++;</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if(increaseTime) {</span>
+<span class="nc" id="L84">            t++;</span>
         }
 
-<span class="nc" id="L93">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
-<span class="nc" id="L94">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
+<span class="nc" id="L87">        Matrix w = params[0];</span>
+<span class="nc" id="L88">        Matrix wGrad = params[1];</span>
+<span class="nc" id="L89">        Matrix v = params[2];</span>
+<span class="nc" id="L90">        Matrix m = params[3];</span>
 
-<span class="nc" id="L96">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
-<span class="nc" id="L97">        w = w.sub(m.scalMult(learningRate).elemDiv(v.sqrt().add(eps)));</span>
+<span class="nc" id="L92">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
+<span class="nc" id="L93">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
 
-<span class="nc" id="L99">        return new Matrix[]{w, v, m};</span>
+<span class="nc" id="L95">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
+<span class="nc" id="L96">        w = w.sub(m.scalMult(learningRate).elemDiv(sqrt(v).add(eps)));</span>
+
+<span class="nc" id="L98">        return new Matrix[]{w, v, m};</span>
+    }
+
+
+    private Matrix sqrt(Matrix A){
+<span class="nc" id="L103">        double[][] result = A.getValuesAsDouble();</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for(int i=0; i&lt;result.length; i++) {</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            for(int j=0; j&lt; result[0].length; j++) {</span>
+<span class="nc" id="L107">                result[i][j] = Math.sqrt(result[i][j]);</span>
+            }
+        }
+
+<span class="nc" id="L111">        return new Matrix(result);</span>
     }
 
 
@@ -108,7 +120,7 @@ public class Adam extends Optimizer {
     @Override
     public String getDetails() {
         // TODO:
-<span class="nc" id="L111">        return null;</span>
+<span class="nc" id="L123">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

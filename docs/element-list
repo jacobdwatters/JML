@@ -5,6 +5,7 @@ com.jml.losses
 com.jml.neural_network
 com.jml.neural_network.activations
 com.jml.neural_network.layers
+com.jml.neural_network.layers.initilizers
 com.jml.optimizers
 com.jml.preprocessing
 com.jml.util

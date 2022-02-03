@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HeUniform.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.layers.initilizers</a> &gt; <span class="el_source">HeUniform.java</span></div><h1>HeUniform.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.layers.initilizers;
+
+import linalg.Matrix;
+
+import java.util.Random;
+
+
+/**
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce random values from a clipped uniform distribution in [-lim, lim] where
+ * lim = sqrt(6 / fanIn), fanIn is the input dimension for the layer.
+ */
+public class HeUniform implements Initializer {
+    private Random r;
+    private double lim;
+
+
+    /**
+     * Creates a HeUniform initializer.
+     */
+<span class="nc" id="L20">    public HeUniform() {</span>
+<span class="nc" id="L21">        r = new Random();</span>
+<span class="nc" id="L22">    }</span>
+
+
+    /**
+     * Creates a HeUniform initializer.
+     * @param seed Seed for random number generator.
+     */
+<span class="nc" id="L29">    public HeUniform(long seed) {</span>
+<span class="nc" id="L30">        r = new Random(seed);</span>
+<span class="nc" id="L31">    }</span>
+
+
+    /**
+     * Initializes values of a weight/bias matrix as specified by this initializer.
+     *
+     * @param m Number of rows in the matrix.
+     * @param n Number of columns in the matrix.
+     * @return A {@link Matrix} initialized with values from the distribution specified by this initializer.
+     */
+    @Override
+    public Matrix init(int m, int n) {
+<span class="nc" id="L43">        double[][] random = new double[m][n];</span>
+<span class="nc" id="L44">        double lim = Math.sqrt(6.0/n);</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="nc" id="L48">                random[i][j] = (-lim) + r.nextDouble() * (2*lim);;</span>
+            }
+        }
+
+<span class="nc" id="L52">        return new Matrix(random);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
