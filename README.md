@@ -34,6 +34,7 @@ for this library as well.
 >    - perceptrons
 >  - <b>Neural networks</b>
 >    - Layers
+>      - Linear
 >      - Dense
 >      - Dropout
 >    - Activation functions
@@ -48,7 +49,8 @@ for this library as well.
 >- <b>Optimizers</b>
 >     - Gradient descent
 >     - Momentum
->     - Add learning rate schedulers to optimizer
+>     - Adam
+>- <b>Add learning rate schedulers to optimizer</b>
 >- <b>Use trained models to make predictions on new data</b>
 >- <b>Save and reuse trained models</b>
 >     - Save a trained model to a file for later use
