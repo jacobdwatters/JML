@@ -10,18 +10,18 @@ public class Constant implements Initializer {
     /**
      * Creates a Constant Initializer with value 1. This is equivalent to the {@link Ones} Initializer.
      */
-<span class="nc" id="L13">    public Constant() {</span>
-<span class="nc" id="L14">        value = 0;</span>
-<span class="nc" id="L15">    }</span>
+<span class="fc" id="L13">    public Constant() {</span>
+<span class="fc" id="L14">        value = 1;</span>
+<span class="fc" id="L15">    }</span>
 
 
     /**
      * Creates a Constant Initializer with specified value.
      * @param value Constant to fill matrix with.
      */
-<span class="nc" id="L22">    public Constant(double value) {</span>
-<span class="nc" id="L23">        this.value = value;</span>
-<span class="nc" id="L24">    }</span>
+<span class="fc" id="L22">    public Constant(double value) {</span>
+<span class="fc" id="L23">        this.value = value;</span>
+<span class="fc" id="L24">    }</span>
 
 
     /**
@@ -33,7 +33,7 @@ public class Constant implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L36">        return new Matrix(m, n, value);</span>
+<span class="fc" id="L36">        return new Matrix(m, n, value);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

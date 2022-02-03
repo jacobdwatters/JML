@@ -17,9 +17,9 @@ public class HeUniform implements Initializer {
     /**
      * Creates a HeUniform initializer.
      */
-<span class="nc" id="L20">    public HeUniform() {</span>
-<span class="nc" id="L21">        r = new Random();</span>
-<span class="nc" id="L22">    }</span>
+<span class="fc" id="L20">    public HeUniform() {</span>
+<span class="fc" id="L21">        r = new Random();</span>
+<span class="fc" id="L22">    }</span>
 
 
     /**
@@ -40,16 +40,16 @@ public class HeUniform implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L43">        double[][] random = new double[m][n];</span>
-<span class="nc" id="L44">        double lim = Math.sqrt(6.0/n);</span>
+<span class="fc" id="L43">        double[][] random = new double[m][n];</span>
+<span class="fc" id="L44">        double lim = Math.sqrt(2.0/n);</span>
 
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        for(int i=0; i&lt;m; i++) {</span>
-<span class="nc bnc" id="L47" title="All 2 branches missed.">            for(int j=0; j&lt;n; j++) {</span>
-<span class="nc" id="L48">                random[i][j] = (-lim) + r.nextDouble() * (2*lim);;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="fc" id="L48">                random[i][j] = (-lim) + r.nextDouble()*(2*lim);</span>
             }
         }
 
-<span class="nc" id="L52">        return new Matrix(random);</span>
+<span class="fc" id="L52">        return new Matrix(random);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

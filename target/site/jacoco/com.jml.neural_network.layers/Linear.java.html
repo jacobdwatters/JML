@@ -16,7 +16,7 @@ import linalg.Matrix;
  * - The default biasInitializer is the {@link Zeros} initializer.
  */
 public class Linear implements TrainableLayer {
-<span class="nc" id="L19">    public final String LAYER_TYPE = &quot;Linear&quot;;</span>
+<span class="pc" id="L19">    public final String LAYER_TYPE = &quot;Linear&quot;;</span>
 
     protected int inDim, outDim;
 
@@ -39,15 +39,15 @@ public class Linear implements TrainableLayer {
      * @param inDim Input dimension for this layer. (i.e. the number of nodes in the previous layer)
      * @param outDim Output dimension for this layer. (i.e. the number of nodes in this layer.)
      */
-<span class="nc" id="L42">    public Linear(int inDim, int outDim) {</span>
-<span class="nc" id="L43">        this.inDim = inDim;</span>
-<span class="nc" id="L44">        this.outDim = outDim;</span>
+<span class="fc" id="L42">    public Linear(int inDim, int outDim) {</span>
+<span class="fc" id="L43">        this.inDim = inDim;</span>
+<span class="fc" id="L44">        this.outDim = outDim;</span>
 
-<span class="nc" id="L46">        this.weightInitializer = new GlorotNormal();</span>
-<span class="nc" id="L47">        this.biasInitializer = new Zeros();</span>
+<span class="fc" id="L46">        this.weightInitializer = new GlorotNormal();</span>
+<span class="fc" id="L47">        this.biasInitializer = new Zeros();</span>
 
-<span class="nc" id="L49">        initLayer(); // Initialize bias and weights</span>
-<span class="nc" id="L50">    }</span>
+<span class="fc" id="L49">        initLayer(); // Initialize bias and weights</span>
+<span class="fc" id="L50">    }</span>
 
 
     /**
@@ -92,13 +92,13 @@ public class Linear implements TrainableLayer {
      * layer use {@link #Linear(int, int)}.
      * @param outDim Output dimension for this layer (i.e. the number of nodes in this layer).
      */
-<span class="nc" id="L95">    public Linear(int outDim) {</span>
-<span class="nc" id="L96">        this.inDim = -1;</span>
-<span class="nc" id="L97">        this.outDim = outDim;</span>
+<span class="fc" id="L95">    public Linear(int outDim) {</span>
+<span class="fc" id="L96">        this.inDim = -1;</span>
+<span class="fc" id="L97">        this.outDim = outDim;</span>
 
-<span class="nc" id="L99">        this.weightInitializer = new GlorotNormal();</span>
-<span class="nc" id="L100">        this.biasInitializer = new Zeros();</span>
-<span class="nc" id="L101">    }</span>
+<span class="fc" id="L99">        this.weightInitializer = new GlorotNormal();</span>
+<span class="fc" id="L100">        this.biasInitializer = new Zeros();</span>
+<span class="fc" id="L101">    }</span>
 
 
     /**
@@ -144,10 +144,10 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public Matrix forward(Matrix input) {
-<span class="nc" id="L147">        forwardIn = input;</span>
-<span class="nc" id="L148">        forwardOut = weights.mult(input);</span>
+<span class="fc" id="L147">        forwardIn = input;</span>
+<span class="fc" id="L148">        forwardOut = weights.mult(input);</span>
 
-<span class="nc" id="L150">        return forwardOut;</span>
+<span class="fc" id="L150">        return forwardOut;</span>
     }
 
 
@@ -160,12 +160,12 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public Matrix back(Matrix upstreamGrad) {
-<span class="nc" id="L163">        this.wGrad = upstreamGrad.T().mult(this.forwardIn.T());</span>
-<span class="nc" id="L164">        this.bGrad = upstreamGrad.T();</span>
+<span class="fc" id="L163">        this.wGrad = upstreamGrad.T().mult(this.forwardIn.T());</span>
+<span class="fc" id="L164">        this.bGrad = upstreamGrad.T();</span>
 
-<span class="nc" id="L166">        this.backwardOut = upstreamGrad.mult(weights); // Gradient of model with respect to inputs of this layer.</span>
+<span class="fc" id="L166">        this.backwardOut = upstreamGrad.mult(weights); // Gradient of model with respect to inputs of this layer.</span>
 
-<span class="nc" id="L168">        return backwardOut;</span>
+<span class="fc" id="L168">        return backwardOut;</span>
     }
 
 
@@ -174,9 +174,9 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public void resetGradients() {
-<span class="nc" id="L177">        this.wGrad = new Matrix(this.outDim, this.inDim); // Reset weight updates to 0.</span>
-<span class="nc" id="L178">        this.bGrad = new Matrix(this.outDim, 1); // Reset bias updates to 0.</span>
-<span class="nc" id="L179">    }</span>
+<span class="fc" id="L177">        this.wGrad = new Matrix(this.outDim, this.inDim); // Reset weight updates to 0.</span>
+<span class="fc" id="L178">        this.bGrad = new Matrix(this.outDim, 1); // Reset bias updates to 0.</span>
+<span class="fc" id="L179">    }</span>
 
 
     /**
@@ -186,7 +186,7 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public int getInDim() {
-<span class="nc" id="L189">        return this.inDim;</span>
+<span class="fc" id="L189">        return this.inDim;</span>
     }
 
 
@@ -197,7 +197,7 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public int getOutDim() {
-<span class="nc" id="L200">        return this.outDim;</span>
+<span class="fc" id="L200">        return this.outDim;</span>
     }
 
 
@@ -207,9 +207,9 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public void updateInDim(int newInDim) {
-<span class="nc" id="L210">        this.inDim = newInDim;</span>
-<span class="nc" id="L211">        initLayer(); // Initialize weights and bias</span>
-<span class="nc" id="L212">    }</span>
+<span class="fc" id="L210">        this.inDim = newInDim;</span>
+<span class="fc" id="L211">        initLayer(); // Initialize weights and bias</span>
+<span class="fc" id="L212">    }</span>
 
 
     /**
@@ -219,7 +219,7 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public Matrix[] getParams() {
-<span class="nc" id="L222">        return new Matrix[]{weights, bias};</span>
+<span class="fc" id="L222">        return new Matrix[]{weights, bias};</span>
     }
 
 
@@ -229,7 +229,7 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public Matrix[] getUpdates() {
-<span class="nc" id="L232">        return new Matrix[]{wGrad, bGrad};</span>
+<span class="fc" id="L232">        return new Matrix[]{wGrad, bGrad};</span>
     }
 
 
@@ -240,22 +240,22 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public void setParams(Matrix... params) {
-<span class="nc bnc" id="L243" title="All 2 branches missed.">        if(params.length!=2) {</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if(params.length!=2) {</span>
 <span class="nc" id="L244">            throw new IllegalArgumentException(&quot;Expecting 2 parameter matrices for Linear layer of form {Weights, bias} but &quot; +</span>
                     &quot;got &quot; + params.length + &quot;.&quot;);
         }
-<span class="nc bnc" id="L247" title="All 2 branches missed.">        if(!params[0].sameShape(weights)) {</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if(!params[0].sameShape(weights)) {</span>
 <span class="nc" id="L248">            throw new IllegalArgumentException(&quot;First parameter matrix does not have same shape as weight matrix. Expecting &quot;</span>
 <span class="nc" id="L249">            + weights.shape() + &quot; but got &quot; + params[0].shape() + &quot;.&quot;);</span>
         }
-<span class="nc bnc" id="L251" title="All 2 branches missed.">        if(!params[1].sameShape(bias)) {</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">        if(!params[1].sameShape(bias)) {</span>
 <span class="nc" id="L252">            throw new IllegalArgumentException(&quot;Second parameter matrix does not have same shape as bias matrix. Expecting &quot;</span>
 <span class="nc" id="L253">                    + bias.shape() + &quot; but got &quot; + params[1].shape() + &quot;.&quot;);</span>
         }
 
-<span class="nc" id="L256">        this.weights = params[0];</span>
-<span class="nc" id="L257">        this.bias = params[1];</span>
-<span class="nc" id="L258">    }</span>
+<span class="fc" id="L256">        this.weights = params[0];</span>
+<span class="fc" id="L257">        this.bias = params[1];</span>
+<span class="fc" id="L258">    }</span>
 
 
     /**
@@ -264,9 +264,9 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public String inspect() {
-<span class="nc" id="L267">        StringBuilder details = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
+<span class="fc" id="L267">        StringBuilder details = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
                 + inDim + &quot;,\tOutput size: &quot; + outDim + &quot;, \tTrainable Parameters: &quot; + (inDim*outDim + outDim));
-<span class="nc" id="L269">        return details.toString();</span>
+<span class="fc" id="L269">        return details.toString();</span>
     }
 
 
@@ -274,10 +274,10 @@ public class Linear implements TrainableLayer {
      * Initializes the weights for this layer.
      */
     private void initLayer() {
-<span class="nc" id="L277">        this.weights = weightInitializer.init(this.outDim, this.inDim); // Initialize weight values.</span>
-<span class="nc" id="L278">        this.bias = biasInitializer.init(this.outDim, 1); // Initialize bias values.</span>
-<span class="nc" id="L279">        resetGradients(); // Set weight and bias updates to 0.</span>
-<span class="nc" id="L280">    }</span>
+<span class="fc" id="L277">        this.weights = weightInitializer.init(this.outDim, this.inDim); // Initialize weight values.</span>
+<span class="fc" id="L278">        this.bias = biasInitializer.init(this.outDim, 1); // Initialize bias values.</span>
+<span class="fc" id="L279">        resetGradients(); // Set weight and bias updates to 0.</span>
+<span class="fc" id="L280">    }</span>
 
 
     /**
@@ -288,18 +288,18 @@ public class Linear implements TrainableLayer {
     @Override
     public String getDetails() {
         // TODO: add optimizer block
-<span class="nc" id="L291">        StringBuilder details = new StringBuilder();</span>
+<span class="fc" id="L291">        StringBuilder details = new StringBuilder();</span>
 
         // Create all the blocks for this layer.
-<span class="nc" id="L294">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
-<span class="nc" id="L295">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.outDim);</span>
-<span class="nc" id="L296">        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
-<span class="nc" id="L297">        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
+<span class="fc" id="L294">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
+<span class="fc" id="L295">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.outDim);</span>
+<span class="fc" id="L296">        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
+<span class="fc" id="L297">        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
 
         // Combine all blocks into a single string.
-<span class="nc" id="L300">        details.append(Block.buildFileContent(layerBlock, dimBlock, weightBlock, biasBlock));</span>
+<span class="fc" id="L300">        details.append(Block.buildFileContent(layerBlock, dimBlock, weightBlock, biasBlock));</span>
 
-<span class="nc" id="L302">        return details.toString();</span>
+<span class="fc" id="L302">        return details.toString();</span>
     }
 
 

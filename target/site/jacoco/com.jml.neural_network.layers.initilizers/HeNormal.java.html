@@ -15,9 +15,9 @@ public class HeNormal implements Initializer {
     /**
      * Creates a HeNormal initializer.
      */
-<span class="nc" id="L18">    public HeNormal() {</span>
-<span class="nc" id="L19">        r = new Random();</span>
-<span class="nc" id="L20">    }</span>
+<span class="fc" id="L18">    public HeNormal() {</span>
+<span class="fc" id="L19">        r = new Random();</span>
+<span class="fc" id="L20">    }</span>
 
 
     /**
@@ -38,16 +38,16 @@ public class HeNormal implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L41">        double[][] random = new double[m][n];</span>
-<span class="nc" id="L42">        double std = Math.sqrt(2.0/n);</span>
+<span class="fc" id="L41">        double[][] random = new double[m][n];</span>
+<span class="fc" id="L42">        double std = Math.sqrt(2.0/n);</span>
 
-<span class="nc bnc" id="L44" title="All 2 branches missed.">        for(int i=0; i&lt;m; i++) {</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">            for(int j=0; j&lt;n; j++) {</span>
-<span class="nc" id="L46">                random[i][j] = r.nextGaussian()*std;</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="fc" id="L46">                random[i][j] = r.nextGaussian()*std;</span>
             }
         }
 
-<span class="nc" id="L50">        return new Matrix(random);</span>
+<span class="fc" id="L50">        return new Matrix(random);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

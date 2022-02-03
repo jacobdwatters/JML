@@ -155,13 +155,13 @@ import java.util.*;
         }
 
         // Create the layer
-<span class="pc bpc" id="L158" title="1 of 2 branches missed.">        if(type.equals(&quot;Dense&quot;)) {</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if(type.equals(&quot;Dense&quot;)) {</span>
 <span class="fc" id="L159">            layer = new Dense(inDim, outDim, activation);</span>
 <span class="fc" id="L160">            layer.setParams(weights, bias);</span>
 
-<span class="nc bnc" id="L162" title="All 2 branches missed.">        } else if(type.equals(&quot;Linear&quot;)) {</span>
-<span class="nc" id="L163">            layer = new Linear(inDim, outDim);</span>
-<span class="nc" id="L164">            layer.setParams(weights, bias);</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        } else if(type.equals(&quot;Linear&quot;)) {</span>
+<span class="fc" id="L163">            layer = new Linear(inDim, outDim);</span>
+<span class="fc" id="L164">            layer.setParams(weights, bias);</span>
 
         } else {
 <span class="nc" id="L167">            throw new IllegalStateException(&quot;Unrecognized layer (&quot; + type + &quot;) encountered for neural network.&quot;);</span>

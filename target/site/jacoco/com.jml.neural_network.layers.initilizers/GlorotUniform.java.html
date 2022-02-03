@@ -16,9 +16,9 @@ public class GlorotUniform implements Initializer {
     /**
      * Creates a GlorotNormal initializer with specified seed.
      */
-<span class="nc" id="L19">    public GlorotUniform() {</span>
-<span class="nc" id="L20">        r = new Random();</span>
-<span class="nc" id="L21">    }</span>
+<span class="fc" id="L19">    public GlorotUniform() {</span>
+<span class="fc" id="L20">        r = new Random();</span>
+<span class="fc" id="L21">    }</span>
 
 
     /**
@@ -39,16 +39,16 @@ public class GlorotUniform implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L42">        double[][] random = new double[m][n];</span>
-<span class="nc" id="L43">        double lim = Math.sqrt(6.0/(m+n));</span>
+<span class="fc" id="L42">        double[][] random = new double[m][n];</span>
+<span class="fc" id="L43">        double lim = Math.sqrt(6.0/(m+n));</span>
 
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        for(int i=0; i&lt;m; i++) {</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">            for(int j=0; j&lt;n; j++) {</span>
-<span class="nc" id="L47">                random[i][j] = (-lim) + r.nextDouble() * (2*lim);;</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="fc" id="L47">                random[i][j] = (-lim) + r.nextDouble()*(2*lim);</span>
             }
         }
 
-<span class="nc" id="L51">        return new Matrix(random);</span>
+<span class="fc" id="L51">        return new Matrix(random);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

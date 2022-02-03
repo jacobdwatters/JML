@@ -10,18 +10,18 @@ import java.util.Random;
  */
 public class RandomUniform implements Initializer {
     private Random r;
-<span class="nc" id="L13">    private double min = 0;</span>
-<span class="nc" id="L14">    private double max = 1;</span>
+<span class="pc" id="L13">    protected double min = 0;</span>
+<span class="pc" id="L14">    protected double max = 1;</span>
 
 
     /**
      * Creates a RandomUniform Initializer within [0, 1].
      */
-<span class="nc" id="L20">    public RandomUniform() {</span>
-<span class="nc" id="L21">        this.min = 0;</span>
-<span class="nc" id="L22">        this.max = 1;</span>
-<span class="nc" id="L23">        this.r = new Random();</span>
-<span class="nc" id="L24">    }</span>
+<span class="fc" id="L20">    public RandomUniform() {</span>
+<span class="fc" id="L21">        this.min = 0;</span>
+<span class="fc" id="L22">        this.max = 1;</span>
+<span class="fc" id="L23">        this.r = new Random();</span>
+<span class="fc" id="L24">    }</span>
 
 
     /**
@@ -29,11 +29,11 @@ public class RandomUniform implements Initializer {
      * @param min Lower bound for random uniform distribution.
      * @param max Upper bound for random uniform distribution.
      */
-<span class="nc" id="L32">    public RandomUniform(double min, double max) {</span>
-<span class="nc" id="L33">        this.min = min;</span>
-<span class="nc" id="L34">        this.max = max;</span>
-<span class="nc" id="L35">        r = new Random();</span>
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L32">    public RandomUniform(double min, double max) {</span>
+<span class="fc" id="L33">        this.min = min;</span>
+<span class="fc" id="L34">        this.max = max;</span>
+<span class="fc" id="L35">        r = new Random();</span>
+<span class="fc" id="L36">    }</span>
 
 
     /**
@@ -58,15 +58,15 @@ public class RandomUniform implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L61">        double[][] random = new double[m][n];</span>
+<span class="fc" id="L61">        double[][] random = new double[m][n];</span>
 
-<span class="nc bnc" id="L63" title="All 2 branches missed.">        for(int i=0; i&lt;m; i++) {</span>
-<span class="nc bnc" id="L64" title="All 2 branches missed.">            for(int j=0; j&lt;n; j++) {</span>
-<span class="nc" id="L65">                random[i][j] = min + r.nextDouble() * (max - min);;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="fc" id="L65">                random[i][j] = min + r.nextDouble() * (max - min);;</span>
             }
         }
 
-<span class="nc" id="L69">        return new Matrix(random);</span>
+<span class="fc" id="L69">        return new Matrix(random);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
