@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Zeros.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.layers.initilizers</a> &gt; <span class="el_source">Zeros.java</span></div><h1>Zeros.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.layers.initilizers;
 
-import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
 
 
 /**
- * {@link Layer} parameter initializer to produce zeros.
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce zeros.
  */
 public class Zeros implements Initializer {
 
     /**
      * Creates a Zeros initializer.
      */
-<span class="nc" id="L15">    public Zeros() {/*Does nothing*/}</span>
+<span class="fc" id="L14">    public Zeros() {/*Does nothing*/}</span>
 
     /**
      * Initialized values of a weight/bias matrix.
@@ -23,7 +22,7 @@ public class Zeros implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L26">        return new Matrix(m, n);</span>
+<span class="fc" id="L25">        return new Matrix(m, n);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

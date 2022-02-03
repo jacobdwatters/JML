@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Constant.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.layers.initilizers</a> &gt; <span class="el_source">Constant.java</span></div><h1>Constant.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.layers.initilizers;
-import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
 
 /**
- * {@link Layer} parameter initializer to produce a constant value.
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce a constant value.
  */
 public class Constant implements Initializer {
     private double value;
@@ -11,18 +10,18 @@ public class Constant implements Initializer {
     /**
      * Creates a Constant Initializer with value 1. This is equivalent to the {@link Ones} Initializer.
      */
-<span class="nc" id="L14">    public Constant() {</span>
-<span class="nc" id="L15">        value = 0;</span>
-<span class="nc" id="L16">    }</span>
+<span class="nc" id="L13">    public Constant() {</span>
+<span class="nc" id="L14">        value = 0;</span>
+<span class="nc" id="L15">    }</span>
 
 
     /**
      * Creates a Constant Initializer with specified value.
      * @param value Constant to fill matrix with.
      */
-<span class="nc" id="L23">    public Constant(double value) {</span>
-<span class="nc" id="L24">        this.value = value;</span>
-<span class="nc" id="L25">    }</span>
+<span class="nc" id="L22">    public Constant(double value) {</span>
+<span class="nc" id="L23">        this.value = value;</span>
+<span class="nc" id="L24">    }</span>
 
 
     /**
@@ -34,7 +33,7 @@ public class Constant implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L37">        return new Matrix(m, n, value);</span>
+<span class="nc" id="L36">        return new Matrix(m, n, value);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

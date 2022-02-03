@@ -1,18 +1,18 @@
 package com.jml.neural_network.layers.initilizers;
 
-import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
 
 import java.util.Random;
 
 
 /**
- * {@link Layer} parameter initializer to produce random values from a uniform distribution.
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce random values from a uniform distribution.
  */
 public class RandomUniform implements Initializer {
     private Random r;
     private double min = 0;
     private double max = 1;
+
 
     /**
      * Creates a RandomUniform Initializer within [0, 1].

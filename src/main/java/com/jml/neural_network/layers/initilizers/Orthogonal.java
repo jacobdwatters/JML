@@ -1,10 +1,9 @@
 package com.jml.neural_network.layers.initilizers;
 
-import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
 
 /**
- * {@link Layer} parameter initializer to produce random orthogonal matrix.
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce random orthogonal matrix.
  */
 public class Orthogonal implements Initializer {
 

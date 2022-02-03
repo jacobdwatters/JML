@@ -5,13 +5,15 @@ import linalg.Matrix;
 
 /**
  * Interface for bias/weight initialization.
- * Available Initializer:
+ * Built-in Initializers:
  * <pre>
  *     - {@link RandomNormal}
  *     - {@link RandomUniform}
  *     - {@link Zeros}
  *     - {@link Ones}
  *     - {@link Constant}
+ *     - {@link GlorotNormal}
+ *     - {@link GlorotUniform}
  *     - {@link Orthogonal}</pre>
  */
 public interface Initializer {

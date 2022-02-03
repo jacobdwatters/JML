@@ -1,8 +1,15 @@
+com\jml\neural_network\layers\initilizers\GlorotUniform.class
 com\jml\neural_network\activations\Softmax.class
+com\jml\neural_network\layers\BaseLayer.class
 com\jml\neural_network\layers\initilizers\Constant.class
 com\jml\neural_network\layers\initilizers\Ones.class
+com\jml\neural_network\layers\initilizers\HeUniform.class
 com\jml\neural_network\layers\initilizers\RandomUniform.class
+com\jml\neural_network\layers\initilizers\HeNormal.class
+com\jml\neural_network\layers\Linear.class
+com\jml\neural_network\layers\initilizers\GlorotNormal.class
 com\jml\neural_network\layers\initilizers\RandomNormal.class
 com\jml\neural_network\layers\initilizers\Zeros.class
 com\jml\neural_network\layers\initilizers\Initializer.class
+com\jml\neural_network\layers\TrainableLayer.class
 com\jml\neural_network\layers\initilizers\Orthogonal.class

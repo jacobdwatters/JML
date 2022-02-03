@@ -1,12 +1,11 @@
 package com.jml.neural_network.layers.initilizers;
 
-import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
 import java.util.Random;
 
 
 /**
- * {@link Layer} parameter initializer to produce random values from a normal distribution.
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce random values from a normal distribution.
  */
 public class RandomNormal implements Initializer {
 

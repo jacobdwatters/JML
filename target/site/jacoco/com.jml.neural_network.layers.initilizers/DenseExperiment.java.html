@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DenseExperiment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.layers.initilizers</a> &gt; <span class="el_source">DenseExperiment.java</span></div><h1>DenseExperiment.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.layers.initilizers;
+
+import com.jml.core.Block;
+import com.jml.neural_network.ModelTags;
+import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.neural_network.activations.Softmax;
+import com.jml.util.ArrayUtils;
+import linalg.Matrix;
+
+
+/**
+ * A fully connected layer with an {@link com.jml.neural_network.activations.ActivationFunction activation function}.
+ * For an activation function g(x), this layer applies the transform f(x) = g(Wx+b) for an input vector x.
+ */
+public class DenseExperiment implements TrainableLayer {
+<span class="nc" id="L16">    public final String LAYER_TYPE = &quot;Dense&quot;;</span>
+
+    protected ActivationFunction activation;
+
+    protected int inDim, outDim;
+
+    protected Matrix weights;
+    protected Matrix bias;
+
+    private Initializer weightInitializer;
+    private Initializer biasInitializer;
+
+    private Matrix forwardIn; // Inputs to this layer. i.e. values of previous layers nodes.
+    private Matrix forwardOut; // Output of this layer. i.e. values of this layers' nodes.
+    private Matrix backwardOut; // New Upstream gradient to use for backpropagation computations in previous layer.
+
+    private Matrix wGrad; // Gradient of model with respect to the weights of this layer.
+    private Matrix bGrad; // Gradients of model with respect to the bias terms of this layer.
+
+    /**
+     * Creates a Linear layer with specified input and output dimensions.
+     *
+     * @param inDim  Input dimension for this layer. (i.e. the number of nodes in the previous layer)
+     * @param outDim Output dimension for this layer. (i.e. the number of nodes in this layer.)
+     * @param activation Activation function for this layer.
+     */
+<span class="nc" id="L42">    public DenseExperiment(int inDim, int outDim, ActivationFunction activation) {</span>
+<span class="nc" id="L43">        this.inDim = inDim;</span>
+<span class="nc" id="L44">        this.outDim = outDim;</span>
+
+<span class="nc" id="L46">        this.weightInitializer = new GlorotNormal();</span>
+<span class="nc" id="L47">        this.biasInitializer = new Zeros();</span>
+
+<span class="nc" id="L49">        this.activation = activation;</span>
+<span class="nc" id="L50">        initLayer(); // Initialize bias and weights</span>
+<span class="nc" id="L51">    }</span>
+
+
+    /**
+     * Creates a Linear layer with specified input and output dimensions.
+     *
+     * @param inDim             Input dimension for this layer. (i.e. the number of nodes in the previous layer)
+     * @param outDim            Output dimension for this layer. (i.e. the number of nodes in this layer.)
+     * @param activation Activation function for this layer.
+     * @param weightInitializer Initializer for the weights of this layer.
+     */
+<span class="nc" id="L62">    public DenseExperiment(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer) {</span>
+<span class="nc" id="L63">        this.inDim = inDim;</span>
+<span class="nc" id="L64">        this.outDim = outDim;</span>
+
+<span class="nc" id="L66">        this.weightInitializer = weightInitializer;</span>
+<span class="nc" id="L67">        this.biasInitializer = new Zeros();</span>
+
+<span class="nc" id="L69">        this.activation = activation;</span>
+<span class="nc" id="L70">        initLayer(); // Initialize bias and weights</span>
+<span class="nc" id="L71">    }</span>
+
+
+    /**
+     * Creates a Linear layer with specified input and output dimensions.
+     *
+     * @param inDim             Input dimension for this layer. (i.e. the number of nodes in the previous layer)
+     * @param outDim            Output dimension for this layer. (i.e. the number of nodes in this layer.)
+     * @param activation Activation function for this layer.
+     * @param weightInitializer Initializer for the weights of this layer.
+     * @param biasInitializer   Initializer for the bias terms of this layer.
+     */
+<span class="nc" id="L83">    public DenseExperiment(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {</span>
+<span class="nc" id="L84">        this.inDim = inDim;</span>
+<span class="nc" id="L85">        this.outDim = outDim;</span>
+
+<span class="nc" id="L87">        this.weightInitializer = weightInitializer;</span>
+<span class="nc" id="L88">        this.biasInitializer = biasInitializer;</span>
+
+<span class="nc" id="L90">        this.activation = activation;</span>
+<span class="nc" id="L91">        initLayer(); // Initialize bias and weights</span>
+<span class="nc" id="L92">    }</span>
+
+
+    /**
+     * Creates a Linear layer with specified input and output dimensions.&lt;br&gt;
+     * &lt;b&gt;NOTE:&lt;/b&gt; this constructor infers the input dimension from the
+     * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
+     * layer use todo...
+     *
+     * @param outDim Output dimension for this layer (i.e. the number of nodes in this layer).
+     * @param activation Activation function for this layer.
+     */
+<span class="nc" id="L104">    public DenseExperiment(int outDim, ActivationFunction activation) {</span>
+<span class="nc" id="L105">        this.inDim = -1;</span>
+<span class="nc" id="L106">        this.outDim = outDim;</span>
+
+<span class="nc" id="L108">        this.weightInitializer = new GlorotNormal();</span>
+<span class="nc" id="L109">        this.biasInitializer = new Zeros();</span>
+<span class="nc" id="L110">        this.activation = activation;</span>
+<span class="nc" id="L111">    }</span>
+
+
+    /**
+     * Creates a Linear layer with specified input and output dimensions.&lt;br&gt;
+     * &lt;b&gt;NOTE:&lt;/b&gt; this constructor infers the input dimension from the
+     * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
+     * layer use todo...
+     *
+     * @param outDim            Output dimension for this layer (i.e. the number of nodes in this layer).
+     * @param activation Activation function for this layer.
+     * @param weightInitializer Initializer for the weights of this layer.
+     */
+<span class="nc" id="L124">    public DenseExperiment(int outDim, ActivationFunction activation, Initializer weightInitializer) {</span>
+<span class="nc" id="L125">        this.inDim = -1;</span>
+<span class="nc" id="L126">        this.outDim = outDim;</span>
+
+<span class="nc" id="L128">        this.weightInitializer = weightInitializer;</span>
+<span class="nc" id="L129">        this.biasInitializer = new Zeros();</span>
+<span class="nc" id="L130">        this.activation = activation;</span>
+<span class="nc" id="L131">    }</span>
+
+
+    /**
+     * Creates a Linear layer with specified input and output dimensions.&lt;br&gt;
+     * &lt;b&gt;NOTE:&lt;/b&gt; this constructor infers the input dimension from the
+     * previous layer in the network. Thus, it cannot be used as the first layer of the neural network. For the first
+     * layer use todo...
+     *
+     * @param outDim            Output dimension for this layer (i.e. the number of nodes in this layer).
+     * @param activation Activation function for this layer.
+     * @param weightInitializer Initializer for the weights of this layer.
+     * @param biasInitializer   Initializer for the bias terms of this layer.
+     */
+<span class="nc" id="L145">    public DenseExperiment(int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {</span>
+<span class="nc" id="L146">        this.inDim = -1;</span>
+<span class="nc" id="L147">        this.outDim = outDim;</span>
+
+<span class="nc" id="L149">        this.weightInitializer = weightInitializer;</span>
+<span class="nc" id="L150">        this.biasInitializer = biasInitializer;</span>
+<span class="nc" id="L151">        this.activation = activation;</span>
+<span class="nc" id="L152">    }</span>
+
+
+    /**
+     * Computes the forward pass of this layer.
+     * @param input Input to this Layer. Must be a column vector.
+     * @return Result of the forward pass of this layer as a Matrix.
+     */
+    @Override
+    public Matrix forward(Matrix input) {
+<span class="nc" id="L162">        this.forwardIn = input;</span>
+<span class="nc" id="L163">        this.forwardOut = activation.forward(this.weights.mult(input).add(this.bias)); // Apply activation to linear transform.</span>
+
+<span class="nc" id="L165">        return this.forwardOut;</span>
+    }
+
+
+    /**
+     * Computes the backward pass for this layer.
+     *
+     * @param upstreamGrad Upstream gradient of the network.
+     * @return Result of the backwards pass of the layer as a Matrix. If this layer has weights, this matrix
+     * will have the same shape as the weight matrix for the layer.
+     */
+    public Matrix back(Matrix upstreamGrad) {
+
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if(this.activation instanceof Softmax) {</span>
+            // TODO:
+        } else {
+            // TODO: Can this be done through Linear layers back(). If not, should this class really extend the Linear Class??
+<span class="nc" id="L182">            this.wGrad = upstreamGrad.T().mult(this.forwardIn.T());</span>
+<span class="nc" id="L183">            this.bGrad = upstreamGrad.T();</span>
+<span class="nc" id="L184">            this.backwardOut = upstreamGrad.mult(weights).elemMult(activation.back(this.forwardIn).T());</span>
+        }
+
+<span class="nc" id="L187">        return backwardOut;</span>
+    }
+
+
+    /**
+     * Gets the input dimension of this layer.
+     *
+     * @return The input dimension of this layer.
+     */
+    @Override
+    public int getInDim() {
+<span class="nc" id="L198">        return this.inDim;</span>
+    }
+
+
+    /**
+     * Gets the output dimension of this layer.
+     *
+     * @return The output dimension of this layer.
+     */
+    @Override
+    public int getOutDim() {
+<span class="nc" id="L209">        return this.outDim;</span>
+    }
+
+
+    /**
+     * Updates this layers input dimension. This is useful for creating a layer with an unknown input dimension and
+     * inferring it from the previous layer in the network.
+     */
+    @Override
+    public void updateInDim(int newInDim) {
+<span class="nc" id="L219">        this.inDim = newInDim;</span>
+<span class="nc" id="L220">        initLayer(); // Initialize weights and bias</span>
+<span class="nc" id="L221">    }</span>
+
+
+    /**
+     * Gets the trainable parameters for this layer as an array of matrices.
+     *
+     * @return The trainable parameters for this layer as an array of matrices {weights, bias}.
+     */
+    @Override
+    public Matrix[] getParams() {
+<span class="nc" id="L231">        return new Matrix[]{weights, bias};</span>
+    }
+
+
+    /**
+     * Sets the parameters for this layer.
+     *
+     * @param params Parameter Matrices for this layer.
+     */
+    @Override
+    public void setParams(Matrix... params) {
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        if(params.length!=2) {</span>
+<span class="nc" id="L243">            throw new IllegalArgumentException(&quot;Expecting 2 parameter matrices for Linear layer of form {Weights, bias} but &quot; +</span>
+                    &quot;got &quot; + params.length + &quot;.&quot;);
+        }
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        if(!params[0].sameShape(weights)) {</span>
+<span class="nc" id="L247">            throw new IllegalArgumentException(&quot;First parameter matrix does not have same shape as weight matrix. Expecting &quot;</span>
+<span class="nc" id="L248">                    + weights.shape() + &quot; but got &quot; + params[0].shape() + &quot;.&quot;);</span>
+        }
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if(!params[1].sameShape(bias)) {</span>
+<span class="nc" id="L251">            throw new IllegalArgumentException(&quot;Second parameter matrix does not have same shape as bias matrix. Expecting &quot;</span>
+<span class="nc" id="L252">                    + bias.shape() + &quot; but got &quot; + params[1].shape() + &quot;.&quot;);</span>
+        }
+
+<span class="nc" id="L255">        this.weights = params[0];</span>
+<span class="nc" id="L256">        this.bias = params[1];</span>
+<span class="nc" id="L257">    }</span>
+
+
+    /**
+     * Gets the update matrices for parameters of this layer.
+     * @return The parameter update matrices.
+     */
+    @Override
+    public Matrix[] getUpdates() {
+<span class="nc" id="L266">        return new Matrix[]{wGrad, bGrad};</span>
+    }
+
+
+    /**
+     * Gets and formats details of this layer in a human-readable String.
+     * @return The details of this layer in a human-reusable String.
+     */
+    @Override
+    public String inspect() {
+<span class="nc" id="L276">        StringBuilder inspection = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
+                + inDim + &quot;,\tOutput size: &quot; + outDim + &quot;, \tTrainable Parameters: &quot; + (inDim*outDim + outDim) +
+<span class="nc" id="L278">                &quot;,\tActivationFunction: &quot; + activation.getName());</span>
+<span class="nc" id="L279">        return inspection.toString();</span>
+    }
+
+
+    /**
+     * Resists the accumulation of gradients for this layer.
+     */
+    @Override
+    public void resetGradients() {
+<span class="nc" id="L288">        this.wGrad = new Matrix(this.outDim, this.inDim); // Reset weight updates to 0.</span>
+<span class="nc" id="L289">        this.bGrad = new Matrix(this.outDim, 1); // Reset bias updates to 0.</span>
+<span class="nc" id="L290">    }</span>
+
+
+    /**
+     * Initializes the weights for this layer.
+     */
+    private void initLayer() {
+<span class="nc" id="L297">        this.weights = weightInitializer.init(this.outDim, this.inDim); // Initialize weight values.</span>
+<span class="nc" id="L298">        this.bias = biasInitializer.init(this.outDim, 1); // Initialize bias values.</span>
+<span class="nc" id="L299">        resetGradients(); // Set weight and bias updates to 0.</span>
+<span class="nc" id="L300">    }</span>
+
+
+    /**
+     * Constructs a string containing this all details of the model pertinent for saving the model to a file.
+     *
+     * @return A string containing all information, including trainable parameters, needed to recreate the layer.
+     */
+    @Override
+    public String getDetails() {
+        // TODO: add optimizer block
+<span class="nc" id="L311">        StringBuilder details = new StringBuilder();</span>
+
+        // Create all the blocks for this layer.
+<span class="nc" id="L314">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
+<span class="nc" id="L315">        Block activationBlock = new Block(ModelTags.ACTIVATION.toString(), this.activation.getName());</span>
+<span class="nc" id="L316">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.outDim);</span>
+<span class="nc" id="L317">        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
+<span class="nc" id="L318">        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
+
+        // Combine all blocks into a single string.
+<span class="nc" id="L321">        details.append(Block.buildFileContent(layerBlock, dimBlock, weightBlock, biasBlock));</span>
+
+<span class="nc" id="L323">        return details.toString();</span>
+    }
+
+
+    /**
+     * Gets the name of the layer type as a string.
+     * @return The type of this layer as a String.
+     */
+    public String toString() {
+<span class="nc" id="L332">        return LAYER_TYPE;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

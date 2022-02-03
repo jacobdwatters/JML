@@ -6,9 +6,10 @@ import linalg.Matrix;
 /**
  * The sigmoid activation function. f(x) = 1/(1+exp(-x))
  */
-class Sigmoid implements ActivationFunction {
+public class Sigmoid implements ActivationFunction {
 
     public final String NAME = "Sigmoid";
+    private final double LARGE_VALUE = 200;
 
     /**
      * Applies the sigmoid activation element-wise to a matrix.
@@ -19,10 +20,19 @@ class Sigmoid implements ActivationFunction {
     @Override
     public Matrix forward(Matrix data) {
         double[][] result = new double[data.numRows()][data.numCols()];
+        double x;
 
         for(int i=0; i<data.numRows(); i++) {
             for(int j=0; j<data.numCols(); j++) {
-                result[i][j] = 1/(1+Math.exp(-data.getAsDouble(i, j)));
+                x = data.getAsDouble(i, j);
+
+                if(x<-LARGE_VALUE) {
+                    x = -LARGE_VALUE;
+                } else if(x>LARGE_VALUE) {
+                    x = LARGE_VALUE;
+                }
+
+                result[i][j] = 1/(1+Math.exp(-x));
             }
         }
 

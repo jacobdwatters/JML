@@ -6,8 +6,9 @@ import com.jml.neural_network.NeuralNetwork;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
-import com.jml.neural_network.layers.Layer;
 
+
+import com.jml.neural_network.layers.TrainableLayer;
 import linalg.Matrix;
 
 
@@ -24,7 +25,7 @@ public class Perceptron extends Model<double[][], double[][]> {
     final String MODEL_TYPE = ModelTypes.PERCEPTRON.toString();
     final NeuralNetwork perceptron;
     final ActivationFunction activation;
-    Layer layer;
+    TrainableLayer layer;
 
     final double learningRate;
     final double threshold;

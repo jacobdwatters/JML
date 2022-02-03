@@ -4,8 +4,9 @@ import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.NeuralNetwork;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.BaseLayer;
 import com.jml.neural_network.layers.Dense;
-import com.jml.neural_network.layers.Layer;
+import com.jml.neural_network.layers.Linear;
 import linalg.Matrix;
 
 import java.util.*;
@@ -78,8 +79,8 @@ class NeuralNetFromData extends NeuralNetwork {
     }
 
 
-    private static Layer createLayer(List<String> layerTags, List<String> layerContents) {
-        Layer layer = null;
+    private static BaseLayer createLayer(List<String> layerTags, List<String> layerContents) {
+        BaseLayer layer = null;
         String type, tag, content;
         ActivationFunction activation = null;
         Matrix weights = null, bias = null;
@@ -156,8 +157,11 @@ class NeuralNetFromData extends NeuralNetwork {
         // Create the layer
         if(type.equals("Dense")) {
             layer = new Dense(inDim, outDim, activation);
-            layer.setBias(bias);
-            layer.setWeights(weights);
+            layer.setParams(weights, bias);
+
+        } else if(type.equals("Linear")) {
+            layer = new Linear(inDim, outDim);
+            layer.setParams(weights, bias);
 
         } else {
             throw new IllegalStateException("Unrecognized layer (" + type + ") encountered for neural network.");

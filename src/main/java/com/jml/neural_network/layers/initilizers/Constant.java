@@ -1,9 +1,8 @@
 package com.jml.neural_network.layers.initilizers;
-import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
 
 /**
- * {@link Layer} parameter initializer to produce a constant value.
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce a constant value.
  */
 public class Constant implements Initializer {
     private double value;

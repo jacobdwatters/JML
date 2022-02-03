@@ -387,5 +387,31 @@ import java.util.Random;
 
 <span class="fc" id="L388">        return newArr;</span>
     }
+
+
+    /**
+     * Generates random unique integers.
+     * @return A list of random unique integers.
+     */
+    public static int[] randomIndices(int size) {
+<span class="nc" id="L397">        int[] indices = new int[size];</span>
+        int temp;
+
+<span class="nc bnc" id="L400" title="All 2 branches missed.">        for(int i=0; i&lt;size; i++) { // Fill array</span>
+<span class="nc" id="L401">            indices[i] = i;</span>
+        }
+
+<span class="nc bnc" id="L404" title="All 2 branches missed.">        for(int i=indices.length-1; i&gt;0; i--) {  // Shuffle indices</span>
+            // Pick a random index from 0 to i
+<span class="nc" id="L406">            int j = rand.nextInt(i+1);</span>
+
+            // Swap arr[i] with the element at random index
+<span class="nc" id="L409">            temp = indices[i];</span>
+<span class="nc" id="L410">            indices[i] = indices[j];</span>
+<span class="nc" id="L411">            indices[j] = temp;</span>
+        }
+
+<span class="nc" id="L414">        return indices;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

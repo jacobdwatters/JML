@@ -1,11 +1,10 @@
 package com.jml.neural_network.layers.initilizers;
 
-import com.jml.neural_network.layers.Layer;
 import linalg.Matrix;
 
 
 /**
- * {@link Layer} parameter initializer to produce ones.
+ * {@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce ones.
  */
 public class Ones implements Initializer {
 

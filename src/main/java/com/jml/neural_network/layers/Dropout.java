@@ -1,7 +1,10 @@
 package com.jml.neural_network.layers;
 
+import com.jml.core.Block;
 import com.jml.core.Stats;
+import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.activations.ActivationFunction;
+import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -13,21 +16,21 @@ import linalg.Vector;
  * Dropout is an effective form of regularization. In addition, the outputs of this layer are scaled by 1/(1-p) where p is the
  * probability of dropping an element of the layer.
  */
-public class Dropout implements Layer {
+public class Dropout implements BaseLayer {
 
     public final String LAYER_TYPE = "Dropout";
-    // TODO: Change mask visibility to private
-    public Matrix mask; // Dropout mask
+    protected Matrix mask; // Dropout mask
     private final double scale;
+
+    protected Matrix forwardIn;
+    protected Matrix forwardOut;
+    protected Matrix backwardOut;
 
     /**
      * Probability of element being zeroed.
      */
     final double p;
     int inDim = -1; // Input size for the layer. The output size will be the same.
-
-    // TODO: is this needed? We will just pass through the values zeroing some
-    Matrix values; // Holds node values for layer.
 
     /**
      * Constructs a dropout layer for a neural network.<br>
@@ -52,7 +55,7 @@ public class Dropout implements Layer {
     public Dropout(int inDim, double p) {
         this.inDim = inDim;
         this.p = p;
-        this.values = new Vector(this.inDim);
+        this.forwardIn = new Vector(this.inDim);
         this.mask = new Vector(this.inDim);
         scale = 1/(1-p);
     }
@@ -66,23 +69,24 @@ public class Dropout implements Layer {
      * @return The result of the layer applied to the values.
      */
     @Override
-    public Matrix forward(Matrix inputs) {
-        if(inputs.numRows()!=inDim && inputs.numCols()!=1) {
-            throw new IllegalArgumentException("Invalid input shape of " + inputs.shape() + ". " +
+    public Matrix forward(Matrix forwardIn) {
+        if(forwardIn.numRows()!=inDim && forwardIn.numCols()!=1) {
+            throw new IllegalArgumentException("Invalid input shape of " + forwardIn.shape() + ". " +
                     "Expecting input shape of " + inDim + "x" + 1);
         }
 
         initMask(); // Initialize the mask
-        values = inputs.copy().elemMult(mask).scalMult(scale); // Apply dropout mask.
+        this.forwardOut = forwardIn.elemMult(mask).scalMult(scale); // Apply dropout mask.
 
-        return values;
+        return forwardOut;
     }
 
 
     // Computes backward pass of layer.
     @Override
-    public Matrix[] back(Matrix previousVals, Matrix error) {
-        return new Matrix[]{previousVals.elemMult(mask).scalMult(scale)};
+    public Matrix back(Matrix upstreamGrad) {
+        this.backwardOut = upstreamGrad;
+        return backwardOut;
     }
 
 
@@ -115,54 +119,8 @@ public class Dropout implements Layer {
     @Override
     public void updateInDim(int inDim) {
         this.inDim = inDim;
-        this.values = new Vector(this.inDim);
+        this.forwardIn = new Vector(this.inDim);
         this.mask = new Vector(this.inDim);
-    }
-
-
-    /**
-     * Does nothing. No weights to get.
-     * @return null
-     */
-    @Override
-    public Matrix getWeights() {
-        return null;
-    }
-
-
-    /**
-     * Does nothing. No weights to set.
-     * @param w New weights
-     */
-    @Override
-    public void setWeights(Matrix w) {}
-
-
-    /**
-     * Does nothing. No bias to set.
-     * @param b New bias
-     */
-    @Override
-    public void setBias(Matrix b) {}
-
-
-    /**
-     * {@inheritDoc}
-     * @return The values of this layer
-     */
-    @Override
-    public Matrix getValues() {
-        return this.values;
-    }
-
-
-    /**
-     * Does nothing. No bias to get.
-     * @return null
-     */
-    @Override
-    public Matrix getBias() {
-        return null;
     }
 
 
@@ -189,16 +147,23 @@ public class Dropout implements Layer {
         return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
     }
 
-
+    /**
+     * Constructs a string containing this all details of the model pertinent for saving the model to a file.
+     *
+     * @return A string containing all information, including trainable parameters, needed to recreate the layer.
+     */
     @Override
-    // TODO: I think that inspect() and getDetails() names should switch.
     public String getDetails() {
-        // TODO: Auto-generated method-stub
-        return null;
-    }
+        StringBuilder details = new StringBuilder();
 
-    @Override
-    public ActivationFunction getActivation() {
-        return null;
+        // Create all the blocks for this layer.
+        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);
+        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + ", " + this.inDim);
+        Block pBlock = new Block(ModelTags.PROBABILITY.toString(), Double.toString(this.p));
+
+        // Combine all blocks into a single string.
+        details.append(Block.buildFileContent(layerBlock, dimBlock, pBlock));
+
+        return details.toString();
     }
 }
