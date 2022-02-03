@@ -211,5 +211,14 @@ class ParameterInitTest {
     }
 
 
+    @RepeatedTest(5)
+    void orthogonalTest() {
+        Orthogonal init = new Orthogonal();
+        Matrix rand = init.init(m, m);
+
+        assertEquals(rand.numRows(), m);
+        assertEquals(rand.numCols(), m);
+        assertTrue(rand.isOrthogonal());
+    }
 
 }

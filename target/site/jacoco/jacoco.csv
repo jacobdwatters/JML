@@ -18,8 +18,8 @@ java-machine-learning,com.jml.neural_network,NeuralNetwork,69,1442,13,75,13,219,
 java-machine-learning,com.jml.neural_network,ModelTags,0,63,0,0,0,2,0,1,0,1
 java-machine-learning,com.jml.neural_network.layers,Dropout,74,130,3,5,9,29,4,10,2,8
 java-machine-learning,com.jml.neural_network.layers,BaseLayer,6,0,0,0,4,0,4,0,4,0
-java-machine-learning,com.jml.neural_network.layers,Dense,126,313,4,4,36,55,9,14,5,14
-java-machine-learning,com.jml.neural_network.layers,Linear,113,274,3,3,32,50,8,14,5,14
+java-machine-learning,com.jml.neural_network.layers,Dense,34,405,4,4,6,85,5,18,1,18
+java-machine-learning,com.jml.neural_network.layers,Linear,33,354,3,3,6,76,4,18,1,18
 java-machine-learning,com.jml.core,NeuralNetFromData,44,390,10,38,7,78,9,18,0,3
 java-machine-learning,com.jml.core,Metrics,48,101,6,14,9,14,5,9,2,2
 java-machine-learning,com.jml.core,LogRegFromData,5,75,2,4,1,20,2,3,0,2
@@ -39,7 +39,7 @@ java-machine-learning,com.jml.neural_network.activations,Softmax,136,12,10,0,23,
 java-machine-learning,com.jml.neural_network.activations,Relu,0,101,0,12,0,17,0,10,0,4
 java-machine-learning,com.jml.neural_network.activations,Sigmoid,5,109,2,10,2,18,2,8,0,4
 java-machine-learning,com.jml.neural_network.activations,Linear,0,15,0,0,0,5,0,4,0,4
-java-machine-learning,com.jml.neural_network.activations,Activations,3,21,0,0,1,5,1,1,1,1
+java-machine-learning,com.jml.neural_network.activations,Activations,23,17,0,0,6,4,6,1,6,1
 java-machine-learning,com.jml.preprocessing,Normalize,33,212,0,16,6,38,2,15,2,7
 java-machine-learning,com.jml.preprocessing,DataSplitter,13,130,2,6,3,20,3,3,1,1
 java-machine-learning,com.jml.preprocessing,Encoder,18,104,0,10,5,19,2,7,2,2
@@ -59,7 +59,7 @@ java-machine-learning,com.jml.neural_network.layers.initilizers,GlorotUniform,9,
 java-machine-learning,com.jml.neural_network.layers.initilizers,HeUniform,9,52,0,4,3,9,1,4,1,2
 java-machine-learning,com.jml.neural_network.layers.initilizers,RandomUniform,21,80,0,4,5,17,1,5,1,3
 java-machine-learning,com.jml.neural_network.layers.initilizers,Constant,0,20,0,0,0,7,0,3,0,3
-java-machine-learning,com.jml.neural_network.layers.initilizers,Orthogonal,16,0,2,0,4,0,3,0,2,0
+java-machine-learning,com.jml.neural_network.layers.initilizers,Orthogonal,0,16,0,2,0,4,0,3,0,2
 java-machine-learning,com.jml.neural_network.layers.initilizers,Ones,0,7,0,0,0,2,0,2,0,2
 java-machine-learning,com.jml.neural_network.layers.initilizers,GlorotNormal,9,49,0,4,3,9,1,4,1,2
 java-machine-learning,com.jml.neural_network.layers.initilizers,Zeros,0,9,0,0,0,2,0,2,0,2

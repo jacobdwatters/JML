@@ -23,8 +23,8 @@ public class Linear implements TrainableLayer {
     protected Matrix weights;
     protected Matrix bias;
 
-    private Initializer weightInitializer;
-    private Initializer biasInitializer;
+    protected Initializer weightInitializer;
+    protected Initializer biasInitializer;
 
     private Matrix forwardIn; // Inputs to this layer. i.e. values of previous layers nodes.
     private Matrix forwardOut; // Output of this layer. i.e. values of this layers' nodes.

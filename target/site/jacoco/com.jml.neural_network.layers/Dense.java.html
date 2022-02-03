@@ -16,7 +16,7 @@ import linalg.Matrix;
  * For an activation function g(x), this layer applies the transform f(x) = g(Wx+b) for an input vector x.
  */
 public class Dense implements TrainableLayer {
-<span class="pc" id="L19">    public final String LAYER_TYPE = &quot;Dense&quot;;</span>
+<span class="fc" id="L19">    public final String LAYER_TYPE = &quot;Dense&quot;;</span>
 
     protected ActivationFunction activation;
 
@@ -25,8 +25,8 @@ public class Dense implements TrainableLayer {
     protected Matrix weights;
     protected Matrix bias;
 
-    private Initializer weightInitializer;
-    private Initializer biasInitializer;
+    protected Initializer weightInitializer;
+    protected Initializer biasInitializer;
 
     private Matrix forwardIn; // Inputs to this layer. i.e. values of previous layers nodes.
     private Matrix forwardOut; // Output of this layer. i.e. values of this layers' nodes.
@@ -62,16 +62,16 @@ public class Dense implements TrainableLayer {
      * @param activation Activation function for this layer.
      * @param weightInitializer Initializer for the weights of this layer.
      */
-<span class="nc" id="L65">    public Dense(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer) {</span>
-<span class="nc" id="L66">        this.inDim = inDim;</span>
-<span class="nc" id="L67">        this.outDim = outDim;</span>
+<span class="fc" id="L65">    public Dense(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer) {</span>
+<span class="fc" id="L66">        this.inDim = inDim;</span>
+<span class="fc" id="L67">        this.outDim = outDim;</span>
 
-<span class="nc" id="L69">        this.weightInitializer = weightInitializer;</span>
-<span class="nc" id="L70">        this.biasInitializer = new Zeros();</span>
+<span class="fc" id="L69">        this.weightInitializer = weightInitializer;</span>
+<span class="fc" id="L70">        this.biasInitializer = new Zeros();</span>
 
-<span class="nc" id="L72">        this.activation = activation;</span>
-<span class="nc" id="L73">        initLayer(); // Initialize bias and weights</span>
-<span class="nc" id="L74">    }</span>
+<span class="fc" id="L72">        this.activation = activation;</span>
+<span class="fc" id="L73">        initLayer(); // Initialize bias and weights</span>
+<span class="fc" id="L74">    }</span>
 
 
     /**
@@ -83,16 +83,16 @@ public class Dense implements TrainableLayer {
      * @param weightInitializer Initializer for the weights of this layer.
      * @param biasInitializer   Initializer for the bias terms of this layer.
      */
-<span class="nc" id="L86">    public Dense(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {</span>
-<span class="nc" id="L87">        this.inDim = inDim;</span>
-<span class="nc" id="L88">        this.outDim = outDim;</span>
+<span class="fc" id="L86">    public Dense(int inDim, int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {</span>
+<span class="fc" id="L87">        this.inDim = inDim;</span>
+<span class="fc" id="L88">        this.outDim = outDim;</span>
 
-<span class="nc" id="L90">        this.weightInitializer = weightInitializer;</span>
-<span class="nc" id="L91">        this.biasInitializer = biasInitializer;</span>
+<span class="fc" id="L90">        this.weightInitializer = weightInitializer;</span>
+<span class="fc" id="L91">        this.biasInitializer = biasInitializer;</span>
 
-<span class="nc" id="L93">        this.activation = activation;</span>
-<span class="nc" id="L94">        initLayer(); // Initialize bias and weights</span>
-<span class="nc" id="L95">    }</span>
+<span class="fc" id="L93">        this.activation = activation;</span>
+<span class="fc" id="L94">        initLayer(); // Initialize bias and weights</span>
+<span class="fc" id="L95">    }</span>
 
 
     /**
@@ -124,14 +124,14 @@ public class Dense implements TrainableLayer {
      * @param activation Activation function for this layer.
      * @param weightInitializer Initializer for the weights of this layer.
      */
-<span class="nc" id="L127">    public Dense(int outDim, ActivationFunction activation, Initializer weightInitializer) {</span>
-<span class="nc" id="L128">        this.inDim = -1;</span>
-<span class="nc" id="L129">        this.outDim = outDim;</span>
+<span class="fc" id="L127">    public Dense(int outDim, ActivationFunction activation, Initializer weightInitializer) {</span>
+<span class="fc" id="L128">        this.inDim = -1;</span>
+<span class="fc" id="L129">        this.outDim = outDim;</span>
 
-<span class="nc" id="L131">        this.weightInitializer = weightInitializer;</span>
-<span class="nc" id="L132">        this.biasInitializer = new Zeros();</span>
-<span class="nc" id="L133">        this.activation = activation;</span>
-<span class="nc" id="L134">    }</span>
+<span class="fc" id="L131">        this.weightInitializer = weightInitializer;</span>
+<span class="fc" id="L132">        this.biasInitializer = new Zeros();</span>
+<span class="fc" id="L133">        this.activation = activation;</span>
+<span class="fc" id="L134">    }</span>
 
 
     /**
@@ -145,14 +145,14 @@ public class Dense implements TrainableLayer {
      * @param weightInitializer Initializer for the weights of this layer.
      * @param biasInitializer   Initializer for the bias terms of this layer.
      */
-<span class="nc" id="L148">    public Dense(int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {</span>
-<span class="nc" id="L149">        this.inDim = -1;</span>
-<span class="nc" id="L150">        this.outDim = outDim;</span>
+<span class="fc" id="L148">    public Dense(int outDim, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {</span>
+<span class="fc" id="L149">        this.inDim = -1;</span>
+<span class="fc" id="L150">        this.outDim = outDim;</span>
 
-<span class="nc" id="L152">        this.weightInitializer = weightInitializer;</span>
-<span class="nc" id="L153">        this.biasInitializer = biasInitializer;</span>
-<span class="nc" id="L154">        this.activation = activation;</span>
-<span class="nc" id="L155">    }</span>
+<span class="fc" id="L152">        this.weightInitializer = weightInitializer;</span>
+<span class="fc" id="L153">        this.biasInitializer = biasInitializer;</span>
+<span class="fc" id="L154">        this.activation = activation;</span>
+<span class="fc" id="L155">    }</span>
 
 
     /**

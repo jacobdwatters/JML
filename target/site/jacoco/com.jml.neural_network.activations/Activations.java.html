@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Activations.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.activations</a> &gt; <span class="el_source">Activations.java</span></div><h1>Activations.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.activations;
 
 /**
- * A class which contains various pre-made {@link com.jml.neural_network.activations.ActivationFunction activation functions} for use in neural network
- * {@link com.jml.neural_network.layers.Layer layers}.
+ * A class which contains methods for geting various pre-made {@link com.jml.neural_network.activations.ActivationFunction activation functions} for use in neural network
+ * {@link com.jml.neural_network.layers.BaseLayer layers}.
  */
 <span class="nc" id="L7">public abstract class Activations {</span>
 
@@ -13,28 +13,69 @@
 
 
     /**
-     * The Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
+     * Creates and returns a new instance of the sigmoid activation function.
+     * @return The sigmoid activation function. f(x)=1/(1+exp(-x))
      */
-<span class="fc" id="L18">    public static final ActivationFunction relu = new Relu();</span>
+    public static ActivationFunction sigmoid() {
+<span class="nc" id="L20">        return new Sigmoid();</span>
+    }
 
 
     /**
-     * The linear activation function. f(x)=x.
+     * A pre-defined instance of the Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
      */
-<span class="fc" id="L24">    public static final ActivationFunction linear = new Linear();</span>
+<span class="fc" id="L27">    public static final ActivationFunction relu = new Relu();</span>
 
 
     /**
-     * The hyperbolic tangent activation function.
+     * Creates and returns a new relu activatoin function.
+     * @return An instance of the Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
+     */
+    public static ActivationFunction relu() {
+<span class="nc" id="L35">        return new Relu();</span>
+    }
+
+
+    /**
+     * A pre-defined instance of the linear activation function. f(x)=x.
+     */
+<span class="fc" id="L42">    public static final ActivationFunction linear = new Linear();</span>
+
+
+    /**
+     * Creates and returns a new instacne of the linear activation function.
+     * @return An instance of the linear activation function. f(x)=x.
+     */
+    public static ActivationFunction linear() {
+<span class="nc" id="L50">        return new Linear();</span>
+    }
+
+
+    /**
+     * A pre-defined instance of the hyperbolic tangent activation function.
      * &lt;code&gt;f(x) = tanh(x) = (e&lt;sup&gt;x&lt;/sup&gt; - e&lt;sup&gt;-x&lt;/sup&gt;) / (e&lt;sup&gt;x&lt;/sup&gt; + e&lt;sup&gt;-x&lt;/sup&gt;)&lt;/code&gt;
      */
-<span class="fc" id="L31">    public static final ActivationFunction tanh = new Tanh();</span>
+<span class="fc" id="L58">    public static final ActivationFunction tanh = new Tanh();</span>
 
 
     /**
-     * The softmax activation function. f(&lt;b&gt;x&lt;/b&gt;)&lt;sub&gt;i&lt;/sub&gt; = exp(&lt;b&gt;x&lt;/b&gt;_i) / sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt;( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) where
-     * &lt;b&gt;x&lt;/b&gt; is a vector of length m and sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt; ( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) = exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;1&lt;/sub&gt;) + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;2&lt;/sub&gt;) + ... + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;m&lt;/sub&gt;).
+     * Creates and returns a new instance of the hyperbolic tangent activation function.
+     * @return An instance of the he hyperbolic tangent activation function&lt;br&gt;
+     *      &lt;code&gt;f(x) = tanh(x) = (e&lt;sup&gt;x&lt;/sup&gt; - e&lt;sup&gt;-x&lt;/sup&gt;) / (e&lt;sup&gt;x&lt;/sup&gt; + e&lt;sup&gt;-x&lt;/sup&gt;)&lt;/code&gt;
      */
-<span class="fc" id="L38">    public static final ActivationFunction softmax = new Softmax();</span>
+    public static ActivationFunction tanh() {
+<span class="nc" id="L67">        return new Tanh();</span>
+    }
+
+
+    /**
+     * Creates and returns a new instance of the softmax activations function.
+     * @return
+     *      The softmax activation function. f(&lt;b&gt;x&lt;/b&gt;)&lt;sub&gt;i&lt;/sub&gt; = exp(&lt;b&gt;x&lt;/b&gt;_i) / sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt;( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) where
+     *      &lt;b&gt;x&lt;/b&gt; is a vector of length m and sum&lt;sub&gt;j=1&lt;/sub&gt;&lt;sup&gt;m&lt;/sup&gt; ( exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;j&lt;/sub&gt;) ) = exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;1&lt;/sub&gt;) + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;2&lt;/sub&gt;) + ... + exp(&lt;b&gt;x&lt;/b&gt;&lt;sub&gt;m&lt;/sub&gt;)
+     */
+    public static ActivationFunction softmax() {
+<span class="nc" id="L78">        return new Softmax();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

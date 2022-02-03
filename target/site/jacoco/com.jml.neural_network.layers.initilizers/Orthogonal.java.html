@@ -10,7 +10,7 @@ public class Orthogonal implements Initializer {
     /**
      * Creates an Orthogonal Initializer.
      */
-<span class="nc" id="L13">    public Orthogonal() {/*Does nothing*/}</span>
+<span class="fc" id="L13">    public Orthogonal() {/*Does nothing*/}</span>
 
 
     /**
@@ -22,12 +22,12 @@ public class Orthogonal implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc bnc" id="L25" title="All 2 branches missed.">        if(m!=n) {</span>
-<span class="nc" id="L26">            throw new IllegalArgumentException(&quot;Cannot use Orthogonal initializer for non-square matrix but got shape &quot;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if(m!=n) {</span>
+<span class="fc" id="L26">            throw new IllegalArgumentException(&quot;Cannot use Orthogonal initializer for non-square matrix but got shape &quot;</span>
                     + m + &quot;x&quot; + n + &quot;.&quot;);
         }
 
-<span class="nc" id="L30">        return Matrix.randomOrthogonal(m);</span>
+<span class="fc" id="L30">        return Matrix.randomOrthogonal(m);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
