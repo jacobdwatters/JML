@@ -4,6 +4,7 @@
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/preprocessing/NormalizationTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/LinearRegressionDatasetOneTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/optimizers/StepLearningRateTest.java
+/Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/neural_network/layers/DenseTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/PolynomialRegressionExceptionTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/losses/SseTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/core/DataLoaderTest.java
@@ -13,8 +14,6 @@
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/PolyRegSGDTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/classifiers/LogRegTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/PolynomialRegressionSaveAndLoadTest.java
-/Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/neural_network/DenseTest.java
-/Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/neural_network/LinearTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/preprocessing/NormalizationExceptionTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/LinearRegressionSaveAndLoadTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/MultRegSGDTest.java
@@ -24,6 +23,7 @@
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/PerceptronTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/losses/mseTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/MultipleRegressionDatasetOneTest.java
+/Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/neural_network/layers/LinearTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/LinRegSGDTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/linear_models/PolynomialRegressionDatasetOneTest.java
 /Users/jacobwatters/IdeaProjects/JML/src/test/java/com/jml/classifiers/KDTreeTest.java
