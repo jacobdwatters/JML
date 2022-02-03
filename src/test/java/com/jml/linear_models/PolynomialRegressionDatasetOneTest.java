@@ -111,12 +111,12 @@ class PolynomialRegressionDatasetOneTest {
     @DisplayName("Testing for degree 6") // define the name of the test which is displayed to the user
     void degreeSixTestCase() {
         double[] expected = {48.0173315, 2.5733680, -10.6886001, 9.9701278, -3.5275208, 0.5457470, -0.0309329};
-        double[] testingExpected = {3.5442995, 48.0173315, 46.8595204, 49.2145514, 53.4008314, 54.4796373};
+        double[] testingExpected = {3.544299, 48.017331, 46.859520, 49.214551, 53.400831, 54.479637};
 
         model = new PolynomialRegression(6);
         model.fit(features, targets);
         double[] values = ArrayUtils.round(model.getParams().T().getValuesAsDouble()[0], 7);
-        double[] predictions = ArrayUtils.round(model.predict(tests), 7);
+        double[] predictions = ArrayUtils.round(model.predict(tests), 6);
 
         assertArrayEquals(expected, values);
         assertArrayEquals(testingExpected, predictions);

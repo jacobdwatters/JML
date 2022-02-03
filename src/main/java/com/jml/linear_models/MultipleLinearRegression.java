@@ -48,6 +48,8 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
         V = ones.augment(V);
 
         Matrix VT = V.T();
+
+        // Form the normal equations
         Matrix A = VT.mult(V);
         Vector b = VT.mult(y).toVector();
 
@@ -56,7 +58,7 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
                     "Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.");
         }
 
-        w = Solvers.solveQR(A, b); // Compute the model parameters
+        w = Solvers.solveQR(A, b); // Compute the model parameters by solving the system via QR decomposition.
 
         this.coefficients = w.T().getValuesAsDouble()[0];
 

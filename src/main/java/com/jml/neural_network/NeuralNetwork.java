@@ -53,7 +53,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected boolean isFit = false;
     final List<Double> lossHist = new ArrayList<>();
 
-
     // TODO: Should these be moved to the layer? Probably yes!
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
@@ -235,6 +234,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         }
 
         double[][][] shuffle;
+        int[] shuffledIndices;
+        int index;
+
         Matrix feature;
         Matrix target = new Matrix(targets);
         Matrix input;
@@ -245,6 +247,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
+            // TODO: Shuffle indices rather than the entire dataset.
             shuffle = ArrayUtils.shuffle(features, targets); // Shuffle samples for this epoch.
             feature = new Matrix(shuffle[0]);
             target = new Matrix(shuffle[1]);

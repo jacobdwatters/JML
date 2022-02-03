@@ -21,9 +21,9 @@ class PolyRegSGDTest {
 
     @Test
     void defaultConstructorTestCase() {
-        double learningRate = 0.002;
+        double learningRate = 0.01;
         double threshold = 0.5e-5;
-        int maxIterations = 1000;
+        int maxIterations = 5000;
 
         model = new PolynomialRegressionSGD();
 
@@ -36,9 +36,9 @@ class PolyRegSGDTest {
 
     @Test
     void defaultConstructorZeroTestCase() {
-        double learningRate = 0.002;
+        double learningRate = 0.01;
         double threshold = 0.5e-5;
-        int maxIterations = 1000;
+        int maxIterations = 5000;
 
         model = new PolynomialRegressionSGD(3);
 
@@ -54,7 +54,7 @@ class PolyRegSGDTest {
         int degree = 3;
         double learningRate = 0.051;
         double threshold = 0.5e-5;
-        int maxIterations = 1000;
+        int maxIterations = 5000;
 
         model = new PolynomialRegressionSGD(degree, learningRate);
 

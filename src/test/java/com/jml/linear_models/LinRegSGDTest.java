@@ -23,9 +23,9 @@ class LinRegSGDTest {
 
     @Test
     void defaultConstructorTestCase() {
-        double learningRate = 0.002;
+        double learningRate = 0.01;
         double threshold = 0.5e-5;
-        int maxIterations = 1000;
+        int maxIterations = 5000;
 
         model = new LinearRegressionSGD();
 
@@ -36,7 +36,7 @@ class LinRegSGDTest {
 
     @Test
     void defaultConstructorZeroTestCase() {
-        double learningRate = 0.002;
+        double learningRate = 0.01;
         double threshold = 0.5e-5;
         int maxIterations = 105;
 
@@ -52,7 +52,7 @@ class LinRegSGDTest {
     void ConstructorOneTestCase() {
         double learningRate = 0.051;
         double threshold = 0.5e-5;
-        int maxIterations = 1000;
+        int maxIterations = 5000;
 
         model = new LinearRegressionSGD(0.051);
 

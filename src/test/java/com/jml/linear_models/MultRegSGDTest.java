@@ -27,9 +27,9 @@ class MultRegSGDTest {
 
     @Test
     void defaultConstructorTestCase() {
-        double learningRate = 0.002;
+        double learningRate = 0.01;
         double threshold = 0.5e-5;
-        int maxIterations = 1000;
+        int maxIterations = 5000;
 
         model = new MultipleLinearRegressionSGD();
 
@@ -41,7 +41,7 @@ class MultRegSGDTest {
 
     @Test
     void defaultConstructorZeroTestCase() {
-        double learningRate = 0.002;
+        double learningRate = 0.01;
         double threshold = 0.5e-5;
         int maxIterations = 10;
 
@@ -57,7 +57,7 @@ class MultRegSGDTest {
     void ConstructorOneTestCase() {
         double learningRate = 0.051;
         double threshold = 0.5e-5;
-        int maxIterations = 1000;
+        int maxIterations = 5000;
 
         model = new MultipleLinearRegressionSGD(0.051);
 

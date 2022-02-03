@@ -390,7 +390,7 @@ public class ArrayUtils {
 
 
     /**
-     * Generates random unique integers.
+     * Generates an array of random unique integers.
      * @return A list of random unique integers.
      */
     public static int[] randomIndices(int size) {

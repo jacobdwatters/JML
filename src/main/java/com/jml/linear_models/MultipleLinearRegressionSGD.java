@@ -4,6 +4,7 @@ import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
+import com.jml.util.ArrayUtils;
 import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
@@ -22,9 +23,9 @@ import java.util.List;
  */
 public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
 
-    protected double learningRate = 0.002;
+    protected double learningRate = 0.01;
     protected double threshold = 0.5e-5;
-    protected int maxIterations = 1000;
+    protected int maxIterations = 5000;
     private Optimizer GD;
     private final List<Double> lossHist = new ArrayList<>();
 
@@ -111,6 +112,8 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     public MultipleLinearRegressionSGD fit(double[][] features, double[] targets) {
         GD = new GradientDescent(learningRate);
 
+        int[] shuffledIndices; // Stores shuffled indices for each epoch.
+
         // Convert features and targets to matrix representations.
         Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));
         Matrix y = new Vector(targets);
@@ -119,8 +122,9 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         w = Matrix.randn(X.numCols(), 1, false); // initialize w.
 
         for(int i=0; i<maxIterations; i++) { // Apply stochastic gradient descent.
+            shuffledIndices = ArrayUtils.randomIndices(X.numRows()); // Get randomly shuffled indices
 
-            for(int j=0; j<X.numRows(); j++) { // Compute gradient a single sample at a time.
+            for(int j : shuffledIndices) { // Compute gradient a single sample at a time.
                 wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients
                 w = GD.step(w, wGrad)[0]; // Apply gradient descent update rule.
             }

@@ -72,9 +72,11 @@ public class PolynomialRegression extends Model<double[], double[]> {
         Matrix V = Matrix.van(x, degree+1);
         Matrix VT = V.T();
 
+        // Form the normal equations
         Matrix A = VT.mult(V);
         Vector b = VT.mult(y).toVector();
-        w = Solvers.solve(A, b);
+
+        w = Solvers.solveQR(A, b); // Solve the normal equations via QR decomposition.
         coefficients = w.T().getValuesAsDouble()[0];
 
         isFit = true;
