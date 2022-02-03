@@ -11,7 +11,7 @@ public class Constant implements Initializer {
      * Creates a Constant Initializer with value 1. This is equivalent to the {@link Ones} Initializer.
      */
     public Constant() {
-        value = 0;
+        value = 1;
     }
 
 

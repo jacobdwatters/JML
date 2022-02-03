@@ -10,8 +10,8 @@ import java.util.Random;
 public class RandomNormal implements Initializer {
 
     private Random r;
-    private double mean;
-    private double std;
+    protected double mean;
+    protected double std;
 
 
     /**

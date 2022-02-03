@@ -10,18 +10,18 @@ import java.util.Random;
 public class RandomNormal implements Initializer {
 
     private Random r;
-    private double mean;
-    private double std;
+    protected double mean;
+    protected double std;
 
 
     /**
      * Creates a RandomNormal initializer with mean 0 and standard deviation 1.
      */
-<span class="nc" id="L20">    public RandomNormal() {</span>
-<span class="nc" id="L21">        this.mean = 0;</span>
-<span class="nc" id="L22">        this.std = 1;</span>
-<span class="nc" id="L23">        this.r = new Random();</span>
-<span class="nc" id="L24">    }</span>
+<span class="fc" id="L20">    public RandomNormal() {</span>
+<span class="fc" id="L21">        this.mean = 0;</span>
+<span class="fc" id="L22">        this.std = 1;</span>
+<span class="fc" id="L23">        this.r = new Random();</span>
+<span class="fc" id="L24">    }</span>
 
 
     /**
@@ -40,11 +40,11 @@ public class RandomNormal implements Initializer {
      * @param std Standard deviation for random normal distribution.
      * @param mean Mean for random normal distribution.
      */
-<span class="nc" id="L43">    public RandomNormal(double std, double mean) {</span>
-<span class="nc" id="L44">        this.mean = mean;</span>
-<span class="nc" id="L45">        this.std = std;</span>
-<span class="nc" id="L46">        this.r = new Random();</span>
-<span class="nc" id="L47">    }</span>
+<span class="fc" id="L43">    public RandomNormal(double std, double mean) {</span>
+<span class="fc" id="L44">        this.mean = mean;</span>
+<span class="fc" id="L45">        this.std = std;</span>
+<span class="fc" id="L46">        this.r = new Random();</span>
+<span class="fc" id="L47">    }</span>
 
 
     /**
@@ -68,15 +68,15 @@ public class RandomNormal implements Initializer {
      */
     @Override
     public Matrix init(int m, int n) {
-<span class="nc" id="L71">        double[][] random = new double[m][n];</span>
+<span class="fc" id="L71">        double[][] random = new double[m][n];</span>
 
-<span class="nc bnc" id="L73" title="All 2 branches missed.">        for(int i=0; i&lt;m; i++) {</span>
-<span class="nc bnc" id="L74" title="All 2 branches missed.">            for(int j=0; j&lt;n; j++) {</span>
-<span class="nc" id="L75">                random[i][j] = r.nextGaussian()*std + mean;</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="fc" id="L75">                random[i][j] = r.nextGaussian()*std + mean;</span>
             }
         }
 
-<span class="nc" id="L79">        return new Matrix(random);</span>
+<span class="fc" id="L79">        return new Matrix(random);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

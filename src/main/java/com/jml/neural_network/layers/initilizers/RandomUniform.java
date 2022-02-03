@@ -10,8 +10,8 @@ import java.util.Random;
  */
 public class RandomUniform implements Initializer {
     private Random r;
-    private double min = 0;
-    private double max = 1;
+    protected double min = 0;
+    protected double max = 1;
 
 
     /**

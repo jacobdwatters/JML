@@ -44,7 +44,7 @@ public class GlorotUniform implements Initializer {
 
         for(int i=0; i<m; i++) {
             for(int j=0; j<n; j++) {
-                random[i][j] = (-lim) + r.nextDouble() * (2*lim);;
+                random[i][j] = (-lim) + r.nextDouble()*(2*lim);
             }
         }
 

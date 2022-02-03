@@ -41,11 +41,11 @@ public class HeUniform implements Initializer {
     @Override
     public Matrix init(int m, int n) {
         double[][] random = new double[m][n];
-        double lim = Math.sqrt(6.0/n);
+        double lim = Math.sqrt(2.0/n);
 
         for(int i=0; i<m; i++) {
             for(int j=0; j<n; j++) {
-                random[i][j] = (-lim) + r.nextDouble() * (2*lim);;
+                random[i][j] = (-lim) + r.nextDouble()*(2*lim);
             }
         }
 

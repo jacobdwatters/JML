@@ -2,15 +2,11 @@ package com.jml.neural_network;
 
 import com.jml.core.Model;
 import com.jml.neural_network.activations.Activations;
-import com.jml.neural_network.layers.BaseLayer;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Dropout;
-import com.jml.optimizers.GradientDescent;
-import com.jml.optimizers.Momentum;
-import com.jml.optimizers.Optimizer;
-import com.jml.optimizers.StepLearningRate;
+import com.jml.neural_network.layers.Linear;
+import com.jml.optimizers.*;
 import org.junit.jupiter.api.Test;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -139,6 +135,37 @@ class NeuralNetworkTest {
 
 
     @Test
+    void fit3Test() {
+        String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN1.mdl";
+        nn = new NeuralNetwork(0.001, 5, 2, 0.5e-5);
+        nn.add(new Dropout(2, 0.1));
+        nn.add(new Dense(2, 10, Activations.tanh));
+        nn.add(new Linear(10));
+        nn.add(new Linear(10, 5));
+        nn.add(new Linear(5, 10));
+        nn.add(new Dropout(0.2));
+        nn.add(new Dense(10, Activations.relu));
+        nn.add(new Dense(1, Activations.sigmoid));
+
+        nn.fit(X, Y);
+        double[][] pred = nn.predict(X);
+
+        assertEquals(0.001, nn.learningRate);
+        assertEquals(5, nn.epochs);
+        assertEquals(2, nn.batchSize);
+        assertEquals(0.5e-5, nn.threshold);
+        assertEquals(8, nn.layers.size());
+
+        nn.saveModel(filePath);
+
+        Model<double[][], double[][]> loadedNN = Model.load(filePath);
+        double[][] loadedPred = loadedNN.predict(X);
+
+        assertArrayEquals(pred, loadedPred);
+    }
+
+
+    @Test
     void momentumTest() {
         String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN2.mdl";
         Optimizer optim = new Momentum(0.01);
@@ -151,6 +178,35 @@ class NeuralNetworkTest {
         double[][] pred = nn.predict(X);
 
         assertEquals(0.01, nn.learningRate);
+        assertEquals(1000, nn.epochs);
+        assertEquals(2, nn.batchSize);
+        assertEquals(0.5e-5, nn.threshold);
+        assertEquals(3, nn.layers.size());
+        assertEquals(optim, nn.optim);
+
+        nn.saveModel(filePath);
+
+        Model<double[][], double[][]> loadedNN = Model.load(filePath);
+        double[][] loadedPred = loadedNN.predict(X);
+
+        assertArrayEquals(pred, loadedPred);
+    }
+
+
+    @Test
+    void AdamTest() {
+        String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN2.mdl";
+        Optimizer optim = new Adam(0.01, 0.9, 0.999);
+        nn = new NeuralNetwork(optim, 1000, 2, 0.5e-5);
+        nn.add(new Dense(2, 10, Activations.sigmoid));
+        nn.add(new Dense(10, Activations.relu));
+        nn.add(new Dense(1, Activations.sigmoid));
+
+        nn.fit(X, Y);
+        double[][] pred = nn.predict(X);
+
+        assertEquals(0.01, nn.learningRate);
+        assertEquals(0.01, optim.getLearningRate());
         assertEquals(1000, nn.epochs);
         assertEquals(2, nn.batchSize);
         assertEquals(0.5e-5, nn.threshold);
