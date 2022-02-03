@@ -11,7 +11,7 @@
  */
 public class StepLearningRate extends Scheduler {
 
-    double stepFactor;
+    final double stepFactor;
     int interval;
     int iterations;
 
@@ -31,9 +31,9 @@ public class StepLearningRate extends Scheduler {
      *
      * @param stepFactor Factor to multiply the learning rate by every 10 iterations.
      */
-<span class="fc" id="L34">    public StepLearningRate(double stepFactor) {</span>
-<span class="fc" id="L35">        this.stepFactor = stepFactor;</span>
-<span class="fc" id="L36">    }</span>
+<span class="nc" id="L34">    public StepLearningRate(double stepFactor) {</span>
+<span class="nc" id="L35">        this.stepFactor = stepFactor;</span>
+<span class="nc" id="L36">    }</span>
 
 
     /**

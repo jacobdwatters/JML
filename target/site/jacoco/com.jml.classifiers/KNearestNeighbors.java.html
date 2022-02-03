@@ -18,7 +18,7 @@ import linalg.Vector;
  */
 public class KNearestNeighbors extends Model&lt;double[][], int[]&gt; {
 
-<span class="fc" id="L21">    String MODEL_TYPE = ModelTypes.K_NEAREST_NEIGHBORS.toString();</span>
+<span class="fc" id="L21">    final String MODEL_TYPE = ModelTypes.K_NEAREST_NEIGHBORS.toString();</span>
     protected int k, p;
     protected Matrix X; // Matrix representation of model features.
     protected Matrix y; // Matrix representation of model targets.

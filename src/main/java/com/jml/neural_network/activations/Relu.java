@@ -6,7 +6,7 @@ import linalg.Matrix;
 /**
  * The ReLU (Rectified Linear Unit) activation function. That is f(x)=max(0, x)
  */
-class Relu implements ActivationFunction {
+public class Relu implements ActivationFunction {
 
     public static final String NAME = "ReLU";
 
@@ -17,7 +17,7 @@ class Relu implements ActivationFunction {
      * @return The result of the ReLU activation function applied to the data matrix.
      */
     @Override
-    public Matrix apply(Matrix data) {
+    public Matrix forward(Matrix data) {
         double[][] result = new double[data.numRows()][data.numCols()];
         double value;
 
@@ -43,7 +43,7 @@ class Relu implements ActivationFunction {
      * @return The result of the derivative of the ReLU activation function applied to the data matrix.
      */
     @Override
-    public Matrix slope(Matrix data) {
+    public Matrix back(Matrix data) {
         double[][] result = new double[data.numRows()][data.numCols()];
         double value;
 

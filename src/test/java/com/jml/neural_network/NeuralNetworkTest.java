@@ -2,6 +2,7 @@ package com.jml.neural_network;
 
 import com.jml.core.Model;
 import com.jml.neural_network.activations.Activations;
+import com.jml.neural_network.layers.BaseLayer;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Dropout;
 import com.jml.optimizers.GradientDescent;
@@ -16,16 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NeuralNetworkTest {
     NeuralNetwork nn;
-    double[][] X = {{0, 0},
+    final double[][] X = {{0, 0},
             {0, 1},
             {1, 0},
             {1, 1}};
-    double[][] Y = {{0}, {1}, {1}, {0}};
+    final double[][] Y = {{0}, {1}, {1}, {0}};
 
 
     @Test
     void constructorTest() {
         nn = new NeuralNetwork();
+
         nn.add(new Dense(2, 10, Activations.sigmoid));
         nn.add(new Dense(10, 5, Activations.relu));
 

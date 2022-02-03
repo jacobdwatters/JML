@@ -6,8 +6,9 @@ import com.jml.neural_network.NeuralNetwork;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
-import com.jml.neural_network.layers.Layer;
 
+
+import com.jml.neural_network.layers.TrainableLayer;
 import linalg.Matrix;
 
 
@@ -22,12 +23,14 @@ import linalg.Matrix;
 public class Perceptron extends Model<double[][], double[][]> {
 
     final String MODEL_TYPE = ModelTypes.PERCEPTRON.toString();
-    NeuralNetwork perceptron;
-    ActivationFunction activation;
-    Layer layer;
+    final NeuralNetwork perceptron;
+    final ActivationFunction activation;
+    TrainableLayer layer;
 
-    double learningRate, threshold;
-    int epochs, batchSize;
+    final double learningRate;
+    final double threshold;
+    final int epochs;
+    final int batchSize;
     boolean isFit = false;
 
     StringBuilder inspection = new StringBuilder(
@@ -182,12 +185,12 @@ public class Perceptron extends Model<double[][], double[][]> {
                         "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
         );
 
-        inspection.append("Learning Rate: " + this.learningRate + "\n");
-        inspection.append("Batch Size: " + this.batchSize + "\n");
+        inspection.append("Learning Rate: ").append(this.learningRate).append("\n");
+        inspection.append("Batch Size: ").append(this.batchSize).append("\n");
 
         if(layer != null) {
             inspection.append("Layer:\n" + "------------\n");
-            inspection.append("\t" + layer.inspect());
+            inspection.append("\t").append(layer.inspect());
         }
     }
 

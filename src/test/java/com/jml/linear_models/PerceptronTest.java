@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class PerceptronTest {
     Perceptron perceptron;
 
-    double[][] X1 = {{0.5, 1},
+    final double[][] X1 = {{0.5, 1},
             {0, 0.5},
             {0, 1},
             {0.5, 0},
             {1, 0.5},
             {1, 0}};
-    double[][] y1 = {{1},
+    final double[][] y1 = {{1},
             {1},
             {1},
             {0},

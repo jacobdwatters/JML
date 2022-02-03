@@ -12,9 +12,14 @@ import linalg.Matrix;
  */
 public class LossFunctions {
 
+    /* TODO: All loss functions should become an object rather than a lambda so that we can define, compute() and slope() function
+        for each loss. This will allow different loss functions to be specified for a NeuralNetwork since function and its
+        derivative needs to be computed.
+     */
+
     // A private constructor to hide the implicit constructor.
-<span class="nc" id="L16">    private LossFunctions() {</span>
-<span class="nc" id="L17">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
+<span class="nc" id="L21">    private LossFunctions() {</span>
+<span class="nc" id="L22">        throw new IllegalStateException(&quot;Utility class, Can not create instantiated.&quot;);</span>
     }
 
 
@@ -24,9 +29,7 @@ public class LossFunctions {
      * where &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; are datasets of length &lt;code&gt;n&lt;/code&gt;,
      * and &lt;code&gt;x&lt;/code&gt; is the actual data and &lt;code&gt;y&lt;/code&gt; is the predicted data.
      */
-<span class="fc" id="L27">    public static Function mse = (Matrix y, Matrix yPred) -&gt; {</span>
-<span class="fc" id="L28">        return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());</span>
-    };
+<span class="fc" id="L32">    public static final Function mse = (Matrix y, Matrix yPred) -&gt; yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());</span>
 
 
     /**
@@ -35,9 +38,7 @@ public class LossFunctions {
      * where &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;code/&gt; are datasets of length &lt;code&gt;n&lt;/code&gt;,
      * and &lt;code&gt;x&lt;/code&gt; is the actual data and &lt;code&gt;y&lt;/code&gt; is the predicted data.
      */
-<span class="fc" id="L38">    public static Function sse = (Matrix y, Matrix yPred) -&gt; {</span>
-<span class="fc" id="L39">        return yPred.sub(y).T().mult(yPred.sub(y));</span>
-    };
+<span class="fc" id="L41">    public static final Function sse = (Matrix y, Matrix yPred) -&gt; yPred.sub(y).T().mult(yPred.sub(y));</span>
 
 
     /**
@@ -45,31 +46,31 @@ public class LossFunctions {
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be &quot;very close&quot; to 0 or 1 if
      * appropriate.
      */
-<span class="fc" id="L48">    public static Function binCrossEntropy = (Matrix y, Matrix yPred) -&gt; {</span>
-<span class="fc" id="L49">        double eps = 1e-15;</span>
-<span class="fc" id="L50">        double loss = 0;</span>
-<span class="fc" id="L51">        Matrix result = new Matrix(1);</span>
+<span class="fc" id="L49">    public static final Function binCrossEntropy = (Matrix y, Matrix yPred) -&gt; {</span>
+<span class="fc" id="L50">        double eps = 1e-15;</span>
+<span class="fc" id="L51">        double loss = 0;</span>
+<span class="fc" id="L52">        Matrix result = new Matrix(1);</span>
 
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        if(yPred.numCols() &gt; 2) {</span>
-<span class="fc" id="L54">            throw new IllegalArgumentException(&quot;Predictions seem to have more than two classes. Consider &quot; +</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if(yPred.numCols() &gt; 2) {</span>
+<span class="fc" id="L55">            throw new IllegalArgumentException(&quot;Predictions seem to have more than two classes. Consider &quot; +</span>
                     &quot;crossEntropy() for multiple classes.&quot;);
         }
 
-<span class="fc bfc" id="L58" title="All 2 branches covered.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
             // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
-<span class="fc bfc" id="L60" title="All 2 branches covered.">            if(yPred.getAsDouble(i, 0)==0) {</span>
-<span class="fc" id="L61">                yPred.set(eps, i,  0);</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
-<span class="fc" id="L63">                yPred.set(1-eps, i,  0);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">            if(yPred.getAsDouble(i, 0)==0) {</span>
+<span class="fc" id="L62">                yPred.set(eps, i,  0);</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
+<span class="fc" id="L64">                yPred.set(1-eps, i,  0);</span>
             }
 
-<span class="fc" id="L66">            loss += y.getAsDouble(i, 0)*Math.log(yPred.getAsDouble(i, 0))</span>
-<span class="fc" id="L67">                    + (1-y.getAsDouble(i, 0))*Math.log(1-yPred.getAsDouble(i, 0));</span>
+<span class="fc" id="L67">            loss += y.getAsDouble(i, 0)*Math.log(yPred.getAsDouble(i, 0))</span>
+<span class="fc" id="L68">                    + (1-y.getAsDouble(i, 0))*Math.log(1-yPred.getAsDouble(i, 0));</span>
         }
 
-<span class="fc" id="L70">        result.set(-loss/yPred.numRows(), 0,0);</span>
+<span class="fc" id="L71">        result.set(-loss/yPred.numRows(), 0,0);</span>
 
-<span class="fc" id="L72">        return result;</span>
+<span class="fc" id="L73">        return result;</span>
     };
 
 
@@ -78,28 +79,32 @@ public class LossFunctions {
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be &quot;very close&quot; to 0 or 1 if
      * appropriate.
      */
-<span class="fc" id="L81">    public static Function crossEntropy = (Matrix y, Matrix yPred) -&gt; {</span>
-<span class="fc" id="L82">        double eps = 1e-15;</span>
-<span class="fc" id="L83">        double loss = 0;</span>
-<span class="fc" id="L84">        Matrix result = new Matrix(1);</span>
-        // y contains the actual labels as a one-hot vector.
+<span class="fc" id="L82">    public static final Function crossEntropy = (Matrix y, Matrix yPred) -&gt; {</span>
+<span class="fc" id="L83">        double eps = 1e-15;</span>
+<span class="fc" id="L84">        double loss = 0;</span>
+<span class="fc" id="L85">        Matrix result = new Matrix(1);</span>
 
-<span class="fc bfc" id="L87" title="All 2 branches covered.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
-<span class="fc bfc" id="L88" title="All 2 branches covered.">            for(int j=0; j&lt;yPred.numCols(); j++) {</span>
+        // y contains the actual labels as a one-hot vector.
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">            for(int j=0; j&lt;yPred.numCols(); j++) {</span>
                 // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
-<span class="fc bfc" id="L90" title="All 2 branches covered.">                if(yPred.getAsDouble(i, j)==0) {</span>
-<span class="fc" id="L91">                    yPred.set(eps, i,  j);</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">                } else if(yPred.getAsDouble(i, j)==1) {</span>
-<span class="fc" id="L93">                    yPred.set(1-eps, i,  j);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">                if(yPred.getAsDouble(i, j)==0) {</span>
+<span class="fc" id="L92">                    yPred.set(eps, i,  j);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">                } else if(yPred.getAsDouble(i, j)==1) {</span>
+<span class="fc" id="L94">                    yPred.set(1-eps, i,  j);</span>
                 }
 
-<span class="fc" id="L96">                loss += y.getAsDouble(i, j)*Math.log(yPred.getAsDouble(i, j));</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">                if(y.getAsDouble(i, j) == 1) {</span>
+<span class="fc" id="L98">                    loss += Math.log(yPred.getAsDouble(i, j));</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">                } else if(y.getAsDouble(i, j) != 0) {</span>
+<span class="nc" id="L100">                    throw new IllegalArgumentException(&quot;y does not seem to be a one-hot vector. Must contain binary entries only.&quot;);</span>
+                }
             }
         }
 
-<span class="fc" id="L100">        result.set(-loss/yPred.numRows(), 0,0);</span>
+<span class="fc" id="L105">        result.set(-loss/yPred.numRows(), 0,0);</span>
 
-<span class="fc" id="L102">        return result;</span>
+<span class="fc" id="L107">        return result;</span>
     };
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

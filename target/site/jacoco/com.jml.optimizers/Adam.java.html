@@ -26,43 +26,91 @@ import linalg.Matrix;
  *
  *
  */
-<span class="nc" id="L29">public class Adam extends Optimizer {</span>
+public class Adam extends Optimizer {
+
+    final static double eps = 1E-8;
+    double beta1, beta2;
+    double t; // Time step
+    double alpha;
+    public static final String OPTIM_NAME = &quot;Adam&quot;;
+
+    /**
+     * Creates a Adam optimizer with specified learning rate and parameters.
+     *
+     * @param learningRate Learning rate for the Adam optimizer.
+     * @param beta1 Exponential decay rate for first moment estimate. Must be in [0, 1)
+     * @param beta2 Exponential decay rate for second moment estimate. Must be in [0, 1)
+     */
+<span class="nc" id="L44">    public Adam(double learningRate, double beta1, double beta2) {</span>
+<span class="nc" id="L45">        super.learningRate = learningRate;</span>
+<span class="nc" id="L46">        this.beta1 = beta1;</span>
+<span class="nc" id="L47">        this.beta2 = beta2;</span>
+<span class="nc" id="L48">        t=0;</span>
+<span class="nc" id="L49">        super.name = OPTIM_NAME;</span>
+<span class="nc" id="L50">    }</span>
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of
-     * the optimizer to the matrix w.&lt;br&gt;&lt;br&gt;
-     * &lt;p&gt;
-     * WARNING: If this step method is called for the {@link Momentum} optimizer an exception will be thrown.
-     * Use {@link #step(Matrix, Matrix, Matrix)} instead.
-     *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
+     * Note, this will increase the time step of the Adam optimizer. To not increase the time step see
+     * {@link #step(boolean, Matrix[])}.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    @Override
-    public Matrix step(Matrix w, Matrix wGrad) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L46">        return null;</span>
+    public Matrix[] step(Matrix... params) {
+<span class="nc" id="L64">        return step(true, params);</span>
     }
-
 
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
      *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *              no effect.
+     * @param increaseTime Flag for increasing the timestamp of the Adam optimizer.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-        // TODO: Auto-generated method stub
-<span class="nc" id="L64">        return new Matrix[0];</span>
+    public Matrix[] step(boolean increaseTime, Matrix... params) {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if(params.length != 4) {</span>
+<span class="nc" id="L80">            throw new IllegalArgumentException(&quot;Step method for &quot; + OPTIM_NAME +</span>
+                    &quot; expecting 4 matrices but got &quot; + params.length);
+        }
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if(increaseTime) {</span>
+<span class="nc" id="L84">            t++;</span>
+        }
+
+<span class="nc" id="L87">        Matrix w = params[0];</span>
+<span class="nc" id="L88">        Matrix wGrad = params[1];</span>
+<span class="nc" id="L89">        Matrix v = params[2];</span>
+<span class="nc" id="L90">        Matrix m = params[3];</span>
+
+<span class="nc" id="L92">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
+<span class="nc" id="L93">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
+
+<span class="nc" id="L95">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
+<span class="nc" id="L96">        w = w.sub(m.scalMult(learningRate).elemDiv(sqrt(v).add(eps)));</span>
+
+<span class="nc" id="L98">        return new Matrix[]{w, v, m};</span>
     }
+
+
+    private Matrix sqrt(Matrix A){
+<span class="nc" id="L103">        double[][] result = A.getValuesAsDouble();</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for(int i=0; i&lt;result.length; i++) {</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            for(int j=0; j&lt; result[0].length; j++) {</span>
+<span class="nc" id="L107">                result[i][j] = Math.sqrt(result[i][j]);</span>
+            }
+        }
+
+<span class="nc" id="L111">        return new Matrix(result);</span>
+    }
+
 
     /**
      * Gets the details of this optimizer.
@@ -72,7 +120,7 @@ import linalg.Matrix;
     @Override
     public String getDetails() {
         // TODO:
-<span class="nc" id="L75">        return null;</span>
+<span class="nc" id="L123">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

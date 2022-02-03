@@ -9,6 +9,7 @@ import linalg.Matrix;
  */
 public interface Function {
 
+
     /**
      * Evaluates a loss function which takes features and targets for a model and weights as parameters.
      *

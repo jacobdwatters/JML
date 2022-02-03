@@ -265,10 +265,9 @@ public class Stats {
                 new LinkedList<Map.Entry<Integer, Double> >(hm.entrySet());
 
         // Sort the list
-        Collections.sort(list, new Comparator<Map.Entry<Integer, Double> >() {
+        list.sort(new Comparator<Map.Entry<Integer, Double>>() {
             public int compare(Map.Entry<Integer, Double> o1,
-                               Map.Entry<Integer, Double> o2)
-            {
+                               Map.Entry<Integer, Double> o2) {
                 return (o1.getValue()).compareTo(o2.getValue());
             }
         });

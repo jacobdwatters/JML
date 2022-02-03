@@ -174,16 +174,16 @@ public class PolynomialRegression extends Model&lt;double[], double[]&gt; {
 <span class="pc bpc" id="L174" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
                 );
 
-<span class="fc" id="L177">        details.append(&quot;Polynomial Degree: &quot; + degree + &quot;\n&quot;);</span>
+<span class="fc" id="L177">        details.append(&quot;Polynomial Degree: &quot;).append(degree).append(&quot;\n&quot;);</span>
 
 <span class="pc bpc" id="L179" title="2 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
 <span class="fc" id="L180">            coefficients = w.T().getValuesAsDouble()[0];</span>
 <span class="fc" id="L181">            details.append(&quot;Coefficients (low-&gt;high): &quot;);</span>
 <span class="fc" id="L182">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L183">            details.append(&quot;\nPolynomial: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x + &quot;);</span>
+<span class="fc" id="L183">            details.append(&quot;\nPolynomial: y = &quot;).append(coefficients[0]).append(&quot; + &quot;).append(coefficients[1]).append(&quot;x + &quot;);</span>
 
 <span class="fc bfc" id="L185" title="All 2 branches covered.">            for(int i=2; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L186">                details.append(coefficients[i] + &quot;x^&quot; + i);</span>
+<span class="fc" id="L186">                details.append(coefficients[i]).append(&quot;x^&quot;).append(i);</span>
 
 <span class="fc bfc" id="L188" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
 <span class="fc" id="L189">                    details.append(&quot; + &quot;);</span>

@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DataSplitterTest {
-    String filePath = "./src/test/java/com/jml/preprocessing/data/testdata.csv";
+    final String filePath = "./src/test/java/com/jml/preprocessing/data/testdata.csv";
 
     @Test
     void trainTestSplitTest() {

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlorotNormal.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.layers.initilizers</a> &gt; <span class="el_source">GlorotNormal.java</span></div><h1>GlorotNormal.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.layers.initilizers;
+
+import linalg.Matrix;
+
+import java.util.Random;
+
+
+/**
+ * {{@link com.jml.neural_network.layers.TrainableLayer layer} parameter initializer to produce random values from a truncated normal distribution with standard deviation
+ * std = sqrt(2 / (fanIn + fanOut)) and mean of 0 where fanIn is the input dimension for the layer and fanOut is the output dimension for
+ * the layer.
+ */
+public class GlorotNormal implements Initializer {
+    private Random r;
+
+
+    /**
+     * Creates a GlorotNormal initializer with specified seed.
+     */
+<span class="fc" id="L20">    public GlorotNormal() {</span>
+<span class="fc" id="L21">        r = new Random();</span>
+<span class="fc" id="L22">    }</span>
+
+
+    /**
+     * Creates a GlorotNormal initializer with specified seed.
+     * @param seed Seed for the random number generator.
+     */
+<span class="nc" id="L29">    public GlorotNormal(long seed) {</span>
+<span class="nc" id="L30">        r = new Random(seed);</span>
+<span class="nc" id="L31">    }</span>
+
+
+    /**
+     * Initializes values of a weight/bias matrix as specified by this initializer.
+     *
+     * @param m Number of rows in the matrix.
+     * @param n Number of columns in the matrix.
+     * @return A {@link Matrix} initialized with values from the distribution specified by this initializer.
+     */
+    @Override
+    public Matrix init(int m, int n) {
+<span class="fc" id="L43">        double[][] random = new double[m][n];</span>
+<span class="fc" id="L44">        double std = Math.sqrt(2.0/(m+n));</span>
+
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for(int i=0; i&lt;m; i++) {</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">            for(int j=0; j&lt;n; j++) {</span>
+<span class="fc" id="L48">                random[i][j] = r.nextGaussian()*std;</span>
+            }
+        }
+
+<span class="fc" id="L52">        return new Matrix(random);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -174,16 +174,16 @@ public class PolynomialRegression extends Model<double[], double[]> {
                 "Is Trained: " + (isFit ? "Yes" : "No") + "\n"
                 );
 
-        details.append("Polynomial Degree: " + degree + "\n");
+        details.append("Polynomial Degree: ").append(degree).append("\n");
 
         if(isFit && w!=null) {
             coefficients = w.T().getValuesAsDouble()[0];
             details.append("Coefficients (low->high): ");
             details.append(ArrayUtils.asString(coefficients));
-            details.append("\nPolynomial: y = " + coefficients[0] + " + " + coefficients[1] + "x + ");
+            details.append("\nPolynomial: y = ").append(coefficients[0]).append(" + ").append(coefficients[1]).append("x + ");
 
             for(int i=2; i<coefficients.length; i++) {
-                details.append(coefficients[i] + "x^" + i);
+                details.append(coefficients[i]).append("x^").append(i);
 
                 if(i<coefficients.length-1) {
                     details.append(" + ");

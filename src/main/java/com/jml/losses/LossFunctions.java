@@ -12,6 +12,11 @@ import linalg.Matrix;
  */
 public class LossFunctions {
 
+    /* TODO: All loss functions should become an object rather than a lambda so that we can define, compute() and slope() function
+        for each loss. This will allow different loss functions to be specified for a NeuralNetwork since function and its
+        derivative needs to be computed.
+     */
+
     // A private constructor to hide the implicit constructor.
     private LossFunctions() {
         throw new IllegalStateException("Utility class, Can not create instantiated.");
@@ -24,9 +29,7 @@ public class LossFunctions {
      * where <code>x</code> and <code>y</code> are datasets of length <code>n</code>,
      * and <code>x</code> is the actual data and <code>y</code> is the predicted data.
      */
-    public static Function mse = (Matrix y, Matrix yPred) -> {
-        return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());
-    };
+    public static final Function mse = (Matrix y, Matrix yPred) -> yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());
 
 
     /**
@@ -35,9 +38,7 @@ public class LossFunctions {
      * where <code>x</code> and <code>y<code/> are datasets of length <code>n</code>,
      * and <code>x</code> is the actual data and <code>y</code> is the predicted data.
      */
-    public static Function sse = (Matrix y, Matrix yPred) -> {
-        return yPred.sub(y).T().mult(yPred.sub(y));
-    };
+    public static final Function sse = (Matrix y, Matrix yPred) -> yPred.sub(y).T().mult(yPred.sub(y));
 
 
     /**
@@ -45,7 +46,7 @@ public class LossFunctions {
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
      * appropriate.
      */
-    public static Function binCrossEntropy = (Matrix y, Matrix yPred) -> {
+    public static final Function binCrossEntropy = (Matrix y, Matrix yPred) -> {
         double eps = 1e-15;
         double loss = 0;
         Matrix result = new Matrix(1);
@@ -78,12 +79,12 @@ public class LossFunctions {
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
      * appropriate.
      */
-    public static Function crossEntropy = (Matrix y, Matrix yPred) -> {
+    public static final Function crossEntropy = (Matrix y, Matrix yPred) -> {
         double eps = 1e-15;
         double loss = 0;
         Matrix result = new Matrix(1);
-        // y contains the actual labels as a one-hot vector.
 
+        // y contains the actual labels as a one-hot vector.
         for(int i=0; i<yPred.numRows(); i++) {
             for(int j=0; j<yPred.numCols(); j++) {
                 // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
@@ -93,7 +94,11 @@ public class LossFunctions {
                     yPred.set(1-eps, i,  j);
                 }
 
-                loss += y.getAsDouble(i, j)*Math.log(yPred.getAsDouble(i, j));
+                if(y.getAsDouble(i, j) == 1) {
+                    loss += Math.log(yPred.getAsDouble(i, j));
+                } else if(y.getAsDouble(i, j) != 0) {
+                    throw new IllegalArgumentException("y does not seem to be a one-hot vector. Must contain binary entries only.");
+                }
             }
         }
 

@@ -39,4 +39,28 @@ class CrossEntTest {
 
         assertEquals(expectedCE, Stats.round(ce, 6));
     }
+
+
+    @Test
+    void crossEnt3Test() {
+        double[][] y = {{0, 0, 0, 1},
+                {0, 1, 0, 0},
+                {0, 1, 0, 0},
+                {1, 0, 0, 0},
+                {0, 0, 1, 0}};
+        double[][] y_pred = {{0.01, 0.04, 0, 0.95},
+                {0.12, 0.8, 0.01, 0.07},
+                {0.6, 0.3, 0.025, 0.075},
+                {0.452, 0.21, 0.1, 0.238},
+                {0, 0, 0.8, 0.2}};
+
+        expectedCE = 0.4991252600983624;
+
+        Matrix Y = new Matrix(y);
+        Matrix Y_pred = new Matrix(y_pred);
+
+        Matrix loss = LossFunctions.crossEntropy.compute(Y, Y_pred);
+
+        assertEquals(expectedCE, loss.getAsDouble(0, 0));
+    }
 }

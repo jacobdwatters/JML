@@ -28,41 +28,89 @@ import linalg.Matrix;
  */
 public class Adam extends Optimizer {
 
+    final static double eps = 1E-8;
+    double beta1, beta2;
+    double t; // Time step
+    double alpha;
+    public static final String OPTIM_NAME = "Adam";
 
     /**
-     * Steps the optimizer a single iteration by applying the update rule of
-     * the optimizer to the matrix w.<br><br>
-     * <p>
-     * WARNING: If this step method is called for the {@link Momentum} optimizer an exception will be thrown.
-     * Use {@link #step(Matrix, Matrix, Matrix)} instead.
+     * Creates a Adam optimizer with specified learning rate and parameters.
      *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @return The result of applying the update rule of the optimizer to the matrix w.
+     * @param learningRate Learning rate for the Adam optimizer.
+     * @param beta1 Exponential decay rate for first moment estimate. Must be in [0, 1)
+     * @param beta2 Exponential decay rate for second moment estimate. Must be in [0, 1)
      */
-    @Override
-    public Matrix step(Matrix w, Matrix wGrad) {
-        // TODO: Auto-generated method stub
-        return null;
+    public Adam(double learningRate, double beta1, double beta2) {
+        super.learningRate = learningRate;
+        this.beta1 = beta1;
+        this.beta2 = beta2;
+        t=0;
+        super.name = OPTIM_NAME;
     }
 
 
-
     /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
-     *
-     * @param w     A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v     The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *              no effect.
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
+     * Note, this will increase the time step of the Adam optimizer. To not increase the time step see
+     * {@link #step(boolean, Matrix[])}.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    @Override
-    public Matrix[] step(Matrix w, Matrix wGrad, Matrix v) {
-        // TODO: Auto-generated method stub
-        return new Matrix[0];
+    public Matrix[] step(Matrix... params) {
+        return step(true, params);
     }
+
+
+    /**
+     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w.
+     *
+     * @param increaseTime Flag for increasing the timestamp of the Adam optimizer.
+     * @param params An array of matrices strictly containing {w, wGrad, v, m}
+     *               where w is the matrix containing the weights to apply the update to,
+     *               wGrad is the gradient of the objective function with respect to w,
+     *               v is the second moment estimate, and v is the first moment estimate.
+     * @return The result of applying the update rule of the optimizer to the matrix w.
+     */
+    public Matrix[] step(boolean increaseTime, Matrix... params) {
+        if(params.length != 4) {
+            throw new IllegalArgumentException("Step method for " + OPTIM_NAME +
+                    " expecting 4 matrices but got " + params.length);
+        }
+        if(increaseTime) {
+            t++;
+        }
+
+        Matrix w = params[0];
+        Matrix wGrad = params[1];
+        Matrix v = params[2];
+        Matrix m = params[3];
+
+        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));
+        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));
+
+        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));
+        w = w.sub(m.scalMult(learningRate).elemDiv(sqrt(v).add(eps)));
+
+        return new Matrix[]{w, v, m};
+    }
+
+
+    private Matrix sqrt(Matrix A){
+        double[][] result = A.getValuesAsDouble();
+
+        for(int i=0; i<result.length; i++) {
+            for(int j=0; j< result[0].length; j++) {
+                result[i][j] = Math.sqrt(result[i][j]);
+            }
+        }
+
+        return new Matrix(result);
+    }
+
 
     /**
      * Gets the details of this optimizer.

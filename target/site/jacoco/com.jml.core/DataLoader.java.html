@@ -33,17 +33,15 @@ public class DataLoader {
 <span class="fc" id="L33">        String[][] targets = new String[content.length][1];</span>
 
 <span class="fc bfc" id="L35" title="All 2 branches covered.">        for(int i=0; i&lt; content.length; i++) {</span>
-<span class="fc bfc" id="L36" title="All 2 branches covered.">            for(int j=0; j&lt; content[0].length-1; j++) {</span>
-<span class="fc" id="L37">                features[i][j] = content[i][j];</span>
-            }
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">            if (content[0].length - 1 &gt;= 0) System.arraycopy(content[i], 0, features[i], 0, content[0].length - 1);</span>
 
-<span class="fc" id="L40">            targets[i][0] = content[i][content[0].length-1];</span>
+<span class="fc" id="L38">            targets[i][0] = content[i][content[0].length-1];</span>
         }
 
-<span class="fc" id="L43">        data.add(features);</span>
-<span class="fc" id="L44">        data.add(targets);</span>
+<span class="fc" id="L41">        data.add(features);</span>
+<span class="fc" id="L42">        data.add(targets);</span>
 
-<span class="fc" id="L46">        return data;</span>
+<span class="fc" id="L44">        return data;</span>
     }
 
 
@@ -59,39 +57,39 @@ public class DataLoader {
      * @return An array list of length two containing the features and targets of the dataset in that order.
      */
     public static List&lt;String[][]&gt; loadFeaturesAndTargets(String filePath, int[] featureColumns, int[] targetColumns) {
-<span class="fc" id="L62">        List&lt;String[][]&gt; data = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L63">        String[][] content = FileManager.readCSVtoString(filePath);</span>
+<span class="fc" id="L60">        List&lt;String[][]&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L61">        String[][] content = FileManager.readCSVtoString(filePath);</span>
 
-<span class="fc bfc" id="L65" title="All 2 branches covered.">        if(featureColumns.length + targetColumns.length != content[0].length) {</span>
-<span class="fc" id="L66">            throw new IllegalArgumentException(&quot;Total number of passed feature and target columns must match &quot;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if(featureColumns.length + targetColumns.length != content[0].length) {</span>
+<span class="fc" id="L64">            throw new IllegalArgumentException(&quot;Total number of passed feature and target columns must match &quot;</span>
             + &quot;the number of columns in the file. However, got (&quot; + featureColumns.length + &quot;, &quot; + targetColumns.length +
                     &quot;) and total columns in the csv file &quot; + content[0].length);
         } // TODO: This is not necessary, user should be able to select a subset of the file columns.
 
-<span class="fc" id="L71">        String[][] features = new String[content.length][featureColumns.length];</span>
-<span class="fc" id="L72">        String[][] targets = new String[content.length][targetColumns.length];</span>
+<span class="fc" id="L69">        String[][] features = new String[content.length][featureColumns.length];</span>
+<span class="fc" id="L70">        String[][] targets = new String[content.length][targetColumns.length];</span>
 
-<span class="fc" id="L74">        int colCount = 0;</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        for(int j : featureColumns) {</span>
-<span class="fc bfc" id="L76" title="All 2 branches covered.">            for(int i=0; i&lt; content.length; i++) {</span>
-<span class="fc" id="L77">                features[i][colCount] = content[i][j];</span>
+<span class="fc" id="L72">        int colCount = 0;</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        for(int j : featureColumns) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            for(int i=0; i&lt; content.length; i++) {</span>
+<span class="fc" id="L75">                features[i][colCount] = content[i][j];</span>
             }
 
-<span class="fc" id="L80">            colCount++;</span>
+<span class="fc" id="L78">            colCount++;</span>
         }
 
-<span class="fc" id="L83">        colCount=0;</span>
-<span class="fc bfc" id="L84" title="All 2 branches covered.">        for(int j : targetColumns) {</span>
-<span class="fc bfc" id="L85" title="All 2 branches covered.">            for(int i=0; i&lt; content.length; i++) {</span>
-<span class="fc" id="L86">                targets[i][colCount] = content[i][j];</span>
+<span class="fc" id="L81">        colCount=0;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for(int j : targetColumns) {</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            for(int i=0; i&lt; content.length; i++) {</span>
+<span class="fc" id="L84">                targets[i][colCount] = content[i][j];</span>
             }
-<span class="fc" id="L88">            colCount++;</span>
+<span class="fc" id="L86">            colCount++;</span>
         }
 
-<span class="fc" id="L91">        data.add(features);</span>
-<span class="fc" id="L92">        data.add(targets);</span>
+<span class="fc" id="L89">        data.add(features);</span>
+<span class="fc" id="L90">        data.add(targets);</span>
 
-<span class="fc" id="L94">        return data;</span>
+<span class="fc" id="L92">        return data;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -265,28 +265,27 @@ public class Stats {
 <span class="fc" id="L265">                new LinkedList&lt;Map.Entry&lt;Integer, Double&gt; &gt;(hm.entrySet());</span>
 
         // Sort the list
-<span class="fc" id="L268">        Collections.sort(list, new Comparator&lt;Map.Entry&lt;Integer, Double&gt; &gt;() {</span>
+<span class="fc" id="L268">        list.sort(new Comparator&lt;Map.Entry&lt;Integer, Double&gt;&gt;() {</span>
             public int compare(Map.Entry&lt;Integer, Double&gt; o1,
-                               Map.Entry&lt;Integer, Double&gt; o2)
-            {
-<span class="fc" id="L272">                return (o1.getValue()).compareTo(o2.getValue());</span>
+                               Map.Entry&lt;Integer, Double&gt; o2) {
+<span class="fc" id="L271">                return (o1.getValue()).compareTo(o2.getValue());</span>
             }
         });
 
         // put data from sorted list to hashmap
-<span class="fc" id="L277">        HashMap&lt;Integer, Double&gt; sorted = new LinkedHashMap&lt;Integer, Double&gt;();</span>
-<span class="fc bfc" id="L278" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, Double&gt; aa : list) {</span>
-<span class="fc" id="L279">            sorted.put(aa.getKey(), aa.getValue());</span>
-<span class="fc" id="L280">        }</span>
+<span class="fc" id="L276">        HashMap&lt;Integer, Double&gt; sorted = new LinkedHashMap&lt;Integer, Double&gt;();</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, Double&gt; aa : list) {</span>
+<span class="fc" id="L278">            sorted.put(aa.getKey(), aa.getValue());</span>
+<span class="fc" id="L279">        }</span>
         // -------------------------------------------------------------------------------------
 
-<span class="fc" id="L283">        Object[] keys = sorted.keySet().toArray();</span>
+<span class="fc" id="L282">        Object[] keys = sorted.keySet().toArray();</span>
 
-<span class="pc bpc" id="L285" title="1 of 4 branches missed.">        for(int i=0; i&lt;k &amp;&amp; i&lt;keys.length; i++) {</span>
-<span class="fc" id="L286">            mindices[i] = (int) keys[i];</span>
+<span class="pc bpc" id="L284" title="1 of 4 branches missed.">        for(int i=0; i&lt;k &amp;&amp; i&lt;keys.length; i++) {</span>
+<span class="fc" id="L285">            mindices[i] = (int) keys[i];</span>
         }
 
-<span class="fc" id="L289">        return mindices;</span>
+<span class="fc" id="L288">        return mindices;</span>
     }
 
 
@@ -297,15 +296,15 @@ public class Stats {
      * @return The maximum value in data.
      */
     public static double max(double... data) {
-<span class="fc" id="L300">        double maximum = Double.MIN_VALUE;</span>
+<span class="fc" id="L299">        double maximum = Double.MIN_VALUE;</span>
 
-<span class="fc bfc" id="L302" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc bfc" id="L303" title="All 2 branches covered.">            if(data[i] &gt; maximum) { // Then we have a new maximum</span>
-<span class="fc" id="L304">                maximum = data[i];</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            if(data[i] &gt; maximum) { // Then we have a new maximum</span>
+<span class="fc" id="L303">                maximum = data[i];</span>
             }
         }
 
-<span class="fc" id="L308">        return maximum;</span>
+<span class="fc" id="L307">        return maximum;</span>
     }
 
 
@@ -317,11 +316,11 @@ public class Stats {
      * @throws IllegalArgumentException if &lt;code&gt;p&lt;/code&gt; is not in range [0, 1].
      */
     public static boolean genRandBoolean(double p) {
-<span class="pc bpc" id="L320" title="2 of 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
-<span class="nc" id="L321">            throw new IllegalArgumentException(&quot;probability must be between 0 and 1 inclusive but got &quot; + p + &quot;.&quot;);</span>
+<span class="pc bpc" id="L319" title="2 of 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
+<span class="nc" id="L320">            throw new IllegalArgumentException(&quot;probability must be between 0 and 1 inclusive but got &quot; + p + &quot;.&quot;);</span>
         }
 
-<span class="fc bfc" id="L324" title="All 2 branches covered.">        return random.nextDouble() &lt; p;</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">        return random.nextDouble() &lt; p;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

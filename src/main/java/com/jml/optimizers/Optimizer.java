@@ -8,33 +8,17 @@ import linalg.Matrix;
 public abstract class Optimizer {
     double learningRate; // Learning rate of the optimizer.
     public Scheduler schedule; // Learning rate scheduler rule to apply during optimization. If this is left as null, then no rule will be applied.
-    public String name;
+    public String name; // Name of the optimizer.
 
     /**
      * Steps the optimizer a single iteration by applying the update rule of
-     * the optimizer to the matrix w.<br><br>
+     * the optimizer to the matrix w.
      *
-     * WARNING: If this step method is called for the {@link Momentum} optimizer an exception will be thrown.
-     * Use {@link #step(Matrix, Matrix, Matrix)} instead.
-     *
-     * @param w A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
+     * @param params An array of Matrices strictly containing the relevant parameters for that optimizer.
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
-    public abstract Matrix step(Matrix w, Matrix wGrad);
-
-
-    /**
-     * Steps the optimizer a single iteration by applying the update rule of the optimizer to the matrix w. This
-     * step method should be used for momentum.
-     *
-     * @param w A matrix containing the weights to apply the update to.
-     * @param wGrad The gradient of w with respect to some function (Most likely a model).
-     * @param v The update vector for the momentum optimizer. If the optimizer is {@link GradientDescent} This will have
-     *          no effect.
-     * @return The result of applying the update rule of the optimizer to the matrix w.
-     */
-    public abstract Matrix[] step(Matrix w, Matrix wGrad, Matrix v);
+    public abstract Matrix[] step(Matrix... params);
+    public abstract Matrix[] step(boolean flag, Matrix... params);
 
 
     /**
