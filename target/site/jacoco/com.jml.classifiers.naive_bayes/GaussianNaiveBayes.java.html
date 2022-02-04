@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GaussianNaiveBayes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.classifiers.naive_bayes</a> &gt; <span class="el_source">GaussianNaiveBayes.java</span></div><h1>GaussianNaiveBayes.java</h1><pre class="source lang-java linenums">package com.jml.classifiers.naive_bayes;
+
+import com.jml.core.Model;
+import com.jml.preprocessing.DataSplitter;
+
+import com.jml.util.ArrayUtils;
+import linalg.Matrix;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+<span class="nc" id="L14">public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {</span>
+
+    private Map&lt;Integer, List&lt;double[]&gt;&gt; data;
+    private Map&lt;Integer, double[]&gt; meanByCol; // Mean for each column of the features for each class.
+    private Map&lt;Integer, double[]&gt; stddevByCol; // Standard deviation for each column of the features for each class.
+
+
+    @Override
+    public GaussianNaiveBayes fit(double[][] features, double[] targets) {
+<span class="nc" id="L23">        data = DataSplitter.splitByClass(features, ArrayUtils.toInt(targets));</span>
+<span class="nc" id="L24">        summerize();</span>
+
+<span class="nc" id="L26">        return this;</span>
+    }
+
+
+    // Computes the mean and standard deviation for each feature for each class.
+    private void summerize() {
+        Matrix classData; // Data for a single class
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        for(Integer key : data.keySet()) {</span>
+            // TODO: compute mean/std for each feature column in this class.
+<span class="nc" id="L36">            classData = new Matrix(ArrayUtils.toDouble2D(data.get(key).toArray())).T();</span>
+<span class="nc" id="L37">        }</span>
+
+<span class="nc" id="L39">    }</span>
+
+
+    @Override
+    public double[] predict(double[][] features) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L45">        return new double[0];</span>
+    }
+
+
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L52">        return null;</span>
+    }
+
+
+    @Override
+    public Matrix getParams() {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L59">        return null;</span>
+    }
+
+
+    @Override
+    public void saveModel(String filePath) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L66">    }</span>
+
+
+    @Override
+    public String inspect() {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L72">        return null;</span>
+    }
+
+
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L79">        return null;</span>
+    }
+
+
+    public static void main(String[] args) {
+<span class="nc" id="L84">        double[][] x = {{1, 2, 3},</span>
+                {3, 2, 1},
+                {2, 3, 1},
+                {-1, -2, -3},
+                {8, 9, 10},
+                {12, -2, -1},
+                {0.23, 3.5, 9.8}};
+<span class="nc" id="L91">        double y[] = {0, 0, 1, 0, 2, 1, 2};</span>
+
+<span class="nc" id="L93">        GaussianNaiveBayes nb = new GaussianNaiveBayes();</span>
+<span class="nc" id="L94">        nb.fit(x, y);</span>
+<span class="nc" id="L95">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
