@@ -46,6 +46,14 @@ for this library as well.
 >      - Mean squared error
 >      - Binary cross-entropy
 >      - Multi-class cross-entropy
+>    - Weight and Bias initializers
+>      - Constant values
+>      - Random normal/uniform values 
+>        - Specify mean, standard deviation, min, and max.
+>      - Glorot normal/uniform values
+>      - He normal/uniform values
+>      - Random orthongonal matrices
+>        - matrix must be square.
 >- <b>Optimizers</b>
 >     - Gradient descent
 >     - Momentum
