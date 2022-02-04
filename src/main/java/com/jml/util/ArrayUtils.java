@@ -217,6 +217,27 @@ public class ArrayUtils {
 
 
     /**
+     * Converts an object array to a double array.
+     * @return The array as an object array
+     */
+    public static double[][] toDouble2D(Object val) {
+        if(val instanceof double[][])
+            return (double[][]) val;
+        int arrlength = Array.getLength(val);
+        int arrlength2 = Array.getLength(Array.get(val, 0));
+        double[][] outputArray = new double[arrlength][arrlength2];
+
+        for(int i = 0; i < arrlength; ++i){
+            for(int j=0; j<arrlength2; j++) {
+                outputArray[i][j] = Double.valueOf(Array.get(Array.get(val, i), j).toString());
+            }
+        }
+
+        return outputArray;
+    }
+
+
+    /**
      * Converts a String array to an 1D array of doubles.<br>
      * Also see {@link #toDouble(String[])} for 1D arrays.
      *

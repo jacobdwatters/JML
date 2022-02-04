@@ -1,8 +1,7 @@
 package com.jml.preprocessing;
 import com.jml.util.ArrayUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A class that provides a method for splitting a dataset into a training and testing dataset.
@@ -62,6 +61,31 @@ public class DataSplitter {
         split.put("yTrain", trainY);
         split.put("xTest", testX);
         split.put("yTest", testY);
+
+        return split;
+    }
+
+
+    /**
+     * Splits data by the class label.
+     * @param X Features of the dataset. Each row is one sample of the dataset.
+     * @param y Class labels for each data sample.
+     * @return A map containing each class and the list of samples belonging to that class.
+     */
+    public static Map<Integer, List<double[]>> splitByClass(double[][] X, int[] y) {
+        Map<Integer, List<double[]>> split = new HashMap<>();
+        List<double[]> temp;
+
+        for(int i=0; i<y.length; i++) {
+            if(!split.containsKey(y[i])) { // Check if map contains this class already.
+                temp = new ArrayList<>();
+                temp.add(X[i]);
+                split.put(y[i], temp);
+            } else { // Then this key already exists
+                temp = split.get(y[i]);
+                temp.add(X[i]);
+            }
+        }
 
         return split;
     }
