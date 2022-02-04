@@ -160,8 +160,8 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public Matrix back(Matrix upstreamGrad) {
-<span class="fc" id="L163">        this.wGrad = upstreamGrad.T().mult(this.forwardIn.T());</span>
-<span class="fc" id="L164">        this.bGrad = upstreamGrad.T();</span>
+<span class="fc" id="L163">        this.wGrad = wGrad.add(upstreamGrad.T().mult(this.forwardIn.T()));</span>
+<span class="fc" id="L164">        this.bGrad = bGrad.add(upstreamGrad.T());</span>
 
 <span class="fc" id="L166">        this.backwardOut = upstreamGrad.mult(weights); // Gradient of model with respect to inputs of this layer.</span>
 
