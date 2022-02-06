@@ -1,97 +1,266 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GaussianNaiveBayes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.classifiers.naive_bayes</a> &gt; <span class="el_source">GaussianNaiveBayes.java</span></div><h1>GaussianNaiveBayes.java</h1><pre class="source lang-java linenums">package com.jml.classifiers.naive_bayes;
 
+import com.jml.core.Block;
 import com.jml.core.Model;
+import com.jml.core.ModelTypes;
+import com.jml.core.Stats;
+import com.jml.linear_models.LinearModelTags;
 import com.jml.preprocessing.DataSplitter;
 
 import com.jml.util.ArrayUtils;
+import com.jml.util.FileManager;
 import linalg.Matrix;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-<span class="nc" id="L14">public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {</span>
+
+/**
+ * A Gaussian Naive Bayes model. Fits a dataset by assuming the dataset if drawn from a Gaussian / normal distribution
+ * and that each feature has zero covariance and provides classifications based on these assumptions.
+ */
+public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {
+    // TODO: All classifiers should have a 'predictProbabilities()' Method.
+<span class="nc" id="L23">    protected final String MODEL_TYPE = ModelTypes.GAUSSIAN_NAIVE_BAYES.toString();</span>
+<span class="nc" id="L24">    protected boolean isFit = false;</span>
 
     private Map&lt;Integer, List&lt;double[]&gt;&gt; data;
-    private Map&lt;Integer, double[]&gt; meanByCol; // Mean for each column of the features for each class.
-    private Map&lt;Integer, double[]&gt; stddevByCol; // Standard deviation for each column of the features for each class.
+<span class="nc" id="L27">    private Map&lt;Integer, double[]&gt; meansByFeature = new HashMap&lt;&gt;(); // Mean for each column of the features for each class.</span>
+<span class="nc" id="L28">    private Map&lt;Integer, double[]&gt; stdsByFeature = new HashMap&lt;&gt;(); // Standard deviation for each column of the features for each class.</span>
+<span class="nc" id="L29">    private Map&lt;Integer, Double&gt; priors = new HashMap&lt;&gt;();</span>
+
+    private double[][] features;
+    private double[] targets;
+
+<span class="nc" id="L34">    private StringBuilder inspection = new StringBuilder(</span>
+            &quot;Model Details\n&quot; +
+                    &quot;----------------------------\n&quot; +
+                    &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
+                    &quot;Is Trained: No\n&quot;
+    );
 
 
+    /**
+     * Creates a Gaussian Naive Bayes classification model.
+     */
+<span class="nc" id="L45">    public GaussianNaiveBayes() {</span>
+        // Does nothing.
+<span class="nc" id="L47">    }</span>
+
+
+    /**
+     * Fits or trains the model with the given features and targets.
+     *
+     * @param features The features of the training set.
+     * @param targets  The targets of the training set.
+     * @return This. i.e. the trained model.
+     */
     @Override
     public GaussianNaiveBayes fit(double[][] features, double[] targets) {
-<span class="nc" id="L23">        data = DataSplitter.splitByClass(features, ArrayUtils.toInt(targets));</span>
-<span class="nc" id="L24">        summerize();</span>
+<span class="nc" id="L59">        this.features = features;</span>
+<span class="nc" id="L60">        this.targets = targets;</span>
+<span class="nc" id="L61">        data = DataSplitter.splitByClass(features, ArrayUtils.toInt(targets));</span>
+<span class="nc" id="L62">        summarize(); // Summarize the data.</span>
+<span class="nc" id="L63">        this.isFit = true;</span>
 
-<span class="nc" id="L26">        return this;</span>
+<span class="nc" id="L65">        buildInspection(); // build the inspection of this model.</span>
+
+<span class="nc" id="L67">        return this;</span>
     }
 
 
     // Computes the mean and standard deviation for each feature for each class.
-    private void summerize() {
-        Matrix classData; // Data for a single class
+    private void summarize() {
+        double[][] classData; // Data for a single class
+        double[] means;
+        double[] stds;
 
-<span class="nc bnc" id="L34" title="All 2 branches missed.">        for(Integer key : data.keySet()) {</span>
-            // TODO: compute mean/std for each feature column in this class.
-<span class="nc" id="L36">            classData = new Matrix(ArrayUtils.toDouble2D(data.get(key).toArray())).T();</span>
-<span class="nc" id="L37">        }</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        for(int klass : data.keySet()) {</span>
+<span class="nc" id="L78">            classData = new Matrix(ArrayUtils.toDouble2D(data.get(klass).toArray())).T().getValuesAsDouble();</span>
+<span class="nc" id="L79">            means = new double[classData.length];</span>
+<span class="nc" id="L80">            stds = new double[classData.length];</span>
 
-<span class="nc" id="L39">    }</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            for(int i=0; i&lt;classData.length; i++) {</span>
+<span class="nc" id="L83">                means[i] = Stats.mean(classData[i]);</span>
+<span class="nc" id="L84">                stds[i] = Stats.std(classData[i]);</span>
+            }
+
+            // Insert the mean and standard deviation for each feature for this class.
+<span class="nc" id="L88">            meansByFeature.put(klass, means);</span>
+<span class="nc" id="L89">            stdsByFeature.put(klass, stds);</span>
+<span class="nc" id="L90">            priors.put(klass, Math.log((double) classData[0].length/this.features.length));</span>
+<span class="nc" id="L91">        }</span>
+<span class="nc" id="L92">    }</span>
 
 
+    /**
+     * Uses fitted/trained model to make prediction on single feature.
+     *
+     * @param features The features to make predictions on.
+     * @return The models predicted labels.
+     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
+     *                                  the specification when the model was compiled.
+     * @throws IllegalStateException    Thrown if the model has not been compiled and fit.
+     */
     @Override
     public double[] predict(double[][] features) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L45">        return new double[0];</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if(features[0].length != this.features[0].length) {</span>
+<span class="nc" id="L107">            throw new IllegalArgumentException(&quot;Can not make predictions on data with &quot; + features[0].length +</span>
+                    &quot; columns. Expecting &quot; + this.features[0].length + &quot;.&quot;);
+        }
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (!isFit) {</span>
+<span class="nc" id="L111">            throw new IllegalStateException(&quot;Model must be fit before predictions can be made.&quot;);</span>
+        }
+
+<span class="nc" id="L114">        double[] predictions = new double[features.length];</span>
+        double[] means;
+        double[] stds;
+
+        double post;
+        double prior;
+<span class="nc" id="L120">        Map&lt;Integer, Double&gt; posteriors = new HashMap&lt;&gt;();</span>
+
+
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for(int i=0; i&lt; features.length; i++) { // Iterate over all the samples</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            for(int klass : meansByFeature.keySet()) {</span>
+<span class="nc" id="L125">                means = meansByFeature.get(klass);</span>
+<span class="nc" id="L126">                stds = stdsByFeature.get(klass);</span>
+<span class="nc" id="L127">                prior = priors.get(klass);</span>
+
+<span class="nc" id="L129">                post = Stats.sum(log(normalPdf(features[i], means, stds))) + prior;</span>
+<span class="nc" id="L130">                posteriors.put(klass, post);</span>
+<span class="nc" id="L131">            }</span>
+
+<span class="nc" id="L133">            predictions[i] = argmax(posteriors);</span>
+        }
+
+<span class="nc" id="L136">        return predictions;</span>
+    }
+
+
+    /**
+     * Computes the value of the normal/gaussian distribution probability density function with specified mean and
+     * standard deviation.
+     *
+     * @param x Value to evaluate probability density function at.
+     * @param mean Mean of the normal/gaussian distribution.
+     * @param std Standard deviation of the normal/gaussian distribution.
+     * @return normal/gaussian distribution probability density function with specified mean and standard deviation
+     * evaluated at x.
+     */
+    private static double[] normalPdf(double[] x, double[] mean, double[] std) {
+<span class="nc bnc" id="L151" title="All 4 branches missed.">        if(x.length != mean.length || x.length != std.length) {</span>
+<span class="nc" id="L152">            throw new IllegalArgumentException(&quot;All arrays should have the same length but got &quot; + x.length + &quot;,&quot; +</span>
+                    mean.length + &quot;, &quot; + std.length + &quot;.&quot;);
+        }
+
+<span class="nc" id="L156">        double[] probabilities = new double[x.length];</span>
+
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        for(int i=0; i&lt;x.length; i++) {</span>
+            // Compute gaussian probability for each feature and its respective mean and standard deviation.
+<span class="nc" id="L160">            probabilities[i] = (1/(std[i]*Math.sqrt(2*Math.PI))) *</span>
+<span class="nc" id="L161">                    Math.exp(- Math.pow(x[i]-mean[i], 2) / (2*std[i]*std[i]));</span>
+        }
+
+<span class="nc" id="L164">        return probabilities;</span>
+    }
+
+
+    /**
+     * Applies natural log transform, element-wise, to an array.
+     * @param arr Array with values to apply transform to you.
+     * @return An array containing the natural log of the elements of arr.
+     */
+    private static double[] log(double[] arr) {
+<span class="nc" id="L174">        double[] logArr = new double[arr.length];</span>
+
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="nc" id="L177">            logArr[i] = Math.log(arr[i]);</span>
+        }
+
+<span class="nc" id="L180">        return logArr;</span>
+    }
+
+
+    /**
+     * Applies the argmax(x) function on a map x. That is, finds the key with the largest value.
+     *
+     * @param map Map of values.
+     * @return The key which corresponds to the largest value in the map.
+     */
+    private static int argmax(Map&lt;Integer, Double&gt; map) {
+<span class="nc" id="L191">        int maxKey = 0;</span>
+<span class="nc" id="L192">        double currMax = -Double.MAX_VALUE; // Holds the current maximum value.</span>
+
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        for(int key : map.keySet()) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if(map.get(key) &gt; currMax) {</span>
+<span class="nc" id="L196">                currMax = map.get(key);</span>
+<span class="nc" id="L197">                maxKey = key;</span>
+            }
+<span class="nc" id="L199">        }</span>
+
+<span class="nc" id="L201">        return maxKey;</span>
     }
 
 
     @Override
     public Matrix predict(Matrix X, Matrix w) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L52">        return null;</span>
+        // TODO: This method is not needed for this model.
+<span class="nc" id="L208">        return null;</span>
     }
 
 
     @Override
     public Matrix getParams() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L59">        return null;</span>
+        // TODO: This method is not needed for this model.
+<span class="nc" id="L215">        return null;</span>
     }
 
 
     @Override
     public void saveModel(String filePath) {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L66">    }</span>
+        Block[] blockList;
+
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L224">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+        }
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
+<span class="nc" id="L227">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+        }
+
+<span class="nc" id="L230">        blockList = new Block[3];</span>
+
+        // Construct the blocks for the model file.
+<span class="nc" id="L233">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="nc" id="L234">        blockList[1] = new Block(LinearModelTags.FEATURES.toString(), ArrayUtils.asString(this.features));</span>
+<span class="nc" id="L235">        blockList[2] = new Block(LinearModelTags.TARGETS.toString(), ArrayUtils.asString(this.targets));</span>
+
+<span class="nc" id="L237">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="nc" id="L238">    }</span>
+
+
+
+    protected void buildInspection() {
+<span class="nc" id="L243">        inspection = new StringBuilder(</span>
+                &quot;Model Details\n&quot; +
+                        &quot;----------------------------\n&quot; +
+                        &quot;Model Type: &quot; + this.MODEL_TYPE + &quot;\n&quot; +
+<span class="nc bnc" id="L247" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+        );
+
+<span class="nc" id="L250">        inspection.append(&quot;Input size: &quot; + features[0].length);</span>
+<span class="nc" id="L251">    }</span>
 
 
     @Override
     public String inspect() {
-        // TODO: Auto-generated method stub.
-<span class="nc" id="L72">        return null;</span>
+<span class="nc" id="L256">        return inspection.toString();</span>
     }
 
 
     @Override
     public String toString() {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L79">        return null;</span>
+<span class="nc" id="L263">        return null;</span>
     }
-
-
-    public static void main(String[] args) {
-<span class="nc" id="L84">        double[][] x = {{1, 2, 3},</span>
-                {3, 2, 1},
-                {2, 3, 1},
-                {-1, -2, -3},
-                {8, 9, 10},
-                {12, -2, -1},
-                {0.23, 3.5, 9.8}};
-<span class="nc" id="L91">        double y[] = {0, 0, 1, 0, 2, 1, 2};</span>
-
-<span class="nc" id="L93">        GaussianNaiveBayes nb = new GaussianNaiveBayes();</span>
-<span class="nc" id="L94">        nb.fit(x, y);</span>
-<span class="nc" id="L95">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

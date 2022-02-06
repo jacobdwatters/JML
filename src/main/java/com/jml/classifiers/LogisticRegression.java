@@ -36,7 +36,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
     private final List<Double> lossHist = new ArrayList<>();
 
     // Details of model in human-readable format.
-    private StringBuilder details = new StringBuilder(
+    private StringBuilder inspection = new StringBuilder(
             "Model Details\n" +
                     "----------------------------\n" +
                     "Model Type: " + this.MODEL_TYPE+ "\n" +
@@ -276,7 +276,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
 
 
     protected void buildDetails() {
-        details = new StringBuilder(
+        inspection = new StringBuilder(
                 "Model Details\n" +
                         "----------------------------\n" +
                         "Model Type: " + this.MODEL_TYPE + "\n" +
@@ -284,19 +284,19 @@ public class LogisticRegression extends Model<double[][], double[]> {
         );
 
         if(isFit && coefficients!=null) {
-            details.append("Coefficients: ");
-            details.append(ArrayUtils.asString(coefficients));
-            details.append("\nlogistic curve: y = 1 / [1+e^-{").append(coefficients[0]).append(" + ");
+            inspection.append("Coefficients: ");
+            inspection.append(ArrayUtils.asString(coefficients));
+            inspection.append("\nlogistic curve: y = 1 / [1+e^-{").append(coefficients[0]).append(" + ");
 
             for(int i=1; i<coefficients.length; i++) {
-                details.append(coefficients[i]).append("*x_").append(i);
+                inspection.append(coefficients[i]).append("*x_").append(i);
 
                 if(i<coefficients.length-1) {
-                    details.append(" + ");
+                    inspection.append(" + ");
                 }
             }
 
-            details.append("}]");
+            inspection.append("}]");
         }
     }
 
@@ -309,7 +309,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
      */
     @Override
     public String inspect() {
-        return details.toString();
+        return inspection.toString();
     }
 
 

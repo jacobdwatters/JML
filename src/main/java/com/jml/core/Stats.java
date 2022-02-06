@@ -296,7 +296,7 @@ public class Stats {
      * @return The maximum value in data.
      */
     public static double max(double... data) {
-        double maximum = Double.MIN_VALUE;
+        double maximum = -Double.MAX_VALUE;
 
         for(int i=0; i< data.length; i++) {
             if(data[i] > maximum) { // Then we have a new maximum
@@ -305,6 +305,23 @@ public class Stats {
         }
 
         return maximum;
+    }
+
+
+    /**
+     * Computes the sum of an array of values.
+     *
+     * @param data Data to sum.
+     * @return The sum of all entries of the data array.
+     */
+    public static double sum(double... data) {
+        double sum=0;
+
+        for(double value  : data) {
+            sum+=value;
+        }
+
+        return sum;
     }
 
 

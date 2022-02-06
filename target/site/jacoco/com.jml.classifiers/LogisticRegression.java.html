@@ -36,7 +36,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
 <span class="fc" id="L36">    private final List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
 
     // Details of model in human-readable format.
-<span class="fc" id="L39">    private StringBuilder details = new StringBuilder(</span>
+<span class="fc" id="L39">    private StringBuilder inspection = new StringBuilder(</span>
             &quot;Model Details\n&quot; +
                     &quot;----------------------------\n&quot; +
                     &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
@@ -276,7 +276,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
 
 
     protected void buildDetails() {
-<span class="fc" id="L279">        details = new StringBuilder(</span>
+<span class="fc" id="L279">        inspection = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                         &quot;----------------------------\n&quot; +
                         &quot;Model Type: &quot; + this.MODEL_TYPE + &quot;\n&quot; +
@@ -284,19 +284,19 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
         );
 
 <span class="pc bpc" id="L286" title="2 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
-<span class="fc" id="L287">            details.append(&quot;Coefficients: &quot;);</span>
-<span class="fc" id="L288">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L289">            details.append(&quot;\nlogistic curve: y = 1 / [1+e^-{&quot;).append(coefficients[0]).append(&quot; + &quot;);</span>
+<span class="fc" id="L287">            inspection.append(&quot;Coefficients: &quot;);</span>
+<span class="fc" id="L288">            inspection.append(ArrayUtils.asString(coefficients));</span>
+<span class="fc" id="L289">            inspection.append(&quot;\nlogistic curve: y = 1 / [1+e^-{&quot;).append(coefficients[0]).append(&quot; + &quot;);</span>
 
 <span class="fc bfc" id="L291" title="All 2 branches covered.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L292">                details.append(coefficients[i]).append(&quot;*x_&quot;).append(i);</span>
+<span class="fc" id="L292">                inspection.append(coefficients[i]).append(&quot;*x_&quot;).append(i);</span>
 
 <span class="fc bfc" id="L294" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
-<span class="fc" id="L295">                    details.append(&quot; + &quot;);</span>
+<span class="fc" id="L295">                    inspection.append(&quot; + &quot;);</span>
                 }
             }
 
-<span class="fc" id="L299">            details.append(&quot;}]&quot;);</span>
+<span class="fc" id="L299">            inspection.append(&quot;}]&quot;);</span>
         }
 <span class="fc" id="L301">    }</span>
 
@@ -309,7 +309,7 @@ public class LogisticRegression extends Model&lt;double[][], double[]&gt; {
      */
     @Override
     public String inspect() {
-<span class="fc" id="L312">        return details.toString();</span>
+<span class="fc" id="L312">        return inspection.toString();</span>
     }
 
 

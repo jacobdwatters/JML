@@ -34,20 +34,53 @@ public class Adam extends Optimizer {
     double alpha;
     public static final String OPTIM_NAME = &quot;Adam&quot;;
 
+
     /**
-     * Creates a Adam optimizer with specified learning rate and parameters.
+     * Creates an Adam optimizer with the following default parameters.
+     * &lt;pre&gt;
+     *     learning rate = 0.001
+     *     beta1 = 0.9
+     *     beta2 = 0.999&lt;/pre&gt;
+     */
+<span class="nc" id="L45">    public Adam() {</span>
+<span class="nc" id="L46">        super.learningRate = 0.001;</span>
+<span class="nc" id="L47">        this.beta1 = 0.9;</span>
+<span class="nc" id="L48">        this.beta2 = 0.999;</span>
+<span class="nc" id="L49">        t=0;</span>
+<span class="nc" id="L50">        super.name = OPTIM_NAME;</span>
+<span class="nc" id="L51">    }</span>
+
+
+    /**
+     * Creates an Adam optimizer with specified learning rate and the following default parameters.
+     * &lt;pre&gt;
+     *     beta1 = 0.9
+     *     beta2 = 0.999&lt;/pre&gt;
+     * @param learningRate Learning rate to use for the Adam optimizers update rule.
+     */
+<span class="fc" id="L61">    public Adam(double learningRate) {</span>
+<span class="fc" id="L62">        super.learningRate = learningRate;</span>
+<span class="fc" id="L63">        this.beta1 = 0.9;</span>
+<span class="fc" id="L64">        this.beta2 = 0.999;</span>
+<span class="fc" id="L65">        t=0;</span>
+<span class="fc" id="L66">        super.name = OPTIM_NAME;</span>
+<span class="fc" id="L67">    }</span>
+
+
+    /**
+     * Creates an Adam optimizer with specified learning rate and beta parameters.
      *
      * @param learningRate Learning rate for the Adam optimizer.
      * @param beta1 Exponential decay rate for first moment estimate. Must be in [0, 1)
      * @param beta2 Exponential decay rate for second moment estimate. Must be in [0, 1)
      */
-<span class="fc" id="L44">    public Adam(double learningRate, double beta1, double beta2) {</span>
-<span class="fc" id="L45">        super.learningRate = learningRate;</span>
-<span class="fc" id="L46">        this.beta1 = beta1;</span>
-<span class="fc" id="L47">        this.beta2 = beta2;</span>
-<span class="fc" id="L48">        t=0;</span>
-<span class="fc" id="L49">        super.name = OPTIM_NAME;</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L77">    public Adam(double learningRate, double beta1, double beta2) {</span>
+<span class="fc" id="L78">        super.learningRate = learningRate;</span>
+<span class="fc" id="L79">        this.beta1 = beta1;</span>
+<span class="fc" id="L80">        this.beta2 = beta2;</span>
+<span class="fc" id="L81">        t=0;</span>
+<span class="fc" id="L82">        super.name = OPTIM_NAME;</span>
+<span class="fc" id="L83">    }</span>
 
 
     /**
@@ -61,7 +94,7 @@ public class Adam extends Optimizer {
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     public Matrix[] step(Matrix... params) {
-<span class="nc" id="L64">        return step(true, params);</span>
+<span class="nc" id="L97">        return step(true, params);</span>
     }
 
 
@@ -76,39 +109,39 @@ public class Adam extends Optimizer {
      * @return The result of applying the update rule of the optimizer to the matrix w.
      */
     public Matrix[] step(boolean increaseTime, Matrix... params) {
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if(params.length != 4) {</span>
-<span class="nc" id="L80">            throw new IllegalArgumentException(&quot;Step method for &quot; + OPTIM_NAME +</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if(params.length != 4) {</span>
+<span class="nc" id="L113">            throw new IllegalArgumentException(&quot;Step method for &quot; + OPTIM_NAME +</span>
                     &quot; expecting 4 matrices but got &quot; + params.length);
         }
-<span class="fc bfc" id="L83" title="All 2 branches covered.">        if(increaseTime) {</span>
-<span class="fc" id="L84">            t++;</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if(increaseTime) {</span>
+<span class="fc" id="L117">            t++;</span>
         }
 
-<span class="fc" id="L87">        Matrix w = params[0];</span>
-<span class="fc" id="L88">        Matrix wGrad = params[1];</span>
-<span class="fc" id="L89">        Matrix v = params[2];</span>
-<span class="fc" id="L90">        Matrix m = params[3];</span>
+<span class="fc" id="L120">        Matrix w = params[0];</span>
+<span class="fc" id="L121">        Matrix wGrad = params[1];</span>
+<span class="fc" id="L122">        Matrix v = params[2];</span>
+<span class="fc" id="L123">        Matrix m = params[3];</span>
 
-<span class="fc" id="L92">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
-<span class="fc" id="L93">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
+<span class="fc" id="L125">        m = m.scalMult(beta1).add(wGrad.scalMult(1-beta1));</span>
+<span class="fc" id="L126">        v = v.scalMult(beta2).add(wGrad.elemMult(wGrad).scalMult(1-beta2));</span>
 
-<span class="fc" id="L95">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
-<span class="fc" id="L96">        w = w.sub(m.scalMult(learningRate).elemDiv(sqrt(v).add(eps)));</span>
+<span class="fc" id="L128">        alpha = learningRate*Math.sqrt(1-Math.pow(beta2, t)) / (1-Math.pow(beta1, t));</span>
+<span class="fc" id="L129">        w = w.sub(m.scalMult(learningRate).elemDiv(sqrt(v).add(eps)));</span>
 
-<span class="fc" id="L98">        return new Matrix[]{w, v, m};</span>
+<span class="fc" id="L131">        return new Matrix[]{w, v, m};</span>
     }
 
 
     private Matrix sqrt(Matrix A){
-<span class="fc" id="L103">        double[][] result = A.getValuesAsDouble();</span>
+<span class="fc" id="L136">        double[][] result = A.getValuesAsDouble();</span>
 
-<span class="fc bfc" id="L105" title="All 2 branches covered.">        for(int i=0; i&lt;result.length; i++) {</span>
-<span class="fc bfc" id="L106" title="All 2 branches covered.">            for(int j=0; j&lt; result[0].length; j++) {</span>
-<span class="fc" id="L107">                result[i][j] = Math.sqrt(result[i][j]);</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        for(int i=0; i&lt;result.length; i++) {</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            for(int j=0; j&lt; result[0].length; j++) {</span>
+<span class="fc" id="L140">                result[i][j] = Math.sqrt(result[i][j]);</span>
             }
         }
 
-<span class="fc" id="L111">        return new Matrix(result);</span>
+<span class="fc" id="L144">        return new Matrix(result);</span>
     }
 
 
@@ -120,7 +153,7 @@ public class Adam extends Optimizer {
     @Override
     public String getDetails() {
         // TODO:
-<span class="nc" id="L123">        return null;</span>
+<span class="nc" id="L156">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
