@@ -39,12 +39,6 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.7</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.ojalgo</groupId>
-            <artifactId>ojalgo</artifactId>
-            <version>49.2.1</version>
-        </dependency>
     </dependencies>
 
     <properties>
