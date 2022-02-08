@@ -87,4 +87,20 @@ public class Encoder {
 
         return encodeClasses(flat);
     }
+
+
+    /**
+     * Encodes a set of labels as one-hot vectors. The labels will be sorted alphabetically before encoding.
+     * @param labels Labels to encode as one hot vectors.
+     * @return A 2d array containing the one-hot vectors for each label. Each row of this array
+     *  is a single one-hot vector.
+     */
+    public static int[][] oneHot(String[] labels) {
+        int[] encodedLabels = new int[labels.length];
+        Map<String, Integer> encodings = new HashMap<>();
+        String[] sortedLabels = labels.clone();
+
+        // TODO:
+        return null;
+    }
 }
