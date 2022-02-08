@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * A Gaussian Naive Bayes model. Fits a dataset by assuming the dataset if drawn from a Gaussian / normal distribution
- * and that each feature has zero covariance and provides classifications based on these assumptions.
+ * and that each feature has zero covariance. Then classification predictions can be made based on these assumptions.
  */
 public class GaussianNaiveBayes extends Model<double[][], double[]> {
     // TODO: All classifiers should have a 'predictProbabilities()' Method.
@@ -136,6 +136,9 @@ public class GaussianNaiveBayes extends Model<double[][], double[]> {
         return predictions;
     }
 
+    // TODO: add predictProbabilities(...) for all classification models. The predict(...) method should return the class prediction
+    //  while the predictProbabilities(...) method will return a vector will the confidence for each class as a probability
+    //  (i.e. the entries of the vector sum to 1.0).
 
     /**
      * Computes the value of the normal/gaussian distribution probability density function with specified mean and
@@ -204,14 +207,14 @@ public class GaussianNaiveBayes extends Model<double[][], double[]> {
 
     @Override
     public Matrix predict(Matrix X, Matrix w) {
-        // TODO: This method is not needed for this model.
+        // TODO: This method is not needed for this model. Should not be required by model class...
         return null;
     }
 
 
     @Override
     public Matrix getParams() {
-        // TODO: This method is not needed for this model.
+        // TODO: This method is not needed for this model. Should not be required by model class...
         return null;
     }
 

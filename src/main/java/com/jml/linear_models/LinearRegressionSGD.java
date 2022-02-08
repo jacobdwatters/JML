@@ -59,7 +59,7 @@ public class LinearRegressionSGD extends LinearRegression {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
         this.threshold = threshold;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -76,7 +76,7 @@ public class LinearRegressionSGD extends LinearRegression {
         super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -90,7 +90,7 @@ public class LinearRegressionSGD extends LinearRegression {
     public LinearRegressionSGD(double learningRate) {
         super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -105,7 +105,7 @@ public class LinearRegressionSGD extends LinearRegression {
     public LinearRegressionSGD(int maxIterations) {
         super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();
         this.maxIterations = maxIterations;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -170,12 +170,13 @@ public class LinearRegressionSGD extends LinearRegression {
         return lossHist.stream().mapToDouble(Double::doubleValue).toArray();
     }
 
-    private void paramCheck() {
-        if(!ValueError.isNonNegative(maxIterations))
-            throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations);
-        if(!ValueError.isNonNegative(learningRate))
-            throw new IllegalArgumentException("learningRate must be non-negative but got " + learningRate);
-        if(!ValueError.isNonNegative(threshold))
-            throw new IllegalArgumentException("threshold must be non-negative but got " + threshold);
+
+    private void validateParams() {
+        if(maxIterations < 0)
+            throw new IllegalArgumentException("Maximum iterations must be non-negative but got " + maxIterations + ".");
+        if(learningRate < 0)
+            throw new IllegalArgumentException("Learning rate must be non-negative but got " + learningRate + ".");
+        if(threshold < 0)
+            throw new IllegalArgumentException("Threshold must be non-negative but got " + threshold + ".");
     }
 }

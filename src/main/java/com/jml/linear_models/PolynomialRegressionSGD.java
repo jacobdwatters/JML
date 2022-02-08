@@ -56,7 +56,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         this.maxIterations = maxIterations;
         this.threshold = threshold;
         this.degree = degree;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -75,7 +75,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
         this.degree = degree;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -91,7 +91,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.degree = degree;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -105,7 +105,7 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     public PolynomialRegressionSGD(int degree) {
         super.MODEL_TYPE = ModelTypes.POLYNOMIAL_REGRESSION_SGD.toString();
         this.degree = degree;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -173,12 +173,16 @@ public class PolynomialRegressionSGD extends PolynomialRegression {
     }
 
 
-    private void paramCheck() {
-        if(!ValueError.isNonNegative(maxIterations))
-            throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations);
-        if(!ValueError.isNonNegative(learningRate))
-            throw new IllegalArgumentException("learningRate must be non-negative but got " + learningRate);
-        if(!ValueError.isNonNegative(threshold))
-            throw new IllegalArgumentException("threshold must be non-negative but got " + threshold);
+    // Ensure constructor parameters are valid.
+    private void validateParams() {
+        if(maxIterations<0)
+            throw new IllegalArgumentException("Maximum iterations must be non-negative but got " + maxIterations + ".");
+        if(learningRate<0)
+            throw new IllegalArgumentException("Learning rate must be non-negative but got " + learningRate + ".");
+        if(threshold<0)
+            throw new IllegalArgumentException("Threshold must be non-negative but got " + threshold + ".");
+        if(degree<1) {
+            throw new IllegalArgumentException("Polynomial degree must be at least 1 but got " + degree + ".");
+        }
     }
 }

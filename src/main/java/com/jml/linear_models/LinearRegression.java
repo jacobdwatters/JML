@@ -12,12 +12,21 @@ import com.jml.util.ArrayUtils;
  * by the model. This is solved explicitly.
  */
 public class LinearRegression extends PolynomialRegression {
+
     String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();
+
     private String details = "Model Details\n" +
             "----------------------------\n" +
             "Model Type: " + this.MODEL_TYPE+ "\n" +
             "Is Trained: No\n";
 
+
+    /**
+     * Creates a simple least-squares linear regression model.
+     */
+    public LinearRegression() {
+        // Does nothing.
+    }
 
     /**
      * Fits or trains the model with the given features and targets.

@@ -54,11 +54,16 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     final List<Double> lossHist = new ArrayList<>();
 
     // TODO: Should these be moved to the layer? Probably yes!
-    // TODO: Maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
+    //  Maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
 
     protected final Optimizer optim; // Optimizer to use during backpropagation.
+
+    // TODO: Add 'recompile(...)' method that takes hyper-parameters so that loaded models can be retrained with specified
+    //  optimizer, learning rate.
+
+    // TODO: Should epochs and batch size should be specified in the 'fit(...)' method?
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -88,7 +93,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         layers = new ArrayList<>();
 
         optim = new Adam(learningRate);
-
+        validateParams();
         buildDetails();
     }
 
@@ -111,7 +116,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         layers = new ArrayList<>();
 
         optim = new Adam(learningRate);
-
+        validateParams();
         buildDetails();
     }
 
@@ -131,7 +136,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         layers = new ArrayList<>();
         this.threshold = 1e-5;
         optim = new Adam(learningRate);
-
+        validateParams();
         buildDetails();
     }
 
@@ -151,7 +156,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         layers = new ArrayList<>();
         this.threshold = 1e-5;
         optim = new Adam(learningRate);
-
+        validateParams();
         buildDetails();
     }
 
@@ -174,7 +179,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         layers = new ArrayList<>();
 
         optim = new Adam(learningRate); // Set the optimizer as a standard gradient descent optimizer
-
+        validateParams();
         buildDetails();
     }
 
@@ -197,6 +202,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = 1e-5;
         layers = new ArrayList<>();
         this.optim = optim;
+        validateParams();
+        buildDetails();
     }
 
 
@@ -215,6 +222,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = 1e-5;
         layers = new ArrayList<>();
         this.optim = optim;
+        validateParams();
+        buildDetails();
     }
 
 
@@ -234,6 +243,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = 1e-5;
         layers = new ArrayList<>();
         this.optim = optim;
+        validateParams();
+        buildDetails();
     }
 
 
@@ -255,6 +266,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = threshold;
         layers = new ArrayList<>();
         this.optim = optim;
+        validateParams();
+        buildDetails();
     }
 
 
@@ -295,7 +308,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
-            // TODO: Shuffle indices rather than the entire dataset.
+            // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
             shuffle = ArrayUtils.shuffle(features, targets); // Shuffle samples for this epoch.
             feature = new Matrix(shuffle[0]);
             target = new Matrix(shuffle[1]);
@@ -604,6 +617,23 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     public List<Double> getLossHist() {
         return lossHist;
+    }
+
+
+    // Ensure constructor parameters are valid.
+    private void validateParams() {
+        if (epochs < 0) {
+            throw new IllegalArgumentException("Maximum iterations must be non-negative but got " + epochs + ".");
+        }
+        if(learningRate<0) {
+            throw new IllegalArgumentException("Learning rate must be non-negative but got " + learningRate + ".");
+        }
+        if(threshold<0) {
+            throw new IllegalArgumentException("Threshold must be non-negative but got " + threshold + ".");
+        }
+        if(batchSize < 1) {
+            throw new IllegalArgumentException("Batch size must be at least 1 but got " + batchSize + ".");
+        }
     }
 
 

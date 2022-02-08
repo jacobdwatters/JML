@@ -1,6 +1,7 @@
 package com.jml.util;
 
 
+@Deprecated
 public class ValueError {
     // Hide default constructor
     private ValueError() {throw new IllegalStateException("Can not instantiate utility class.");}

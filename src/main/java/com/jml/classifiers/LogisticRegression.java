@@ -51,6 +51,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
      */
     public LogisticRegression() {
         GD = new GradientDescent(learningRate);
+        validateParams();
     }
 
 
@@ -69,6 +70,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
         this.maxIterations = maxIterations;
         this.threshold = threshold;
         GD = new GradientDescent(learningRate);
+        validateParams();
     }
 
 
@@ -84,6 +86,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
         GD = new GradientDescent(learningRate);
+        validateParams();
     }
 
 
@@ -97,6 +100,7 @@ public class LogisticRegression extends Model<double[][], double[]> {
     public LogisticRegression(double learningRate) {
         this.learningRate = learningRate;
         GD = new GradientDescent(learningRate);
+        validateParams();
     }
 
 
@@ -246,6 +250,20 @@ public class LogisticRegression extends Model<double[][], double[]> {
         }
 
         return lossHist.stream().mapToDouble(Double::doubleValue).toArray();
+    }
+
+
+    // Validates constructor parameters.
+    private void validateParams() {
+        if(learningRate < 0) {
+            throw new IllegalArgumentException("Learning rate must be non-negative but got " + learningRate + ".");
+        }
+        if(maxIterations < 0) {
+            throw new IllegalArgumentException("Maximum iterations must be non-negative but got " + maxIterations + ".");
+        }
+        if(threshold < 0) {
+            throw new IllegalArgumentException("Threshold must be non-negative but got " + threshold + ".");
+        }
     }
 
 

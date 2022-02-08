@@ -42,6 +42,7 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
         this.k = 3;
         this.p = 2;
         buildDetails();
+        validateParams();
     }
 
 
@@ -53,6 +54,7 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
         this.k = k;
         this.p = 2;
         buildDetails();
+        validateParams();
     }
 
 
@@ -66,6 +68,7 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
         this.k = k;
         this.p = p;
         buildDetails();
+        validateParams();
     }
 
 
@@ -161,6 +164,18 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
     @Override
     public Matrix getParams() {
         return X;
+    }
+
+
+    // Validates constructor parameters.
+    private void validateParams() {
+        if(k<=0) {
+            throw new IllegalArgumentException("Number of neighbors must be positive but got " + k + ".");
+        }
+        if(p<=1) {
+            throw new IllegalArgumentException("Power parameter of Minkowski distance must be greater than or equal to" +
+                    "one but got " + p + ".");
+        }
     }
 
 
