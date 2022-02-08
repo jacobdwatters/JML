@@ -7,7 +7,6 @@ import com.jml.optimizers.*;
 import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
-import com.jml.util.ValueError;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * A Gaussian Naive Bayes model. Fits a dataset by assuming the dataset if drawn from a Gaussian / normal distribution
- * and that each feature has zero covariance and provides classifications based on these assumptions.
+ * and that each feature has zero covariance. Then classification predictions can be made based on these assumptions.
  */
 public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {
     // TODO: All classifiers should have a 'predictProbabilities()' Method.
@@ -136,6 +136,9 @@ public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {
 <span class="nc" id="L136">        return predictions;</span>
     }
 
+    // TODO: add predictProbabilities(...) for all classification models. The predict(...) method should return the class prediction
+    //  while the predictProbabilities(...) method will return a vector will the confidence for each class as a probability
+    //  (i.e. the entries of the vector sum to 1.0).
 
     /**
      * Computes the value of the normal/gaussian distribution probability density function with specified mean and
@@ -148,20 +151,20 @@ public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {
      * evaluated at x.
      */
     private static double[] normalPdf(double[] x, double[] mean, double[] std) {
-<span class="nc bnc" id="L151" title="All 4 branches missed.">        if(x.length != mean.length || x.length != std.length) {</span>
-<span class="nc" id="L152">            throw new IllegalArgumentException(&quot;All arrays should have the same length but got &quot; + x.length + &quot;,&quot; +</span>
+<span class="nc bnc" id="L154" title="All 4 branches missed.">        if(x.length != mean.length || x.length != std.length) {</span>
+<span class="nc" id="L155">            throw new IllegalArgumentException(&quot;All arrays should have the same length but got &quot; + x.length + &quot;,&quot; +</span>
                     mean.length + &quot;, &quot; + std.length + &quot;.&quot;);
         }
 
-<span class="nc" id="L156">        double[] probabilities = new double[x.length];</span>
+<span class="nc" id="L159">        double[] probabilities = new double[x.length];</span>
 
-<span class="nc bnc" id="L158" title="All 2 branches missed.">        for(int i=0; i&lt;x.length; i++) {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        for(int i=0; i&lt;x.length; i++) {</span>
             // Compute gaussian probability for each feature and its respective mean and standard deviation.
-<span class="nc" id="L160">            probabilities[i] = (1/(std[i]*Math.sqrt(2*Math.PI))) *</span>
-<span class="nc" id="L161">                    Math.exp(- Math.pow(x[i]-mean[i], 2) / (2*std[i]*std[i]));</span>
+<span class="nc" id="L163">            probabilities[i] = (1/(std[i]*Math.sqrt(2*Math.PI))) *</span>
+<span class="nc" id="L164">                    Math.exp(- Math.pow(x[i]-mean[i], 2) / (2*std[i]*std[i]));</span>
         }
 
-<span class="nc" id="L164">        return probabilities;</span>
+<span class="nc" id="L167">        return probabilities;</span>
     }
 
 
@@ -171,13 +174,13 @@ public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {
      * @return An array containing the natural log of the elements of arr.
      */
     private static double[] log(double[] arr) {
-<span class="nc" id="L174">        double[] logArr = new double[arr.length];</span>
+<span class="nc" id="L177">        double[] logArr = new double[arr.length];</span>
 
-<span class="nc bnc" id="L176" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
-<span class="nc" id="L177">            logArr[i] = Math.log(arr[i]);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="nc" id="L180">            logArr[i] = Math.log(arr[i]);</span>
         }
 
-<span class="nc" id="L180">        return logArr;</span>
+<span class="nc" id="L183">        return logArr;</span>
     }
 
 
@@ -188,31 +191,31 @@ public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {
      * @return The key which corresponds to the largest value in the map.
      */
     private static int argmax(Map&lt;Integer, Double&gt; map) {
-<span class="nc" id="L191">        int maxKey = 0;</span>
-<span class="nc" id="L192">        double currMax = -Double.MAX_VALUE; // Holds the current maximum value.</span>
+<span class="nc" id="L194">        int maxKey = 0;</span>
+<span class="nc" id="L195">        double currMax = -Double.MAX_VALUE; // Holds the current maximum value.</span>
 
-<span class="nc bnc" id="L194" title="All 2 branches missed.">        for(int key : map.keySet()) {</span>
-<span class="nc bnc" id="L195" title="All 2 branches missed.">            if(map.get(key) &gt; currMax) {</span>
-<span class="nc" id="L196">                currMax = map.get(key);</span>
-<span class="nc" id="L197">                maxKey = key;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        for(int key : map.keySet()) {</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">            if(map.get(key) &gt; currMax) {</span>
+<span class="nc" id="L199">                currMax = map.get(key);</span>
+<span class="nc" id="L200">                maxKey = key;</span>
             }
-<span class="nc" id="L199">        }</span>
+<span class="nc" id="L202">        }</span>
 
-<span class="nc" id="L201">        return maxKey;</span>
+<span class="nc" id="L204">        return maxKey;</span>
     }
 
 
     @Override
     public Matrix predict(Matrix X, Matrix w) {
-        // TODO: This method is not needed for this model.
-<span class="nc" id="L208">        return null;</span>
+        // TODO: This method is not needed for this model. Should not be required by model class...
+<span class="nc" id="L211">        return null;</span>
     }
 
 
     @Override
     public Matrix getParams() {
-        // TODO: This method is not needed for this model.
-<span class="nc" id="L215">        return null;</span>
+        // TODO: This method is not needed for this model. Should not be required by model class...
+<span class="nc" id="L218">        return null;</span>
     }
 
 
@@ -220,47 +223,47 @@ public class GaussianNaiveBayes extends Model&lt;double[][], double[]&gt; {
     public void saveModel(String filePath) {
         Block[] blockList;
 
-<span class="nc bnc" id="L223" title="All 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L224">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L227">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="nc bnc" id="L226" title="All 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
-<span class="nc" id="L227">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
+<span class="nc" id="L230">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="nc" id="L230">        blockList = new Block[3];</span>
+<span class="nc" id="L233">        blockList = new Block[3];</span>
 
         // Construct the blocks for the model file.
-<span class="nc" id="L233">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
-<span class="nc" id="L234">        blockList[1] = new Block(LinearModelTags.FEATURES.toString(), ArrayUtils.asString(this.features));</span>
-<span class="nc" id="L235">        blockList[2] = new Block(LinearModelTags.TARGETS.toString(), ArrayUtils.asString(this.targets));</span>
+<span class="nc" id="L236">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="nc" id="L237">        blockList[1] = new Block(LinearModelTags.FEATURES.toString(), ArrayUtils.asString(this.features));</span>
+<span class="nc" id="L238">        blockList[2] = new Block(LinearModelTags.TARGETS.toString(), ArrayUtils.asString(this.targets));</span>
 
-<span class="nc" id="L237">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
-<span class="nc" id="L238">    }</span>
+<span class="nc" id="L240">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="nc" id="L241">    }</span>
 
 
 
     protected void buildInspection() {
-<span class="nc" id="L243">        inspection = new StringBuilder(</span>
+<span class="nc" id="L246">        inspection = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                         &quot;----------------------------\n&quot; +
                         &quot;Model Type: &quot; + this.MODEL_TYPE + &quot;\n&quot; +
-<span class="nc bnc" id="L247" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
         );
 
-<span class="nc" id="L250">        inspection.append(&quot;Input size: &quot; + features[0].length);</span>
-<span class="nc" id="L251">    }</span>
+<span class="nc" id="L253">        inspection.append(&quot;Input size: &quot; + features[0].length);</span>
+<span class="nc" id="L254">    }</span>
 
 
     @Override
     public String inspect() {
-<span class="nc" id="L256">        return inspection.toString();</span>
+<span class="nc" id="L259">        return inspection.toString();</span>
     }
 
 
     @Override
     public String toString() {
         // TODO: Auto-generated method stub.
-<span class="nc" id="L263">        return null;</span>
+<span class="nc" id="L266">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

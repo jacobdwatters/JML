@@ -5,7 +5,6 @@ import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
 import com.jml.util.ArrayUtils;
-import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
 

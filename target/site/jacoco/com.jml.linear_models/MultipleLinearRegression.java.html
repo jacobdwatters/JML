@@ -11,24 +11,23 @@ import linalg.Vector;
 
 
 /**
- * Model for least squares linear regression of multiple variables by least squares.&lt;br&gt;&lt;br&gt;
+ * Model for linear regression of multiple variables by least squares.&lt;br&gt;&lt;br&gt;
  *
  * MultipleLinearRegression fits a model y = b&lt;sub&gt;0&lt;/sub&gt; + b&lt;sub&gt;1&lt;/sub&gt;x&lt;sub&gt;1&lt;/sub&gt; + ... + b&lt;sub&gt;n&lt;/sub&gt;x&lt;sub&gt;n&lt;/sub&gt;  to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model.
  */
-// TODO: Refactor polynomial regression as a special case of multiple regression
-<span class="fc" id="L21">public class MultipleLinearRegression extends Model&lt;double[][], double[]&gt; {</span>
-<span class="fc" id="L22">    String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();</span>
+public class MultipleLinearRegression extends Model&lt;double[][], double[]&gt; {
+<span class="nc" id="L21">    String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();</span>
 
-<span class="fc" id="L24">    protected boolean isFit = false;</span>
+<span class="nc" id="L23">    protected boolean isFit = false;</span>
     protected double[] coefficients;
 
     // Weights of the model.
     protected Matrix w;
 
     // Details of model in human-readable format.
-<span class="fc" id="L31">    private StringBuilder details = new StringBuilder(</span>
+<span class="nc" id="L30">    private StringBuilder details = new StringBuilder(</span>
             &quot;Model Details\n&quot; +
                     &quot;----------------------------\n&quot; +
                     &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
@@ -37,35 +36,46 @@ import linalg.Vector;
 
 
     /**
+     * Creates a multivariate least squares regression model
+     */
+<span class="nc" id="L41">    public MultipleLinearRegression() {</span>
+        // Does nothing.
+<span class="nc" id="L43">    }</span>
+
+
+    /**
      * {@inheritDoc}
+     *
+     * @param features Features to use during training of the model.
+     * @param targets Targets to use during training of the model.
      */
     @Override
     public MultipleLinearRegression fit(double[][] features, double[] targets) {
 
-<span class="fc" id="L45">        Matrix y = new Vector(targets);</span>
-<span class="fc" id="L46">        Matrix V = new Matrix(features);</span>
-<span class="fc" id="L47">        Matrix ones = Matrix.ones(features.length, 1);</span>
-<span class="fc" id="L48">        V = ones.augment(V);</span>
+<span class="nc" id="L55">        Matrix y = new Vector(targets);</span>
+<span class="nc" id="L56">        Matrix V = new Matrix(features);</span>
+<span class="nc" id="L57">        Matrix ones = Matrix.ones(features.length, 1);</span>
+<span class="nc" id="L58">        V = ones.augment(V);</span>
 
-<span class="fc" id="L50">        Matrix VT = V.T();</span>
+<span class="nc" id="L60">        Matrix VT = V.T();</span>
 
         // Form the normal equations
-<span class="fc" id="L53">        Matrix A = VT.mult(V);</span>
-<span class="fc" id="L54">        Vector b = VT.mult(y).toVector();</span>
+<span class="nc" id="L63">        Matrix A = VT.mult(V);</span>
+<span class="nc" id="L64">        Vector b = VT.mult(y).toVector();</span>
 
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if(A.isSingular()) { // Then we can not explicitly solve Ax=b for a single solution.</span>
-<span class="nc" id="L57">            throw new IllegalArgumentException(&quot;The data resulted in an equation with a singular matrix. &quot; +</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if(A.isSingular()) { // Then we can not explicitly solve Ax=b for a single solution.</span>
+<span class="nc" id="L67">            throw new IllegalArgumentException(&quot;The data resulted in an equation with a singular matrix. &quot; +</span>
                     &quot;Singular matrices are not supported. Use the MultipleLinearRegressionSGD model instead.&quot;);
         }
 
-<span class="fc" id="L61">        w = Solvers.solveQR(A, b); // Compute the model parameters by solving the system via QR decomposition.</span>
+<span class="nc" id="L71">        w = Solvers.solveQR(A, b); // Compute the model parameters by solving the system via QR decomposition.</span>
 
-<span class="fc" id="L63">        this.coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="nc" id="L73">        this.coefficients = w.T().getValuesAsDouble()[0];</span>
 
-<span class="fc" id="L65">        isFit = true;</span>
-<span class="fc" id="L66">        buildDetails(); // Build the details of the model.</span>
+<span class="nc" id="L75">        isFit = true;</span>
+<span class="nc" id="L76">        buildDetails(); // Build the details of the model.</span>
 
-<span class="fc" id="L68">        return this;</span>
+<span class="nc" id="L78">        return this;</span>
     }
 
 
@@ -79,13 +89,13 @@ import linalg.Vector;
      */
     @Override
     public double[] predict(double[][] features) {
-<span class="fc bfc" id="L82" title="All 2 branches covered.">        if(!isFit) {</span>
-<span class="fc" id="L83">            throw new IllegalStateException(&quot;Model must be fit before predictions can be made.&quot;);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L93">            throw new IllegalStateException(&quot;Model must be fit before predictions can be made.&quot;);</span>
         }
 
-<span class="fc" id="L86">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
+<span class="nc" id="L96">        Matrix X = Matrix.ones(features.length, 1).augment(new Matrix(features));</span>
 
-<span class="fc" id="L88">        return X.mult(w).T().getValuesAsDouble()[0];</span>
+<span class="nc" id="L98">        return X.mult(w).T().getValuesAsDouble()[0];</span>
     }
 
 
@@ -93,7 +103,7 @@ import linalg.Vector;
      * {@inheritDoc}
      */
     public Matrix predict(Matrix X, Matrix w) {
-<span class="fc" id="L96">        return X.mult(w);</span>
+<span class="nc" id="L106">        return X.mult(w);</span>
     }
 
 
@@ -102,7 +112,7 @@ import linalg.Vector;
      */
     @Override
     public Matrix getParams() {
-<span class="fc" id="L105">        return this.w;</span>
+<span class="nc" id="L115">        return this.w;</span>
     }
 
 
@@ -115,46 +125,46 @@ import linalg.Vector;
     public void saveModel(String filePath) {
         Block[] blockList;
 
-<span class="fc bfc" id="L118" title="All 2 branches covered.">        if(!isFit) {</span>
-<span class="fc" id="L119">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L129">            throw new IllegalStateException(&quot;Model must be fit before it can be saved.&quot;);</span>
         }
-<span class="fc bfc" id="L121" title="All 2 branches covered.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
-<span class="fc" id="L122">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if(!filePath.endsWith(&quot;.mdl&quot;)) {</span>
+<span class="nc" id="L132">            throw new IllegalArgumentException(&quot;Incorrect file type. File does not end with \&quot;.mdl\&quot;.&quot;);</span>
         }
 
-<span class="fc" id="L125">        blockList = new Block[2];</span>
+<span class="nc" id="L135">        blockList = new Block[2];</span>
 
         // Construct the blocks for the model file.
-<span class="fc" id="L128">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
-<span class="fc" id="L129">        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));</span>
+<span class="nc" id="L138">        blockList[0] = new Block(LinearModelTags.MODEL_TYPE.toString(), this.MODEL_TYPE);</span>
+<span class="nc" id="L139">        blockList[1] = new Block(LinearModelTags.PARAMETERS.toString(), ArrayUtils.asString(this.coefficients));</span>
 
-<span class="fc" id="L131">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
-<span class="fc" id="L132">    }</span>
+<span class="nc" id="L141">        FileManager.stringToFile(Block.buildFileContent(blockList), filePath);</span>
+<span class="nc" id="L142">    }</span>
 
 
     // Construct details of model
     protected void buildDetails() {
-<span class="fc" id="L137">        details = new StringBuilder(</span>
+<span class="nc" id="L147">        details = new StringBuilder(</span>
                 &quot;Model Details\n&quot; +
                         &quot;----------------------------\n&quot; +
                         &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                        &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;</span>
         );
 
-<span class="pc bpc" id="L144" title="2 of 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
-<span class="fc" id="L145">            details.append(&quot;Coefficients: &quot;);</span>
-<span class="fc" id="L146">            details.append(ArrayUtils.asString(coefficients));</span>
-<span class="fc" id="L147">            details.append(&quot;\nHyperplane: y = &quot;).append(coefficients[0]).append(&quot; + &quot;);</span>
+<span class="nc bnc" id="L154" title="All 4 branches missed.">        if(isFit &amp;&amp; coefficients!=null) {</span>
+<span class="nc" id="L155">            details.append(&quot;Coefficients: &quot;);</span>
+<span class="nc" id="L156">            details.append(ArrayUtils.asString(coefficients));</span>
+<span class="nc" id="L157">            details.append(&quot;\nHyperplane: y = &quot;).append(coefficients[0]).append(&quot; + &quot;);</span>
 
-<span class="fc bfc" id="L149" title="All 2 branches covered.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
-<span class="fc" id="L150">                details.append(coefficients[i]).append(&quot;x_&quot;).append(i);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">            for(int i=1; i&lt;coefficients.length; i++) {</span>
+<span class="nc" id="L160">                details.append(coefficients[i]).append(&quot;x_&quot;).append(i);</span>
 
-<span class="fc bfc" id="L152" title="All 2 branches covered.">                if(i&lt;coefficients.length-1) {</span>
-<span class="fc" id="L153">                    details.append(&quot; + &quot;);</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                if(i&lt;coefficients.length-1) {</span>
+<span class="nc" id="L163">                    details.append(&quot; + &quot;);</span>
                 }
             }
         }
-<span class="fc" id="L157">    }</span>
+<span class="nc" id="L167">    }</span>
 
 
     /**
@@ -165,7 +175,7 @@ import linalg.Vector;
      */
     @Override
     public String inspect() {
-<span class="fc" id="L168">        return this.toString();</span>
+<span class="nc" id="L178">        return this.toString();</span>
     }
 
 
@@ -176,7 +186,7 @@ import linalg.Vector;
      */
     @Override
     public String toString() {
-<span class="fc" id="L179">        return details.toString();</span>
+<span class="nc" id="L189">        return details.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

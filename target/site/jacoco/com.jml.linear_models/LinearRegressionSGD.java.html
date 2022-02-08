@@ -7,7 +7,6 @@ import com.jml.optimizers.*;
 import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
-import com.jml.util.ValueError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +21,11 @@ import java.util.List;
  */
 public class LinearRegressionSGD extends LinearRegression {
 
-<span class="fc" id="L25">    protected double learningRate = 0.01;</span>
-<span class="fc" id="L26">    protected double threshold = 0.5e-5;</span>
-<span class="fc" id="L27">    protected int maxIterations = 5000;</span>
+<span class="nc" id="L24">    protected double learningRate = 0.01;</span>
+<span class="nc" id="L25">    protected double threshold = 0.5e-5;</span>
+<span class="nc" id="L26">    protected int maxIterations = 5000;</span>
     protected Optimizer GD;
-<span class="fc" id="L29">    private final List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L28">    private final List&lt;Double&gt; lossHist = new ArrayList&lt;&gt;();</span>
 
     /**
      * Creates a {@link LinearRegressionSGD} model.&lt;br&gt;
@@ -38,9 +37,9 @@ public class LinearRegressionSGD extends LinearRegression {
      *    Scheduler: None
      * &lt;pre/&gt;
      */
-<span class="fc" id="L41">    public LinearRegressionSGD() {</span>
-<span class="fc" id="L42">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L43">    }</span>
+<span class="nc" id="L40">    public LinearRegressionSGD() {</span>
+<span class="nc" id="L41">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L42">    }</span>
 
 
     /**
@@ -54,13 +53,13 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L57">    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold) {</span>
-<span class="fc" id="L58">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L59">        this.learningRate = learningRate;</span>
-<span class="fc" id="L60">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L61">        this.threshold = threshold;</span>
-<span class="fc" id="L62">        paramCheck();</span>
-<span class="fc" id="L63">    }</span>
+<span class="nc" id="L56">    public LinearRegressionSGD(double learningRate, int maxIterations, double threshold) {</span>
+<span class="nc" id="L57">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L58">        this.learningRate = learningRate;</span>
+<span class="nc" id="L59">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L60">        this.threshold = threshold;</span>
+<span class="nc" id="L61">        validateParams();</span>
+<span class="nc" id="L62">    }</span>
 
 
     /**
@@ -72,12 +71,12 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L75">    public LinearRegressionSGD(double learningRate, int maxIterations) {</span>
-<span class="fc" id="L76">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L77">        this.learningRate = learningRate;</span>
-<span class="fc" id="L78">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L79">        paramCheck();</span>
-<span class="fc" id="L80">    }</span>
+<span class="nc" id="L74">    public LinearRegressionSGD(double learningRate, int maxIterations) {</span>
+<span class="nc" id="L75">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L76">        this.learningRate = learningRate;</span>
+<span class="nc" id="L77">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L78">        validateParams();</span>
+<span class="nc" id="L79">    }</span>
 
 
     /**
@@ -87,11 +86,11 @@ public class LinearRegressionSGD extends LinearRegression {
      *
      * @param learningRate Learning rate to use during {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L90">    public LinearRegressionSGD(double learningRate) {</span>
-<span class="fc" id="L91">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L92">        this.learningRate = learningRate;</span>
-<span class="fc" id="L93">        paramCheck();</span>
-<span class="fc" id="L94">    }</span>
+<span class="nc" id="L89">    public LinearRegressionSGD(double learningRate) {</span>
+<span class="nc" id="L90">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L91">        this.learningRate = learningRate;</span>
+<span class="nc" id="L92">        validateParams();</span>
+<span class="nc" id="L93">    }</span>
 
 
     /**
@@ -102,11 +101,11 @@ public class LinearRegressionSGD extends LinearRegression {
      * @param maxIterations Maximum number of iterations to run for during
      * {@link com.jml.optimizers.GradientDescent Stochastic Gradient Descent}.
      */
-<span class="fc" id="L105">    public LinearRegressionSGD(int maxIterations) {</span>
-<span class="fc" id="L106">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
-<span class="fc" id="L107">        this.maxIterations = maxIterations;</span>
-<span class="fc" id="L108">        paramCheck();</span>
-<span class="fc" id="L109">    }</span>
+<span class="nc" id="L104">    public LinearRegressionSGD(int maxIterations) {</span>
+<span class="nc" id="L105">        super.MODEL_TYPE = ModelTypes.LINEAR_REGRESSION_SGD.toString();</span>
+<span class="nc" id="L106">        this.maxIterations = maxIterations;</span>
+<span class="nc" id="L107">        validateParams();</span>
+<span class="nc" id="L108">    }</span>
 
 
     /**
@@ -122,38 +121,38 @@ public class LinearRegressionSGD extends LinearRegression {
      */
     @Override
     public LinearRegressionSGD fit(double[] features, double[] targets) {
-<span class="fc" id="L125">        GD = new GradientDescent(learningRate);</span>
+<span class="nc" id="L124">        GD = new GradientDescent(learningRate);</span>
         int[] shuffledIndices; // Stores shuffled indices for each epoch.
 
         // Convert features and targets to matrix representations.
-<span class="fc" id="L129">        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));</span>
-<span class="fc" id="L130">        Matrix y = new Vector(targets);</span>
+<span class="nc" id="L128">        Matrix X = Matrix.ones(features.length, 1).augment(new Vector(features));</span>
+<span class="nc" id="L129">        Matrix y = new Vector(targets);</span>
 
         Matrix wGrad;
-<span class="fc" id="L133">        w = Matrix.randn(X.numCols(), 1, false); // initialize w.</span>
+<span class="nc" id="L132">        w = Matrix.randn(X.numCols(), 1, false); // initialize w.</span>
 
-<span class="fc bfc" id="L135" title="All 2 branches covered.">        for(int i=0; i&lt;maxIterations; i++) { // Apply stochastic gradient descent.</span>
-<span class="fc" id="L136">            shuffledIndices = ArrayUtils.randomIndices(X.numRows()); // Get randomly shuffled indices</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        for(int i=0; i&lt;maxIterations; i++) { // Apply stochastic gradient descent.</span>
+<span class="nc" id="L135">            shuffledIndices = ArrayUtils.randomIndices(X.numRows()); // Get randomly shuffled indices</span>
 
-<span class="fc bfc" id="L138" title="All 2 branches covered.">            for(int j : shuffledIndices) { // Compute gradient a single sample at a time.</span>
-<span class="fc" id="L139">                wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients</span>
-<span class="fc" id="L140">                w = GD.step(w, wGrad)[0]; // Apply gradient descent update rule.</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">            for(int j : shuffledIndices) { // Compute gradient a single sample at a time.</span>
+<span class="nc" id="L138">                wGrad = LinearGradient.getGrad(X.getRowAsVector(j), y.getRowAsVector(j), w); // Compute gradients</span>
+<span class="nc" id="L139">                w = GD.step(w, wGrad)[0]; // Apply gradient descent update rule.</span>
             }
 
             // Append loss to the loss history.
-<span class="fc" id="L144">            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));</span>
+<span class="nc" id="L143">            lossHist.add(LossFunctions.sse.compute(y, this.predict(X, w)).getAsDouble(0, 0));</span>
 
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">            if(lossHist.get(lossHist.size()-1)&lt;threshold) {</span>
-<span class="nc" id="L147">                break; // Then stop the training early</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            if(lossHist.get(lossHist.size()-1)&lt;threshold) {</span>
+<span class="nc" id="L146">                break; // Then stop the training early</span>
             }
         }
 
         // Update the model details
-<span class="fc" id="L152">        super.coefficients = w.T().getValuesAsDouble()[0];</span>
-<span class="fc" id="L153">        super.isFit=true;</span>
-<span class="fc" id="L154">        buildDetails();</span>
+<span class="nc" id="L151">        super.coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="nc" id="L152">        super.isFit=true;</span>
+<span class="nc" id="L153">        buildDetails();</span>
 
-<span class="fc" id="L156">        return this;</span>
+<span class="nc" id="L155">        return this;</span>
     }
 
 
@@ -163,20 +162,21 @@ public class LinearRegressionSGD extends LinearRegression {
      * @return The loss of every iteration stored in a List.
      */
     public double[] getLossHist() {
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L167">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L166">            throw new IllegalStateException(&quot;Model must be trained before the loss history can be computed.&quot;);</span>
         }
 
-<span class="fc" id="L170">        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();</span>
+<span class="nc" id="L169">        return lossHist.stream().mapToDouble(Double::doubleValue).toArray();</span>
     }
 
-    private void paramCheck() {
-<span class="fc bfc" id="L174" title="All 2 branches covered.">        if(!ValueError.isNonNegative(maxIterations))</span>
-<span class="fc" id="L175">            throw new IllegalArgumentException(&quot;maxIterations must be non-negative but got &quot; + maxIterations);</span>
-<span class="fc bfc" id="L176" title="All 2 branches covered.">        if(!ValueError.isNonNegative(learningRate))</span>
-<span class="fc" id="L177">            throw new IllegalArgumentException(&quot;learningRate must be non-negative but got &quot; + learningRate);</span>
-<span class="fc bfc" id="L178" title="All 2 branches covered.">        if(!ValueError.isNonNegative(threshold))</span>
-<span class="fc" id="L179">            throw new IllegalArgumentException(&quot;threshold must be non-negative but got &quot; + threshold);</span>
-<span class="fc" id="L180">    }</span>
+
+    private void validateParams() {
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if(maxIterations &lt; 0)</span>
+<span class="nc" id="L175">            throw new IllegalArgumentException(&quot;Maximum iterations must be non-negative but got &quot; + maxIterations + &quot;.&quot;);</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if(learningRate &lt; 0)</span>
+<span class="nc" id="L177">            throw new IllegalArgumentException(&quot;Learning rate must be non-negative but got &quot; + learningRate + &quot;.&quot;);</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if(threshold &lt; 0)</span>
+<span class="nc" id="L179">            throw new IllegalArgumentException(&quot;Threshold must be non-negative but got &quot; + threshold + &quot;.&quot;);</span>
+<span class="nc" id="L180">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
