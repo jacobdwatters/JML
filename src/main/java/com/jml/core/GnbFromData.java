@@ -2,7 +2,6 @@ package com.jml.core;
 
 import com.jml.classifiers.naive_bayes.GaussianNaiveBayes;
 import com.jml.linear_models.LinearModelTags;
-import linalg.Matrix;
 
 import java.util.Arrays;
 import java.util.List;

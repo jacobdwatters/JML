@@ -172,9 +172,9 @@ public class KNearestNeighbors extends Model<double[][], int[]> {
         if(k<=0) {
             throw new IllegalArgumentException("Number of neighbors must be positive but got " + k + ".");
         }
-        if(p<=1) {
+        if(p<1) {
             throw new IllegalArgumentException("Power parameter of Minkowski distance must be greater than or equal to" +
-                    "one but got " + p + ".");
+                    " 1 but got " + p + ".");
         }
     }
 
