@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/* TODO: This is a top level interface for all models.
-        As such, it should not limit the input and output type of the model.
- */
-
 
 /**
  * This interface specifies the requirements for a machine learning model.
@@ -104,6 +100,7 @@ public abstract class Model<X, Y> {
      * @param filePath File path, including file extension, of model to load.
      * @return Returns a saved trained model from the file path.
      */
+    // TODO: Make it so that each model has its own load so that the returned model has the correct type rather than "Model"
     public static Model load(String filePath) {
 
         if(!filePath.endsWith(".mdl")) {

@@ -34,8 +34,41 @@ public class Adam extends Optimizer {
     double alpha;
     public static final String OPTIM_NAME = "Adam";
 
+
     /**
-     * Creates a Adam optimizer with specified learning rate and parameters.
+     * Creates an Adam optimizer with the following default parameters.
+     * <pre>
+     *     learning rate = 0.001
+     *     beta1 = 0.9
+     *     beta2 = 0.999</pre>
+     */
+    public Adam() {
+        super.learningRate = 0.001;
+        this.beta1 = 0.9;
+        this.beta2 = 0.999;
+        t=0;
+        super.name = OPTIM_NAME;
+    }
+
+
+    /**
+     * Creates an Adam optimizer with specified learning rate and the following default parameters.
+     * <pre>
+     *     beta1 = 0.9
+     *     beta2 = 0.999</pre>
+     * @param learningRate Learning rate to use for the Adam optimizers update rule.
+     */
+    public Adam(double learningRate) {
+        super.learningRate = learningRate;
+        this.beta1 = 0.9;
+        this.beta2 = 0.999;
+        t=0;
+        super.name = OPTIM_NAME;
+    }
+
+
+    /**
+     * Creates an Adam optimizer with specified learning rate and beta parameters.
      *
      * @param learningRate Learning rate for the Adam optimizer.
      * @param beta1 Exponential decay rate for first moment estimate. Must be in [0, 1)

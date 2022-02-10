@@ -41,10 +41,15 @@ class ModelFromData {
         } else if(modelType.equals(ModelTypes.LOGISTIC_REGRESSION.toString())) {
             model = LogRegFromData.create(tags, contents);
 
+        } else if(modelType.equals(ModelTypes.GAUSSIAN_NAIVE_BAYES.toString())) {
+            model = GnbFromData.create(tags, contents);
+
         } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {
-            // TODO:
+            model = NeuralNetFromData.create(tags, contents); // TODO: Change this so it is actually a perceptron.
+
         } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {
             model = NeuralNetFromData.create(tags, contents);
+
         } else {
             throw new IllegalArgumentException("The file does not seem to contain a valid model.");
         }

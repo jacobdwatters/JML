@@ -11,13 +11,12 @@ import linalg.Vector;
 
 
 /**
- * Model for least squares linear regression of multiple variables by least squares.<br><br>
+ * Model for linear regression of multiple variables by least squares.<br><br>
  *
  * MultipleLinearRegression fits a model y = b<sub>0</sub> + b<sub>1</sub>x<sub>1</sub> + ... + b<sub>n</sub>x<sub>n</sub>  to the datasets by minimizing
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model.
  */
-// TODO: Refactor polynomial regression as a special case of multiple regression
 public class MultipleLinearRegression extends Model<double[][], double[]> {
     String MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION.toString();
 
@@ -37,7 +36,18 @@ public class MultipleLinearRegression extends Model<double[][], double[]> {
 
 
     /**
+     * Creates a multivariate least squares regression model
+     */
+    public MultipleLinearRegression() {
+        // Does nothing.
+    }
+
+
+    /**
      * {@inheritDoc}
+     *
+     * @param features Features to use during training of the model.
+     * @param targets Targets to use during training of the model.
      */
     @Override
     public MultipleLinearRegression fit(double[][] features, double[] targets) {

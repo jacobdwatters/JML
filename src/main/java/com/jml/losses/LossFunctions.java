@@ -10,7 +10,7 @@ import linalg.Matrix;
  *     - {@link #crossEntropy}: cross-entropy loss (For multiple classes).
  * </pre>
  */
-public class LossFunctions {
+public abstract class LossFunctions {
 
     /* TODO: All loss functions should become an object rather than a lambda so that we can define, compute() and slope() function
         for each loss. This will allow different loss functions to be specified for a NeuralNetwork since function and its
@@ -42,7 +42,8 @@ public class LossFunctions {
 
 
     /**
-     * The binary cross-entropy loss function.
+     * The binary cross-entropy loss function.<br>
+     * bce = -(1/n) * sum( y*<sub>i</sub>ln(yPred<sub>i</sub>) + (1-y<sub>i</sub>)*ln(yPred<sub>i</sub>) )<br><br>
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
      * appropriate.
      */
@@ -75,7 +76,8 @@ public class LossFunctions {
 
 
     /**
-     * the cross-entropy loss function.
+     * the cross-entropy loss function.<br>
+     * ce = -(1/n) * sum( y*<sub>i</sub>ln(yPred<sub>i</sub>) )<br><br>
      * Note: cross-entropy is undefined for p=0 or p=1, so probabilities adjusted to be "very close" to 0 or 1 if
      * appropriate.
      */

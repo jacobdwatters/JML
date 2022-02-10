@@ -296,7 +296,7 @@ public class Stats {
      * @return The maximum value in data.
      */
     public static double max(double... data) {
-<span class="fc" id="L299">        double maximum = Double.MIN_VALUE;</span>
+<span class="fc" id="L299">        double maximum = -Double.MAX_VALUE;</span>
 
 <span class="fc bfc" id="L301" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
 <span class="fc bfc" id="L302" title="All 2 branches covered.">            if(data[i] &gt; maximum) { // Then we have a new maximum</span>
@@ -309,6 +309,23 @@ public class Stats {
 
 
     /**
+     * Computes the sum of an array of values.
+     *
+     * @param data Data to sum.
+     * @return The sum of all entries of the data array.
+     */
+    public static double sum(double... data) {
+<span class="nc" id="L318">        double sum=0;</span>
+
+<span class="nc bnc" id="L320" title="All 2 branches missed.">        for(double value  : data) {</span>
+<span class="nc" id="L321">            sum+=value;</span>
+        }
+
+<span class="nc" id="L324">        return sum;</span>
+    }
+
+
+    /**
      * Generates a random boolean with a specified probability of being true.
      *
      * @param p Probability of being true. Must be in range [0, 1].
@@ -316,11 +333,11 @@ public class Stats {
      * @throws IllegalArgumentException if &lt;code&gt;p&lt;/code&gt; is not in range [0, 1].
      */
     public static boolean genRandBoolean(double p) {
-<span class="pc bpc" id="L319" title="2 of 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
-<span class="nc" id="L320">            throw new IllegalArgumentException(&quot;probability must be between 0 and 1 inclusive but got &quot; + p + &quot;.&quot;);</span>
+<span class="pc bpc" id="L336" title="2 of 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
+<span class="nc" id="L337">            throw new IllegalArgumentException(&quot;probability must be between 0 and 1 inclusive but got &quot; + p + &quot;.&quot;);</span>
         }
 
-<span class="fc bfc" id="L323" title="All 2 branches covered.">        return random.nextDouble() &lt; p;</span>
+<span class="fc bfc" id="L340" title="All 2 branches covered.">        return random.nextDouble() &lt; p;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

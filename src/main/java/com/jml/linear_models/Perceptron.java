@@ -7,7 +7,6 @@ import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.Dense;
 
-
 import com.jml.neural_network.layers.TrainableLayer;
 import linalg.Matrix;
 
@@ -60,6 +59,7 @@ public class Perceptron extends Model<double[][], double[][]> {
 
         this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);
 
+        validateParams();
         buildDetails();
     }
 
@@ -83,6 +83,7 @@ public class Perceptron extends Model<double[][], double[][]> {
         this.activation = Activations.sigmoid;
 
         this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);
+        validateParams();
         buildDetails();
     }
 
@@ -106,6 +107,7 @@ public class Perceptron extends Model<double[][], double[][]> {
         this.activation = activation;
 
         this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);
+        validateParams();
         buildDetails();
     }
 
@@ -162,6 +164,23 @@ public class Perceptron extends Model<double[][], double[][]> {
     @Override
     public Matrix getParams() {
         return null;
+    }
+
+
+    // Ensure constructor parameters are valid.
+    private void validateParams() {
+        if (epochs < 0) {
+            throw new IllegalArgumentException("Maximum iterations must be non-negative but got " + epochs + ".");
+        }
+        if(learningRate<0) {
+            throw new IllegalArgumentException("Learning rate must be non-negative but got " + learningRate + ".");
+        }
+        if(threshold<0) {
+            throw new IllegalArgumentException("Threshold must be non-negative but got " + threshold + ".");
+        }
+        if(batchSize < 1) {
+            throw new IllegalArgumentException("Batch size must be at least 1 but got " + batchSize + ".");
+        }
     }
 
 

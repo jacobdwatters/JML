@@ -11,13 +11,22 @@ import com.jml.util.ArrayUtils;
  * the residuals of the sum of squares between the values in the target dataset and the values predicted
  * by the model. This is solved explicitly.
  */
-<span class="fc" id="L14">public class LinearRegression extends PolynomialRegression {</span>
-<span class="fc" id="L15">    String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();</span>
-<span class="fc" id="L16">    private String details = &quot;Model Details\n&quot; +</span>
+public class LinearRegression extends PolynomialRegression {
+
+<span class="fc" id="L16">    String MODEL_TYPE = ModelTypes.LINEAR_REGRESSION.toString();</span>
+
+<span class="fc" id="L18">    private String details = &quot;Model Details\n&quot; +</span>
             &quot;----------------------------\n&quot; +
             &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
             &quot;Is Trained: No\n&quot;;
 
+
+    /**
+     * Creates a simple least-squares linear regression model.
+     */
+<span class="fc" id="L27">    public LinearRegression() {</span>
+        // Does nothing.
+<span class="fc" id="L29">    }</span>
 
     /**
      * Fits or trains the model with the given features and targets.
@@ -31,27 +40,27 @@ import com.jml.util.ArrayUtils;
      */
     @Override
     public LinearRegression fit(double[] features, double[] targets) {
-<span class="fc" id="L34">        super.fit(features, targets);</span>
-<span class="fc" id="L35">        buildDetails();</span>
-<span class="fc" id="L36">        return this;</span>
+<span class="fc" id="L43">        super.fit(features, targets);</span>
+<span class="fc" id="L44">        buildDetails();</span>
+<span class="fc" id="L45">        return this;</span>
     }
 
 
     // Construct details of model
     @Override
     protected void buildDetails() {
-<span class="fc" id="L43">        details =&quot;Model Details\n&quot; +</span>
+<span class="fc" id="L52">        details =&quot;Model Details\n&quot; +</span>
                 &quot;----------------------------\n&quot; +
                 &quot;Model Type: &quot; + this.MODEL_TYPE+ &quot;\n&quot; +
-<span class="pc bpc" id="L46" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">                &quot;Is Trained: &quot; + (isFit ? &quot;Yes&quot; : &quot;No&quot;) + &quot;\n&quot;;</span>
 
-<span class="pc bpc" id="L48" title="2 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
-<span class="fc" id="L49">            coefficients = w.T().getValuesAsDouble()[0];</span>
-<span class="fc" id="L50">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
-<span class="fc" id="L51">            details += ArrayUtils.asString(coefficients);</span>
-<span class="fc" id="L52">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
+<span class="pc bpc" id="L57" title="2 of 4 branches missed.">        if(isFit &amp;&amp; w!=null) {</span>
+<span class="fc" id="L58">            coefficients = w.T().getValuesAsDouble()[0];</span>
+<span class="fc" id="L59">            details += &quot;Coefficients (low-&gt;high): &quot;;</span>
+<span class="fc" id="L60">            details += ArrayUtils.asString(coefficients);</span>
+<span class="fc" id="L61">            details += &quot;\nLine: y = &quot; + coefficients[0] + &quot; + &quot; + coefficients[1] + &quot;x&quot;;</span>
         }
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L63">    }</span>
 
 
     /**
@@ -62,7 +71,7 @@ import com.jml.util.ArrayUtils;
      */
     @Override
     public String inspect() {
-<span class="fc" id="L65">        return this.toString();</span>
+<span class="fc" id="L74">        return this.toString();</span>
     }
 
 
@@ -73,7 +82,7 @@ import com.jml.util.ArrayUtils;
      */
     @Override
     public String toString() {
-<span class="fc" id="L76">        return details;</span>
+<span class="fc" id="L85">        return details;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
