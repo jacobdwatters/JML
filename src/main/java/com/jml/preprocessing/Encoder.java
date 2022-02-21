@@ -15,7 +15,7 @@ public class Encoder {
     private Encoder() {throw new IllegalStateException("Cannot instantiate utility class.");}
 
     // TODO: Each encoder should be an object inheriting from the Encoder class. This will allow an encoder object to be
-    //  fit to the data so that any data can then be decoded. wh
+    //  fit to the data so that any data can then be decoded.
 
 
     /**
