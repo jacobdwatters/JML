@@ -41,8 +41,8 @@ class ModelFromData {
 <span class="fc bfc" id="L41" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.LOGISTIC_REGRESSION.toString())) {</span>
 <span class="fc" id="L42">            model = LogRegFromData.create(tags, contents);</span>
 
-<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.GAUSSIAN_NAIVE_BAYES.toString())) {</span>
-<span class="nc" id="L45">            model = GnbFromData.create(tags, contents);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.GAUSSIAN_NAIVE_BAYES.toString())) {</span>
+<span class="fc" id="L45">            model = GnbFromData.create(tags, contents);</span>
 
 <span class="pc bpc" id="L47" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
 <span class="nc" id="L48">            model = NeuralNetFromData.create(tags, contents); // TODO: Change this so it is actually a perceptron.</span>
