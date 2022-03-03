@@ -81,7 +81,7 @@ public class GaussianNaiveBayes extends Model<double[][], double[]> {
 
             for(int i=0; i<classData.length; i++) {
                 means[i] = Stats.mean(classData[i]);
-                stds[i] = Stats.std(classData[i]);
+                stds[i] = Stats.stdPop(classData[i]);
             }
 
             // Insert the mean and standard deviation for each feature for this class.
@@ -105,7 +105,7 @@ public class GaussianNaiveBayes extends Model<double[][], double[]> {
     public double[] predict(double[][] features) {
         if(features[0].length != this.features[0].length) {
             throw new IllegalArgumentException("Can not make predictions on data with " + features[0].length +
-                    " columns. Expecting " + this.features[0].length + ".");
+                    " columns. Expecting " + this.features[0].length + " columns.");
         }
         if (!isFit) {
             throw new IllegalStateException("Model must be fit before predictions can be made.");
@@ -129,7 +129,6 @@ public class GaussianNaiveBayes extends Model<double[][], double[]> {
                 post = Stats.sum(log(normalPdf(features[i], means, stds))) + prior;
                 posteriors.put(klass, post);
             }
-
             predictions[i] = argmax(posteriors);
         }
 
@@ -159,9 +158,13 @@ public class GaussianNaiveBayes extends Model<double[][], double[]> {
         double[] probabilities = new double[x.length];
 
         for(int i=0; i<x.length; i++) {
+
+            // Ensure that the standard deviation is not zero to ensure no division by zero occurs.
+            double adjustedSTD = (std[i]==0) ? 1E-8 : std[i];
+
             // Compute gaussian probability for each feature and its respective mean and standard deviation.
-            probabilities[i] = (1/(std[i]*Math.sqrt(2*Math.PI))) *
-                    Math.exp(- Math.pow(x[i]-mean[i], 2) / (2*std[i]*std[i]));
+            probabilities[i] = (1.0/(adjustedSTD*Math.sqrt(2.0*Math.PI))) *
+                    Math.exp(- Math.pow(x[i]-mean[i], 2.0) / (2.0*adjustedSTD*adjustedSTD));
         }
 
         return probabilities;
@@ -169,7 +172,7 @@ public class GaussianNaiveBayes extends Model<double[][], double[]> {
 
 
     /**
-     * Applies natural log transform, element-wise, to an array.
+     * Applies natural log, element-wise, to an array.
      * @param arr Array with values to apply transform to you.
      * @return An array containing the natural log of the elements of arr.
      */

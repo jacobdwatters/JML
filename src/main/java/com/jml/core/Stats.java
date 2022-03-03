@@ -120,13 +120,37 @@ public class Stats {
 
     /**
      * Computes the standard deviation of the dataset. It is assumed that data contains only a sample of
-     * observations from the true population.
+     * observations from the true population. If there is only one sample in the dataset, then the std will be 0.
+     * <br><br>
+     * To compute the standard deviation for an entire population see {@link #stdPop(double...)}.
      *
-     * @param data Dataset of interest
-     * @return The standard deviation of the data.
+     * @param data Dataset of interest.
+     * @return The standard deviation of the data. If there is only one sample in the dataset, 0 will be returned.
      */
     public static double std(double... data) {
-        return Math.sqrt(sst(data)/data.length);
+        if(data.length<2) {
+            return 0;
+        } else {
+            return Math.sqrt(sst(data)/(data.length-1));
+        }
+    }
+
+
+    /**
+     * Computes the standard deviation of the dataset. It is assumed that data contains the true population in its entirety.
+     * If there is only one sample in the dataset, then the std will be 0.
+     * <br><br>
+     * To compute the standard deviation for a sample of the true population see {@link #std(double...)}.
+     *
+     * @param data Dataset of interest.
+     * @return The standard deviation of the data. If there is only one sample in the dataset, 0 will be returned.
+     */
+    public static double stdPop(double... data) {
+        if(data.length<2) {
+            return 0;
+        } else {
+            return Math.sqrt(sst(data)/(data.length));
+        }
     }
 
 

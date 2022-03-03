@@ -91,8 +91,8 @@ class StatsTest {
 
     @Test
     void stdTestCase() {
-        double std1 = 1.8305149245195707;
-        double std2 = 0.5;
+        double std1 = 1.8947629579096872;
+        double std2 = 0.7071067811865476;
         double std3 = 0;
         double std4 = 0;
 

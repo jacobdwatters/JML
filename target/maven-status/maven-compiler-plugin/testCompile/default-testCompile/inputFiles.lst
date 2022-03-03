@@ -26,4 +26,5 @@ C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\preprocessing\Normalizatio
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\preprocessing\NormalizationTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\losses\SseTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\classifiers\KnnTest.java
+C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\classifiers\naive_bayes\GaussianNaiveBayesTest.java
 C:\Users\17194\IdeaProjects\JML\src\test\java\com\jml\neural_network\layers\DenseTest.java
