@@ -88,21 +88,5 @@ public class Encoder {
 
 <span class="fc" id="L89">        return encodeClasses(flat);</span>
     }
-
-
-    /**
-     * Encodes a set of labels as one-hot vectors. The labels will be sorted alphabetically before encoding.
-     * @param labels Labels to encode as one hot vectors.
-     * @return A 2d array containing the one-hot vectors for each label. Each row of this array
-     *  is a single one-hot vector.
-     */
-    public static int[][] oneHot(String[] labels) {
-<span class="nc" id="L100">        int[] encodedLabels = new int[labels.length];</span>
-<span class="nc" id="L101">        Map&lt;String, Integer&gt; encodings = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L102">        String[] sortedLabels = labels.clone();</span>
-
-        // TODO:
-<span class="nc" id="L105">        return null;</span>
-    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
