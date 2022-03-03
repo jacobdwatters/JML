@@ -1,7 +1,10 @@
 package com.jml.util;
 
-public class ArrayErrors {
 
+/**
+ * A class for ensuring an array(s) has a certain property (e.g. non-empty). If this requirement is not met, an exception is thrown.
+ */
+public class ArrayErrors {
 
     // Private constructor to hide implicate one.
     private ArrayErrors() {

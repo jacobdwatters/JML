@@ -41,15 +41,20 @@ class ModelFromData {
 <span class="fc bfc" id="L41" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.LOGISTIC_REGRESSION.toString())) {</span>
 <span class="fc" id="L42">            model = LogRegFromData.create(tags, contents);</span>
 
-<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
-            // TODO:
-<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {</span>
-<span class="fc" id="L47">            model = NeuralNetFromData.create(tags, contents);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        } else if(modelType.equals(ModelTypes.GAUSSIAN_NAIVE_BAYES.toString())) {</span>
+<span class="fc" id="L45">            model = GnbFromData.create(tags, contents);</span>
+
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.PERCEPTRON.toString())) {</span>
+<span class="nc" id="L48">            model = NeuralNetFromData.create(tags, contents); // TODO: Change this so it is actually a perceptron.</span>
+
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        } else if(modelType.equals(ModelTypes.NEURAL_NETWORK.toString())) {</span>
+<span class="fc" id="L51">            model = NeuralNetFromData.create(tags, contents);</span>
+
         } else {
-<span class="nc" id="L49">            throw new IllegalArgumentException(&quot;The file does not seem to contain a valid model.&quot;);</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;The file does not seem to contain a valid model.&quot;);</span>
         }
 
-<span class="fc" id="L52">        return model;</span>
+<span class="fc" id="L57">        return model;</span>
     }
 
 
@@ -61,40 +66,40 @@ class ModelFromData {
      * @return The content from the block
      */
     protected static String getContent(String block) {
-<span class="fc" id="L64">        int start=-1, end=-1, endConsideration = -1;</span>
+<span class="fc" id="L69">        int start=-1, end=-1, endConsideration = -1;</span>
         StringBuilder currentTag;
-<span class="fc" id="L66">        String tag = getTag(block);</span>
+<span class="fc" id="L71">        String tag = getTag(block);</span>
 
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
-<span class="pc bpc" id="L69" title="1 of 6 branches missed.">            if(block.charAt(i)=='&gt;' &amp;&amp; end==-1 &amp;&amp; start==-1) {</span>
-<span class="fc" id="L70">                start=i+1;</span>
-<span class="fc bfc" id="L71" title="All 4 branches covered.">            } else if(block.charAt(i)=='&lt;' &amp;&amp; start&gt;-1) {</span>
-<span class="fc" id="L72">                currentTag = new StringBuilder();</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
+<span class="pc bpc" id="L74" title="1 of 6 branches missed.">            if(block.charAt(i)=='&gt;' &amp;&amp; end==-1 &amp;&amp; start==-1) {</span>
+<span class="fc" id="L75">                start=i+1;</span>
+<span class="fc bfc" id="L76" title="All 4 branches covered.">            } else if(block.charAt(i)=='&lt;' &amp;&amp; start&gt;-1) {</span>
+<span class="fc" id="L77">                currentTag = new StringBuilder();</span>
 
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">                for(int j=i+2; j&lt;block.length(); j++) {</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">                    if(block.charAt(j) != '&gt;') {</span>
-<span class="fc" id="L76">                        currentTag.append(block.charAt(j));</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                for(int j=i+2; j&lt;block.length(); j++) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">                    if(block.charAt(j) != '&gt;') {</span>
+<span class="fc" id="L81">                        currentTag.append(block.charAt(j));</span>
                     } else {
                         break;
                     }
                 }
 
-<span class="fc bfc" id="L82" title="All 2 branches covered.">                if(currentTag.toString().equals(tag)) { // Ensure that the ending tag is the same as the opening tag.</span>
-<span class="fc" id="L83">                    end=i;</span>
-<span class="fc" id="L84">                    break;</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">                if(currentTag.toString().equals(tag)) { // Ensure that the ending tag is the same as the opening tag.</span>
+<span class="fc" id="L88">                    end=i;</span>
+<span class="fc" id="L89">                    break;</span>
                 }
             }
         }
 
-<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if(start==-1) { // Did not find start of block.</span>
-<span class="nc" id="L90">            throw new IllegalStateException(&quot;Error while parsing block. Could not find start.&quot;);</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if(start==-1) { // Did not find start of block.</span>
+<span class="nc" id="L95">            throw new IllegalStateException(&quot;Error while parsing block. Could not find start.&quot;);</span>
         }
 
-<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if(end==-1) { // Did not find end of block.</span>
-<span class="nc" id="L94">            throw new IllegalStateException(&quot;Error while parsing block. Could not find end.&quot;);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if(end==-1) { // Did not find end of block.</span>
+<span class="nc" id="L99">            throw new IllegalStateException(&quot;Error while parsing block. Could not find end.&quot;);</span>
         }
 
-<span class="fc" id="L97">        return block.substring(start, end).replaceAll(&quot;\\s&quot;,&quot;&quot;);</span>
+<span class="fc" id="L102">        return block.substring(start, end).replaceAll(&quot;\\s&quot;,&quot;&quot;);</span>
     }
 
 
@@ -106,20 +111,20 @@ class ModelFromData {
      * @return The Tag from the block
      */
     protected static String getTag(String block) {
-<span class="fc" id="L109">        boolean foundStart = false;</span>
-<span class="fc" id="L110">        StringBuilder tag = new StringBuilder();</span>
+<span class="fc" id="L114">        boolean foundStart = false;</span>
+<span class="fc" id="L115">        StringBuilder tag = new StringBuilder();</span>
 
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">            if(block.charAt(i)=='&lt;') {</span>
-<span class="fc" id="L114">                foundStart = true;</span>
-<span class="pc bpc" id="L115" title="1 of 4 branches missed.">            } else if(foundStart &amp;&amp; block.charAt(i)!='&gt;') {</span>
-<span class="fc" id="L116">                tag.append(block.charAt(i)); // Add the character to the tag.</span>
-<span class="pc bpc" id="L117" title="1 of 2 branches missed.">            } else if(block.charAt(i)=='&gt;') {</span>
-<span class="fc" id="L118">                break; // Then we are done.</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        for(int i=0; i&lt;block.length(); i++) {</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">            if(block.charAt(i)=='&lt;') {</span>
+<span class="fc" id="L119">                foundStart = true;</span>
+<span class="pc bpc" id="L120" title="1 of 4 branches missed.">            } else if(foundStart &amp;&amp; block.charAt(i)!='&gt;') {</span>
+<span class="fc" id="L121">                tag.append(block.charAt(i)); // Add the character to the tag.</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            } else if(block.charAt(i)=='&gt;') {</span>
+<span class="fc" id="L123">                break; // Then we are done.</span>
             }
         }
 
-<span class="fc" id="L122">        return tag.toString();</span>
+<span class="fc" id="L127">        return tag.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

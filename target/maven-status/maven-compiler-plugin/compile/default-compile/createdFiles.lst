@@ -1,1 +1,4 @@
-com/jml/classifiers/naive_bayes/GaussianNaiveBayes.class
+com\jml\losses\Loss.class
+com\jml\classifiers\naive_bayes\GaussianNaiveBayes.class
+com\jml\core\GnbFromData.class
+com\jml\preprocessing\OneHotEncoder.class

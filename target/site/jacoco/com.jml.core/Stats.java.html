@@ -120,13 +120,37 @@ public class Stats {
 
     /**
      * Computes the standard deviation of the dataset. It is assumed that data contains only a sample of
-     * observations from the true population.
+     * observations from the true population. If there is only one sample in the dataset, then the std will be 0.
+     * &lt;br&gt;&lt;br&gt;
+     * To compute the standard deviation for an entire population see {@link #stdPop(double...)}.
      *
-     * @param data Dataset of interest
-     * @return The standard deviation of the data.
+     * @param data Dataset of interest.
+     * @return The standard deviation of the data. If there is only one sample in the dataset, 0 will be returned.
      */
     public static double std(double... data) {
-<span class="fc" id="L129">        return Math.sqrt(sst(data)/data.length);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        if(data.length&lt;2) {</span>
+<span class="fc" id="L132">            return 0;</span>
+        } else {
+<span class="fc" id="L134">            return Math.sqrt(sst(data)/(data.length-1));</span>
+        }
+    }
+
+
+    /**
+     * Computes the standard deviation of the dataset. It is assumed that data contains the true population in its entirety.
+     * If there is only one sample in the dataset, then the std will be 0.
+     * &lt;br&gt;&lt;br&gt;
+     * To compute the standard deviation for a sample of the true population see {@link #std(double...)}.
+     *
+     * @param data Dataset of interest.
+     * @return The standard deviation of the data. If there is only one sample in the dataset, 0 will be returned.
+     */
+    public static double stdPop(double... data) {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if(data.length&lt;2) {</span>
+<span class="fc" id="L150">            return 0;</span>
+        } else {
+<span class="fc" id="L152">            return Math.sqrt(sst(data)/(data.length));</span>
+        }
     }
 
 
@@ -138,14 +162,14 @@ public class Stats {
      * @return The correlation coefficient for the given datasets.
      */
     public static double determination(double[] y, double[] y_pred) {
-<span class="fc" id="L141">        ArrayErrors.checkSameLength(y, y_pred); // Ensure the arrays are the same length.</span>
+<span class="fc" id="L165">        ArrayErrors.checkSameLength(y, y_pred); // Ensure the arrays are the same length.</span>
 
-<span class="fc" id="L143">        double sst = sst(y);</span>
-<span class="fc bfc" id="L144" title="All 2 branches covered.">        if(sst == 0) {</span>
-<span class="fc" id="L145">            throw new ArithmeticException(&quot;Division by zero will occur because sst=0.&quot;);</span>
+<span class="fc" id="L167">        double sst = sst(y);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if(sst == 0) {</span>
+<span class="fc" id="L169">            throw new ArithmeticException(&quot;Division by zero will occur because sst=0.&quot;);</span>
         }
 
-<span class="fc" id="L148">        return 1-(sse(y, y_pred)/sst);</span>
+<span class="fc" id="L172">        return 1-(sse(y, y_pred)/sst);</span>
     }
 
 
@@ -157,7 +181,7 @@ public class Stats {
      * @return The coefficient of determination for the given datasets.
      */
     public static double correlation(double[] y, double[] y_pred) {
-<span class="nc" id="L160">        return Math.sqrt(determination(y, y_pred));</span>
+<span class="nc" id="L184">        return Math.sqrt(determination(y, y_pred));</span>
     }
 
 
@@ -169,15 +193,15 @@ public class Stats {
      * @return The sum of square differences between two datasets.
      */
     public static double sse(double[] y, double[] y_pred) {
-<span class="fc" id="L172">        double result = 0;</span>
+<span class="fc" id="L196">        double result = 0;</span>
 
-<span class="fc" id="L174">        ArrayErrors.checkSameLength(y, y_pred);</span>
+<span class="fc" id="L198">        ArrayErrors.checkSameLength(y, y_pred);</span>
 
-<span class="fc bfc" id="L176" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
-<span class="fc" id="L177">            result += Math.pow(y[i]-y_pred[i], 2);</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
+<span class="fc" id="L201">            result += Math.pow(y[i]-y_pred[i], 2);</span>
         }
 
-<span class="fc" id="L180">        return result;</span>
+<span class="fc" id="L204">        return result;</span>
     }
 
 
@@ -188,14 +212,14 @@ public class Stats {
      * @return The sum of squares total.
      */
     public static double sst(double... y) {
-<span class="fc" id="L191">        double mean = mean(y),</span>
-<span class="fc" id="L192">                result = 0;</span>
+<span class="fc" id="L215">        double mean = mean(y),</span>
+<span class="fc" id="L216">                result = 0;</span>
 
-<span class="fc bfc" id="L194" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
-<span class="fc" id="L195">            result += Math.pow(y[i]-mean, 2);</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
+<span class="fc" id="L219">            result += Math.pow(y[i]-mean, 2);</span>
         }
 
-<span class="fc" id="L198">        return result;</span>
+<span class="fc" id="L222">        return result;</span>
     }
 
 
@@ -206,15 +230,15 @@ public class Stats {
      * @return The minimum value in data.
      */
     public static double min(double... data) {
-<span class="fc" id="L209">        double minimum = Double.MAX_VALUE;</span>
+<span class="fc" id="L233">        double minimum = Double.MAX_VALUE;</span>
 
-<span class="fc bfc" id="L211" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc bfc" id="L212" title="All 2 branches covered.">            if(data[i] &lt; minimum) { // Then we have a new minimum</span>
-<span class="fc" id="L213">                minimum = data[i];</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">            if(data[i] &lt; minimum) { // Then we have a new minimum</span>
+<span class="fc" id="L237">                minimum = data[i];</span>
             }
         }
 
-<span class="fc" id="L217">        return minimum;</span>
+<span class="fc" id="L241">        return minimum;</span>
     }
 
 
@@ -225,17 +249,17 @@ public class Stats {
      * @return The index of the entry with the smallest value.
      */
     public static int minIndex(double[] data) {
-<span class="fc" id="L228">        double minimum = Double.MAX_VALUE;</span>
-<span class="fc" id="L229">        int mindex = -1;</span>
+<span class="fc" id="L252">        double minimum = Double.MAX_VALUE;</span>
+<span class="fc" id="L253">        int mindex = -1;</span>
 
-<span class="fc bfc" id="L231" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc bfc" id="L232" title="All 2 branches covered.">            if(data[i] &lt; minimum) { // Then we have a new minimum</span>
-<span class="fc" id="L233">                minimum = data[i];</span>
-<span class="fc" id="L234">                mindex = i;</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">            if(data[i] &lt; minimum) { // Then we have a new minimum</span>
+<span class="fc" id="L257">                minimum = data[i];</span>
+<span class="fc" id="L258">                mindex = i;</span>
             }
         }
 
-<span class="fc" id="L238">        return mindex;</span>
+<span class="fc" id="L262">        return mindex;</span>
     }
 
 
@@ -247,45 +271,45 @@ public class Stats {
      * @return An array of length k containing the indices of the k smallest values.
      */
     public static int[] minIndices(double[] data, int k) {
-<span class="pc bpc" id="L250" title="1 of 2 branches missed.">        if(k&gt;data.length) {</span>
-<span class="nc" id="L251">            throw new IllegalArgumentException(&quot;k can not be greater than the length of the array but got k=&quot; + k +</span>
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">        if(k&gt;data.length) {</span>
+<span class="nc" id="L275">            throw new IllegalArgumentException(&quot;k can not be greater than the length of the array but got k=&quot; + k +</span>
                     &quot; and an array length of &quot; + data.length);
         }
 
-<span class="fc" id="L255">        int[] mindices = new int[k];</span>
+<span class="fc" id="L279">        int[] mindices = new int[k];</span>
 
-<span class="fc" id="L257">        Map&lt;Integer, Double&gt; hm = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L281">        Map&lt;Integer, Double&gt; hm = new HashMap&lt;&gt;();</span>
 
-<span class="fc bfc" id="L259" title="All 2 branches covered.">        for(int i=0; i&lt;data.length; i++) { // Fill hashmap</span>
-<span class="fc" id="L260">            hm.put(i, data[i]);</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        for(int i=0; i&lt;data.length; i++) { // Fill hashmap</span>
+<span class="fc" id="L284">            hm.put(i, data[i]);</span>
         }
 
         // --------------------------------------- SORT HASHMAP --------------------------------
-<span class="fc" id="L264">        List&lt;Map.Entry&lt;Integer, Double&gt; &gt; list =</span>
-<span class="fc" id="L265">                new LinkedList&lt;Map.Entry&lt;Integer, Double&gt; &gt;(hm.entrySet());</span>
+<span class="fc" id="L288">        List&lt;Map.Entry&lt;Integer, Double&gt; &gt; list =</span>
+<span class="fc" id="L289">                new LinkedList&lt;Map.Entry&lt;Integer, Double&gt; &gt;(hm.entrySet());</span>
 
         // Sort the list
-<span class="fc" id="L268">        list.sort(new Comparator&lt;Map.Entry&lt;Integer, Double&gt;&gt;() {</span>
+<span class="fc" id="L292">        list.sort(new Comparator&lt;Map.Entry&lt;Integer, Double&gt;&gt;() {</span>
             public int compare(Map.Entry&lt;Integer, Double&gt; o1,
                                Map.Entry&lt;Integer, Double&gt; o2) {
-<span class="fc" id="L271">                return (o1.getValue()).compareTo(o2.getValue());</span>
+<span class="fc" id="L295">                return (o1.getValue()).compareTo(o2.getValue());</span>
             }
         });
 
         // put data from sorted list to hashmap
-<span class="fc" id="L276">        HashMap&lt;Integer, Double&gt; sorted = new LinkedHashMap&lt;Integer, Double&gt;();</span>
-<span class="fc bfc" id="L277" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, Double&gt; aa : list) {</span>
-<span class="fc" id="L278">            sorted.put(aa.getKey(), aa.getValue());</span>
-<span class="fc" id="L279">        }</span>
+<span class="fc" id="L300">        HashMap&lt;Integer, Double&gt; sorted = new LinkedHashMap&lt;Integer, Double&gt;();</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">        for (Map.Entry&lt;Integer, Double&gt; aa : list) {</span>
+<span class="fc" id="L302">            sorted.put(aa.getKey(), aa.getValue());</span>
+<span class="fc" id="L303">        }</span>
         // -------------------------------------------------------------------------------------
 
-<span class="fc" id="L282">        Object[] keys = sorted.keySet().toArray();</span>
+<span class="fc" id="L306">        Object[] keys = sorted.keySet().toArray();</span>
 
-<span class="pc bpc" id="L284" title="1 of 4 branches missed.">        for(int i=0; i&lt;k &amp;&amp; i&lt;keys.length; i++) {</span>
-<span class="fc" id="L285">            mindices[i] = (int) keys[i];</span>
+<span class="pc bpc" id="L308" title="1 of 4 branches missed.">        for(int i=0; i&lt;k &amp;&amp; i&lt;keys.length; i++) {</span>
+<span class="fc" id="L309">            mindices[i] = (int) keys[i];</span>
         }
 
-<span class="fc" id="L288">        return mindices;</span>
+<span class="fc" id="L312">        return mindices;</span>
     }
 
 
@@ -296,15 +320,32 @@ public class Stats {
      * @return The maximum value in data.
      */
     public static double max(double... data) {
-<span class="fc" id="L299">        double maximum = Double.MIN_VALUE;</span>
+<span class="fc" id="L323">        double maximum = -Double.MAX_VALUE;</span>
 
-<span class="fc bfc" id="L301" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
-<span class="fc bfc" id="L302" title="All 2 branches covered.">            if(data[i] &gt; maximum) { // Then we have a new maximum</span>
-<span class="fc" id="L303">                maximum = data[i];</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        for(int i=0; i&lt; data.length; i++) {</span>
+<span class="fc bfc" id="L326" title="All 2 branches covered.">            if(data[i] &gt; maximum) { // Then we have a new maximum</span>
+<span class="fc" id="L327">                maximum = data[i];</span>
             }
         }
 
-<span class="fc" id="L307">        return maximum;</span>
+<span class="fc" id="L331">        return maximum;</span>
+    }
+
+
+    /**
+     * Computes the sum of an array of values.
+     *
+     * @param data Data to sum.
+     * @return The sum of all entries of the data array.
+     */
+    public static double sum(double... data) {
+<span class="fc" id="L342">        double sum=0;</span>
+
+<span class="fc bfc" id="L344" title="All 2 branches covered.">        for(double value  : data) {</span>
+<span class="fc" id="L345">            sum+=value;</span>
+        }
+
+<span class="fc" id="L348">        return sum;</span>
     }
 
 
@@ -316,11 +357,11 @@ public class Stats {
      * @throws IllegalArgumentException if &lt;code&gt;p&lt;/code&gt; is not in range [0, 1].
      */
     public static boolean genRandBoolean(double p) {
-<span class="pc bpc" id="L319" title="2 of 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
-<span class="nc" id="L320">            throw new IllegalArgumentException(&quot;probability must be between 0 and 1 inclusive but got &quot; + p + &quot;.&quot;);</span>
+<span class="pc bpc" id="L360" title="2 of 4 branches missed.">        if(p&lt;0 || p&gt;1) {</span>
+<span class="nc" id="L361">            throw new IllegalArgumentException(&quot;probability must be between 0 and 1 inclusive but got &quot; + p + &quot;.&quot;);</span>
         }
 
-<span class="fc bfc" id="L323" title="All 2 branches covered.">        return random.nextDouble() &lt; p;</span>
+<span class="fc bfc" id="L364" title="All 2 branches covered.">        return random.nextDouble() &lt; p;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

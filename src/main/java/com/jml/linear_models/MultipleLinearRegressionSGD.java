@@ -5,7 +5,6 @@ import com.jml.losses.LossFunctions;
 import com.jml.optimizers.GradientDescent;
 import com.jml.optimizers.Optimizer;
 import com.jml.util.ArrayUtils;
-import com.jml.util.ValueError;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -55,7 +54,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
         this.threshold = threshold;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -72,7 +71,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -86,7 +85,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     public MultipleLinearRegressionSGD(double learningRate) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.learningRate = learningRate;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -101,7 +100,7 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     public MultipleLinearRegressionSGD(int maxIterations) {
         super.MODEL_TYPE = ModelTypes.MULTIPLE_LINEAR_REGRESSION_SGD.toString();
         this.maxIterations = maxIterations;
-        paramCheck();
+        validateParams();
     }
 
 
@@ -159,13 +158,13 @@ public class MultipleLinearRegressionSGD extends MultipleLinearRegression {
     }
 
 
-    // Ensure parameters are valid.
-    private void paramCheck() {
-        if(!ValueError.isNonNegative(maxIterations))
-            throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations);
-        if(!ValueError.isNonNegative(learningRate))
-            throw new IllegalArgumentException("learningRate must be non-negative but got " + learningRate);
-        if(!ValueError.isNonNegative(threshold))
-            throw new IllegalArgumentException("threshold must be non-negative but got " + threshold);
+    // Ensure constructor parameters are valid.
+    private void validateParams() {
+        if(maxIterations<0)
+            throw new IllegalArgumentException("maxIterations must be non-negative but got " + maxIterations + ".");
+        if(learningRate<0)
+            throw new IllegalArgumentException("learningRate must be non-negative but got " + learningRate + ".");
+        if(threshold<0)
+            throw new IllegalArgumentException("threshold must be non-negative but got " + threshold + ".");
     }
 }

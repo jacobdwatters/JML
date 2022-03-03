@@ -120,13 +120,37 @@ public class Stats {
 
     /**
      * Computes the standard deviation of the dataset. It is assumed that data contains only a sample of
-     * observations from the true population.
+     * observations from the true population. If there is only one sample in the dataset, then the std will be 0.
+     * <br><br>
+     * To compute the standard deviation for an entire population see {@link #stdPop(double...)}.
      *
-     * @param data Dataset of interest
-     * @return The standard deviation of the data.
+     * @param data Dataset of interest.
+     * @return The standard deviation of the data. If there is only one sample in the dataset, 0 will be returned.
      */
     public static double std(double... data) {
-        return Math.sqrt(sst(data)/data.length);
+        if(data.length<2) {
+            return 0;
+        } else {
+            return Math.sqrt(sst(data)/(data.length-1));
+        }
+    }
+
+
+    /**
+     * Computes the standard deviation of the dataset. It is assumed that data contains the true population in its entirety.
+     * If there is only one sample in the dataset, then the std will be 0.
+     * <br><br>
+     * To compute the standard deviation for a sample of the true population see {@link #std(double...)}.
+     *
+     * @param data Dataset of interest.
+     * @return The standard deviation of the data. If there is only one sample in the dataset, 0 will be returned.
+     */
+    public static double stdPop(double... data) {
+        if(data.length<2) {
+            return 0;
+        } else {
+            return Math.sqrt(sst(data)/(data.length));
+        }
     }
 
 
@@ -296,7 +320,7 @@ public class Stats {
      * @return The maximum value in data.
      */
     public static double max(double... data) {
-        double maximum = Double.MIN_VALUE;
+        double maximum = -Double.MAX_VALUE;
 
         for(int i=0; i< data.length; i++) {
             if(data[i] > maximum) { // Then we have a new maximum
@@ -305,6 +329,23 @@ public class Stats {
         }
 
         return maximum;
+    }
+
+
+    /**
+     * Computes the sum of an array of values.
+     *
+     * @param data Data to sum.
+     * @return The sum of all entries of the data array.
+     */
+    public static double sum(double... data) {
+        double sum=0;
+
+        for(double value  : data) {
+            sum+=value;
+        }
+
+        return sum;
     }
 
 

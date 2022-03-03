@@ -14,7 +14,8 @@ public class Encoder {
     // Hide default constructor.
     private Encoder() {throw new IllegalStateException("Cannot instantiate utility class.");}
 
-    // TODO: Add Encoding object that hold a map which shows what class became what value. That way the value can be decoded.
+    // TODO: Each encoder should be an object inheriting from the Encoder class. This will allow an encoder object to be
+    //  fit to the data so that any data can then be decoded.
 
 
     /**
@@ -75,7 +76,7 @@ public class Encoder {
      * @return An integer array containing the encoding of each label.
      */
     public static int[] encodeClasses(String[][] labels) {
-        String[] flat = new String[labels.length* labels[0].length];
+        String[] flat = new String[labels.length*labels[0].length];
         int k=0;
 
         for(int i=0; i<labels.length; i++) { // Flatten the array.

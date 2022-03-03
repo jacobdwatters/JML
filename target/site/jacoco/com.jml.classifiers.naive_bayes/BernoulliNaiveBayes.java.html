@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BernoulliNaiveBayes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.classifiers.naive_bayes</a> &gt; <span class="el_source">BernoulliNaiveBayes.java</span></div><h1>BernoulliNaiveBayes.java</h1><pre class="source lang-java linenums">package com.jml.classifiers.naive_bayes;
+
+
+import com.jml.core.Model;
+import linalg.Matrix;
+
+/**
+ * A Bernoulli Naive Bayes model. Fits a dataset by assuming the dataset if drawn from a Bernoulli distribution
+ * and that each feature has zero covariance. Then classification predictions can be made based on these assumptions.
+ */
+<span class="nc" id="L11">public class BernoulliNaiveBayes extends Model&lt;int[][], int[]&gt; {</span>
+
+    private double p; // Probability of success.
+
+    /**
+     * Fits or trains the model with the given features and targets. For both the features and targets parameters,
+     * if they are 2D arrays, then the number of rows in each must match and will be the number of samples in the
+     * data. The number of columns in each will be the number of features and targets in a single sample.&lt;br&gt;&lt;br&gt;
+     * &lt;p&gt;
+     * For instance, if the features array has shape n-by-m and the targets array has shape n-by-k. Then there
+     * are n samples in the dataset, each individual sample has m features, and each individual sample has k targets.
+     *
+     * @param features The features of the training set.
+     * @param targets  The targets of the training set.
+     * @return This. i.e. the trained model.
+     * @throws IllegalArgumentException Thrown if the features and targets are not correctly sized per
+     *                                  the specification when the model was compiled.
+     */
+    @Override
+    public Model&lt;int[][], int[]&gt; fit(int[][] features, int[] targets) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L32">        return this;</span>
+    }
+
+
+
+    // TODO: Does p need to be an array?
+    private static double[] bernoulliPdf(int[] x, double p) {
+<span class="nc" id="L39">        double[] probabilities = new double[x.length];</span>
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        for(int i=0; i&lt;x.length; i++) {</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            if(x[i]==0) {</span>
+<span class="nc" id="L43">                probabilities[i] = 1-p;</span>
+            } else {
+<span class="nc" id="L45">                probabilities[i] = p;</span>
+            }
+        }
+
+<span class="nc" id="L49">        return probabilities;</span>
+    }
+
+
+    /**
+     * Uses fitted/trained model to make prediction on single feature.
+     *
+     * @param features The features to make predictions on.
+     * @return The models predicted labels.
+     * @throws IllegalArgumentException Thrown if the features are not correctly sized per
+     *                                  the specification when the model was compiled.
+     * @throws IllegalStateException    Thrown if the model has not been compiled and fit.
+     */
+    @Override
+    public int[] predict(int[][] features) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L65">        return new int[0];</span>
+    }
+
+
+    /**
+     * Makes a prediction using a model by specifying the parameters of the model.
+     * Unlike the other predict method, no model needs to be trained to use this method since the parameters provided
+     * define a model.
+     *
+     * @param X Features to make prediction on.
+     * @param w Parameters of the model.
+     * @return prediction on the features using the given model parameters.
+     */
+    @Override
+    public Matrix predict(Matrix X, Matrix w) {
+        // TODO: Does nothing for this model. Need to remove requirement from Model class.
+        //  Models that need this can inherit from a 'ParameterizedModel' abstract class.
+<span class="nc" id="L82">        return null;</span>
+    }
+
+
+    /**
+     * Gets the parameters of the trained model.
+     *
+     * @return A matrix containing the parameters of the trained model.
+     */
+    @Override
+    public Matrix getParams() {
+        // TODO: Does nothing for this model. Need to remove requirement from Model class.
+        //  Models that need this can inherit from a 'ParameterizedModel' abstract class.
+<span class="nc" id="L95">        return null;</span>
+    }
+
+
+    /**
+     * Saves a trained model to the specified file path.
+     *
+     * @param filePath File path, including extension, to save fitted / trained model to.
+     */
+    @Override
+    public void saveModel(String filePath) {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L107">    }</span>
+
+
+    /**
+     * Forms a string of the important aspects of the model.&lt;br&gt;
+     * same as {@link #toString()}
+     *
+     * @return Details of model as string.
+     */
+    @Override
+    public String inspect() {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L119">        return null;</span>
+    }
+
+
+    /**
+     * Forms a string of the important aspects of the model.
+     *
+     * @return String representation of model.
+     */
+    @Override
+    public String toString() {
+        // TODO: Auto-generated method stub.
+<span class="nc" id="L131">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

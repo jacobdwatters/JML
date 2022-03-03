@@ -1,3 +1,4 @@
-com/jml/neural_network/layers/DenseTest.class
-com/jml/neural_network/layers/initilizers/ParameterInitTest.class
-com/jml/neural_network/layers/LinearTest.class
+com\jml\classifiers\naive_bayes\GaussianNaiveBayesTest.class
+com\jml\neural_network\layers\LinearTest.class
+com\jml\neural_network\layers\initilizers\ParameterInitTest.class
+com\jml\neural_network\layers\DenseTest.class

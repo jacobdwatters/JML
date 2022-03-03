@@ -25,8 +25,6 @@ public class Softmax implements ActivationFunction {
             throw new IllegalArgumentException("Expecting column matrix for " + NAME + " activation but got shape " + data.shape());
         }
 
-        // TODO: For this to work, each layer will need to be passed new Softmax() and NOT Activations.softmax as this will then
-        //      be shared for all layers. Thus the Activations class should be removed entirely so that the user can not do this.
         this.forwardIn = data.copy();
 
         double[] result = new double[data.numRows()];
@@ -47,6 +45,7 @@ public class Softmax implements ActivationFunction {
 
         return this.forwardOut; // Return Softmax activation result as a column vector.
     }
+
 
     /**
      * Applies the derivative of the activation function, element-wise, to a matrix.

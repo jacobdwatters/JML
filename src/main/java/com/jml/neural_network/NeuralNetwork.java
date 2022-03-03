@@ -48,16 +48,22 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected int epochs;
     protected int batchSize;
 
-    private int trainableLayers=0;
+    private int trainableLayers = 0;
 
     protected boolean isFit = false;
     final List<Double> lossHist = new ArrayList<>();
 
     // TODO: Should these be moved to the layer? Probably yes!
+    //  Maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
 
     protected final Optimizer optim; // Optimizer to use during backpropagation.
+
+    // TODO: Add 'recompile(...)' method that takes hyper-parameters so that loaded models can be retrained with specified
+    //  optimizer, learning rate.
+
+    // TODO: Should epochs and batch size should be specified in the 'fit(...)' method?
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -74,7 +80,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *     epochs: 10
      *     batchSize: 1
      *     threshold: 1E-5
-     *     optimizer: {@link GradientDescent Vanila Gradient Descent}
+     *     optimizer: {@link Adam Adam}
+     *      - beta1 = 0.9
+     *      - beta2 = 0.999</pre>
      * </pre>
      */
     public NeuralNetwork() {
@@ -84,15 +92,39 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = 1e-5;
         layers = new ArrayList<>();
 
-        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
-
+        optim = new Adam(learningRate);
+        validateParams();
         buildDetails();
     }
 
 
     /**
+     * Constructs a neural network with default specified learning rate and the following default hyper-parameters.
+     * <pre>
+     *     epochs: 10
+     *     batchSize: 1
+     *     threshold: 1E-5
+     *     optimizer: {@link Adam Adam}
+     *      - beta1 = 0.9
+     *      - beta2 = 0.999</pre>
+     */
+    public NeuralNetwork(int learningRate) {
+        this.learningRate = learningRate;
+        this.epochs = 10;
+        this.batchSize = 1;
+        this.threshold = 1e-5;
+        layers = new ArrayList<>();
+
+        optim = new Adam(learningRate);
+        validateParams();
+        buildDetails();
+    }
+
+
+
+    /**
      * Constructs a neural network with the specified hyper-parameters.
-     * Uses a default batchSize of 1 and the {@link GradientDescent Vanila Gradient Descent} optimizer.
+     * Uses a default batchSize of 1 and the {@link Adam} optimizer.
      *
      * @param learningRate Learning to be used during optimization.
      * @param epochs Number of epochs to train the network for.
@@ -103,15 +135,15 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.batchSize = 1;
         layers = new ArrayList<>();
         this.threshold = 1e-5;
-        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
-
+        optim = new Adam(learningRate);
+        validateParams();
         buildDetails();
     }
 
 
     /**
      * Constructs a neural network with the specified hyper-parameters. Uses the
-     * {@link GradientDescent Vanila Gradient Descent} optimizer as the default optimizer.
+     * {@link Adam} optimizer as the default optimizer.
      *
      * @param learningRate Learning to be used during optimization.
      * @param epochs Number of epochs to train the network for.
@@ -123,15 +155,15 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.batchSize = batchSize;
         layers = new ArrayList<>();
         this.threshold = 1e-5;
-        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
-
+        optim = new Adam(learningRate);
+        validateParams();
         buildDetails();
     }
 
 
     /**
      * Constructs a neural network with the specified hyper-parameters.
-     * Uses the {@link GradientDescent Vanila Gradient Descent} optimizer as the default optimizer.
+     * Uses the {@link Adam} optimizer as the default optimizer.
      *
      * @param learningRate The learning rate to be using during optimization.
      * @param epochs The number of epochs to train the network for.
@@ -146,8 +178,31 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = threshold;
         layers = new ArrayList<>();
 
-        optim = new GradientDescent(learningRate); // Set the optimizer as a standard gradient descent optimizer
+        optim = new Adam(learningRate); // Set the optimizer as a standard gradient descent optimizer
+        validateParams();
+        buildDetails();
+    }
 
+
+    /**
+     * Creates a neural network with the specified optimizer. Note that when an optimizer
+     * is specified, the learning rate will be specified upon creation of the optimizer and is not needed as a
+     * parameter to the NeuralNetwork. The following default hyperparameters will be used.
+     * <pre>
+     *     epochs = 10
+     *     batchSize = 1
+     *     threshold = 1e-5</pre>
+     *
+     * @param optim The optimizer to use during training.
+     */
+    public NeuralNetwork(Optimizer optim) {
+        this.learningRate = optim.getLearningRate();
+        this.epochs = 10;
+        this.batchSize = 1;
+        this.threshold = 1e-5;
+        layers = new ArrayList<>();
+        this.optim = optim;
+        validateParams();
         buildDetails();
     }
 
@@ -167,6 +222,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = 1e-5;
         layers = new ArrayList<>();
         this.optim = optim;
+        validateParams();
+        buildDetails();
     }
 
 
@@ -186,6 +243,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = 1e-5;
         layers = new ArrayList<>();
         this.optim = optim;
+        validateParams();
+        buildDetails();
     }
 
 
@@ -207,6 +266,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         this.threshold = threshold;
         layers = new ArrayList<>();
         this.optim = optim;
+        validateParams();
+        buildDetails();
     }
 
 
@@ -233,9 +294,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             initAdam(); // Then initialize Adam matrices.
         }
 
+        isFit = false; // Reset the isFit flag so training behaves correctly.
+
         double[][][] shuffle;
-        int[] shuffledIndices;
-        int index;
 
         Matrix feature;
         Matrix target = new Matrix(targets);
@@ -247,7 +308,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
-            // TODO: Shuffle indices rather than the entire dataset.
+            // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
             shuffle = ArrayUtils.shuffle(features, targets); // Shuffle samples for this epoch.
             feature = new Matrix(shuffle[0]);
             target = new Matrix(shuffle[1]);
@@ -288,8 +349,10 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     protected Matrix feedForward(Matrix input) {
         Matrix currentInput = new Matrix(input);
         for(BaseLayer layer : layers) { // Feeds the input through all layers.
+
             if(isFit) { // Then ensure that dropout is not applied
-                if(!(layer instanceof Dropout)) { // Layer is NOT dropout so apply it.
+                if(!(layer instanceof Dropout)) {
+                    // Layer is NOT dropout so apply it.
                     currentInput = layer.forward(currentInput);
                 }
 
@@ -316,14 +379,11 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                  of the loss function.*/
         Matrix upstreamGrad = output.sub(target).T(); // initial upstream gradient.
 
-        int param_i = trainableLayers-1; // Keeps track of parameter updates index.
-
         for(int i=layers.size()-1; i>=1; i--) {
 
             if(layers.get(i) instanceof TrainableLayer) { // Apply backdrop to trainable layer.
                 // Compute the backward pass for the layer.
                 upstreamGrad = layers.get(i).back(upstreamGrad);
-                param_i--;
             }
         }
 
@@ -337,6 +397,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      * Applies weight updates to each layer by applying the optimizer to the weights.
      */
     private void applyUpdates() {
+        // TODO: Add applyUpdates() method for trainable layers and pass the optimizer.
+
         Matrix[] params; // Holds trainable parameters for a layer.
         Matrix[] updates; // Holds update matrices for the parameters of this layer.
 
@@ -555,6 +617,23 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     public List<Double> getLossHist() {
         return lossHist;
+    }
+
+
+    // Ensure constructor parameters are valid.
+    private void validateParams() {
+        if (epochs < 0) {
+            throw new IllegalArgumentException("Maximum iterations must be non-negative but got " + epochs + ".");
+        }
+        if(learningRate<0) {
+            throw new IllegalArgumentException("Learning rate must be non-negative but got " + learningRate + ".");
+        }
+        if(threshold<0) {
+            throw new IllegalArgumentException("Threshold must be non-negative but got " + threshold + ".");
+        }
+        if(batchSize < 1) {
+            throw new IllegalArgumentException("Batch size must be at least 1 but got " + batchSize + ".");
+        }
     }
 
 
