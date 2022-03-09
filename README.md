@@ -31,6 +31,7 @@ for this library as well.
 >  - <b>Classification models</b>
 >    - K-Nearest neighbors
 >    - Logistic Regression
+>    - Gaussian Naive Bayes
 >    - perceptrons
 >  - <b>Neural networks</b>
 >    - Layers
