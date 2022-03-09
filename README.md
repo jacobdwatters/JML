@@ -77,7 +77,7 @@ for this library as well.
 >     - Standard Deviation
 >     - Variance
 
-Please not this library is still under development. Optimizations and new features are planned.
+Please note this library is still under development. Optimizations and new features are planned.
 
 ### A Word of Caution
 This library was primary developed for educational purposes. While efforts are currently being made to make this library fast and reliable,
