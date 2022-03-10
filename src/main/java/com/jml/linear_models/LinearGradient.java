@@ -2,8 +2,10 @@ package com.jml.linear_models;
 
 import linalg.Matrix;
 
+/**
+ * A utility class for computing the gradient the SSE loss of a linear function.
+ */
 class LinearGradient {
-
 
     /**
      * Computes gradient of linear regression model.
