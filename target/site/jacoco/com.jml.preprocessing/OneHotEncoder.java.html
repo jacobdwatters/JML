@@ -9,11 +9,11 @@ import java.util.Map;
 public class OneHotEncoder {
 
     /* Flag for handling unknown samples. If false, a sample that was not seen during the fit() call
-        will cause an error. If true, the sample will be &quot;ignored&quot; and all zeros will be returned.
-     */
+        will cause an error. If true, the sample will be &quot;ignored&quot; and all zeros will be returned. */
     private boolean ignoreUnknown;
-    Map&lt;String, double[]&gt; encodings;
-
+<span class="nc" id="L14">    private boolean isFit = false;</span>
+    Map&lt;String[], int[]&gt; encodings; // Key is the target sample, the value is the encoding of that sample.
+    Map&lt;int[], String[]&gt; invEncodings; // The inverse encodings.
 
     /**
      * Creates a OneHotEncoder object.
@@ -34,75 +34,52 @@ public class OneHotEncoder {
 <span class="nc" id="L34">    }</span>
 
 
-
-    public double[][] fit(double[] features) {
+    public void fit(String[][] targets) {
         // TODO:
-<span class="nc" id="L40">        return null;</span>
-    }
 
-    public double[][] fit(double[][] features) {
-        // TODO:
-<span class="nc" id="L45">        return null;</span>
-    }
+<span class="nc" id="L40">        isFit = true;</span>
+<span class="nc" id="L41">    }</span>
 
 
-    public double[][] fit(String[] features) {
-        // TODO:
-<span class="nc" id="L51">        return null;</span>
-    }
+    /**
+     * Encodes a set of targets to one-hot vectors. OneHotEncoder instance must have already been fit.
+     * @param targets A 2D array of strings where each row contains the targets for a single sample.
+     * @return One-hot encodings of the specified targets.
+     */
+    public int[][] encode(String[][] targets) {
+        // TODO: Implement ignoreUnknown
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L52">            throw new IllegalStateException(&quot;Encoder must be fit before the encode method can be called.&quot;);</span>
+        }
 
-    public double[][] fit(String[][] features) {
-        // TODO:
-<span class="nc" id="L56">        return null;</span>
-    }
+<span class="nc" id="L55">        int[][] encode = new int[targets.length][targets[0].length];</span>
 
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        for(int i=0; i&lt; targets.length; i++) {</span>
+<span class="nc" id="L58">            encode[i] = encodings.get(targets[i]);</span>
+        }
 
-
-
-
-
-    public double[][] encode(double[] features) {
-        // TODO:
-<span class="nc" id="L66">        return null;</span>
-    }
-
-    public double[][] encode(double[][] features) {
-        // TODO:
-<span class="nc" id="L71">        return null;</span>
+<span class="nc" id="L61">        return encode;</span>
     }
 
 
-    public double[][] encode(String[] features) {
-        // TODO:
-<span class="nc" id="L77">        return null;</span>
-    }
+    /**
+     * Decodes a set of one-hot vectors to their original feature. OneHotEncoder instance must have already been fit.
+     * @param onehot A 2D array of strings where each row contains the targets for a single sample.
+     * @return One-hot encodings of the specified targets.
+     */
+    public String[][] decode(int[][] onehot) {
+        // TODO: Implement ignoreUnknown
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L73">            throw new IllegalStateException(&quot;Encoder must be fit before the decode method can be called.&quot;);</span>
+        }
 
-    public double[][] encode(String[][] features) {
-        // TODO:
-<span class="nc" id="L82">        return null;</span>
-    }
+<span class="nc" id="L76">        String[][] encode = new String[onehot.length][onehot[0].length];</span>
 
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for(int i=0; i&lt; onehot.length; i++) {</span>
+<span class="nc" id="L79">            encode[i] = invEncodings.get(onehot[i]);</span>
+        }
 
-
-    public double[][] invEncode(double[] features) {
-        // TODO:
-<span class="nc" id="L89">        return null;</span>
-    }
-
-    public double[][] invEncode(double[][] features) {
-        // TODO:
-<span class="nc" id="L94">        return null;</span>
-    }
-
-
-    public double[][] invEncode(String[] features) {
-        // TODO:
-<span class="nc" id="L100">        return null;</span>
-    }
-
-    public double[][] invEncode(String[][] features) {
-        // TODO:
-<span class="nc" id="L105">        return null;</span>
+<span class="nc" id="L82">        return encode;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

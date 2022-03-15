@@ -3,6 +3,7 @@ package com.jml.util;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Random;
 
 public class ArrayUtils {
@@ -433,5 +434,34 @@ public class ArrayUtils {
         }
 
         return indices;
+    }
+
+
+    /**
+     * Sorts rows of 2D array alphabetically by a specified column.
+     * @param arr Array to sort.
+     * @param colIndex Index of column to sort by.
+     * @return The sorted array.
+     */
+    public static String[][] sortByCol(String[][] arr, int colIndex) {
+        String[][] sorted = arr.clone();
+
+        Arrays.sort(sorted, (a, b) -> CharSequence.compare(a[colIndex], b[colIndex]));
+
+        return sorted;
+    }
+
+
+    /**
+     * Sorts rows of 2D array alphabetically by column zero.
+     * @param arr Array to sort.
+     * @return The sorted array.
+     */
+    public static String[][] sortByCol(String[][] arr) {
+        String[][] sorted = arr.clone();
+
+        Arrays.sort(sorted, (a, b) -> CharSequence.compare(a[0], b[0]));
+
+        return sorted;
     }
 }
