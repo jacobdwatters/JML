@@ -3,7 +3,9 @@ package com.jml.util;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class ArrayUtils {
@@ -463,5 +465,23 @@ public class ArrayUtils {
         Arrays.sort(sorted, (a, b) -> CharSequence.compare(a[0], b[0]));
 
         return sorted;
+    }
+
+
+    /**
+     * Appends a list of arrays together into a single array.
+     * @param arrays Array of arrays to append together.
+     * @return The appended arrays.
+     */
+    public static int[] append(int[]... arrays) {
+        List<Integer> appended = new ArrayList<>();
+
+        for(int i=0; i<arrays.length; i++) {
+            for(int j=0; j<arrays[i].length; j++) {
+                appended.add(arrays[i][j]);
+            }
+        }
+
+        return appended.stream().mapToInt(i->i).toArray();
     }
 }
