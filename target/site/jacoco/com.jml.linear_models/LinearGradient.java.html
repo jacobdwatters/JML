@@ -2,8 +2,10 @@
 
 import linalg.Matrix;
 
-<span class="nc" id="L5">class LinearGradient {</span>
-
+/**
+ * A utility class for computing the gradient the SSE loss of a linear function.
+ */
+<span class="nc" id="L8">class LinearGradient {</span>
 
     /**
      * Computes gradient of linear regression model.
@@ -13,7 +15,7 @@ import linalg.Matrix;
      * @return Gradient of the linear regression model.
      */
     protected static Matrix getGrad(Matrix X, Matrix y, Matrix w) {
-<span class="fc" id="L16">        return w.T().mult(X.T()).mult(X).sub(y.T().mult(X)).T();</span>
+<span class="fc" id="L18">        return w.T().mult(X.T()).mult(X).sub(y.T().mult(X)).T();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

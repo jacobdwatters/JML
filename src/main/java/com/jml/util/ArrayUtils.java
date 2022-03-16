@@ -3,6 +3,9 @@ package com.jml.util;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class ArrayUtils {
@@ -433,5 +436,71 @@ public class ArrayUtils {
         }
 
         return indices;
+    }
+
+
+    /**
+     * Sorts rows of 2D array alphabetically by a specified column.
+     * @param arr Array to sort.
+     * @param colIndex Index of column to sort by.
+     * @return The sorted array.
+     */
+    public static String[][] sortByCol(String[][] arr, int colIndex) {
+        String[][] sorted = arr.clone();
+
+        Arrays.sort(sorted, (a, b) -> CharSequence.compare(a[colIndex], b[colIndex]));
+
+        return sorted;
+    }
+
+
+    /**
+     * Sorts rows of 2D array alphabetically by column zero.
+     * @param arr Array to sort.
+     * @return The sorted array.
+     */
+    public static String[][] sortByCol(String[][] arr) {
+        String[][] sorted = arr.clone();
+
+        Arrays.sort(sorted, (a, b) -> CharSequence.compare(a[0], b[0]));
+
+        return sorted;
+    }
+
+
+    /**
+     * Appends a list of arrays together into a single array.
+     * @param arrays Array of arrays to append together.
+     * @return The appended arrays.
+     */
+    public static int[] append(int[]... arrays) {
+        List<Integer> appended = new ArrayList<>();
+
+        for(int i=0; i<arrays.length; i++) {
+            for(int j=0; j<arrays[i].length; j++) {
+                appended.add(arrays[i][j]);
+            }
+        }
+
+        return appended.stream().mapToInt(i->i).toArray();
+    }
+
+
+    /**
+     * Transposes a 2d array. This transpose is NOT done in place.
+     *
+     * @param arr Array to transpose.
+     * @return The transpose of arr.
+     */
+    public static String[][] transpose(String[][] arr) {
+        String[][] transpose = new String[arr[0].length][arr.length];
+
+        for(int i=0; i<arr.length; i++) {
+            for(int j=0; j<arr[0].length; j++) {
+                transpose[j][i] = arr[i][j];
+            }
+        }
+
+        return transpose;
     }
 }
