@@ -42,31 +42,37 @@ public class OneHotEncoder {
 
 
     /**
-     * Fits the one-hot encoder to a dataset. This creates the encodings for each sample in the targets array. Note that
-     * the targets will be sorted by the first column before being encoded.
-     * @param targets
+     * Fits the one-hot encoder to a dataset. This creates the encodings for each sample in the features array.
+     * <br><br>
+     * Note that the features will be sorted alphanumerically by the first column before being encoded.
+     *
+     * @param features String values to encode as one-hot arrays.
      */
-    public void fit(String[][] targets) {
-        String[][] sortedTargets = ArrayUtils.sortByCol(targets); // Sort, alphanumerically, by the first column.
-        List<String[]> toEncode = new ArrayList<>();
+    public void fit(String[][] features) {
+        OneHotBase[] baseEncoders = new OneHotBase[features[0].length];
+        String[][] featT = ArrayUtils.transpose(features); // Transpose of feature matrix.
+        int[][] tempEncodingsByFeature = new int[features[0].length][];
         int[] tempEncoding;
 
-        for(String[] sample : sortedTargets) {
-            if(!containsArray(toEncode, sample)) {
-                toEncode.add(sample); // Then we have a new sample to encode.
-            } // Otherwise, we skip.
+
+        for(int i=0; i<baseEncoders.length; i++) { // Fit all the base encoders.
+            baseEncoders[i] = new OneHotBase();
+            baseEncoders[i].fit(featT[i]);
+            size+=baseEncoders[i].encodings.size();
         }
 
-        size = toEncode.size();
+        for(int i=0; i<features.length; i++) {
 
-        // Form the one-hot vectors for each sample in the toEncode array.
-        for(int i=0; i<toEncode.size(); i++) {
-            tempEncoding = new int[toEncode.size()];
-            tempEncoding[i] = 1;
+            if(!containsArrayKey(encodings, features[i])) {
 
-            // Create the encoding and inverse encoding.
-            encodings.put(toEncode.get(i), tempEncoding);
-            invEncodings.put(tempEncoding, toEncode.get(i));
+                for(int j=0; j<features[i].length; j++) { // Get the encodings for each feature.
+                    tempEncodingsByFeature[j] = baseEncoders[j].encodings.get(features[i][j]);
+                }
+
+                tempEncoding = ArrayUtils.append(tempEncodingsByFeature);
+                encodings.put(features[i], tempEncoding);
+                invEncodings.put(tempEncoding, features[i]);
+            }
         }
 
         isFit = true;
@@ -74,37 +80,35 @@ public class OneHotEncoder {
 
 
     /**
-     * Encodes a set of targets to one-hot vectors. OneHotEncoder instance must have already been {@link #fit(String[][]) fit}.
+     * Encodes a set of features to one-hot vectors. OneHotEncoder instance must have already been {@link #fit(String[][]) fit}.
      * <br>
-     * - If ignoreUnknown = false, then an error will occur is a sample in targets was not seen during {@link #fit(String[][]) fit}.<br>
-     * - If ignoreUnknown = true, and a sample in targets was not seen during the {@link #fit(String[][]) fit} then it will be encoded as all zeros.
+     * - If ignoreUnknown = false, then an error will occur is a sample in features was not seen during {@link #fit(String[][]) fit}.<br>
+     * - If ignoreUnknown = true, and a sample in features was not seen during the {@link #fit(String[][]) fit} then it will be encoded as all zeros.
      *
-     * @param targets A 2D array of strings where each row contains the targets for a single sample.
-     * @return One-hot encodings of the specified targets.
+     * @param features A 2D array of strings where each row contains the features for a single sample.
+     * @return One-hot encodings of the specified features.
      * @throws IllegalStateException If the {@link #fit(String[][])} method has not been called. Or if a sample that was not seen
      * in the {@link #fit(String[][])} method is
      */
-    public int[][] encode(String[][] targets) {
+    public int[][] encode(String[][] features) {
         if(!isFit) {
             throw new IllegalStateException("Encoder must be fit before the encode method can be called.");
         }
 
-        int[][] encode = new int[targets.length][size];
+        int[][] encode = new int[features.length][size];
 
-        for(int i=0; i<targets.length; i++) {
-//            System.out.println("Sample: " + Arrays.toString(targets[i]));
-//            System.out.println("Contains: " + containsArrayKey(encodings, targets[i]) + "\n\n");
+        for(int i=0; i<features.length; i++) {
 
-            if(containsArrayKey(encodings, targets[i])) {
+            if(containsArrayKey(encodings, features[i])) {
                 // Then we have a known encoding for this sample.
-                encode[i] = getArray(encodings, targets[i]);
+                encode[i] = getArray(encodings, features[i]);
 
             } else if(ignoreUnknown) {
                 // Then the target was not seen in the fit() method, but we ignore the sample.
                 encode[i] = new int[size];
 
             } else {
-                throw new IllegalStateException("Could not encode " + targets[i] + " since it was not seen during the fit " +
+                throw new IllegalStateException("Could not encode " + features[i] + " since it was not seen during the fit " +
                         "and ignoreUnknown was set to false.");
             }
         }
@@ -174,6 +178,12 @@ public class OneHotEncoder {
     }
 
 
+    /**
+     * Gets key value from map which key matches a specified key.
+     * @param map Map to search for matching key in.
+     * @param key Key to match.
+     * @return If the map contains the specified key, then returns the associated value. Otherwise, returns null.
+     */
     private int[] getArray(Map<String[], int[]> map, String[] key) {
         int[] arr = null;
 
@@ -190,6 +200,12 @@ public class OneHotEncoder {
     }
 
 
+    /**
+     * Gets key value from map which key matches a specified key.
+     * @param map Map to search for matching key in.
+     * @param key Key to match.
+     * @return If the map contains the specified key, then returns the associated value. Otherwise, returns null.
+     */
     private String[] getArray(Map<int[], String[]> map, int[] key) {
         String[] arr = null;
 
@@ -203,36 +219,5 @@ public class OneHotEncoder {
         }
 
         return arr;
-    }
-
-
-    // TODO: TEMP. Remove
-    public void printMap(Map<String[], int[]> map) {
-        for(String[] key : map.keySet()) {
-            System.out.println("key: " + Arrays.toString(key) + ", value: " + Arrays.toString(map.get(key)));
-        }
-    }
-
-
-    // TODO: TEMP. Remove
-    public static void main(String[] args) {
-        String[][] data = {{"male", "0"}, {"female", "0"}, {"female", "1"}, {"dog", "1"}, {"male", "1"}};
-
-        OneHotEncoder encoder = new OneHotEncoder(true);
-        encoder.fit(data);
-
-        int[][] encodings = encoder.encode(data);
-        String[][] decodings = encoder.decode(encodings);
-
-        System.out.println("Encodings");
-        for(int[] onehot : encodings) {
-            System.out.println(Arrays.toString(onehot));
-        }
-
-
-        System.out.println("\n\nDecodings:");
-        for(String[] target : decodings) {
-            System.out.println(Arrays.toString(target));
-        }
     }
 }

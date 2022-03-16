@@ -460,11 +460,11 @@ import java.util.Random;
      * @return The sorted array.
      */
     public static String[][] sortByCol(String[][] arr) {
-<span class="fc" id="L463">        String[][] sorted = arr.clone();</span>
+<span class="nc" id="L463">        String[][] sorted = arr.clone();</span>
 
-<span class="fc" id="L465">        Arrays.sort(sorted, (a, b) -&gt; CharSequence.compare(a[0], b[0]));</span>
+<span class="nc" id="L465">        Arrays.sort(sorted, (a, b) -&gt; CharSequence.compare(a[0], b[0]));</span>
 
-<span class="fc" id="L467">        return sorted;</span>
+<span class="nc" id="L467">        return sorted;</span>
     }
 
 
@@ -474,15 +474,34 @@ import java.util.Random;
      * @return The appended arrays.
      */
     public static int[] append(int[]... arrays) {
-<span class="nc" id="L477">        List&lt;Integer&gt; appended = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L477">        List&lt;Integer&gt; appended = new ArrayList&lt;&gt;();</span>
 
-<span class="nc bnc" id="L479" title="All 2 branches missed.">        for(int i=0; i&lt;arrays.length; i++) {</span>
-<span class="nc bnc" id="L480" title="All 2 branches missed.">            for(int j=0; j&lt;arrays[i].length; j++) {</span>
-<span class="nc" id="L481">                appended.add(arrays[i][j]);</span>
+<span class="fc bfc" id="L479" title="All 2 branches covered.">        for(int i=0; i&lt;arrays.length; i++) {</span>
+<span class="fc bfc" id="L480" title="All 2 branches covered.">            for(int j=0; j&lt;arrays[i].length; j++) {</span>
+<span class="fc" id="L481">                appended.add(arrays[i][j]);</span>
             }
         }
 
-<span class="nc" id="L485">        return appended.stream().mapToInt(i-&gt;i).toArray();</span>
+<span class="fc" id="L485">        return appended.stream().mapToInt(i-&gt;i).toArray();</span>
+    }
+
+
+    /**
+     * Transposes a 2d array. This transpose is NOT done in place.
+     *
+     * @param arr Array to transpose.
+     * @return The transpose of arr.
+     */
+    public static String[][] transpose(String[][] arr) {
+<span class="fc" id="L496">        String[][] transpose = new String[arr[0].length][arr.length];</span>
+
+<span class="fc bfc" id="L498" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="fc bfc" id="L499" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="fc" id="L500">                transpose[j][i] = arr[i][j];</span>
+            }
+        }
+
+<span class="fc" id="L504">        return transpose;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

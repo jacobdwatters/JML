@@ -42,74 +42,78 @@ public class OneHotEncoder {
 
 
     /**
-     * Fits the one-hot encoder to a dataset. This creates the encodings for each sample in the targets array. Note that
-     * the targets will be sorted by the first column before being encoded.
-     * @param targets
+     * Fits the one-hot encoder to a dataset. This creates the encodings for each sample in the features array.
+     * &lt;br&gt;&lt;br&gt;
+     * Note that the features will be sorted alphanumerically by the first column before being encoded.
+     *
+     * @param features String values to encode as one-hot arrays.
      */
-    public void fit(String[][] targets) {
-<span class="fc" id="L50">        String[][] sortedTargets = ArrayUtils.sortByCol(targets); // Sort, alphanumerically, by the first column.</span>
-<span class="fc" id="L51">        List&lt;String[]&gt; toEncode = new ArrayList&lt;&gt;();</span>
+    public void fit(String[][] features) {
+<span class="fc" id="L52">        OneHotBase[] baseEncoders = new OneHotBase[features[0].length];</span>
+<span class="fc" id="L53">        String[][] featT = ArrayUtils.transpose(features); // Transpose of feature matrix.</span>
+<span class="fc" id="L54">        int[][] tempEncodingsByFeature = new int[features[0].length][];</span>
         int[] tempEncoding;
 
-<span class="fc bfc" id="L54" title="All 2 branches covered.">        for(String[] sample : sortedTargets) {</span>
-<span class="fc bfc" id="L55" title="All 2 branches covered.">            if(!containsArray(toEncode, sample)) {</span>
-<span class="fc" id="L56">                toEncode.add(sample); // Then we have a new sample to encode.</span>
-            } // Otherwise, we skip.
+
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        for(int i=0; i&lt;baseEncoders.length; i++) { // Fit all the base encoders.</span>
+<span class="fc" id="L59">            baseEncoders[i] = new OneHotBase();</span>
+<span class="fc" id="L60">            baseEncoders[i].fit(featT[i]);</span>
+<span class="fc" id="L61">            size+=baseEncoders[i].encodings.size();</span>
         }
 
-<span class="fc" id="L60">        size = toEncode.size();</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) {</span>
 
-        // Form the one-hot vectors for each sample in the toEncode array.
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        for(int i=0; i&lt;toEncode.size(); i++) {</span>
-<span class="fc" id="L64">            tempEncoding = new int[toEncode.size()];</span>
-<span class="fc" id="L65">            tempEncoding[i] = 1;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            if(!containsArrayKey(encodings, features[i])) {</span>
 
-            // Create the encoding and inverse encoding.
-<span class="fc" id="L68">            encodings.put(toEncode.get(i), tempEncoding);</span>
-<span class="fc" id="L69">            invEncodings.put(tempEncoding, toEncode.get(i));</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                for(int j=0; j&lt;features[i].length; j++) { // Get the encodings for each feature.</span>
+<span class="fc" id="L69">                    tempEncodingsByFeature[j] = baseEncoders[j].encodings.get(features[i][j]);</span>
+                }
+
+<span class="fc" id="L72">                tempEncoding = ArrayUtils.append(tempEncodingsByFeature);</span>
+<span class="fc" id="L73">                encodings.put(features[i], tempEncoding);</span>
+<span class="fc" id="L74">                invEncodings.put(tempEncoding, features[i]);</span>
+            }
         }
 
-<span class="fc" id="L72">        isFit = true;</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L78">        isFit = true;</span>
+<span class="fc" id="L79">    }</span>
 
 
     /**
-     * Encodes a set of targets to one-hot vectors. OneHotEncoder instance must have already been {@link #fit(String[][]) fit}.
+     * Encodes a set of features to one-hot vectors. OneHotEncoder instance must have already been {@link #fit(String[][]) fit}.
      * &lt;br&gt;
-     * - If ignoreUnknown = false, then an error will occur is a sample in targets was not seen during {@link #fit(String[][]) fit}.&lt;br&gt;
-     * - If ignoreUnknown = true, and a sample in targets was not seen during the {@link #fit(String[][]) fit} then it will be encoded as all zeros.
+     * - If ignoreUnknown = false, then an error will occur is a sample in features was not seen during {@link #fit(String[][]) fit}.&lt;br&gt;
+     * - If ignoreUnknown = true, and a sample in features was not seen during the {@link #fit(String[][]) fit} then it will be encoded as all zeros.
      *
-     * @param targets A 2D array of strings where each row contains the targets for a single sample.
-     * @return One-hot encodings of the specified targets.
+     * @param features A 2D array of strings where each row contains the features for a single sample.
+     * @return One-hot encodings of the specified features.
      * @throws IllegalStateException If the {@link #fit(String[][])} method has not been called. Or if a sample that was not seen
      * in the {@link #fit(String[][])} method is
      */
-    public int[][] encode(String[][] targets) {
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L89">            throw new IllegalStateException(&quot;Encoder must be fit before the encode method can be called.&quot;);</span>
+    public int[][] encode(String[][] features) {
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L95">            throw new IllegalStateException(&quot;Encoder must be fit before the encode method can be called.&quot;);</span>
         }
 
-<span class="fc" id="L92">        int[][] encode = new int[targets.length][size];</span>
+<span class="fc" id="L98">        int[][] encode = new int[features.length][size];</span>
 
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        for(int i=0; i&lt;targets.length; i++) {</span>
-//            System.out.println(&quot;Sample: &quot; + Arrays.toString(targets[i]));
-//            System.out.println(&quot;Contains: &quot; + containsArrayKey(encodings, targets[i]) + &quot;\n\n&quot;);
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) {</span>
 
-<span class="fc bfc" id="L98" title="All 2 branches covered.">            if(containsArrayKey(encodings, targets[i])) {</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if(containsArrayKey(encodings, features[i])) {</span>
                 // Then we have a known encoding for this sample.
-<span class="fc" id="L100">                encode[i] = getArray(encodings, targets[i]);</span>
+<span class="fc" id="L104">                encode[i] = getArray(encodings, features[i]);</span>
 
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">            } else if(ignoreUnknown) {</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            } else if(ignoreUnknown) {</span>
                 // Then the target was not seen in the fit() method, but we ignore the sample.
-<span class="fc" id="L104">                encode[i] = new int[size];</span>
+<span class="fc" id="L108">                encode[i] = new int[size];</span>
 
             } else {
-<span class="nc" id="L107">                throw new IllegalStateException(&quot;Could not encode &quot; + targets[i] + &quot; since it was not seen during the fit &quot; +</span>
+<span class="nc" id="L111">                throw new IllegalStateException(&quot;Could not encode &quot; + features[i] + &quot; since it was not seen during the fit &quot; +</span>
                         &quot;and ignoreUnknown was set to false.&quot;);
             }
         }
 
-<span class="fc" id="L112">        return encode;</span>
+<span class="fc" id="L116">        return encode;</span>
     }
 
 
@@ -119,17 +123,17 @@ public class OneHotEncoder {
      * @return One-hot encodings of the specified targets.
      */
     public String[][] decode(int[][] onehot) {
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L123">            throw new IllegalStateException(&quot;Encoder must be fit before the decode method can be called.&quot;);</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L127">            throw new IllegalStateException(&quot;Encoder must be fit before the decode method can be called.&quot;);</span>
         }
 
-<span class="fc" id="L126">        String[][] decode = new String[onehot.length][onehot[0].length];</span>
+<span class="fc" id="L130">        String[][] decode = new String[onehot.length][onehot[0].length];</span>
 
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        for(int i=0; i&lt; onehot.length; i++) {</span>
-<span class="fc" id="L129">            decode[i] = getArray(invEncodings, onehot[i]);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        for(int i=0; i&lt; onehot.length; i++) {</span>
+<span class="fc" id="L133">            decode[i] = getArray(invEncodings, onehot[i]);</span>
         }
 
-<span class="fc" id="L132">        return decode;</span>
+<span class="fc" id="L136">        return decode;</span>
     }
 
 
@@ -140,16 +144,16 @@ public class OneHotEncoder {
      * @return True if the list contains the array at least once. False otherwise.
      */
     private boolean containsArray(List&lt;String[]&gt; list, String[] arr) {
-<span class="fc" id="L143">        boolean contained = false;</span>
+<span class="nc" id="L147">        boolean contained = false;</span>
 
-<span class="fc bfc" id="L145" title="All 2 branches covered.">        for(int i=0; i&lt; list.size(); i++) {</span>
-<span class="fc bfc" id="L146" title="All 2 branches covered.">            if(Arrays.equals(list.get(i), arr)) {</span>
-<span class="fc" id="L147">                contained = true;</span>
-<span class="fc" id="L148">                break; // Then we are done.</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        for(int i=0; i&lt; list.size(); i++) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if(Arrays.equals(list.get(i), arr)) {</span>
+<span class="nc" id="L151">                contained = true;</span>
+<span class="nc" id="L152">                break; // Then we are done.</span>
             }
         }
 
-<span class="fc" id="L152">        return contained;</span>
+<span class="nc" id="L156">        return contained;</span>
     }
 
 
@@ -160,80 +164,61 @@ public class OneHotEncoder {
      * @return True if the map contains the array as a key. False otherwise.
      */
     private boolean containsArrayKey(Map&lt;String[], int[]&gt; map, String[] arr) {
-<span class="fc" id="L163">        boolean contained = false;</span>
+<span class="fc" id="L167">        boolean contained = false;</span>
 
-<span class="fc bfc" id="L165" title="All 2 branches covered.">        for(String[] key : map.keySet()) {</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        for(String[] key : map.keySet()) {</span>
 
-<span class="fc bfc" id="L167" title="All 2 branches covered.">            if(Arrays.equals(key, arr)) {</span>
-<span class="fc" id="L168">                contained = true;</span>
-<span class="fc" id="L169">                break; // Then we are done.</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">            if(Arrays.equals(key, arr)) {</span>
+<span class="fc" id="L172">                contained = true;</span>
+<span class="fc" id="L173">                break; // Then we are done.</span>
             }
-<span class="fc" id="L171">        }</span>
+<span class="fc" id="L175">        }</span>
 
-<span class="fc" id="L173">        return contained;</span>
+<span class="fc" id="L177">        return contained;</span>
     }
 
 
+    /**
+     * Gets key value from map which key matches a specified key.
+     * @param map Map to search for matching key in.
+     * @param key Key to match.
+     * @return If the map contains the specified key, then returns the associated value. Otherwise, returns null.
+     */
     private int[] getArray(Map&lt;String[], int[]&gt; map, String[] key) {
-<span class="fc" id="L178">        int[] arr = null;</span>
+<span class="fc" id="L188">        int[] arr = null;</span>
 
         // TODO: Since we are searching the map, there is probably no point in using a map for this...
         //      Could a new java.util.Map be implemented to fix the issue of array equality?
-<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        for(String[] k : map.keySet()) {</span>
-<span class="fc bfc" id="L183" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
-<span class="fc" id="L184">                arr = map.get(k);</span>
-<span class="fc" id="L185">                break;</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">        for(String[] k : map.keySet()) {</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
+<span class="fc" id="L194">                arr = map.get(k);</span>
+<span class="fc" id="L195">                break;</span>
             }
-<span class="fc" id="L187">        }</span>
+<span class="fc" id="L197">        }</span>
 
-<span class="fc" id="L189">        return arr;</span>
+<span class="fc" id="L199">        return arr;</span>
     }
 
 
+    /**
+     * Gets key value from map which key matches a specified key.
+     * @param map Map to search for matching key in.
+     * @param key Key to match.
+     * @return If the map contains the specified key, then returns the associated value. Otherwise, returns null.
+     */
     private String[] getArray(Map&lt;int[], String[]&gt; map, int[] key) {
-<span class="fc" id="L194">        String[] arr = null;</span>
+<span class="fc" id="L210">        String[] arr = null;</span>
 
         // TODO: Since we are searching the map, there is probably no point in using a map for this...
         //      Could a new java.util.Map be implemented to fix the issue of array equality?
-<span class="fc bfc" id="L198" title="All 2 branches covered.">        for(int[] k : map.keySet()) {</span>
-<span class="fc bfc" id="L199" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
-<span class="fc" id="L200">                arr = map.get(k);</span>
-<span class="fc" id="L201">                break;</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        for(int[] k : map.keySet()) {</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
+<span class="fc" id="L216">                arr = map.get(k);</span>
+<span class="fc" id="L217">                break;</span>
             }
-<span class="fc" id="L203">        }</span>
+<span class="fc" id="L219">        }</span>
 
-<span class="fc" id="L205">        return arr;</span>
+<span class="fc" id="L221">        return arr;</span>
     }
-
-
-    // TODO: TEMP. Remove
-    public void printMap(Map&lt;String[], int[]&gt; map) {
-<span class="nc bnc" id="L211" title="All 2 branches missed.">        for(String[] key : map.keySet()) {</span>
-<span class="nc" id="L212">            System.out.println(&quot;key: &quot; + Arrays.toString(key) + &quot;, value: &quot; + Arrays.toString(map.get(key)));</span>
-<span class="nc" id="L213">        }</span>
-<span class="nc" id="L214">    }</span>
-
-
-    // TODO: TEMP. Remove
-    public static void main(String[] args) {
-<span class="nc" id="L219">        String[][] data = {{&quot;male&quot;, &quot;0&quot;}, {&quot;female&quot;, &quot;0&quot;}, {&quot;female&quot;, &quot;1&quot;}, {&quot;dog&quot;, &quot;1&quot;}, {&quot;male&quot;, &quot;1&quot;}};</span>
-
-<span class="nc" id="L221">        OneHotEncoder encoder = new OneHotEncoder(true);</span>
-<span class="nc" id="L222">        encoder.fit(data);</span>
-
-<span class="nc" id="L224">        int[][] encodings = encoder.encode(data);</span>
-<span class="nc" id="L225">        String[][] decodings = encoder.decode(encodings);</span>
-
-<span class="nc" id="L227">        System.out.println(&quot;Encodings&quot;);</span>
-<span class="nc bnc" id="L228" title="All 2 branches missed.">        for(int[] onehot : encodings) {</span>
-<span class="nc" id="L229">            System.out.println(Arrays.toString(onehot));</span>
-        }
-
-
-<span class="nc" id="L233">        System.out.println(&quot;\n\nDecodings:&quot;);</span>
-<span class="nc bnc" id="L234" title="All 2 branches missed.">        for(String[] target : decodings) {</span>
-<span class="nc" id="L235">            System.out.println(Arrays.toString(target));</span>
-        }
-<span class="nc" id="L237">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -484,4 +484,23 @@ public class ArrayUtils {
 
         return appended.stream().mapToInt(i->i).toArray();
     }
+
+
+    /**
+     * Transposes a 2d array. This transpose is NOT done in place.
+     *
+     * @param arr Array to transpose.
+     * @return The transpose of arr.
+     */
+    public static String[][] transpose(String[][] arr) {
+        String[][] transpose = new String[arr[0].length][arr.length];
+
+        for(int i=0; i<arr.length; i++) {
+            for(int j=0; j<arr[0].length; j++) {
+                transpose[j][i] = arr[i][j];
+            }
+        }
+
+        return transpose;
+    }
 }
