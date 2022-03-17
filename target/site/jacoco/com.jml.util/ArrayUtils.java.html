@@ -503,5 +503,45 @@ import java.util.Random;
 
 <span class="fc" id="L504">        return transpose;</span>
     }
+
+
+    /**
+     * Flattens a 2D array.
+     * @param arr Array to flatten.
+     * @return A 1d array which contains the flattened elements of arr.
+     */
+    public static String[] flatten(String[][] arr) {
+<span class="fc" id="L514">        String[] flat = new String[arr.length*arr[0].length];</span>
+<span class="fc" id="L515">        int k=0;</span>
+
+<span class="fc bfc" id="L517" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) { // Flatten the array.</span>
+<span class="fc bfc" id="L518" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="fc" id="L519">                flat[k] = arr[i][j];</span>
+<span class="fc" id="L520">                k++;</span>
+            }
+        }
+
+<span class="fc" id="L524">        return flat;</span>
+    }
+
+
+    /**
+     * Flattens a 2D array.
+     * @param arr Array to flatten.
+     * @return A 1d array which contains the flattened elements of arr.
+     */
+    public static int[] flatten(int[][] arr) {
+<span class="fc" id="L534">        int[] flat = new int[arr.length*arr[0].length];</span>
+<span class="fc" id="L535">        int k=0;</span>
+
+<span class="fc bfc" id="L537" title="All 2 branches covered.">        for(int i=0; i&lt;arr.length; i++) { // Flatten the array.</span>
+<span class="fc bfc" id="L538" title="All 2 branches covered.">            for(int j=0; j&lt;arr[0].length; j++) {</span>
+<span class="fc" id="L539">                flat[k] = arr[i][j];</span>
+<span class="fc" id="L540">                k++;</span>
+            }
+        }
+
+<span class="fc" id="L544">        return flat;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

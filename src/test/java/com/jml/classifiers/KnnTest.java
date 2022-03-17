@@ -2,7 +2,7 @@ package com.jml.classifiers;
 
 import com.jml.core.DataLoader;
 import com.jml.core.Model;
-import com.jml.preprocessing.Encoder;
+import com.jml.preprocessing.ClassEncoder;
 import com.jml.util.ArrayUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,15 +20,20 @@ class KnnTest {
     String filePath;
     double[][] features;
     int[] classes;
+    ClassEncoder encoder;
 
     @BeforeEach
     void setUp() {
         filePath = "./src/test/java/com/jml/classifiers/testfiles/test.csv";
+        encoder = new ClassEncoder();
 
         data = DataLoader.loadFeaturesAndTargets(filePath);
         features = ArrayUtils.toDouble(data.get(0));
         String[][] targets = data.get(1);
-        classes = Encoder.encodeClasses(targets);
+
+        encoder.fit(targets);
+
+        classes = ArrayUtils.flatten(encoder.encode(targets));
     }
 
 
