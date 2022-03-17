@@ -82,7 +82,7 @@ public class ClassEncoder implements Encoder {
     @Override
     public int[][] encode(String[][] targets) {
         if(!isFit) {
-            throw new IllegalArgumentException("Encoder must be fit before targets can be encoded.");
+            throw new IllegalStateException("Encoder must be fit before targets can be encoded.");
         }
 
         int[][] encode = new int[targets.length][targets[0].length];
@@ -117,7 +117,7 @@ public class ClassEncoder implements Encoder {
     @Override
     public String[][] decode(int[][] classes) {
         if(!isFit) {
-            throw new IllegalArgumentException("Encoder must be fit before classes can be decoded.");
+            throw new IllegalStateException("Encoder must be fit before classes can be decoded.");
         }
 
         String[][] decode = new String[classes.length][classes[0].length];

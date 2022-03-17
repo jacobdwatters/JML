@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassEncoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.preprocessing</a> &gt; <span class="el_source">ClassEncoder.java</span></div><h1>ClassEncoder.java</h1><pre class="source lang-java linenums">package com.jml.preprocessing;
+
+import com.jml.util.ArrayUtils;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+
+/**
+ * Encodes a list of classes as numerical values between 0 to (n-1) for n classes.&lt;br&gt;
+ * This encoder should be used to encode the target values of a dataset and not the features.
+ */
+public class ClassEncoder implements Encoder {
+    boolean ignoreUnknown;
+    boolean isFit;
+    Map&lt;String, Integer&gt; encodings; // Class encodings.
+    Map&lt;Integer, String&gt; invEncodings; // Inverse encodings.
+
+
+    /**
+     * Creates a class encoder. Note, by default, this will not ignore unknown samples. See {@link #ClassEncoder(boolean)}
+     * to change this.
+     */
+<span class="fc" id="L25">    public ClassEncoder() {</span>
+<span class="fc" id="L26">        encodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L27">        invEncodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L28">        ignoreUnknown = false;</span>
+<span class="fc" id="L29">        isFit = false;</span>
+<span class="fc" id="L30">    }</span>
+
+
+    /**
+     * Creates a class encoder.
+     * @param ignoreUnknown Flag for whether to ignore unseen samples. If true, then samples not seen in {@link #fit(String[][])}
+     *                      will be ignored. If false, then when trying to encode a sample not seen in
+     *                      {@link #fit(String[][])} an exception will be thrown.
+     */
+<span class="fc" id="L39">    public ClassEncoder(boolean ignoreUnknown) {</span>
+<span class="fc" id="L40">        encodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L41">        invEncodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L42">        this.ignoreUnknown = ignoreUnknown;</span>
+<span class="fc" id="L43">        isFit = false;</span>
+<span class="fc" id="L44">    }</span>
+
+
+    /**
+     * Encodes targets as numerical class labels. Note, this fit method will flatten the targets array and create encodings with that.
+     * @param targets Targets to encode as numerical class labels.
+     */
+    @Override
+    public void fit(String[][] targets) {
+<span class="fc" id="L53">        String[] sortedLabels = ArrayUtils.flatten(targets);</span>
+
+<span class="fc" id="L55">        Arrays.sort(sortedLabels);</span>
+
+<span class="fc" id="L57">        int classNum = 0;</span>
+
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (String label : sortedLabels) {</span>
+
+            // Find unique labels
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            if (!encodings.containsKey(label)) {</span>
+
+                // Store the encoding.
+<span class="fc" id="L65">                encodings.put(label, classNum);</span>
+<span class="fc" id="L66">                invEncodings.put(classNum, label);</span>
+<span class="fc" id="L67">                classNum++;</span>
+            }
+        }
+
+<span class="fc" id="L71">        isFit = true;</span>
+<span class="fc" id="L72">    }</span>
+
+
+    /**
+     * Encodes a set of targets as numerical integer labels.
+     * @param targets Targets to encode.
+     * @return An array of the same shape as targets containing the numerical encodings of the targets.
+     * @throws IllegalStateException If the {@link #fit(String[][])} method has not been called. Or if a sample that was not seen
+     * in the {@link #fit(String[][])} method and ignoreUnknown is set to false.
+     */
+    @Override
+    public int[][] encode(String[][] targets) {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L85">            throw new IllegalStateException(&quot;Encoder must be fit before targets can be encoded.&quot;);</span>
+        }
+
+<span class="fc" id="L88">        int[][] encode = new int[targets.length][targets[0].length];</span>
+
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for(int i=0; i&lt;targets.length; i++) {</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">            for(int j=0; j&lt;targets[0].length; j++) {</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">                if(encodings.containsKey(targets[i][j])) {</span>
+                    // Then encode as normal
+<span class="fc" id="L94">                    encode[i][j] = encodings.get(targets[i][j]);</span>
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">                } else if(ignoreUnknown) {</span>
+                    // Then the target was not seen in the fit() method, but we ignore the sample.
+<span class="fc" id="L98">                    encode[i][j] = -1;</span>
+
+                } else {
+<span class="fc" id="L101">                    throw new IllegalStateException(&quot;Could not encode &quot; + targets[i][j] + &quot; since it was not seen during the fit\n&quot; +</span>
+                            &quot;and ignoreUnknown was set to false.&quot;);
+                }
+            }
+        }
+
+<span class="fc" id="L107">        return encode;</span>
+    }
+
+
+    /**
+     * Decodes a set of numerical classes into their string representations. If there is a class in the classes array
+     * which was not seen in the {@link #fit(String[][])} array, then null will be assigned.
+     * @param classes Classes to decode.
+     * @return An array of the same shape as classes containing the string decodings of each class value.
+     */
+    @Override
+    public String[][] decode(int[][] classes) {
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if(!isFit) {</span>
+<span class="fc" id="L120">            throw new IllegalStateException(&quot;Encoder must be fit before classes can be decoded.&quot;);</span>
+        }
+
+<span class="fc" id="L123">        String[][] decode = new String[classes.length][classes[0].length];</span>
+
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        for(int i=0; i&lt;classes.length; i++) {</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            for(int j=0; j&lt;classes[0].length; j++) {</span>
+<span class="fc" id="L127">                decode[i][j] = invEncodings.get(classes[i][j]);</span>
+            }
+        }
+
+<span class="fc" id="L131">        return decode;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
