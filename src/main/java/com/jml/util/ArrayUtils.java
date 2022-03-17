@@ -503,4 +503,44 @@ public class ArrayUtils {
 
         return transpose;
     }
+
+
+    /**
+     * Flattens a 2D array.
+     * @param arr Array to flatten.
+     * @return A 1d array which contains the flattened elements of arr.
+     */
+    public static String[] flatten(String[][] arr) {
+        String[] flat = new String[arr.length*arr[0].length];
+        int k=0;
+
+        for(int i=0; i<arr.length; i++) { // Flatten the array.
+            for(int j=0; j<arr[0].length; j++) {
+                flat[k] = arr[i][j];
+                k++;
+            }
+        }
+
+        return flat;
+    }
+
+
+    /**
+     * Flattens a 2D array.
+     * @param arr Array to flatten.
+     * @return A 1d array which contains the flattened elements of arr.
+     */
+    public static int[] flatten(int[][] arr) {
+        int[] flat = new int[arr.length*arr[0].length];
+        int k=0;
+
+        for(int i=0; i<arr.length; i++) { // Flatten the array.
+            for(int j=0; j<arr[0].length; j++) {
+                flat[k] = arr[i][j];
+                k++;
+            }
+        }
+
+        return flat;
+    }
 }
