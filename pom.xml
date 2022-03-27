@@ -6,7 +6,7 @@
 
     <groupId>com.jml</groupId>
     <artifactId>java-machine-learning</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>feb90dfc52</version>
 
     <repositories>
         <repository>

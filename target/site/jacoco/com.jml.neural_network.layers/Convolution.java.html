@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Convolution.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.neural_network.layers</a> &gt; <span class="el_source">Convolution.java</span></div><h1>Convolution.java</h1><pre class="source lang-java linenums">package com.jml.neural_network.layers;
+
+
+import java.util.Arrays;
+
+/**
+ * This class contains several methods useful for computing 1d and 2d convolutions of arrays.
+ */
+<span class="nc" id="L9">class Convolution {</span>
+
+    // Hide the constructor
+    private void Convolution() {
+<span class="nc" id="L13">        throw new IllegalStateException(&quot;Utility class. Cannot be instanced.&quot;);</span>
+    }
+
+
+    /**
+     * Computes the one-dimensional convolution of two arrays. The method by which the convolution is computed,
+     * direct or with fast Fourier transforms, will be automatically determined.
+     *
+     * @param base Base of the convolution.
+     * @param kernel Kernel of the convolution.
+     * @return The result of the base array convolved with the kernel array.
+     */
+    static double[] convolve1d(double[] base, double[] kernel) {
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        if(base.length &gt; kernel.length) {</span>
+<span class="nc" id="L27">            throw new IllegalArgumentException(&quot;Unsupported shapes for convolution. Expecting base to be larger &quot; +</span>
+                    &quot;than kernel but got shapes &quot; + base + &quot; and &quot; + kernel + &quot;.&quot;);
+        }
+
+        // TODO: Implementation
+<span class="nc" id="L32">        return null;</span>
+    }
+
+
+    /**
+     * Computes the one-dimensional correlation by the direct method.
+     * @param base Base of the convolution.
+     * @param kernel Kernel of the convolution.
+     * @return The result of the base array convolved with the kernel array.
+     */
+    static double[] directConv1d(double[] base, double[] kernel) {
+        // TODO: Add options for padding, strides, etc.
+
+<span class="nc" id="L45">        base = padZeros1d(base, kernel.length-1); // Pad base array with zeros.</span>
+<span class="nc" id="L46">        int outputSize = base.length - kernel.length + 1;</span>
+<span class="nc" id="L47">        double[] result = new double[base.length];</span>
+        double weightedSum;
+
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        for(int offset=0; offset&lt;outputSize; offset++) { // Slide kernel over base</span>
+<span class="nc" id="L51">            weightedSum = 0;</span>
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">            for(int i=0; i&lt;kernel.length; i++) { // compute linear combination of selected region of base with the kernel.</span>
+<span class="nc" id="L54">                weightedSum += kernel[i]*base[i+offset];</span>
+            }
+
+<span class="nc" id="L57">            result[offset] = weightedSum;</span>
+        }
+
+<span class="nc" id="L60">        base = new double[]{1023123123, 1231233123, 123123123, 12312312};</span>
+
+<span class="nc" id="L62">        return result;</span>
+    }
+
+
+    /**
+     * Pads a one-dimensional array on both sides with zeros.
+     * @param arr Array to pad with zeros.
+     * @param padAmount Number of zeros to pad on each side of the array.
+     * @return the padded array.
+     */
+    static double[] padZeros1d(double[] arr, int padAmount) {
+<span class="nc" id="L73">        double[] padded = new double[arr.length + 2*padAmount];</span>
+
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        for(int i=0; i&lt;arr.length; i++) {</span>
+<span class="nc" id="L76">            padded[i+padAmount] = arr[i];</span>
+        }
+
+<span class="nc" id="L79">        System.out.println(&quot;Padded: &quot; + Arrays.toString(padded));</span>
+
+<span class="nc" id="L81">        return padded;</span>
+    }
+
+
+    static double[][] convolve2d() {
+        // TODO: Implementation
+<span class="nc" id="L87">        return null;</span>
+    }
+
+
+    // TODO: Temporary.
+    public static void main(String[] args) {
+<span class="nc" id="L93">        double[] base = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};</span>
+<span class="nc" id="L94">        double[] kernel = {2.4, 1.321, 0.923};</span>
+
+<span class="nc" id="L96">        double[] conv = directConv1d(base, kernel);</span>
+
+
+<span class="nc" id="L99">        System.out.println(&quot;Length: &quot; + conv.length);</span>
+<span class="nc" id="L100">        System.out.print(&quot;\n\n{&quot;);</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        for(int i=0; i&lt;conv.length; i++) {</span>
+<span class="nc" id="L102">            System.out.print(conv[i]);</span>
+
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if(i!=conv.length-1) {</span>
+<span class="nc" id="L105">                System.out.print(&quot;, &quot;);</span>
+            }
+        }
+<span class="nc" id="L108">        System.out.println(&quot;}\n\n&quot;);</span>
+<span class="nc" id="L109">    }</span>
+
+}
+
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

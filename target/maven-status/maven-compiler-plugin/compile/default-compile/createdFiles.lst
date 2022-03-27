@@ -1,2 +1,3 @@
 com\jml\preprocessing\ClassEncoder.class
+com\jml\neural_network\layers\Convolution.class
 com\jml\preprocessing\OneHotBase.class

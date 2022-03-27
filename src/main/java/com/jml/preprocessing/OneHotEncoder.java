@@ -19,6 +19,7 @@ public class OneHotEncoder implements Encoder {
     Map<String[], int[]> encodings; // Key is the target sample, the value is the encoding of that sample.
     Map<int[], String[]> invEncodings; // The inverse encodings.
 
+
     /**
      * Creates a OneHotEncoder object.
      */

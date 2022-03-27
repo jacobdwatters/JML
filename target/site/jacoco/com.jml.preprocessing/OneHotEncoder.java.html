@@ -19,14 +19,15 @@ public class OneHotEncoder implements Encoder {
     Map&lt;String[], int[]&gt; encodings; // Key is the target sample, the value is the encoding of that sample.
     Map&lt;int[], String[]&gt; invEncodings; // The inverse encodings.
 
+
     /**
      * Creates a OneHotEncoder object.
      */
-<span class="fc" id="L25">    public OneHotEncoder() {</span>
-<span class="fc" id="L26">        this.ignoreUnknown = false;</span>
-<span class="fc" id="L27">        encodings = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L28">        invEncodings = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L29">    }</span>
+<span class="fc" id="L26">    public OneHotEncoder() {</span>
+<span class="fc" id="L27">        this.ignoreUnknown = false;</span>
+<span class="fc" id="L28">        encodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L29">        invEncodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L30">    }</span>
 
 
     /**
@@ -35,11 +36,11 @@ public class OneHotEncoder implements Encoder {
      *                      during the {@link #fit(String[][])} call will cause an error. If true, the sample will be &quot;ignored&quot; and all
      *                      zeros will be returned.
      */
-<span class="fc" id="L38">    public OneHotEncoder(boolean ignoreUnknown) {</span>
-<span class="fc" id="L39">        this.ignoreUnknown = ignoreUnknown;</span>
-<span class="fc" id="L40">        encodings = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L41">        invEncodings = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L42">    }</span>
+<span class="fc" id="L39">    public OneHotEncoder(boolean ignoreUnknown) {</span>
+<span class="fc" id="L40">        this.ignoreUnknown = ignoreUnknown;</span>
+<span class="fc" id="L41">        encodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L42">        invEncodings = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L43">    }</span>
 
 
     /**
@@ -51,36 +52,36 @@ public class OneHotEncoder implements Encoder {
      */
     @Override
     public void fit(String[][] features) {
-<span class="fc" id="L54">        OneHotBase[] baseEncoders = new OneHotBase[features[0].length];</span>
-<span class="fc" id="L55">        String[][] featT = ArrayUtils.transpose(features); // Transpose of feature matrix.</span>
-<span class="fc" id="L56">        int[][] tempEncodingsByFeature = new int[features[0].length][];</span>
+<span class="fc" id="L55">        OneHotBase[] baseEncoders = new OneHotBase[features[0].length];</span>
+<span class="fc" id="L56">        String[][] featT = ArrayUtils.transpose(features); // Transpose of feature matrix.</span>
+<span class="fc" id="L57">        int[][] tempEncodingsByFeature = new int[features[0].length][];</span>
         int[] tempEncoding;
 
 
-<span class="fc bfc" id="L60" title="All 2 branches covered.">        for(int i=0; i&lt;baseEncoders.length; i++) { // Fit all the base encoders.</span>
-<span class="fc" id="L61">            baseEncoders[i] = new OneHotBase();</span>
-<span class="fc" id="L62">            baseEncoders[i].fit(featT[i]);</span>
-<span class="fc" id="L63">            size+=baseEncoders[i].encodings.size();</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        for(int i=0; i&lt;baseEncoders.length; i++) { // Fit all the base encoders.</span>
+<span class="fc" id="L62">            baseEncoders[i] = new OneHotBase();</span>
+<span class="fc" id="L63">            baseEncoders[i].fit(featT[i]);</span>
+<span class="fc" id="L64">            size+=baseEncoders[i].encodings.size();</span>
         }
 
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) {</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) {</span>
 
-<span class="fc bfc" id="L68" title="All 2 branches covered.">            if(!containsArrayKey(encodings, features[i])) {</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            if(!containsArrayKey(encodings, features[i])) {</span>
 
-<span class="fc bfc" id="L70" title="All 2 branches covered.">                for(int j=0; j&lt;features[i].length; j++) { // Get the encodings for each feature.</span>
-<span class="fc" id="L71">                    tempEncodingsByFeature[j] = baseEncoders[j].encodings.get(features[i][j]);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">                for(int j=0; j&lt;features[i].length; j++) { // Get the encodings for each feature.</span>
+<span class="fc" id="L72">                    tempEncodingsByFeature[j] = baseEncoders[j].encodings.get(features[i][j]);</span>
                 }
 
-<span class="fc" id="L74">                tempEncoding = ArrayUtils.append(tempEncodingsByFeature);</span>
+<span class="fc" id="L75">                tempEncoding = ArrayUtils.append(tempEncodingsByFeature);</span>
 
                 // Store the encoding and inverse encoding.
-<span class="fc" id="L77">                encodings.put(features[i], tempEncoding);</span>
-<span class="fc" id="L78">                invEncodings.put(tempEncoding, features[i]);</span>
+<span class="fc" id="L78">                encodings.put(features[i], tempEncoding);</span>
+<span class="fc" id="L79">                invEncodings.put(tempEncoding, features[i]);</span>
             }
         }
 
-<span class="fc" id="L82">        isFit = true;</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L83">        isFit = true;</span>
+<span class="fc" id="L84">    }</span>
 
 
     /**
@@ -96,29 +97,29 @@ public class OneHotEncoder implements Encoder {
      */
     @Override
     public int[][] encode(String[][] features) {
-<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L100">            throw new IllegalStateException(&quot;Encoder must be fit before the encode method can be called.&quot;);</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L101">            throw new IllegalStateException(&quot;Encoder must be fit before the encode method can be called.&quot;);</span>
         }
 
-<span class="fc" id="L103">        int[][] encode = new int[features.length][size];</span>
+<span class="fc" id="L104">        int[][] encode = new int[features.length][size];</span>
 
-<span class="fc bfc" id="L105" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) {</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        for(int i=0; i&lt;features.length; i++) {</span>
 
-<span class="fc bfc" id="L107" title="All 2 branches covered.">            if(containsArrayKey(encodings, features[i])) {</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">            if(containsArrayKey(encodings, features[i])) {</span>
                 // Then we have a known encoding for this sample.
-<span class="fc" id="L109">                encode[i] = getArray(encodings, features[i]);</span>
+<span class="fc" id="L110">                encode[i] = getArray(encodings, features[i]);</span>
 
-<span class="fc bfc" id="L111" title="All 2 branches covered.">            } else if(ignoreUnknown) {</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            } else if(ignoreUnknown) {</span>
                 // Then the target was not seen in the fit() method, but we ignore the sample.
-<span class="fc" id="L113">                encode[i] = new int[size];</span>
+<span class="fc" id="L114">                encode[i] = new int[size];</span>
 
             } else {
-<span class="fc" id="L116">                throw new IllegalStateException(&quot;Could not encode:\n&quot; + Arrays.toString(features[i]) + &quot;\nsince it was not seen during the fit &quot; +</span>
+<span class="fc" id="L117">                throw new IllegalStateException(&quot;Could not encode:\n&quot; + Arrays.toString(features[i]) + &quot;\nsince it was not seen during the fit &quot; +</span>
                         &quot;and ignoreUnknown was set to false.&quot;);
             }
         }
 
-<span class="fc" id="L121">        return encode;</span>
+<span class="fc" id="L122">        return encode;</span>
     }
 
 
@@ -129,17 +130,17 @@ public class OneHotEncoder implements Encoder {
      */
     @Override
     public String[][] decode(int[][] onehot) {
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if(!isFit) {</span>
-<span class="nc" id="L133">            throw new IllegalStateException(&quot;Encoder must be fit before the decode method can be called.&quot;);</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if(!isFit) {</span>
+<span class="nc" id="L134">            throw new IllegalStateException(&quot;Encoder must be fit before the decode method can be called.&quot;);</span>
         }
 
-<span class="fc" id="L136">        String[][] decode = new String[onehot.length][onehot[0].length];</span>
+<span class="fc" id="L137">        String[][] decode = new String[onehot.length][onehot[0].length];</span>
 
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        for(int i=0; i&lt; onehot.length; i++) {</span>
-<span class="fc" id="L139">            decode[i] = getArray(invEncodings, onehot[i]);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        for(int i=0; i&lt; onehot.length; i++) {</span>
+<span class="fc" id="L140">            decode[i] = getArray(invEncodings, onehot[i]);</span>
         }
 
-<span class="fc" id="L142">        return decode;</span>
+<span class="fc" id="L143">        return decode;</span>
     }
 
 
@@ -150,17 +151,17 @@ public class OneHotEncoder implements Encoder {
      * @return True if the map contains the array as a key. False otherwise.
      */
     private boolean containsArrayKey(Map&lt;String[], int[]&gt; map, String[] arr) {
-<span class="fc" id="L153">        boolean contained = false;</span>
+<span class="fc" id="L154">        boolean contained = false;</span>
 
-<span class="fc bfc" id="L155" title="All 2 branches covered.">        for(String[] key : map.keySet()) {</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        for(String[] key : map.keySet()) {</span>
 
-<span class="fc bfc" id="L157" title="All 2 branches covered.">            if(Arrays.equals(key, arr)) {</span>
-<span class="fc" id="L158">                contained = true;</span>
-<span class="fc" id="L159">                break; // Then we are done.</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            if(Arrays.equals(key, arr)) {</span>
+<span class="fc" id="L159">                contained = true;</span>
+<span class="fc" id="L160">                break; // Then we are done.</span>
             }
-<span class="fc" id="L161">        }</span>
+<span class="fc" id="L162">        }</span>
 
-<span class="fc" id="L163">        return contained;</span>
+<span class="fc" id="L164">        return contained;</span>
     }
 
 
@@ -171,18 +172,18 @@ public class OneHotEncoder implements Encoder {
      * @return If the map contains the specified key, then returns the associated value. Otherwise, returns null.
      */
     private int[] getArray(Map&lt;String[], int[]&gt; map, String[] key) {
-<span class="fc" id="L174">        int[] arr = null;</span>
+<span class="fc" id="L175">        int[] arr = null;</span>
 
         // TODO: Since we are searching the map when we want to get something, there is probably no point in using a map for this...
         //      Could a new java.util.Map be implemented to fix the issue of array equality?
-<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        for(String[] k : map.keySet()) {</span>
-<span class="fc bfc" id="L179" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
-<span class="fc" id="L180">                arr = map.get(k);</span>
-<span class="fc" id="L181">                break;</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">        for(String[] k : map.keySet()) {</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
+<span class="fc" id="L181">                arr = map.get(k);</span>
+<span class="fc" id="L182">                break;</span>
             }
-<span class="fc" id="L183">        }</span>
+<span class="fc" id="L184">        }</span>
 
-<span class="fc" id="L185">        return arr;</span>
+<span class="fc" id="L186">        return arr;</span>
     }
 
 
@@ -193,18 +194,18 @@ public class OneHotEncoder implements Encoder {
      * @return If the map contains the specified key, then returns the associated value. Otherwise, returns null.
      */
     private String[] getArray(Map&lt;int[], String[]&gt; map, int[] key) {
-<span class="fc" id="L196">        String[] arr = null;</span>
+<span class="fc" id="L197">        String[] arr = null;</span>
 
         // TODO: Since we are searching the map, there is probably no point in using a map for this...
         //      Could a new java.util.Map be implemented to fix the issue of array equality?
-<span class="fc bfc" id="L200" title="All 2 branches covered.">        for(int[] k : map.keySet()) {</span>
-<span class="fc bfc" id="L201" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
-<span class="fc" id="L202">                arr = map.get(k);</span>
-<span class="fc" id="L203">                break;</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        for(int[] k : map.keySet()) {</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">            if(Arrays.equals(k, key)) {</span>
+<span class="fc" id="L203">                arr = map.get(k);</span>
+<span class="fc" id="L204">                break;</span>
             }
-<span class="fc" id="L205">        }</span>
+<span class="fc" id="L206">        }</span>
 
-<span class="fc" id="L207">        return arr;</span>
+<span class="fc" id="L208">        return arr;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
