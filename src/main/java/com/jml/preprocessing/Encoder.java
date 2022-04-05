@@ -1,91 +1,35 @@
 package com.jml.preprocessing;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
- * Contains methods to encode classes or targets to numerical values. This allows labels to be used as targets when
- * {@link com.jml.core.Model#fit(Object, Object) fitting} a {@link com.jml.core.Model Model}.
+ * An interface for specifying data encoders.<br>
+ * Included default encoders:
+ * <pre>
+ *     - {@link OneHotEncoder}
+ *     - {@link ClassEncoder}</pre>
  */
-public class Encoder {
+public interface Encoder {
 
-    // Hide default constructor.
-    private Encoder() {throw new IllegalStateException("Cannot instantiate utility class.");}
-
-    // TODO: Each encoder should be an object inheriting from the Encoder class. This will allow an encoder object to be
-    //  fit to the data so that any data can then be easily decoded.
+    /**
+     * Fits the encoder to the data. This generates an encodings for each unique sample.
+     * @param data Data to generate encodings for.
+     */
+    void fit(String[][] data);
 
 
     /**
-     * Encodes a list of classes as values between 0 to (n-1) classes. <br><br>
-     * Labels will be sorted lexicographically before encoding. This guarantees a consistent method of encoding so that
-     * the encoded labels can be decoded.
-     *
-     * @param labels Labels of a dataset.
-     * @return An integer array containing the encoding of each label.
+     * Encodes samples based on the encodings generated in the {@link #fit(String[][])} method.
+     * @param samples Samples to encode.
+     * @return The encodings of each sample in the samples array.
+     * @throws IllegalStateException if this method is called before {@link #fit(String[][])}.
      */
-    public static int[] encodeClasses(int[] labels) {
-        String[] labelsAsStr = Arrays.toString(labels)
-                .replaceAll("\\s+", "")
-                .split(",");
-        return encodeClasses(labelsAsStr);
-    }
+    int[][] encode(String[][] samples);
 
 
     /**
-     * Encodes a list of classes as values between 0 to (n-1) classes.<br><br>
-     * Labels will be sorted lexicographically before encoding. This guarantees a consistent method of encoding so that
-     * the encoded labels can be decoded.
-     *
-     * @param labels Labels of a dataset.
-     * @return An integer array containing the encoding of each label.
+     * Decodes samples based on the encodings generated in the {@link #fit(String[][])} method.
+     * @param samples Samples to decode.
+     * @return The decodings of each sample in the samples array.
      */
-    public static int[] encodeClasses(String[] labels) {
-        int[] encodedLabels = new int[labels.length];
-        Map<String, Integer> encodings = new HashMap<>();
-        String[] sortedLabels = labels.clone();
-        Arrays.sort(sortedLabels);
-
-        int classNum = 0;
-
-        for (String label : sortedLabels) { // Find unique labels
-            if (!encodings.containsKey(label)) {
-                encodings.put(label, classNum);
-                classNum++;
-            }
-        }
-
-        for(int i=0; i<labels.length; i++) { // set class for each unique label.
-            encodedLabels[i] = encodings.get(labels[i]);
-        }
-
-        return encodedLabels;
-    }
-
-
-    /**
-     * Encodes a list of classes as values between 0 t0 (n-1) classes.<br>
-     * WARNING: This method only flattens the array and calls {@link #encodeClasses(String[])}.<br><br>
-     *
-     * Labels will be sorted alphabetically before encoding. This guarantees a consistent method of encoding so that
-     * the encoded labels can be decoded.
-     *
-     * @param labels Labels of a dataset.
-     * @return An integer array containing the encoding of each label.
-     */
-    public static int[] encodeClasses(String[][] labels) {
-        String[] flat = new String[labels.length*labels[0].length];
-        int k=0;
-
-        for(int i=0; i<labels.length; i++) { // Flatten the array.
-            for(int j=0; j<labels[0].length; j++) {
-                flat[k] = labels[i][j];
-                k++;
-            }
-        }
-
-        return encodeClasses(flat);
-    }
+    String[][] decode(int[][] samples);
 }

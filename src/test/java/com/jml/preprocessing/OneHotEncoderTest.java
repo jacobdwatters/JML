@@ -3,8 +3,6 @@ package com.jml.preprocessing;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class OneHotEncoderTest {
@@ -71,5 +69,42 @@ class OneHotEncoderTest {
         assertArrayEquals(expValEncodings, valEncodings);
         assertArrayEquals(data, invDataEncodings);
         assertArrayEquals(expValDecodings, invValEncodings);
+    }
+
+
+    @Test
+    void twoDimensionNoIgnoreTest() {
+        enc = new OneHotEncoder();
+        String[][] data = {{"male", "0"}, {"female", "0"}, {"female", "1"}, {"dog", "1"}, {"male", "1"}};
+        int[][] expDataEncodings = {{0, 0, 1, 1, 0},
+                {0, 1, 0, 1, 0},
+                {0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1},
+                {0, 0, 1, 0, 1}};
+
+        String[][] val = {{"male", "0"}, {"female", "0"}, {"female", "1"}, {"dog", "1"}, {"male", "1"}};
+        String[][] expValDecodings = {{"male", "0"}, {"female", "0"}, {"female", "1"}, {"dog", "1"}, {"male", "1"}};
+        int[][] expValEncodings = { {0, 0, 1, 1, 0},
+                {0, 1, 0, 1, 0},
+                {0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1},
+                {0, 0, 1, 0, 1}};
+
+
+        enc.fit(data);
+
+        int[][] dataEncodings = enc.encode(data);
+        int[][] valEncodings = enc.encode(val);
+
+        String[][] invDataEncodings = enc.decode(expDataEncodings);
+        String[][] invValEncodings = enc.decode(expValEncodings);
+
+        assertArrayEquals(expDataEncodings, dataEncodings);
+        assertArrayEquals(expValEncodings, valEncodings);
+        assertArrayEquals(data, invDataEncodings);
+        assertArrayEquals(expValDecodings, invValEncodings);
+
+
+        assertThrows(Exception.class, () -> enc.encode(new String[][]{{"cat", "1"}}));
     }
 }

@@ -6,9 +6,10 @@ import java.util.*;
 
 
 /**
- * An encoder object that allows for the categorical encoding of samples as one-hot arrays.
+ * An encoder object that allows for the categorical encoding of samples as one-hot arrays.<br>
+ * Generally speaking, this encoder should be used for the features of a dataset and not the targets.
  */
-public class OneHotEncoder {
+public class OneHotEncoder implements Encoder {
 
     /* Flag for handling unknown samples. If false, a sample that was not seen during the fit() call
         will cause an error. If true, the sample will be "ignored" and all zeros will be returned. */
@@ -48,6 +49,7 @@ public class OneHotEncoder {
      *
      * @param features String values to encode as one-hot arrays.
      */
+    @Override
     public void fit(String[][] features) {
         OneHotBase[] baseEncoders = new OneHotBase[features[0].length];
         String[][] featT = ArrayUtils.transpose(features); // Transpose of feature matrix.
@@ -70,6 +72,8 @@ public class OneHotEncoder {
                 }
 
                 tempEncoding = ArrayUtils.append(tempEncodingsByFeature);
+
+                // Store the encoding and inverse encoding.
                 encodings.put(features[i], tempEncoding);
                 invEncodings.put(tempEncoding, features[i]);
             }
@@ -88,8 +92,9 @@ public class OneHotEncoder {
      * @param features A 2D array of strings where each row contains the features for a single sample.
      * @return One-hot encodings of the specified features.
      * @throws IllegalStateException If the {@link #fit(String[][])} method has not been called. Or if a sample that was not seen
-     * in the {@link #fit(String[][])} method is
+     * in the {@link #fit(String[][])} method and ignoreUnknown was set to false.
      */
+    @Override
     public int[][] encode(String[][] features) {
         if(!isFit) {
             throw new IllegalStateException("Encoder must be fit before the encode method can be called.");
@@ -108,7 +113,7 @@ public class OneHotEncoder {
                 encode[i] = new int[size];
 
             } else {
-                throw new IllegalStateException("Could not encode " + features[i] + " since it was not seen during the fit " +
+                throw new IllegalStateException("Could not encode:\n" + Arrays.toString(features[i]) + "\nsince it was not seen during the fit " +
                         "and ignoreUnknown was set to false.");
             }
         }
@@ -122,6 +127,7 @@ public class OneHotEncoder {
      * @param onehot A 2D array of strings where each row contains the targets for a single sample.
      * @return One-hot encodings of the specified targets.
      */
+    @Override
     public String[][] decode(int[][] onehot) {
         if(!isFit) {
             throw new IllegalStateException("Encoder must be fit before the decode method can be called.");
@@ -134,26 +140,6 @@ public class OneHotEncoder {
         }
 
         return decode;
-    }
-
-
-    /**
-     * Checks if a list of arrays contains a specified array.
-     * @param list List to check.
-     * @param arr Array of interest.
-     * @return True if the list contains the array at least once. False otherwise.
-     */
-    private boolean containsArray(List<String[]> list, String[] arr) {
-        boolean contained = false;
-
-        for(int i=0; i< list.size(); i++) {
-            if(Arrays.equals(list.get(i), arr)) {
-                contained = true;
-                break; // Then we are done.
-            }
-        }
-
-        return contained;
     }
 
 
@@ -187,7 +173,7 @@ public class OneHotEncoder {
     private int[] getArray(Map<String[], int[]> map, String[] key) {
         int[] arr = null;
 
-        // TODO: Since we are searching the map, there is probably no point in using a map for this...
+        // TODO: Since we are searching the map when we want to get something, there is probably no point in using a map for this...
         //      Could a new java.util.Map be implemented to fix the issue of array equality?
         for(String[] k : map.keySet()) {
             if(Arrays.equals(k, key)) {
