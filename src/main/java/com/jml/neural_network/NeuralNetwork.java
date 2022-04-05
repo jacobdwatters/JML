@@ -17,6 +17,7 @@ import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -297,6 +298,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         isFit = false; // Reset the isFit flag so training behaves correctly.
 
         double[][][] shuffle;
+        double[][] featuresCopy = features.clone();
+        double[][] targetsCopy = targets.clone();
 
         Matrix feature;
         Matrix target = new Matrix(targets);
@@ -309,7 +312,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         for(int i=0; i<epochs; i++) {
             // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
-            shuffle = ArrayUtils.shuffle(features, targets); // Shuffle samples for this epoch.
+            shuffle = ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
             feature = new Matrix(shuffle[0]);
             target = new Matrix(shuffle[1]);
 
@@ -324,7 +327,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             }
 
             predictions = new Matrix(this.predict(features));
-            lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re);
+            lossHist.add(LossFunctions.mse.compute(predictions, new Matrix(targets)).get(0, 0).re);
 
             if(lossHist.get(lossHist.size()-1) < threshold) {
                 break; // Then stop training since the loss has dropped below the stopping threshold.

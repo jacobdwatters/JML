@@ -1,7 +1,7 @@
 package com.jml.losses;
 
-
 import linalg.Matrix;
+
 
 /**
  * This class contains methods for computing the loss between two datasets stored in double[][] arrays.
