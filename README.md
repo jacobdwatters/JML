@@ -13,7 +13,7 @@ for this library as well.
 ### Install
 1) Ensure you have [Java SE 16](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or later installed.
 2) Download the Jar file for this library [here](https://www.worldofjacobwatters.com/jml-download)
-   1) <u>Recommended</u>: Also download the Jar file for the Java-Linear-Algebra library [here](https://www.worldofjacobwatters.com/download)
+   1) Also download the Jar file for the Java-Linear-Algebra library [here](https://www.worldofjacobwatters.com/download)
 3) Add the Jar(s) to your project in your IDE of choice. 
 4) You are ready to being developing machine learning models in Java!
 
