@@ -256,7 +256,7 @@ public class Dense implements TrainableLayer {
         }
 
         this.weights = params[0];
-        this.bias = params[1];
+//        this.bias = params[1];
     }
 
 

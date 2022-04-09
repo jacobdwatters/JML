@@ -4,6 +4,7 @@ import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
 import com.jml.losses.LossFunctions;
+import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.BaseLayer;
 import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.TrainableLayer;
