@@ -163,9 +163,8 @@ public class Dense implements TrainableLayer {
     @Override
     public Matrix forward(Matrix input) {
 <span class="fc" id="L165">        this.forwardIn = input;</span>
-<span class="fc" id="L166">        this.forwardOut = activation.forward(this.weights.mult(input).add(this.bias)); // Apply activation to linear transform.</span>
-
-<span class="fc" id="L168">        return this.forwardOut;</span>
+<span class="fc" id="L166">        this.forwardOut = this.weights.mult(input).add(this.bias);</span>
+<span class="fc" id="L167">        return activation.forward(this.forwardOut); // Apply activation to linear transform.</span>
     }
 
 
@@ -178,13 +177,14 @@ public class Dense implements TrainableLayer {
      */
     public Matrix back(Matrix upstreamGrad) {
 
-<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        if(this.activation instanceof Softmax) {</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if(this.activation instanceof Softmax) {</span>
             // TODO:
         } else {
             // TODO: Can this be done through Linear layers back(). If not, should this class really extend the Linear Class??
-<span class="fc" id="L185">            this.wGrad = this.wGrad.add(upstreamGrad.T().mult(this.forwardIn.T()));</span>
-<span class="fc" id="L186">            this.bGrad = this.bGrad.add(upstreamGrad.T());</span>
-<span class="fc" id="L187">            this.backwardOut = upstreamGrad.mult(weights).elemMult(activation.back(this.forwardIn).T());</span>
+<span class="fc" id="L184">            Matrix commonGrad = upstreamGrad.elemMult(activation.back(this.forwardOut));</span>
+<span class="fc" id="L185">            this.wGrad = this.wGrad.add(commonGrad.mult(this.forwardIn.T()));</span>
+<span class="fc" id="L186">            this.bGrad = this.bGrad.add(upstreamGrad);</span>
+<span class="fc" id="L187">            this.backwardOut = weights.T().mult(commonGrad);</span>
         }
 
 <span class="fc" id="L190">        return backwardOut;</span>
@@ -256,7 +256,7 @@ public class Dense implements TrainableLayer {
         }
 
 <span class="fc" id="L258">        this.weights = params[0];</span>
-<span class="fc" id="L259">        this.bias = params[1];</span>
+//        this.bias = params[1];
 <span class="fc" id="L260">    }</span>
 
 

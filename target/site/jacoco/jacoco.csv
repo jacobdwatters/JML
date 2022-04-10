@@ -14,12 +14,12 @@ java-machine-learning,com.jml.linear_models,PolynomialRegression,1,348,3,21,0,62
 java-machine-learning,com.jml.linear_models,LinearRegression,1,78,3,3,0,17,3,5,0,5
 java-machine-learning,com.jml.linear_models,LinearModelTags,0,33,0,0,0,2,0,1,0,1
 java-machine-learning,com.jml.linear_models,PolynomialRegressionSGD,13,329,3,13,3,60,3,13,0,8
-java-machine-learning,com.jml.neural_network,NeuralNetwork,202,1489,15,81,36,236,20,53,5,20
+java-machine-learning,com.jml.neural_network,NeuralNetwork,202,1488,15,81,36,236,20,53,5,20
 java-machine-learning,com.jml.neural_network,ModelTags,0,63,0,0,0,2,0,1,0,1
 java-machine-learning,com.jml.neural_network.layers,Dropout,74,130,3,5,9,29,4,10,2,8
 java-machine-learning,com.jml.neural_network.layers,BaseLayer,6,0,0,0,4,0,4,0,4,0
-java-machine-learning,com.jml.neural_network.layers,Dense,34,406,4,4,6,84,5,18,1,18
-java-machine-learning,com.jml.neural_network.layers,Linear,33,360,3,3,6,76,4,18,1,18
+java-machine-learning,com.jml.neural_network.layers,Dense,34,406,4,4,6,85,5,18,1,18
+java-machine-learning,com.jml.neural_network.layers,Linear,33,359,3,3,6,76,4,18,1,18
 java-machine-learning,com.jml.core,NeuralNetFromData,44,390,10,38,7,78,9,18,0,3
 java-machine-learning,com.jml.core,Metrics,48,101,6,14,9,14,5,9,2,2
 java-machine-learning,com.jml.core,LogRegFromData,5,75,2,4,1,20,2,3,0,2

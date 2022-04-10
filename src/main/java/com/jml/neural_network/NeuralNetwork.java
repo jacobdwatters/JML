@@ -381,7 +381,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         /* TODO: Initial upstreamGrad is currently the derivative of MSE but should be the derivative of any loss function.
                 Should allow the use of a specified loss function and replace this initial upstreamGrad with the derivative
                  of the loss function.*/
-        Matrix upstreamGrad = output.sub(target).T(); // initial upstream gradient.
+        Matrix upstreamGrad = output.sub(target); // initial upstream gradient.
 
         for(int i=layers.size()-1; i>=1; i--) {
 

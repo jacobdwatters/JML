@@ -26,8 +26,8 @@ import linalg.Matrix;
 <span class="fc bfc" id="L26" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
 <span class="fc" id="L27">                x = data.getAsDouble(i, j);</span>
 
-<span class="pc bpc" id="L29" title="1 of 2 branches missed.">                if(x&lt;-LARGE_VALUE) {</span>
-<span class="nc" id="L30">                    x = -LARGE_VALUE;</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">                if(x&lt;-LARGE_VALUE) {</span>
+<span class="fc" id="L30">                    x = -LARGE_VALUE;</span>
 <span class="fc bfc" id="L31" title="All 2 branches covered.">                } else if(x&gt;LARGE_VALUE) {</span>
 <span class="fc" id="L32">                    x = LARGE_VALUE;</span>
                 }

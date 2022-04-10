@@ -163,9 +163,8 @@ public class Dense implements TrainableLayer {
     @Override
     public Matrix forward(Matrix input) {
         this.forwardIn = input;
-        this.forwardOut = activation.forward(this.weights.mult(input).add(this.bias)); // Apply activation to linear transform.
-
-        return this.forwardOut;
+        this.forwardOut = this.weights.mult(input).add(this.bias);
+        return activation.forward(this.forwardOut); // Apply activation to linear transform.
     }
 
 
@@ -182,9 +181,10 @@ public class Dense implements TrainableLayer {
             // TODO:
         } else {
             // TODO: Can this be done through Linear layers back(). If not, should this class really extend the Linear Class??
-            this.wGrad = this.wGrad.add(upstreamGrad.T().mult(this.forwardIn.T()));
-            this.bGrad = this.bGrad.add(upstreamGrad.T());
-            this.backwardOut = upstreamGrad.mult(weights).elemMult(activation.back(this.forwardIn).T());
+            Matrix commonGrad = upstreamGrad.elemMult(activation.back(this.forwardOut));
+            this.wGrad = this.wGrad.add(commonGrad.mult(this.forwardIn.T()));
+            this.bGrad = this.bGrad.add(upstreamGrad);
+            this.backwardOut = weights.T().mult(commonGrad);
         }
 
         return backwardOut;
