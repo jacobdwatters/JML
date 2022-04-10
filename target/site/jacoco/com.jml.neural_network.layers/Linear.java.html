@@ -145,7 +145,7 @@ public class Linear implements TrainableLayer {
     @Override
     public Matrix forward(Matrix input) {
 <span class="fc" id="L147">        forwardIn = input;</span>
-<span class="fc" id="L148">        forwardOut = weights.mult(input);</span>
+<span class="fc" id="L148">        forwardOut = weights.mult(input).add(bias);</span>
 
 <span class="fc" id="L150">        return forwardOut;</span>
     }
