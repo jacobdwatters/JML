@@ -323,7 +323,6 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
                 feature = new Matrix(featuresCopy);
                 target = new Matrix(targetsCopy);
-                System.out.println("Shuffling");
             }
 
             for(int j=0; j<feature.numRows(); j+=batchSize) { // Iterate over all samples
