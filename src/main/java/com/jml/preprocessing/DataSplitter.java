@@ -43,16 +43,19 @@ public class DataSplitter {
         double[][] testX = new double[testNumber][X.length];
         double[][] testY = new double[testNumber][y.length];
 
-        double[][][] shuffle = ArrayUtils.shuffle(X, y); // Shuffle the array.
+        double[][] Xcopy = X.clone();
+        double[][] ycopy = y.clone();
+
+        ArrayUtils.shuffle(Xcopy, ycopy); // Shuffle the arrays.
 
         // Split the dataset based off the computed sizes.
         for(int i=0; i<X.length; i++) {
             if(i<trainNumber) {
-                trainX[i] = shuffle[0][i];
-                trainY[i] = shuffle[1][i];
+                trainX[i] = Xcopy[i];
+                trainY[i] = ycopy[i];
             } else {
-                testX[i-trainNumber] = shuffle[0][i];
-                testY[i-trainNumber] = shuffle[1][i];
+                testX[i-trainNumber] = Xcopy[i];
+                testY[i-trainNumber] = ycopy[i];
             }
         }
 

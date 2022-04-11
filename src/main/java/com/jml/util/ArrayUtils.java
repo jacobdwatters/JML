@@ -365,7 +365,8 @@ public class ArrayUtils {
 
 
     /**
-     * Randomly shuffles 2D arrays by rows using the Fisher–Yates algorithm.<br><br>
+     * Randomly shuffles the rows of 2D arrays using the Fisher–Yates algorithm.
+     * This is done in place.<br><br>
      *
      * If more than one array is passed, the shuffled row indices of all arrays will be the same.
      * I.e. if the following arrays are passed:
@@ -391,8 +392,7 @@ public class ArrayUtils {
      * @param arr 2D Arrays to shuffle
      * @return Arrays with rows randomly shuffled.
      */
-    public static double[][][] shuffle(double[][]... arr) {
-        double[][][] newArr = arr.clone();
+    public static void shuffle(double[][]... arr) {
         double[] temp;
 
         for (int i = arr[0].length-1; i>0; i--) {
@@ -400,16 +400,13 @@ public class ArrayUtils {
             // Pick a random index from 0 to i
             int j = rand.nextInt(i+1);
 
-
             for(int k=0; k<arr.length; k++) { // Swap same row for entire depth.
                 // Swap arr[i] with the element at random index
-                temp = newArr[k][i];
-                newArr[k][i] = newArr[k][j];
-                newArr[k][j] = temp;
+                temp = arr[k][i];
+                arr[k][i] = arr[k][j];
+                arr[k][j] = temp;
             }
         }
-
-        return newArr;
     }
 
 

@@ -298,24 +298,33 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         isFit = false; // Reset the isFit flag so training behaves correctly.
 
-        double[][][] shuffle;
         double[][] featuresCopy = features.clone();
         double[][] targetsCopy = targets.clone();
 
-        Matrix feature;
-        Matrix target = new Matrix(targets);
+        boolean shuffle = batchSize<features.length;
+
+        Matrix feature = null;
+        Matrix target = new Matrix(targetsCopy);
         Matrix input;
         Matrix output;
         Matrix predictions;
+
+        if(!shuffle) {
+            feature = new Matrix(featuresCopy);
+        }
 
         predictions = new Matrix(this.predict(features));
         lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
-            // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
-            shuffle = ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
-            feature = new Matrix(shuffle[0]);
-            target = new Matrix(shuffle[1]);
+
+            if(shuffle) { // Then shuffle the samples for this epoch.
+                // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
+                ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
+                feature = new Matrix(featuresCopy);
+                target = new Matrix(targetsCopy);
+                System.out.println("Shuffling");
+            }
 
             for(int j=0; j<feature.numRows(); j+=batchSize) { // Iterate over all samples
                 for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) { // Iterate over the batch.
