@@ -302,13 +302,12 @@ public class ArrayUtils {
 
 
     /**
-     * Randomly shuffles arrays using the Fisher–Yates algorithm.
+     * Randomly shuffles arrays using the Fisher–Yates algorithm. This is done in place
      *
      * @param arr Arrays to shuffle
      * @return Arrays with rows randomly shuffled.
      */
-    public static double[] shuffle(double[] arr) {
-        double[] newArr = arr.clone();
+    public static void shuffle(double[] arr) {
         double temp;
 
         for (int i = arr.length-1; i>0; i--) {
@@ -317,12 +316,10 @@ public class ArrayUtils {
             int j = rand.nextInt(i+1);
 
             // Swap arr[i] with the element at random index
-            temp = newArr[i];
-            newArr[i] = newArr[j];
-            newArr[j] = temp;
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
         }
-
-        return newArr;
     }
 
 
@@ -343,8 +340,7 @@ public class ArrayUtils {
      * @param arr Arrays to shuffle
      * @return Arrays with rows randomly shuffled.
      */
-    public static double[][] shuffle(double[]... arr) {
-        double[][] newArr = arr.clone();
+    public static void shuffle(double[]... arr) {
         double temp;
 
         for (int i = arr[0].length-1; i>0; i--) {
@@ -354,13 +350,11 @@ public class ArrayUtils {
 
             for(int k=0; k<arr.length; k++) { // Swap same element for all rows.
                 // Swap arr[i] with the element at random index
-                temp = newArr[k][i];
-                newArr[k][i] = newArr[k][j];
-                newArr[k][j] = temp;
+                temp = arr[k][i];
+                arr[k][i] = arr[k][j];
+                arr[k][j] = temp;
             }
         }
-
-        return newArr;
     }
 
 

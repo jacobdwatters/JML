@@ -26,12 +26,12 @@ public class Linear implements TrainableLayer {
     protected Initializer weightInitializer;
     protected Initializer biasInitializer;
 
-    private Matrix forwardIn; // Inputs to this layer. i.e. values of previous layers nodes.
-    private Matrix forwardOut; // Output of this layer. i.e. values of this layers' nodes.
-    private Matrix backwardOut; // New Upstream gradient to use for backpropagation computations in previous layer.
+    protected Matrix forwardIn; // Inputs to this layer. i.e. values of previous layers nodes.
+    protected Matrix forwardOut; // Output of this layer. i.e. values of this layers' nodes.
+    protected Matrix backwardOut; // New Upstream gradient to use for backpropagation computations in previous layer.
 
-    private Matrix wGrad; // Gradient of model with respect to the weights of this layer.
-    private Matrix bGrad; // Gradients of model with respect to the bias terms of this layer.
+    protected Matrix wGrad; // Gradient of model with respect to the weights of this layer.
+    protected Matrix bGrad; // Gradients of model with respect to the bias terms of this layer.
 
 
     /**
