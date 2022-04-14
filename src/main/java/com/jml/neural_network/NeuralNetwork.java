@@ -315,9 +315,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             feature = new Matrix(featuresCopy);
         }
 
-        // TODO: Uncomment following two lines
-//        predictions = new Matrix(this.predict(features));
-//        lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
+        predictions = new Matrix(this.predict(features));
+        lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
 
@@ -337,14 +336,12 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 applyUpdates(); // Apply updates computed during the backward pass to the weights.
             }
 
+            predictions = new Matrix(this.predict(features));
+            lossHist.add(LossFunctions.mse.compute(predictions, new Matrix(targets)).get(0, 0).re);
 
-            // TODO: Uncomment following five lines
-//            predictions = new Matrix(this.predict(features));
-//            lossHist.add(LossFunctions.mse.compute(predictions, new Matrix(targets)).get(0, 0).re);
-
-//            if(lossHist.get(lossHist.size()-1) < threshold) {
-//                break; // Then stop training since the loss has dropped below the stopping threshold.
-//            }
+            if(lossHist.get(lossHist.size()-1) < threshold) {
+                break; // Then stop training since the loss has dropped below the stopping threshold.
+            }
 
             if(optim.schedule!=null) { // Apply learning rate scheduler if applicable
                 optim.schedule.step(optim);

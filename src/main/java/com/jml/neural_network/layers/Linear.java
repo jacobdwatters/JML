@@ -147,11 +147,6 @@ public class Linear implements TrainableLayer {
         forwardIn = input;
         forwardOut = weights.mult(input).sumToEachCol(bias);
 
-        // TODO: delete print statements
-//        System.out.println("product:\n" + weights.mult(input) + "\n");
-//        System.out.println("bias:\n" + bias + "\n");
-//        System.out.println("forwardOut:\n" + forwardOut + "\n\n");
-
         return forwardOut;
     }
 

@@ -139,9 +139,6 @@ public class Dense extends Linear {
             this.backwardOut = weights.T().mult(commonGrad);
         }
 
-        System.out.println("wGrad:\n" + wGrad);
-        System.out.println("bGrad:\n" + bGrad + "\n\n");
-
         return backwardOut;
     }
 
