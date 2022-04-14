@@ -137,7 +137,6 @@ public class Dropout implements BaseLayer {
             }
         }
 
-        System.out.println(mask.shape());
         this.mask = this.mask.extend(size);
     }
 

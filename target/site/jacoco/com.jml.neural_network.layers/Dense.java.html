@@ -139,10 +139,7 @@ public class Dense extends Linear {
 <span class="fc" id="L139">            this.backwardOut = weights.T().mult(commonGrad);</span>
         }
 
-<span class="fc" id="L142">        System.out.println(&quot;wGrad:\n&quot; + wGrad);</span>
-<span class="fc" id="L143">        System.out.println(&quot;bGrad:\n&quot; + bGrad + &quot;\n\n&quot;);</span>
-
-<span class="fc" id="L145">        return backwardOut;</span>
+<span class="fc" id="L142">        return backwardOut;</span>
     }
 
 
@@ -152,10 +149,10 @@ public class Dense extends Linear {
      */
     @Override
     public String inspect() {
-<span class="fc" id="L155">        StringBuilder inspection = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
+<span class="fc" id="L152">        StringBuilder inspection = new StringBuilder(&quot;Type: &quot; + LAYER_TYPE + &quot;,\tInput size: &quot;</span>
                 + inDim + &quot;,\tOutput size: &quot; + outDim + &quot;, \tTrainable Parameters: &quot; + (inDim*outDim + outDim) +
-<span class="fc" id="L157">                &quot;,\tActivationFunction: &quot; + activation.getName());</span>
-<span class="fc" id="L158">        return inspection.toString();</span>
+<span class="fc" id="L154">                &quot;,\tActivationFunction: &quot; + activation.getName());</span>
+<span class="fc" id="L155">        return inspection.toString();</span>
     }
 
 
@@ -166,19 +163,19 @@ public class Dense extends Linear {
      */
     @Override
     public String getDetails() {
-<span class="fc" id="L169">        StringBuilder details = new StringBuilder();</span>
+<span class="fc" id="L166">        StringBuilder details = new StringBuilder();</span>
 
         // Create all the blocks for this layer.
-<span class="fc" id="L172">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
-<span class="fc" id="L173">        Block activationBlock = new Block(ModelTags.ACTIVATION.toString(), this.activation.getName());</span>
-<span class="fc" id="L174">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.outDim);</span>
-<span class="fc" id="L175">        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
-<span class="fc" id="L176">        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
+<span class="fc" id="L169">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
+<span class="fc" id="L170">        Block activationBlock = new Block(ModelTags.ACTIVATION.toString(), this.activation.getName());</span>
+<span class="fc" id="L171">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.outDim);</span>
+<span class="fc" id="L172">        Block weightBlock = new Block(ModelTags.WEIGHTS.toString(), ArrayUtils.asString(this.weights.getValuesAsDouble()));</span>
+<span class="fc" id="L173">        Block biasBlock = new Block(ModelTags.BIAS.toString(), ArrayUtils.asString(this.bias.getValuesAsDouble()));</span>
 
         // Combine all blocks into a single string.
-<span class="fc" id="L179">        details.append(Block.buildFileContent(layerBlock, activationBlock, dimBlock, weightBlock, biasBlock));</span>
+<span class="fc" id="L176">        details.append(Block.buildFileContent(layerBlock, activationBlock, dimBlock, weightBlock, biasBlock));</span>
 
-<span class="fc" id="L181">        return details.toString();</span>
+<span class="fc" id="L178">        return details.toString();</span>
     }
 
 
@@ -187,7 +184,7 @@ public class Dense extends Linear {
      * @return The type of this layer as a String.
      */
     public String toString() {
-<span class="nc" id="L190">        return LAYER_TYPE;</span>
+<span class="nc" id="L187">        return LAYER_TYPE;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
