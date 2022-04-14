@@ -147,31 +147,6 @@ public class Dense extends Linear {
 
 
     /**
-     * Sets the parameters for this layer.
-     *
-     * @param params Parameter Matrices for this layer.
-     */
-    @Override
-    public void setParams(Matrix... params) {
-        if(params.length!=2) {
-            throw new IllegalArgumentException("Expecting 2 parameter matrices for Linear layer of form {Weights, bias} but " +
-                    "got " + params.length + ".");
-        }
-        if(!params[0].sameShape(weights)) {
-            throw new IllegalArgumentException("First parameter matrix does not have same shape as weight matrix. Expecting "
-                    + weights.shape() + " but got " + params[0].shape() + ".");
-        }
-        if(!params[1].sameShape(bias)) {
-            throw new IllegalArgumentException("Second parameter matrix does not have same shape as bias matrix. Expecting "
-                    + bias.shape() + " but got " + params[1].shape() + ".");
-        }
-
-        this.weights = params[0];
-        this.bias = params[1];
-    }
-
-
-    /**
      * Gets and formats details of this layer in a human-readable String.
      * @return The details of this layer in a human-reusable String.
      */
