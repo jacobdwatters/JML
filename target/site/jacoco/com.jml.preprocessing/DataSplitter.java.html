@@ -43,26 +43,29 @@ public class DataSplitter {
 <span class="fc" id="L43">        double[][] testX = new double[testNumber][X.length];</span>
 <span class="fc" id="L44">        double[][] testY = new double[testNumber][y.length];</span>
 
-<span class="fc" id="L46">        double[][][] shuffle = ArrayUtils.shuffle(X, y); // Shuffle the array.</span>
+<span class="fc" id="L46">        double[][] Xcopy = X.clone();</span>
+<span class="fc" id="L47">        double[][] ycopy = y.clone();</span>
+
+<span class="fc" id="L49">        ArrayUtils.shuffle(Xcopy, ycopy); // Shuffle the arrays.</span>
 
         // Split the dataset based off the computed sizes.
-<span class="fc bfc" id="L49" title="All 2 branches covered.">        for(int i=0; i&lt;X.length; i++) {</span>
-<span class="fc bfc" id="L50" title="All 2 branches covered.">            if(i&lt;trainNumber) {</span>
-<span class="fc" id="L51">                trainX[i] = shuffle[0][i];</span>
-<span class="fc" id="L52">                trainY[i] = shuffle[1][i];</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for(int i=0; i&lt;X.length; i++) {</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            if(i&lt;trainNumber) {</span>
+<span class="fc" id="L54">                trainX[i] = Xcopy[i];</span>
+<span class="fc" id="L55">                trainY[i] = ycopy[i];</span>
             } else {
-<span class="fc" id="L54">                testX[i-trainNumber] = shuffle[0][i];</span>
-<span class="fc" id="L55">                testY[i-trainNumber] = shuffle[1][i];</span>
+<span class="fc" id="L57">                testX[i-trainNumber] = Xcopy[i];</span>
+<span class="fc" id="L58">                testY[i-trainNumber] = ycopy[i];</span>
             }
         }
 
         // Insert all subsets into the hashmap.
-<span class="fc" id="L60">        split.put(&quot;xTrain&quot;, trainX);</span>
-<span class="fc" id="L61">        split.put(&quot;yTrain&quot;, trainY);</span>
-<span class="fc" id="L62">        split.put(&quot;xTest&quot;, testX);</span>
-<span class="fc" id="L63">        split.put(&quot;yTest&quot;, testY);</span>
+<span class="fc" id="L63">        split.put(&quot;xTrain&quot;, trainX);</span>
+<span class="fc" id="L64">        split.put(&quot;yTrain&quot;, trainY);</span>
+<span class="fc" id="L65">        split.put(&quot;xTest&quot;, testX);</span>
+<span class="fc" id="L66">        split.put(&quot;yTest&quot;, testY);</span>
 
-<span class="fc" id="L65">        return split;</span>
+<span class="fc" id="L68">        return split;</span>
     }
 
 
@@ -73,21 +76,21 @@ public class DataSplitter {
      * @return A map containing each class and the list of samples belonging to that class.
      */
     public static Map&lt;Integer, List&lt;double[]&gt;&gt; splitByClass(double[][] X, int[] y) {
-<span class="fc" id="L76">        Map&lt;Integer, List&lt;double[]&gt;&gt; split = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L79">        Map&lt;Integer, List&lt;double[]&gt;&gt; split = new HashMap&lt;&gt;();</span>
         List&lt;double[]&gt; temp;
 
-<span class="fc bfc" id="L79" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
-<span class="fc bfc" id="L80" title="All 2 branches covered.">            if(!split.containsKey(y[i])) { // Check if map contains this class already.</span>
-<span class="fc" id="L81">                temp = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L82">                temp.add(X[i]);</span>
-<span class="fc" id="L83">                split.put(y[i], temp);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for(int i=0; i&lt;y.length; i++) {</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            if(!split.containsKey(y[i])) { // Check if map contains this class already.</span>
+<span class="fc" id="L84">                temp = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L85">                temp.add(X[i]);</span>
+<span class="fc" id="L86">                split.put(y[i], temp);</span>
             } else { // Then this key already exists
-<span class="fc" id="L85">                temp = split.get(y[i]);</span>
-<span class="fc" id="L86">                temp.add(X[i]);</span>
+<span class="fc" id="L88">                temp = split.get(y[i]);</span>
+<span class="fc" id="L89">                temp.add(X[i]);</span>
             }
         }
 
-<span class="fc" id="L90">        return split;</span>
+<span class="fc" id="L93">        return split;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

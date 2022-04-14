@@ -65,7 +65,7 @@ public class Dropout implements BaseLayer {
      * Feeds the inputs through the layer. Each input will be scaled by <code>1/(1-p)</code>
      * and have a probability, <code>p</code>, of being zeroed or "dropped."
      *
-     * @param inputs Input values for the layer
+     * @param forwardIn Input values for the layer
      * @return The result of the layer applied to the values.
      */
     @Override
@@ -75,7 +75,7 @@ public class Dropout implements BaseLayer {
                     "Expecting input shape of " + inDim + "x" + 1);
         }
 
-        initMask(); // Initialize the mask
+        initMask(forwardIn.numCols()); // Initialize the mask
         this.forwardOut = forwardIn.elemMult(mask).scalMult(scale); // Apply dropout mask.
 
         return forwardOut;
@@ -124,16 +124,20 @@ public class Dropout implements BaseLayer {
     }
 
 
-    // Initialize mask.
-    private void initMask() {
+    // Initialize dropout mask.
+    private void initMask(int size) {
         boolean drop;
 
-        for(int i=0; i<mask.numRows(); i++) {
+        this.mask = new Vector(this.inDim);
+
+        for(int i=0; i<this.mask.numRows(); i++) {
             drop = Stats.genRandBoolean(this.p);
             if(!drop) {
-                mask.set(1, i, 0);
+                this.mask.set(1, i, 0);
             }
         }
+
+        this.mask = this.mask.extend(size);
     }
 
 
@@ -146,6 +150,7 @@ public class Dropout implements BaseLayer {
     public String inspect() {
         return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
     }
+
 
     /**
      * Constructs a string containing this all details of the model pertinent for saving the model to a file.

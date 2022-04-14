@@ -56,7 +56,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     final List<Double> lossHist = new ArrayList<>();
 
     // TODO: Should these be moved to the layer? Probably yes!
-    //  Maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
+    //  Or, maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
 
@@ -65,7 +65,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     // TODO: Add 'recompile(...)' method that takes hyper-parameters so that loaded models can be retrained with specified
     //  optimizer, learning rate.
 
-    // TODO: Should epochs and batch size should be specified in the 'fit(...)' method?
+    // TODO: epochs, batch size, and loss function should be specified in the 'fit(...)' method?
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -298,31 +298,40 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         isFit = false; // Reset the isFit flag so training behaves correctly.
 
-        double[][][] shuffle;
         double[][] featuresCopy = features.clone();
         double[][] targetsCopy = targets.clone();
 
-        Matrix feature;
-        Matrix target = new Matrix(targets);
+        boolean shuffle = batchSize<features.length;
+
+        int limit = 0;
+
+        Matrix feature = null;
+        Matrix target = new Matrix(targetsCopy);
         Matrix input;
         Matrix output;
         Matrix predictions;
+
+        if(!shuffle) {
+            feature = new Matrix(featuresCopy);
+        }
 
         predictions = new Matrix(this.predict(features));
         lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
-            // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
-            shuffle = ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
-            feature = new Matrix(shuffle[0]);
-            target = new Matrix(shuffle[1]);
+
+            if(shuffle) { // Then shuffle the samples for this epoch.
+                // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
+                ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
+                feature = new Matrix(featuresCopy);
+                target = new Matrix(targetsCopy);
+            }
 
             for(int j=0; j<feature.numRows(); j+=batchSize) { // Iterate over all samples
-                for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) { // Iterate over the batch.
-                    input = feature.getRowAsVector(j+k).T();
-                    output = feedForward(input); // Apply the forward pass on the network.
-                    back(target.getRowAsVector(j+k).T(), output, input); // Apply the backward pass of the network.
-                }
+                limit = Math.min(j+batchSize, feature.numRows());
+                input = feature.getSlice(j, limit, 0, feature.numCols()).T();
+                output = feedForward(input);
+                back(target.getSlice(j, limit, 0, target.numCols()).T(), output, input);
 
                 applyUpdates(); // Apply updates computed during the backward pass to the weights.
             }
