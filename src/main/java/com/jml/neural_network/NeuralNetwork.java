@@ -56,7 +56,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     final List<Double> lossHist = new ArrayList<>();
 
     // TODO: Should these be moved to the layer? Probably yes!
-    //  Maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
+    //  Or, maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
 
@@ -65,7 +65,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     // TODO: Add 'recompile(...)' method that takes hyper-parameters so that loaded models can be retrained with specified
     //  optimizer, learning rate.
 
-    // TODO: Should epochs and batch size should be specified in the 'fit(...)' method?
+    // TODO: epochs, batch size, and loss function should be specified in the 'fit(...)' method?
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
