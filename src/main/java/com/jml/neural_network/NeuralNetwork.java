@@ -303,6 +303,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
         boolean shuffle = batchSize<features.length;
 
+        int limit = 0;
+
         Matrix feature = null;
         Matrix target = new Matrix(targetsCopy);
         Matrix input;
@@ -313,8 +315,9 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             feature = new Matrix(featuresCopy);
         }
 
-        predictions = new Matrix(this.predict(features));
-        lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
+        // TODO: Uncomment following two lines
+//        predictions = new Matrix(this.predict(features));
+//        lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
 
@@ -326,21 +329,22 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             }
 
             for(int j=0; j<feature.numRows(); j+=batchSize) { // Iterate over all samples
-                for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) { // Iterate over the batch.
-                    input = feature.getRowAsVector(j+k).T();
-                    output = feedForward(input); // Apply the forward pass on the network.
-                    back(target.getRowAsVector(j+k).T(), output, input); // Apply the backward pass of the network.
-                }
+                limit = Math.min(j+batchSize, feature.numRows());
+                input = feature.getSlice(j, limit, 0, feature.numCols()).T();
+                output = feedForward(input);
+                back(target.getSlice(j, limit, 0, target.numCols()).T(), output, input);
 
                 applyUpdates(); // Apply updates computed during the backward pass to the weights.
             }
 
-            predictions = new Matrix(this.predict(features));
-            lossHist.add(LossFunctions.mse.compute(predictions, new Matrix(targets)).get(0, 0).re);
 
-            if(lossHist.get(lossHist.size()-1) < threshold) {
-                break; // Then stop training since the loss has dropped below the stopping threshold.
-            }
+            // TODO: Uncomment following five lines
+//            predictions = new Matrix(this.predict(features));
+//            lossHist.add(LossFunctions.mse.compute(predictions, new Matrix(targets)).get(0, 0).re);
+
+//            if(lossHist.get(lossHist.size()-1) < threshold) {
+//                break; // Then stop training since the loss has dropped below the stopping threshold.
+//            }
 
             if(optim.schedule!=null) { // Apply learning rate scheduler if applicable
                 optim.schedule.step(optim);

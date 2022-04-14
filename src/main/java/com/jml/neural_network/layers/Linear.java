@@ -145,7 +145,12 @@ public class Linear implements TrainableLayer {
     @Override
     public Matrix forward(Matrix input) {
         forwardIn = input;
-        forwardOut = weights.mult(input).add(bias);
+        forwardOut = weights.mult(input).sumToEachCol(bias);
+
+        // TODO: delete print statements
+//        System.out.println("product:\n" + weights.mult(input) + "\n");
+//        System.out.println("bias:\n" + bias + "\n");
+//        System.out.println("forwardOut:\n" + forwardOut + "\n\n");
 
         return forwardOut;
     }
@@ -160,8 +165,8 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public Matrix back(Matrix upstreamGrad) {
-        this.wGrad = wGrad.add(upstreamGrad.mult(this.forwardIn.T()));
-        this.bGrad = bGrad.add(upstreamGrad);
+        this.wGrad = upstreamGrad.mult(this.forwardIn.T());
+        this.bGrad = upstreamGrad.sumCols();
 
         this.backwardOut = weights.T().mult(upstreamGrad); // Gradient of model with respect to inputs of this layer.
 

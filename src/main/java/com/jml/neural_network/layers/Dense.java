@@ -134,10 +134,13 @@ public class Dense extends Linear {
             // TODO:
         } else {
             Matrix commonGrad = upstreamGrad.elemMult(activation.back(this.forwardOut));
-            this.wGrad = this.wGrad.add(commonGrad.mult(this.forwardIn.T()));
-            this.bGrad = this.bGrad.add(upstreamGrad);
+            this.wGrad = commonGrad.mult(this.forwardIn.T());
+            this.bGrad = upstreamGrad.sumCols();
             this.backwardOut = weights.T().mult(commonGrad);
         }
+
+        System.out.println("wGrad:\n" + wGrad);
+        System.out.println("bGrad:\n" + bGrad + "\n\n");
 
         return backwardOut;
     }
