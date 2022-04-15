@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BinaryCrossEntropy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.losses</a> &gt; <span class="el_source">BinaryCrossEntropy.java</span></div><h1>BinaryCrossEntropy.java</h1><pre class="source lang-java linenums">package com.jml.losses;
+
+import linalg.Matrix;
+
+
+/**
+ * Class for computing binary cross-entropy and its derivative.
+ */
+<span class="fc" id="L9">public class BinaryCrossEntropy implements LossFunction {</span>
+    // Small value to ensure no division by zero occurs as a result of floating point precision.
+    private static final double EPS = 1e-15;
+    public static final String NAME = &quot;Binary Cross-entropy&quot;;
+
+
+    @Override
+    public Matrix forward(Matrix y, Matrix yPred) {
+<span class="nc" id="L17">        double loss = 0;</span>
+
+<span class="nc bnc" id="L19" title="All 2 branches missed.">        if(yPred.numCols() &gt; 2) {</span>
+<span class="nc" id="L20">            throw new IllegalArgumentException(&quot;Predictions seem to have more than two classes. Consider &quot; +</span>
+                    &quot;CrossEntropy class for multiple classes.&quot;);
+        }
+
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
+            // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
+<span class="nc bnc" id="L26" title="All 2 branches missed.">            if(yPred.getAsDouble(i, 0)==0) {</span>
+<span class="nc" id="L27">                yPred.set(EPS, i,  0);</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            } else if(yPred.getAsDouble(i, 0)==1) {</span>
+<span class="nc" id="L29">                yPred.set(1-EPS, i,  0);</span>
+            }
+
+<span class="nc" id="L32">            loss += y.getAsDouble(i, 0)*Math.log(yPred.getAsDouble(i, 0))</span>
+<span class="nc" id="L33">                    + (1-y.getAsDouble(i, 0))*Math.log(1-yPred.getAsDouble(i, 0));</span>
+        }
+
+<span class="nc" id="L36">        return new Matrix(1, 1, loss/y.numRows());</span>
+    }
+
+
+    @Override
+    public Matrix back(Matrix y, Matrix yPred) {
+<span class="fc" id="L42">        return yPred.sub(y).elemDiv(yPred.sub(yPred.elemMult(yPred))).scalDiv(y.numRows());</span>
+    }
+
+
+    @Override
+    public String getName() {
+<span class="nc" id="L48">        return this.NAME;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

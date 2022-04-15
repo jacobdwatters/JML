@@ -3,7 +3,10 @@ package com.jml.neural_network;
 import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
+import com.jml.losses.BinaryCrossEntropy;
+import com.jml.losses.LossFunction;
 import com.jml.losses.LossFunctions;
+import com.jml.losses.MeanSquaredError;
 import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.BaseLayer;
 import com.jml.neural_network.layers.Dropout;
@@ -54,6 +57,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected boolean isFit = false;
     final List<Double> lossHist = new ArrayList<>();
+    protected LossFunction loss;
 
     // TODO: Should these be moved to the layer? Probably yes!
     //  Or, maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
@@ -296,6 +300,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             initAdam(); // Then initialize Adam matrices.
         }
 
+        // TODO: Allow loss to be passed as parameter.
+        loss = new MeanSquaredError();
         isFit = false; // Reset the isFit flag so training behaves correctly.
 
         double[][] featuresCopy = features.clone();
@@ -316,12 +322,11 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         }
 
         predictions = new Matrix(this.predict(features));
-        lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
+        lossHist.add(loss.forward(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
 
             if(shuffle) { // Then shuffle the samples for this epoch.
-                // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
                 ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
                 feature = new Matrix(featuresCopy);
                 target = new Matrix(targetsCopy);
@@ -337,7 +342,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             }
 
             predictions = new Matrix(this.predict(features));
-            lossHist.add(LossFunctions.mse.compute(predictions, new Matrix(targets)).get(0, 0).re);
+            lossHist.add(loss.forward(predictions, new Matrix(targets)).get(0, 0).re);
 
             if(lossHist.get(lossHist.size()-1) < threshold) {
                 break; // Then stop training since the loss has dropped below the stopping threshold.
@@ -390,7 +395,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         /* TODO: Initial upstreamGrad is currently the derivative of MSE but should be the derivative of any loss function.
                 Should allow the use of a specified loss function and replace this initial upstreamGrad with the derivative
                  of the loss function.*/
-        Matrix upstreamGrad = output.sub(target); // initial upstream gradient.
+//        Matrix upstreamGrad = output.sub(target); // initial upstream gradient.
+        Matrix upstreamGrad = loss.back(target, output); // initial upstream gradient.
 
         for(int i=layers.size()-1; i>=1; i--) {
 

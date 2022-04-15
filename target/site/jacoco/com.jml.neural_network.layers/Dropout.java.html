@@ -137,9 +137,8 @@ public class Dropout implements BaseLayer {
             }
         }
 
-<span class="fc" id="L140">        System.out.println(mask.shape());</span>
-<span class="fc" id="L141">        this.mask = this.mask.extend(size);</span>
-<span class="fc" id="L142">    }</span>
+<span class="fc" id="L140">        this.mask = this.mask.extend(size);</span>
+<span class="fc" id="L141">    }</span>
 
 
     /**
@@ -149,7 +148,7 @@ public class Dropout implements BaseLayer {
      */
     @Override
     public String inspect() {
-<span class="fc" id="L152">        return &quot;Type: &quot; + this.LAYER_TYPE + &quot;,\tInput size: &quot; + this.inDim + &quot;,\tOutput size: &quot; + this.inDim + &quot;, \tTrainable Parameters: &quot; + 0;</span>
+<span class="fc" id="L151">        return &quot;Type: &quot; + this.LAYER_TYPE + &quot;,\tInput size: &quot; + this.inDim + &quot;,\tOutput size: &quot; + this.inDim + &quot;, \tTrainable Parameters: &quot; + 0;</span>
     }
 
 
@@ -160,17 +159,17 @@ public class Dropout implements BaseLayer {
      */
     @Override
     public String getDetails() {
-<span class="nc" id="L163">        StringBuilder details = new StringBuilder();</span>
+<span class="nc" id="L162">        StringBuilder details = new StringBuilder();</span>
 
         // Create all the blocks for this layer.
-<span class="nc" id="L166">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
-<span class="nc" id="L167">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.inDim);</span>
-<span class="nc" id="L168">        Block pBlock = new Block(ModelTags.PROBABILITY.toString(), Double.toString(this.p));</span>
+<span class="nc" id="L165">        Block layerBlock = new Block(ModelTags.TYPE.toString(), this.LAYER_TYPE);</span>
+<span class="nc" id="L166">        Block dimBlock = new Block(ModelTags.DIMENSIONS.toString(), this.inDim + &quot;, &quot; + this.inDim);</span>
+<span class="nc" id="L167">        Block pBlock = new Block(ModelTags.PROBABILITY.toString(), Double.toString(this.p));</span>
 
         // Combine all blocks into a single string.
-<span class="nc" id="L171">        details.append(Block.buildFileContent(layerBlock, dimBlock, pBlock));</span>
+<span class="nc" id="L170">        details.append(Block.buildFileContent(layerBlock, dimBlock, pBlock));</span>
 
-<span class="nc" id="L173">        return details.toString();</span>
+<span class="nc" id="L172">        return details.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
