@@ -102,16 +102,16 @@ import java.util.*;
                 // Extract the activation function.
 <span class="fc bfc" id="L103" title="All 2 branches covered.">                if(content.equalsIgnoreCase(&quot;linear&quot;)) {</span>
                     // Then we have a linear activation
-<span class="fc" id="L105">                    activation = Activations.linear;</span>
+<span class="fc" id="L105">                    activation = Activations.linear();</span>
 <span class="fc bfc" id="L106" title="All 2 branches covered.">                } else if(content.equalsIgnoreCase(&quot;sigmoid&quot;)) {</span>
                     // Then we have a sigmoid activation
-<span class="fc" id="L108">                    activation = Activations.sigmoid;</span>
+<span class="fc" id="L108">                    activation = Activations.sigmoid();</span>
 <span class="fc bfc" id="L109" title="All 2 branches covered.">                } else if(content.equalsIgnoreCase(&quot;relu&quot;)) {</span>
                     // Then we have a ReLU activation.
-<span class="fc" id="L111">                    activation = Activations.relu;</span>
+<span class="fc" id="L111">                    activation = Activations.relu();</span>
 <span class="pc bpc" id="L112" title="1 of 2 branches missed.">                } else if(content.equalsIgnoreCase(&quot;tanh&quot;)) {</span>
                     // Then we have a ReLU activation.
-<span class="fc" id="L114">                    activation = Activations.tanh;</span>
+<span class="fc" id="L114">                    activation = Activations.tanh();</span>
                 } else {
 <span class="nc" id="L116">                    throw new IllegalStateException(&quot;Unknown activation function: &quot; + content);</span>
                 }
