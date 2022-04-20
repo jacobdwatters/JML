@@ -10,6 +10,7 @@ import linalg.Matrix;
 
 <span class="fc" id="L11">    public final String NAME = &quot;Sigmoid&quot;;</span>
 <span class="fc" id="L12">    private final double LARGE_VALUE = 200;</span>
+    private Matrix forwardOut; // Stores result of most recent forward pass
 
     /**
      * Applies the sigmoid activation element-wise to a matrix.
@@ -19,24 +20,26 @@ import linalg.Matrix;
      */
     @Override
     public Matrix forward(Matrix data) {
-<span class="fc" id="L22">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+<span class="fc" id="L23">        double[][] result = new double[data.numRows()][data.numCols()];</span>
         double x;
 
-<span class="fc bfc" id="L25" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="fc bfc" id="L26" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="fc" id="L27">                x = data.getAsDouble(i, j);</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="fc" id="L28">                x = data.getAsDouble(i, j);</span>
 
-<span class="fc bfc" id="L29" title="All 2 branches covered.">                if(x&lt;-LARGE_VALUE) {</span>
-<span class="fc" id="L30">                    x = -LARGE_VALUE;</span>
-<span class="fc bfc" id="L31" title="All 2 branches covered.">                } else if(x&gt;LARGE_VALUE) {</span>
-<span class="fc" id="L32">                    x = LARGE_VALUE;</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">                if(x&lt;-LARGE_VALUE) {</span>
+<span class="nc" id="L31">                    x = -LARGE_VALUE;</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">                } else if(x&gt;LARGE_VALUE) {</span>
+<span class="nc" id="L33">                    x = LARGE_VALUE;</span>
                 }
 
-<span class="fc" id="L35">                result[i][j] = 1/(1+Math.exp(-x));</span>
+<span class="fc" id="L36">                result[i][j] = 1/(1+Math.exp(-x));</span>
             }
         }
 
-<span class="fc" id="L39">        return new Matrix(result);</span>
+<span class="fc" id="L40">        forwardOut = new Matrix(result);</span>
+
+<span class="fc" id="L42">        return forwardOut;</span>
     }
 
 
@@ -48,17 +51,8 @@ import linalg.Matrix;
      */
     @Override
     public Matrix back(Matrix data) {
-<span class="fc" id="L51">        double[][] result = new double[data.numRows()][data.numCols()];</span>
-        double exp;
-
-<span class="fc bfc" id="L54" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="fc bfc" id="L55" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="fc" id="L56">                exp = Math.exp(-data.getAsDouble(i, j));</span>
-<span class="fc" id="L57">                result[i][j] = exp/Math.pow(1+exp, 2);</span>
-            }
-        }
-
-<span class="fc" id="L61">        return new Matrix(result);</span>
+<span class="fc" id="L54">        Matrix ones = Matrix.ones(forwardOut.shape());</span>
+<span class="fc" id="L55">        return forwardOut.elemMult(ones.sub(forwardOut));</span>
     }
 
 
@@ -67,6 +61,6 @@ import linalg.Matrix;
      * @return The name of the activation function as a String.
      */
     @Override
-<span class="fc" id="L70">    public String getName(){return NAME;}</span>
+<span class="fc" id="L64">    public String getName(){return NAME;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
