@@ -102,16 +102,16 @@ class NeuralNetFromData extends NeuralNetwork {
                 // Extract the activation function.
                 if(content.equalsIgnoreCase("linear")) {
                     // Then we have a linear activation
-                    activation = Activations.linear;
+                    activation = Activations.linear();
                 } else if(content.equalsIgnoreCase("sigmoid")) {
                     // Then we have a sigmoid activation
-                    activation = Activations.sigmoid;
+                    activation = Activations.sigmoid();
                 } else if(content.equalsIgnoreCase("relu")) {
                     // Then we have a ReLU activation.
-                    activation = Activations.relu;
+                    activation = Activations.relu();
                 } else if(content.equalsIgnoreCase("tanh")) {
                     // Then we have a ReLU activation.
-                    activation = Activations.tanh;
+                    activation = Activations.tanh();
                 } else {
                     throw new IllegalStateException("Unknown activation function: " + content);
                 }

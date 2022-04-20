@@ -40,7 +40,7 @@ java-machine-learning,com.jml.neural_network.activations,Softmax,148,0,10,0,26,0
 java-machine-learning,com.jml.neural_network.activations,Relu,0,101,0,12,0,17,0,10,0,4
 java-machine-learning,com.jml.neural_network.activations,Sigmoid,0,114,0,12,0,20,0,10,0,4
 java-machine-learning,com.jml.neural_network.activations,Linear,0,15,0,0,0,5,0,4,0,4
-java-machine-learning,com.jml.neural_network.activations,Activations,23,17,0,0,6,4,6,1,6,1
+java-machine-learning,com.jml.neural_network.activations,Activations,7,16,0,0,2,4,2,4,2,4
 java-machine-learning,com.jml.preprocessing,OneHotEncoder,10,310,3,29,2,62,3,21,0,8
 java-machine-learning,com.jml.preprocessing,Normalize,33,212,0,16,6,38,2,15,2,7
 java-machine-learning,com.jml.preprocessing,DataSplitter,13,183,2,10,3,31,3,6,1,2

@@ -24,8 +24,8 @@ class NeuralNetworkTest {
     void constructorTest() {
         nn = new NeuralNetwork();
 
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, 5, Activations.relu));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, 5, Activations.relu()));
 
         assertEquals(0.01, nn.learningRate);
         assertEquals(10, nn.epochs);
@@ -38,8 +38,8 @@ class NeuralNetworkTest {
     @Test
     void constructor2Test() {
         nn = new NeuralNetwork(0.5, 100);
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, 5, Activations.relu));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, 5, Activations.relu()));
 
         assertEquals(0.5, nn.learningRate);
         assertEquals(100, nn.epochs);
@@ -52,8 +52,8 @@ class NeuralNetworkTest {
     @Test
     void constructor3Test() {
         nn = new NeuralNetwork(0.5, 100, 12);
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, 5, Activations.relu));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, 5, Activations.relu()));
 
         assertEquals(0.5, nn.learningRate);
         assertEquals(100, nn.epochs);
@@ -67,8 +67,8 @@ class NeuralNetworkTest {
     void constructor4Test() {
         Optimizer optim = new GradientDescent(0.01);
         nn = new NeuralNetwork(optim, 100);
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, 5, Activations.relu));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, 5, Activations.relu()));
 
         assertEquals(0.01, nn.learningRate);
         assertEquals(100, nn.epochs);
@@ -82,9 +82,9 @@ class NeuralNetworkTest {
     void fitTest() {
         String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN.mdl";
         nn = new NeuralNetwork(0.1, 1000, 2, 0.5e-5);
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, Activations.relu));
-        nn.add(new Dense(1, Activations.sigmoid));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, Activations.relu()));
+        nn.add(new Dense(1, Activations.sigmoid()));
 
         nn.fit(X, Y);
         double[][] pred = nn.predict(X);
@@ -110,11 +110,11 @@ class NeuralNetworkTest {
         String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN1.mdl";
         nn = new NeuralNetwork(0.001, 5, 2, 0.5e-5);
         nn.add(new Dropout(2, 0.1));
-        nn.add(new Dense(2, 10, Activations.tanh));
-        nn.add(new Dense(10, Activations.linear));
+        nn.add(new Dense(2, 10, Activations.tanh()));
+        nn.add(new Dense(10, Activations.linear()));
         nn.add(new Dropout(0.2));
-        nn.add(new Dense(10, Activations.relu));
-        nn.add(new Dense(1, Activations.sigmoid));
+        nn.add(new Dense(10, Activations.relu()));
+        nn.add(new Dense(1, Activations.sigmoid()));
 
         nn.fit(X, Y);
         double[][] pred = nn.predict(X);
@@ -139,13 +139,13 @@ class NeuralNetworkTest {
         String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN1.mdl";
         nn = new NeuralNetwork(0.001, 5, 2, 0.5e-5);
         nn.add(new Dropout(2, 0.1));
-        nn.add(new Dense(2, 10, Activations.tanh));
+        nn.add(new Dense(2, 10, Activations.tanh()));
         nn.add(new Linear(10));
         nn.add(new Linear(10, 5));
         nn.add(new Linear(5, 10));
         nn.add(new Dropout(0.2));
-        nn.add(new Dense(10, Activations.relu));
-        nn.add(new Dense(1, Activations.sigmoid));
+        nn.add(new Dense(10, Activations.relu()));
+        nn.add(new Dense(1, Activations.sigmoid()));
 
         nn.fit(X, Y);
         double[][] pred = nn.predict(X);
@@ -170,9 +170,9 @@ class NeuralNetworkTest {
         String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN2.mdl";
         Optimizer optim = new Momentum(0.01);
         nn = new NeuralNetwork(optim, 1000, 2, 0.5e-5);
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, Activations.relu));
-        nn.add(new Dense(1, Activations.sigmoid));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, Activations.relu()));
+        nn.add(new Dense(1, Activations.sigmoid()));
 
         nn.fit(X, Y);
         double[][] pred = nn.predict(X);
@@ -198,9 +198,9 @@ class NeuralNetworkTest {
         String filePath = "./src/test/java/com/jml/neural_network/test_files/testNN2.mdl";
         Optimizer optim = new Adam(0.01, 0.9, 0.999);
         nn = new NeuralNetwork(optim, 1000, 2, 0.5e-5);
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, Activations.relu));
-        nn.add(new Dense(1, Activations.sigmoid));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, Activations.relu()));
+        nn.add(new Dense(1, Activations.sigmoid()));
 
         nn.fit(X, Y);
         double[][] pred = nn.predict(X);
@@ -229,9 +229,9 @@ class NeuralNetworkTest {
         optim.setScheduler(new StepLearningRate(0.9, 100));
 
         nn = new NeuralNetwork(optim, 1000, 10);
-        nn.add(new Dense(2, 10, Activations.sigmoid));
-        nn.add(new Dense(10, Activations.relu));
-        nn.add(new Dense(1, Activations.sigmoid));
+        nn.add(new Dense(2, 10, Activations.sigmoid()));
+        nn.add(new Dense(10, Activations.relu()));
+        nn.add(new Dense(1, Activations.sigmoid()));
 
         nn.fit(X, Y);
         double[][] pred = nn.predict(X);

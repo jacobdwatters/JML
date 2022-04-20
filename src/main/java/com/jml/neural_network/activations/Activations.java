@@ -6,11 +6,6 @@ package com.jml.neural_network.activations;
  */
 public abstract class Activations {
 
-    /**
-     * The sigmoid activation function. f(x)=1/(1+exp(-x))
-     */
-    public static final ActivationFunction sigmoid = new Sigmoid();
-
 
     /**
      * Creates and returns a new instance of the sigmoid activation function.
@@ -19,12 +14,6 @@ public abstract class Activations {
     public static ActivationFunction sigmoid() {
         return new Sigmoid();
     }
-
-
-    /**
-     * A pre-defined instance of the Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
-     */
-    public static final ActivationFunction relu = new Relu();
 
 
     /**
@@ -37,25 +26,12 @@ public abstract class Activations {
 
 
     /**
-     * A pre-defined instance of the linear activation function. f(x)=x.
-     */
-    public static final ActivationFunction linear = new Linear();
-
-
-    /**
      * Creates and returns a new instacne of the linear activation function.
      * @return An instance of the linear activation function. f(x)=x.
      */
     public static ActivationFunction linear() {
         return new Linear();
     }
-
-
-    /**
-     * A pre-defined instance of the hyperbolic tangent activation function.
-     * <code>f(x) = tanh(x) = (e<sup>x</sup> - e<sup>-x</sup>) / (e<sup>x</sup> + e<sup>-x</sup>)</code>
-     */
-    public static final ActivationFunction tanh = new Tanh();
 
 
     /**

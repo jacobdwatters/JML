@@ -32,7 +32,7 @@ class PerceptronTest {
         assertEquals(10, perceptron.epochs);
         assertEquals(1, perceptron.batchSize);
         assertEquals(1e-5, perceptron.threshold);
-        assertEquals(Activations.sigmoid, perceptron.activation);
+        assertEquals("Sigmoid", perceptron.activation.getName());
     }
 
 
@@ -44,19 +44,19 @@ class PerceptronTest {
         assertEquals(105, perceptron.epochs);
         assertEquals(2, perceptron.batchSize);
         assertEquals(1e-3, perceptron.threshold);
-        assertEquals(Activations.sigmoid, perceptron.activation);
+        assertEquals("Sigmoid", perceptron.activation.getName());
     }
 
 
     @Test
     void constructorTwoTest() {
-        perceptron = new Perceptron(0.05, 105, 2, 1e-3, Activations.relu);
+        perceptron = new Perceptron(0.05, 105, 2, 1e-3, Activations.relu());
 
         assertEquals(0.05, perceptron.learningRate);
         assertEquals(105, perceptron.epochs);
         assertEquals(2, perceptron.batchSize);
         assertEquals(1e-3, perceptron.threshold);
-        assertEquals(Activations.relu, perceptron.activation);
+        assertEquals("ReLU", perceptron.activation.getName());
     }
 
 
@@ -69,7 +69,7 @@ class PerceptronTest {
         assertEquals(5000, perceptron.epochs);
         assertEquals(6, perceptron.batchSize);
         assertEquals(1e-5, perceptron.threshold);
-        assertEquals(Activations.sigmoid, perceptron.activation);
+        assertEquals("Sigmoid", perceptron.activation.getName());
 
         perceptron.fit(X1, y1);
         perceptron.saveModel(filePath);
