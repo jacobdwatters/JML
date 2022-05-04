@@ -1,8 +1,10 @@
 package com.jml.neural_network.activations;
 
+import com.jml.neural_network.layers.Layer;
+
 /**
  * A class which contains methods for getting new instances of pre-defined {@link com.jml.neural_network.activations.ActivationFunction activation functions} for use in neural network
- * {@link com.jml.neural_network.layers.BaseLayer layers}.
+ * {@link Layer layers}.
  */
 public abstract class Activations {
 

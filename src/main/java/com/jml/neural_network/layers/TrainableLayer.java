@@ -6,7 +6,7 @@ import linalg.Matrix;
 /**
  * This interface specifies functionality for a layer that has trainable parameters.
  */
-public interface TrainableLayer extends BaseLayer {
+public interface TrainableLayer extends Layer {
     /**
      * Gets the trainable parameters for this layer as an array of matrices.
      * @return The trainable parameters for this layer as an array of matrices.

@@ -3,8 +3,6 @@ package com.jml.neural_network.layers;
 import com.jml.core.Block;
 import com.jml.core.Stats;
 import com.jml.neural_network.ModelTags;
-import com.jml.neural_network.activations.ActivationFunction;
-import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -16,7 +14,7 @@ import linalg.Vector;
  * Dropout is an effective form of regularization. In addition, the outputs of this layer are scaled by 1/(1-p) where p is the
  * probability of dropping an element of the layer.
  */
-public class Dropout implements BaseLayer {
+public class Dropout implements Layer {
 
     public final String LAYER_TYPE = "Dropout";
     protected Matrix mask; // Dropout mask

@@ -4,7 +4,7 @@ import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.NeuralNetwork;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Activations;
-import com.jml.neural_network.layers.BaseLayer;
+import com.jml.neural_network.layers.Layer;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Linear;
 import linalg.Matrix;
@@ -79,8 +79,8 @@ class NeuralNetFromData extends NeuralNetwork {
     }
 
 
-    private static BaseLayer createLayer(List<String> layerTags, List<String> layerContents) {
-        BaseLayer layer = null;
+    private static Layer createLayer(List<String> layerTags, List<String> layerContents) {
+        Layer layer = null;
         String type, tag, content;
         ActivationFunction activation = null;
         Matrix weights = null, bias = null;
