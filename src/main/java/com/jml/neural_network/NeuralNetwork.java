@@ -642,6 +642,30 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     }
 
 
+    /**
+     * Gets specified layer from this model.
+     *
+     * @param layerIndex Index of the layer to get within this model.
+     * @return The specified layer of this model.
+     */
+    public BaseLayer getLayer(int layerIndex) {
+        return this.layers.get(layerIndex);
+    }
+
+
+    /**
+     * Gets all layers from this model.
+     * @return An ArrayList containing, in order, all layers of this model.
+     */
+    public List<BaseLayer> getAllLayers() {
+        return this.layers;
+    }
+
+
+    /**
+     * Gets the loss history of this model.
+     * @return
+     */
     public List<Double> getLossHist() {
         return lossHist;
     }
