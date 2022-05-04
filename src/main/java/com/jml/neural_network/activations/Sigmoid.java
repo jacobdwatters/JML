@@ -10,6 +10,7 @@ public class Sigmoid implements ActivationFunction {
 
     public final String NAME = "Sigmoid";
     private final double LARGE_VALUE = 200;
+    private Matrix forwardOut; // Stores result of most recent forward pass
 
     /**
      * Applies the sigmoid activation element-wise to a matrix.
@@ -36,7 +37,9 @@ public class Sigmoid implements ActivationFunction {
             }
         }
 
-        return new Matrix(result);
+        forwardOut = new Matrix(result);
+
+        return forwardOut;
     }
 
 
@@ -48,17 +51,8 @@ public class Sigmoid implements ActivationFunction {
      */
     @Override
     public Matrix back(Matrix data) {
-        double[][] result = new double[data.numRows()][data.numCols()];
-        double exp;
-
-        for(int i=0; i<data.numRows(); i++) {
-            for(int j=0; j<data.numCols(); j++) {
-                exp = Math.exp(-data.getAsDouble(i, j));
-                result[i][j] = exp/Math.pow(1+exp, 2);
-            }
-        }
-
-        return new Matrix(result);
+        Matrix ones = Matrix.ones(forwardOut.shape());
+        return forwardOut.elemMult(ones.sub(forwardOut));
     }
 
 

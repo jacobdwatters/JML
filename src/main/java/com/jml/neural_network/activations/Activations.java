@@ -1,15 +1,12 @@
 package com.jml.neural_network.activations;
 
+import com.jml.neural_network.layers.Layer;
+
 /**
- * A class which contains methods for geting various pre-made {@link com.jml.neural_network.activations.ActivationFunction activation functions} for use in neural network
- * {@link com.jml.neural_network.layers.BaseLayer layers}.
+ * A class which contains methods for getting new instances of pre-defined {@link com.jml.neural_network.activations.ActivationFunction activation functions} for use in neural network
+ * {@link Layer layers}.
  */
 public abstract class Activations {
-
-    /**
-     * The sigmoid activation function. f(x)=1/(1+exp(-x))
-     */
-    public static final ActivationFunction sigmoid = new Sigmoid();
 
 
     /**
@@ -22,12 +19,6 @@ public abstract class Activations {
 
 
     /**
-     * A pre-defined instance of the Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
-     */
-    public static final ActivationFunction relu = new Relu();
-
-
-    /**
      * Creates and returns a new relu activatoin function.
      * @return An instance of the Relu (Rectified Linear Unit) activation function. f(x)=max(0, x)
      */
@@ -37,25 +28,12 @@ public abstract class Activations {
 
 
     /**
-     * A pre-defined instance of the linear activation function. f(x)=x.
-     */
-    public static final ActivationFunction linear = new Linear();
-
-
-    /**
      * Creates and returns a new instacne of the linear activation function.
      * @return An instance of the linear activation function. f(x)=x.
      */
     public static ActivationFunction linear() {
         return new Linear();
     }
-
-
-    /**
-     * A pre-defined instance of the hyperbolic tangent activation function.
-     * <code>f(x) = tanh(x) = (e<sup>x</sup> - e<sup>-x</sup>) / (e<sup>x</sup> + e<sup>-x</sup>)</code>
-     */
-    public static final ActivationFunction tanh = new Tanh();
 
 
     /**

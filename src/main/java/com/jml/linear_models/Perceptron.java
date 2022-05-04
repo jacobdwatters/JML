@@ -55,7 +55,7 @@ public class Perceptron extends Model<double[][], double[][]> {
         this.epochs = 10;
         this.batchSize = 1;
         this.threshold = 1e-5;
-        this.activation = Activations.sigmoid;
+        this.activation = Activations.sigmoid();
 
         this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);
 
@@ -80,7 +80,7 @@ public class Perceptron extends Model<double[][], double[][]> {
         this.epochs = epochs;
         this.batchSize = batchSize;
         this.threshold = threshold;
-        this.activation = Activations.sigmoid;
+        this.activation = Activations.sigmoid();
 
         this.perceptron = new NeuralNetwork(this.learningRate, this.epochs, this.batchSize, this.threshold);
         validateParams();

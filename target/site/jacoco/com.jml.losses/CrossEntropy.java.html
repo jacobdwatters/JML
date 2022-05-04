@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CrossEntropy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.losses</a> &gt; <span class="el_source">CrossEntropy.java</span></div><h1>CrossEntropy.java</h1><pre class="source lang-java linenums">package com.jml.losses;
+
+import linalg.Matrix;
+
+
+/**
+ * Class for computing cross-entropy loss and its derivative.
+ */
+<span class="nc" id="L9">public class CrossEntropy implements LossFunction {</span>
+    // Small value to ensure no division by zero occurs as a result of floating point precision.
+    private static final double EPS = 1e-15;
+    public static final String NAME = &quot;Cross-entropy&quot;;
+
+
+    @Override
+    public Matrix forward(Matrix y, Matrix yPred) {
+<span class="nc" id="L17">        double eps = 1e-15;</span>
+<span class="nc" id="L18">        double loss = 0;</span>
+
+        // y contains the actual labels as a one-hot vector.
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">            for(int j=0; j&lt;yPred.numCols(); j++) {</span>
+                // cross-entropy is undefined for p=0 and p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
+<span class="nc bnc" id="L24" title="All 2 branches missed.">                if(yPred.getAsDouble(i, j)==0) {</span>
+<span class="nc" id="L25">                    yPred.set(eps, i,  j);</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">                } else if(yPred.getAsDouble(i, j)==1) {</span>
+<span class="nc" id="L27">                    yPred.set(1-eps, i,  j);</span>
+                }
+
+<span class="nc bnc" id="L30" title="All 2 branches missed.">                if(y.getAsDouble(i, j) == 1) {</span>
+<span class="nc" id="L31">                    loss += Math.log(yPred.getAsDouble(i, j));</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">                } else if(y.getAsDouble(i, j) != 0) {</span>
+<span class="nc" id="L33">                    throw new IllegalArgumentException(&quot;y does not seem to be a one-hot vector. Must contain binary entries only.&quot;);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L38">        return new Matrix(1, 1, loss/y.numRows());</span>
+    }
+
+
+    @Override
+    public Matrix back(Matrix y, Matrix yPred) {
+<span class="nc" id="L44">        return yPred.sub(y).elemDiv(yPred.sub(yPred.elemMult(yPred))).scalDiv(y.numRows());</span>
+    }
+
+
+    @Override
+    public String getName() {
+<span class="nc" id="L50">        return this.NAME;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

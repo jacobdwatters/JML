@@ -9,7 +9,7 @@ import linalg.Matrix;
  */
 public class Tanh implements ActivationFunction {
     public static final String NAME = "tanh";
-
+    private Matrix forwardOut; // Stores result of most recent forward pass
 
     /**
      * Applies the activation function, element-wise, to a matrix.
@@ -30,7 +30,8 @@ public class Tanh implements ActivationFunction {
             }
         }
 
-        return new Matrix(result);
+        forwardOut = new Matrix(result);
+        return forwardOut;
     }
 
 
@@ -42,18 +43,8 @@ public class Tanh implements ActivationFunction {
      */
     @Override
     public Matrix back(Matrix data) {
-        double[][] result = new double[data.numRows()][data.numCols()];
-        double exp;
-
-        for(int i=0; i<data.numRows(); i++) {
-            for(int j=0; j<data.numCols(); j++) {
-                exp = Math.exp(data.getAsDouble(i, j)*2);
-
-                result[i][j] =  4*exp / Math.pow(exp+1, 2);
-            }
-        }
-
-        return new Matrix(result);
+        Matrix ones = Matrix.ones(forwardOut.shape());
+        return ones.sub(forwardOut.elemMult(forwardOut));
     }
 
 

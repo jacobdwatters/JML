@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MeanSquaredError.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-machine-learning</a> &gt; <a href="index.source.html" class="el_package">com.jml.losses</a> &gt; <span class="el_source">MeanSquaredError.java</span></div><h1>MeanSquaredError.java</h1><pre class="source lang-java linenums">package com.jml.losses;
+
+import linalg.Matrix;
+
+
+/**
+ * Class for computing the mean squared error loss and its derivative.&lt;br&gt;&lt;br&gt;
+ *
+ * &lt;code&gt;mse = (1/n)*sum(x&lt;sub&gt;i&lt;/sub&gt; - y&lt;sub&gt;i&lt;/sub&gt;)&lt;sup&gt;2&lt;/sup&gt;&lt;/code&gt;
+ * where &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; are datasets of length &lt;code&gt;n&lt;/code&gt;,
+ * and &lt;code&gt;x&lt;/code&gt; is the actual data and &lt;code&gt;y&lt;/code&gt; is the predicted data.
+ */
+<span class="fc" id="L13">public class MeanSquaredError implements LossFunction {</span>
+    public static final String NAME = &quot;Mean Squared Error&quot;;
+
+
+    @Override
+    public Matrix forward(Matrix y, Matrix yPred) {
+<span class="fc" id="L19">        return yPred.sub(y).T().mult(yPred.sub(y)).scalDiv(y.numRows());</span>
+    }
+
+
+    @Override
+    public Matrix back(Matrix y, Matrix yPred) {
+<span class="fc" id="L25">        return yPred.sub(y);</span>
+    }
+
+
+    @Override
+    public String getName() {
+<span class="nc" id="L31">        return this.NAME;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

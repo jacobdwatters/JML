@@ -3,8 +3,6 @@ package com.jml.neural_network.layers;
 import com.jml.core.Block;
 import com.jml.core.Stats;
 import com.jml.neural_network.ModelTags;
-import com.jml.neural_network.activations.ActivationFunction;
-import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 import linalg.Vector;
 
@@ -16,7 +14,7 @@ import linalg.Vector;
  * Dropout is an effective form of regularization. In addition, the outputs of this layer are scaled by 1/(1-p) where p is the
  * probability of dropping an element of the layer.
  */
-public class Dropout implements BaseLayer {
+public class Dropout implements Layer {
 
     public final String LAYER_TYPE = "Dropout";
     protected Matrix mask; // Dropout mask
@@ -65,7 +63,7 @@ public class Dropout implements BaseLayer {
      * Feeds the inputs through the layer. Each input will be scaled by <code>1/(1-p)</code>
      * and have a probability, <code>p</code>, of being zeroed or "dropped."
      *
-     * @param inputs Input values for the layer
+     * @param forwardIn Input values for the layer
      * @return The result of the layer applied to the values.
      */
     @Override
@@ -75,7 +73,7 @@ public class Dropout implements BaseLayer {
                     "Expecting input shape of " + inDim + "x" + 1);
         }
 
-        initMask(); // Initialize the mask
+        initMask(forwardIn.numCols()); // Initialize the mask
         this.forwardOut = forwardIn.elemMult(mask).scalMult(scale); // Apply dropout mask.
 
         return forwardOut;
@@ -124,16 +122,20 @@ public class Dropout implements BaseLayer {
     }
 
 
-    // Initialize mask.
-    private void initMask() {
+    // Initialize dropout mask.
+    private void initMask(int size) {
         boolean drop;
 
-        for(int i=0; i<mask.numRows(); i++) {
+        this.mask = new Vector(this.inDim);
+
+        for(int i=0; i<this.mask.numRows(); i++) {
             drop = Stats.genRandBoolean(this.p);
             if(!drop) {
-                mask.set(1, i, 0);
+                this.mask.set(1, i, 0);
             }
         }
+
+        this.mask = this.mask.extend(size);
     }
 
 
@@ -146,6 +148,7 @@ public class Dropout implements BaseLayer {
     public String inspect() {
         return "Type: " + this.LAYER_TYPE + ",\tInput size: " + this.inDim + ",\tOutput size: " + this.inDim + ", \tTrainable Parameters: " + 0;
     }
+
 
     /**
      * Constructs a string containing this all details of the model pertinent for saving the model to a file.

@@ -4,7 +4,7 @@ import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.NeuralNetwork;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Activations;
-import com.jml.neural_network.layers.BaseLayer;
+import com.jml.neural_network.layers.Layer;
 import com.jml.neural_network.layers.Dense;
 import com.jml.neural_network.layers.Linear;
 import linalg.Matrix;
@@ -79,8 +79,8 @@ class NeuralNetFromData extends NeuralNetwork {
     }
 
 
-    private static BaseLayer createLayer(List<String> layerTags, List<String> layerContents) {
-        BaseLayer layer = null;
+    private static Layer createLayer(List<String> layerTags, List<String> layerContents) {
+        Layer layer = null;
         String type, tag, content;
         ActivationFunction activation = null;
         Matrix weights = null, bias = null;
@@ -102,16 +102,16 @@ class NeuralNetFromData extends NeuralNetwork {
                 // Extract the activation function.
                 if(content.equalsIgnoreCase("linear")) {
                     // Then we have a linear activation
-                    activation = Activations.linear;
+                    activation = Activations.linear();
                 } else if(content.equalsIgnoreCase("sigmoid")) {
                     // Then we have a sigmoid activation
-                    activation = Activations.sigmoid;
+                    activation = Activations.sigmoid();
                 } else if(content.equalsIgnoreCase("relu")) {
                     // Then we have a ReLU activation.
-                    activation = Activations.relu;
+                    activation = Activations.relu();
                 } else if(content.equalsIgnoreCase("tanh")) {
                     // Then we have a ReLU activation.
-                    activation = Activations.tanh;
+                    activation = Activations.tanh();
                 } else {
                     throw new IllegalStateException("Unknown activation function: " + content);
                 }

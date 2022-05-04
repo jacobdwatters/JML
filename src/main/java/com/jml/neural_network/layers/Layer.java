@@ -6,7 +6,7 @@ import linalg.Matrix;
 /**
  * Base layer interface. Specifies basic functionality that all layers should have.
  */
-public interface BaseLayer {
+public interface Layer {
 
 
     /**

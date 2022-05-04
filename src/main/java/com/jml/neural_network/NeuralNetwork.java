@@ -3,8 +3,9 @@ package com.jml.neural_network;
 import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
-import com.jml.losses.LossFunctions;
-import com.jml.neural_network.layers.BaseLayer;
+import com.jml.losses.LossFunction;
+import com.jml.losses.MeanSquaredError;
+import com.jml.neural_network.layers.Layer;
 import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.TrainableLayer;
 import com.jml.optimizers.Adam;
@@ -17,13 +18,12 @@ import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
 /**
  * A class that supports the creation and training of neural networks. A neural network is a supervised learning model that is structured in layers.<br>
- * Neural networks are created sequentially one layer at a time by using the {@link #add(BaseLayer)} method. Activation functions can be specified for applicable layers.<br>
+ * Neural networks are created sequentially one layer at a time by using the {@link #add(Layer)} method. Activation functions can be specified for applicable layers.<br>
  *
  * <pre>
  * Built-in Layers:
@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class NeuralNetwork extends Model<double[][], double[][]> {
     protected final String MODEL_TYPE = ModelTypes.NEURAL_NETWORK.toString();
-    protected final List<BaseLayer> layers;
+    protected final List<Layer> layers;
     protected double learningRate;
     protected double threshold;
     protected int epochs;
@@ -53,9 +53,10 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
 
     protected boolean isFit = false;
     final List<Double> lossHist = new ArrayList<>();
+    protected LossFunction loss;
 
     // TODO: Should these be moved to the layer? Probably yes!
-    //  Maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
+    //  Or, maybe each layer should get its own optimizer so that this can actually be stored in the optimizer.
     private Matrix[] V; // Momentum update matrices. Only used for the Momentum and Adam optimizers.
     private Matrix[] M; // Adam moment update matrices.
 
@@ -64,7 +65,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     // TODO: Add 'recompile(...)' method that takes hyper-parameters so that loaded models can be retrained with specified
     //  optimizer, learning rate.
 
-    // TODO: Should epochs and batch size should be specified in the 'fit(...)' method?
+    // TODO: epochs, batch size, and loss function should be specified in the 'fit(...)' method?
 
     private StringBuilder details = new StringBuilder(
             "Model Details\n" +
@@ -283,6 +284,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *                                  - If the features and targets are not correctly sized per the specification when the model was
      *                                  compiled.
      */
+    // TODO: Epochs and batchSize should be passed to fit method rather than given in the constructor.
     @Override
     public NeuralNetwork fit(double[][] features, double[][] targets) {
         if(this.layers.size()==0) {
@@ -295,39 +297,49 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             initAdam(); // Then initialize Adam matrices.
         }
 
+        // TODO: Allow loss function to be passed as parameter.
+        loss = new MeanSquaredError();
         isFit = false; // Reset the isFit flag so training behaves correctly.
 
-        double[][][] shuffle;
         double[][] featuresCopy = features.clone();
         double[][] targetsCopy = targets.clone();
 
-        Matrix feature;
-        Matrix target = new Matrix(targets);
+        boolean shuffle = batchSize<features.length;
+
+        int limit = 0;
+
+        Matrix feature = null;
+        Matrix target = new Matrix(targetsCopy);
         Matrix input;
         Matrix output;
         Matrix predictions;
 
+        if(!shuffle) {
+            feature = new Matrix(featuresCopy);
+        }
+
         predictions = new Matrix(this.predict(features));
-        lossHist.add(LossFunctions.mse.compute(predictions, target).get(0, 0).re); // Beginning loss.
+        lossHist.add(loss.forward(predictions, target).get(0, 0).re); // Beginning loss.
 
         for(int i=0; i<epochs; i++) {
-            // TODO: Shuffle indices and draw from those rather than shuffle the entire dataset.
-            shuffle = ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
-            feature = new Matrix(shuffle[0]);
-            target = new Matrix(shuffle[1]);
+
+            if(shuffle) { // Then shuffle the samples for this epoch.
+                ArrayUtils.shuffle(featuresCopy, targetsCopy); // Shuffle samples for this epoch.
+                feature = new Matrix(featuresCopy);
+                target = new Matrix(targetsCopy);
+            }
 
             for(int j=0; j<feature.numRows(); j+=batchSize) { // Iterate over all samples
-                for(int k=0; k<batchSize && (j+k)<feature.numRows(); k++) { // Iterate over the batch.
-                    input = feature.getRowAsVector(j+k).T();
-                    output = feedForward(input); // Apply the forward pass on the network.
-                    back(target.getRowAsVector(j+k).T(), output, input); // Apply the backward pass of the network.
-                }
+                limit = Math.min(j+batchSize, feature.numRows());
+                input = feature.getSlice(j, limit, 0, feature.numCols()).T();
+                output = feedForward(input);
+                back(target.getSlice(j, limit, 0, target.numCols()).T(), output, input);
 
                 applyUpdates(); // Apply updates computed during the backward pass to the weights.
             }
 
             predictions = new Matrix(this.predict(features));
-            lossHist.add(LossFunctions.mse.compute(predictions, new Matrix(targets)).get(0, 0).re);
+            lossHist.add(loss.forward(predictions, new Matrix(targets)).get(0, 0).re);
 
             if(lossHist.get(lossHist.size()-1) < threshold) {
                 break; // Then stop training since the loss has dropped below the stopping threshold.
@@ -351,7 +363,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      */
     protected Matrix feedForward(Matrix input) {
         Matrix currentInput = new Matrix(input);
-        for(BaseLayer layer : layers) { // Feeds the input through all layers.
+        for(Layer layer : layers) { // Feeds the input through all layers.
 
             if(isFit) { // Then ensure that dropout is not applied
                 if(!(layer instanceof Dropout)) {
@@ -380,7 +392,8 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         /* TODO: Initial upstreamGrad is currently the derivative of MSE but should be the derivative of any loss function.
                 Should allow the use of a specified loss function and replace this initial upstreamGrad with the derivative
                  of the loss function.*/
-        Matrix upstreamGrad = output.sub(target).T(); // initial upstream gradient.
+//        Matrix upstreamGrad = output.sub(target); // initial upstream gradient.
+        Matrix upstreamGrad = loss.back(target, output); // initial upstream gradient.
 
         for(int i=layers.size()-1; i>=1; i--) {
 
@@ -408,17 +421,21 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         if(optim instanceof GradientDescent) {
             Matrix newW, newB;
 
-            for(BaseLayer layer : layers) { // Update the weights for each layer.
+            for(Layer layer : layers) { // Update the weights for each layer.
                 // Apply the optimizer update rule to the weights and bias terms.
                 if(layer instanceof TrainableLayer) {
-                    params = layer.getParams();
-                    updates = layer.getUpdates();
+                    TrainableLayer trainableLayer = (TrainableLayer) layer;
 
-                    newW = optim.step(params[0], updates[0].scalDiv(batchSize))[0];
-                    newB = optim.step(params[1], updates[1].scalDiv(batchSize))[0];
+                    if(!trainableLayer.isFrozen()) { // Is the TrainableLayer currently set to be trainable? If so make updates.
+                        params = layer.getParams();
+                        updates = layer.getUpdates();
 
-                    layer.setParams(newW, newB);
-                    layer.resetGradients();
+                        newW = optim.step(params[0], updates[0].scalDiv(batchSize))[0];
+                        newB = optim.step(params[1], updates[1].scalDiv(batchSize))[0];
+
+                        layer.setParams(newW, newB);
+                        layer.resetGradients();
+                    }
                 }
             }
 
@@ -428,24 +445,28 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             Matrix[] wv; // Holds new weight and momentum matrices.
             Matrix[] bv; // Holds new bias and momentum matrices.
 
-            for(BaseLayer layer : layers) { // Update the weights for each layer.
+            for(Layer layer : layers) { // Update the weights for each layer.
                 // Apply the optimizer update rule to the weights and bias terms.
 
                 if(layer instanceof TrainableLayer) {
-                    params = layer.getParams();
-                    updates = layer.getUpdates();
+                    TrainableLayer trainableLayer = (TrainableLayer) layer;
 
-                    wv = optim.step(params[0], updates[0].scalDiv(batchSize), V[vi]);
-                    bv = optim.step(params[1], updates[1].scalDiv(batchSize), V[vi+1]);
+                    if(!trainableLayer.isFrozen()) { // Is the TrainableLayer currently set to be trainable? If so make updates.
+                        params = layer.getParams();
+                        updates = layer.getUpdates();
 
-                    // Apply updates to weight, bias, and momentum matrices.
-                    layer.setParams(wv[0], bv[0]);
-                    layer.resetGradients();
+                        wv = optim.step(params[0], updates[0].scalDiv(batchSize), V[vi]);
+                        bv = optim.step(params[1], updates[1].scalDiv(batchSize), V[vi+1]);
 
-                    V[vi] = wv[1];
-                    V[vi+1] = bv[1];
+                        // Apply updates to weight, bias, and momentum matrices.
+                        layer.setParams(wv[0], bv[0]);
+                        layer.resetGradients();
 
-                    vi+=2;
+                        V[vi] = wv[1];
+                        V[vi+1] = bv[1];
+
+                        vi+=2;
+                    }
                 }
             }
 
@@ -455,29 +476,33 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             Matrix[] wvm; // Holds new weight and momentum matrices.
             Matrix[] bvm; // Holds new bias and momentum matrices.
 
-            for(BaseLayer layer : layers) { // Update the weights for each layer.
+            for(Layer layer : layers) { // Update the weights for each layer.
                 // Apply the optimizer update rule to the weights and bias terms.
 
                 if(layer instanceof TrainableLayer) {
-                    params = layer.getParams();
-                    updates = layer.getUpdates();
+                    TrainableLayer trainableLayer = (TrainableLayer) layer;
 
-                    wvm = optim.step(vi==0, params[0], updates[0].scalDiv(batchSize),
-                            V[vi], M[vi]);
-                    bvm = optim.step(false, params[1], updates[1].scalDiv(batchSize),
-                            V[vi+1], M[vi+1]);
+                    if(!trainableLayer.isFrozen()) {
+                        params = layer.getParams();
+                        updates = layer.getUpdates();
 
-                    // Apply updates to weight, bias, and momentum matrices.
-                    layer.setParams(wvm[0], bvm[0]);
-                    layer.resetGradients();
+                        wvm = optim.step(vi==0, params[0], updates[0].scalDiv(batchSize),
+                                V[vi], M[vi]);
+                        bvm = optim.step(false, params[1], updates[1].scalDiv(batchSize),
+                                V[vi+1], M[vi+1]);
 
-                    V[vi] = wvm[1];
-                    V[vi+1] = bvm[1];
+                        // Apply updates to weight, bias, and momentum matrices.
+                        layer.setParams(wvm[0], bvm[0]);
+                        layer.resetGradients();
 
-                    M[vi] = wvm[2];
-                    M[vi+1] = bvm[2];
+                        V[vi] = wvm[1];
+                        V[vi+1] = bvm[1];
 
-                    vi+=2;
+                        M[vi] = wvm[2];
+                        M[vi+1] = bvm[2];
+
+                        vi+=2;
+                    }
                 }
             }
 
@@ -590,7 +615,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
      *
      * @param layer Layer to add to the neural network.
      */
-    public void add(BaseLayer layer) {
+    public void add(Layer layer) {
         if(layers.size() == 0) { // Then this is the first layer and the input dimension must be defined
             if(layer.getInDim() == -1) {
                 throw new IllegalArgumentException("First layer must have input dimension defined.");
@@ -618,6 +643,30 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
     }
 
 
+    /**
+     * Gets specified layer from this model.
+     *
+     * @param layerIndex Index of the layer to get within this model.
+     * @return The specified layer of this model.
+     */
+    public Layer getLayer(int layerIndex) {
+        return this.layers.get(layerIndex);
+    }
+
+
+    /**
+     * Gets all layers from this model.
+     * @return An ArrayList containing, in order, all layers of this model.
+     */
+    public List<Layer> getAllLayers() {
+        return this.layers;
+    }
+
+
+    /**
+     * Gets the loss history of this model.
+     * @return
+     */
     public List<Double> getLossHist() {
         return lossHist;
     }
@@ -673,7 +722,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
         int count = 2;
         StringBuilder layerDetails = new StringBuilder();
 
-        for(BaseLayer layer : layers) {
+        for(Layer layer : layers) {
             if(!(layer instanceof Dropout)) { // TODO: save dropout as well.
                 blockList[count] = new Block(ModelTags.LAYER.toString(), layer.getDetails());
                 count++;
@@ -703,7 +752,7 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             details.append("Layers (").append(layers.size()).append("):\n").append("------------\n");
 
             int layerCount = 1;
-            for(BaseLayer layer : this.layers) {
+            for(Layer layer : this.layers) {
                 details.append("\t").append(layerCount).append("\t").append(layer.inspect()).append("\n");
                 layerCount++;
             }
