@@ -3,11 +3,8 @@ package com.jml.neural_network;
 import com.jml.core.Block;
 import com.jml.core.Model;
 import com.jml.core.ModelTypes;
-import com.jml.losses.BinaryCrossEntropy;
 import com.jml.losses.LossFunction;
-import com.jml.losses.LossFunctions;
 import com.jml.losses.MeanSquaredError;
-import com.jml.neural_network.activations.Activations;
 import com.jml.neural_network.layers.BaseLayer;
 import com.jml.neural_network.layers.Dropout;
 import com.jml.neural_network.layers.TrainableLayer;
@@ -21,7 +18,6 @@ import linalg.Matrix;
 import linalg.Vector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -427,14 +423,18 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
             for(BaseLayer layer : layers) { // Update the weights for each layer.
                 // Apply the optimizer update rule to the weights and bias terms.
                 if(layer instanceof TrainableLayer) {
-                    params = layer.getParams();
-                    updates = layer.getUpdates();
+                    TrainableLayer trainableLayer = (TrainableLayer) layer;
 
-                    newW = optim.step(params[0], updates[0].scalDiv(batchSize))[0];
-                    newB = optim.step(params[1], updates[1].scalDiv(batchSize))[0];
+                    if(!trainableLayer.isFrozen()) { // Is the TrainableLayer currently set to be trainable? If so make updates.
+                        params = layer.getParams();
+                        updates = layer.getUpdates();
 
-                    layer.setParams(newW, newB);
-                    layer.resetGradients();
+                        newW = optim.step(params[0], updates[0].scalDiv(batchSize))[0];
+                        newB = optim.step(params[1], updates[1].scalDiv(batchSize))[0];
+
+                        layer.setParams(newW, newB);
+                        layer.resetGradients();
+                    }
                 }
             }
 
@@ -448,20 +448,24 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 // Apply the optimizer update rule to the weights and bias terms.
 
                 if(layer instanceof TrainableLayer) {
-                    params = layer.getParams();
-                    updates = layer.getUpdates();
+                    TrainableLayer trainableLayer = (TrainableLayer) layer;
 
-                    wv = optim.step(params[0], updates[0].scalDiv(batchSize), V[vi]);
-                    bv = optim.step(params[1], updates[1].scalDiv(batchSize), V[vi+1]);
+                    if(!trainableLayer.isFrozen()) { // Is the TrainableLayer currently set to be trainable? If so make updates.
+                        params = layer.getParams();
+                        updates = layer.getUpdates();
 
-                    // Apply updates to weight, bias, and momentum matrices.
-                    layer.setParams(wv[0], bv[0]);
-                    layer.resetGradients();
+                        wv = optim.step(params[0], updates[0].scalDiv(batchSize), V[vi]);
+                        bv = optim.step(params[1], updates[1].scalDiv(batchSize), V[vi+1]);
 
-                    V[vi] = wv[1];
-                    V[vi+1] = bv[1];
+                        // Apply updates to weight, bias, and momentum matrices.
+                        layer.setParams(wv[0], bv[0]);
+                        layer.resetGradients();
 
-                    vi+=2;
+                        V[vi] = wv[1];
+                        V[vi+1] = bv[1];
+
+                        vi+=2;
+                    }
                 }
             }
 
@@ -475,25 +479,29 @@ public class NeuralNetwork extends Model<double[][], double[][]> {
                 // Apply the optimizer update rule to the weights and bias terms.
 
                 if(layer instanceof TrainableLayer) {
-                    params = layer.getParams();
-                    updates = layer.getUpdates();
+                    TrainableLayer trainableLayer = (TrainableLayer) layer;
 
-                    wvm = optim.step(vi==0, params[0], updates[0].scalDiv(batchSize),
-                            V[vi], M[vi]);
-                    bvm = optim.step(false, params[1], updates[1].scalDiv(batchSize),
-                            V[vi+1], M[vi+1]);
+                    if(!trainableLayer.isFrozen()) {
+                        params = layer.getParams();
+                        updates = layer.getUpdates();
 
-                    // Apply updates to weight, bias, and momentum matrices.
-                    layer.setParams(wvm[0], bvm[0]);
-                    layer.resetGradients();
+                        wvm = optim.step(vi==0, params[0], updates[0].scalDiv(batchSize),
+                                V[vi], M[vi]);
+                        bvm = optim.step(false, params[1], updates[1].scalDiv(batchSize),
+                                V[vi+1], M[vi+1]);
 
-                    V[vi] = wvm[1];
-                    V[vi+1] = bvm[1];
+                        // Apply updates to weight, bias, and momentum matrices.
+                        layer.setParams(wvm[0], bvm[0]);
+                        layer.resetGradients();
 
-                    M[vi] = wvm[2];
-                    M[vi+1] = bvm[2];
+                        V[vi] = wvm[1];
+                        V[vi+1] = bvm[1];
 
-                    vi+=2;
+                        M[vi] = wvm[2];
+                        M[vi+1] = bvm[2];
+
+                        vi+=2;
+                    }
                 }
             }
 

@@ -24,11 +24,7 @@ public class Relu implements ActivationFunction {
         for(int i=0; i<data.numRows(); i++) {
             for(int j=0; j<data.numCols(); j++) {
                 value = data.getAsDouble(i, j);
-                if(value > 0) {
-                    result[i][j] = value;
-                } else {
-                    result[i][j] = 0;
-                }
+                result[i][j] = value>0 ? value : 0;
             }
         }
 

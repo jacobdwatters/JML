@@ -4,9 +4,7 @@ import com.jml.core.Block;
 import com.jml.neural_network.ModelTags;
 import com.jml.neural_network.activations.ActivationFunction;
 import com.jml.neural_network.activations.Softmax;
-import com.jml.neural_network.layers.initilizers.GlorotNormal;
 import com.jml.neural_network.layers.initilizers.Initializer;
-import com.jml.neural_network.layers.initilizers.Zeros;
 import com.jml.util.ArrayUtils;
 import linalg.Matrix;
 
@@ -18,7 +16,7 @@ import linalg.Matrix;
 public class Dense extends Linear {
     public final String LAYER_TYPE = "Dense";
 
-    protected ActivationFunction activation;
+    protected ActivationFunction activation; // Activation function for this layer.
 
     /**
      * Creates a Linear layer with specified input and output dimensions.
@@ -134,8 +132,12 @@ public class Dense extends Linear {
             // TODO:
         } else {
             Matrix commonGrad = upstreamGrad.elemMult(activation.back(this.forwardOut));
-            this.wGrad = commonGrad.mult(this.forwardIn.T());
-            this.bGrad = upstreamGrad.sumCols();
+
+            if(!frozen) { // If the layer is currently not frozen, then compute gradients.
+                this.wGrad = commonGrad.mult(this.forwardIn.T());
+                this.bGrad = upstreamGrad.sumCols();
+            }
+
             this.backwardOut = weights.T().mult(commonGrad);
         }
 

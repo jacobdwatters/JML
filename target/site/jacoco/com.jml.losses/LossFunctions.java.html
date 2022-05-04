@@ -89,7 +89,7 @@ public abstract class LossFunctions {
         // y contains the actual labels as a one-hot vector.
 <span class="fc bfc" id="L90" title="All 2 branches covered.">        for(int i=0; i&lt;yPred.numRows(); i++) {</span>
 <span class="fc bfc" id="L91" title="All 2 branches covered.">            for(int j=0; j&lt;yPred.numCols(); j++) {</span>
-                // cross-entropy is undefined for p=0 or p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
+                // cross-entropy is undefined for p=0 and p=1, so probabilities are clipped to max(eps, min(1 - eps, p)).
 <span class="fc bfc" id="L93" title="All 2 branches covered.">                if(yPred.getAsDouble(i, j)==0) {</span>
 <span class="fc" id="L94">                    yPred.set(eps, i,  j);</span>
 <span class="fc bfc" id="L95" title="All 2 branches covered.">                } else if(yPred.getAsDouble(i, j)==1) {</span>

@@ -1,3 +1,4 @@
+com\jml\losses\CrossEntropy.class
 com\jml\losses\MeanSquaredError.class
 com\jml\preprocessing\ClassEncoder.class
 com\jml\preprocessing\OneHotBase.class

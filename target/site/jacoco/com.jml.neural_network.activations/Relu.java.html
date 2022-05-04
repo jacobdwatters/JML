@@ -24,15 +24,11 @@ import linalg.Matrix;
 <span class="fc bfc" id="L24" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
 <span class="fc bfc" id="L25" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
 <span class="fc" id="L26">                value = data.getAsDouble(i, j);</span>
-<span class="fc bfc" id="L27" title="All 2 branches covered.">                if(value &gt; 0) {</span>
-<span class="fc" id="L28">                    result[i][j] = value;</span>
-                } else {
-<span class="fc" id="L30">                    result[i][j] = 0;</span>
-                }
+<span class="fc bfc" id="L27" title="All 2 branches covered.">                result[i][j] = value&gt;0 ? value : 0;</span>
             }
         }
 
-<span class="fc" id="L35">        return new Matrix(result);</span>
+<span class="fc" id="L31">        return new Matrix(result);</span>
     }
 
 
@@ -44,20 +40,20 @@ import linalg.Matrix;
      */
     @Override
     public Matrix back(Matrix data) {
-<span class="fc" id="L47">        double[][] result = new double[data.numRows()][data.numCols()];</span>
+<span class="fc" id="L43">        double[][] result = new double[data.numRows()][data.numCols()];</span>
         double value;
 
-<span class="fc bfc" id="L50" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
-<span class="fc bfc" id="L51" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
-<span class="fc bfc" id="L52" title="All 2 branches covered.">                if(data.getAsDouble(i, j) &gt; 0) {</span>
-<span class="fc" id="L53">                    result[i][j] = 1;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for(int i=0; i&lt;data.numRows(); i++) {</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">            for(int j=0; j&lt;data.numCols(); j++) {</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">                if(data.getAsDouble(i, j) &gt; 0) {</span>
+<span class="fc" id="L49">                    result[i][j] = 1;</span>
                 } else {
-<span class="fc" id="L55">                    result[i][j] = 0;</span>
+<span class="fc" id="L51">                    result[i][j] = 0;</span>
                 }
             }
         }
 
-<span class="fc" id="L60">        return new Matrix(result);</span>
+<span class="fc" id="L56">        return new Matrix(result);</span>
     }
 
 
@@ -66,6 +62,6 @@ import linalg.Matrix;
      * @return The name of the activation function as a String.
      */
     @Override
-<span class="fc" id="L69">    public String getName(){return NAME;}</span>
+<span class="fc" id="L65">    public String getName(){return NAME;}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -18,13 +18,16 @@ import linalg.Matrix;
 public class Linear implements TrainableLayer {
     public final String LAYER_TYPE = "Linear";
 
-    protected int inDim, outDim;
+    protected int inDim; // This layers' input dimension.
+    protected int outDim; // This layers' output dimension.
 
-    protected Matrix weights;
-    protected Matrix bias;
+    boolean frozen = false; // Flag indicating if this TrainableLayer is currently frozen.
 
-    protected Initializer weightInitializer;
-    protected Initializer biasInitializer;
+    protected Matrix weights; // Weight terms for this layer.
+    protected Matrix bias; // Bias terms for this layer.
+
+    protected Initializer weightInitializer; // Initializer to use for this layers weight terms.
+    protected Initializer biasInitializer; // Initializer to use for this layers bias terms.
 
     protected Matrix forwardIn; // Inputs to this layer. i.e. values of previous layers nodes.
     protected Matrix forwardOut; // Output of this layer. i.e. values of this layers' nodes.
@@ -160,8 +163,11 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public Matrix back(Matrix upstreamGrad) {
-        this.wGrad = upstreamGrad.mult(this.forwardIn.T());
-        this.bGrad = upstreamGrad.sumCols();
+
+        if(!frozen) { // If the layer is currently not frozen, then compute gradients.
+            this.wGrad = upstreamGrad.mult(this.forwardIn.T());
+            this.bGrad = upstreamGrad.sumCols();
+        }
 
         this.backwardOut = weights.T().mult(upstreamGrad); // Gradient of model with respect to inputs of this layer.
 
@@ -240,21 +246,51 @@ public class Linear implements TrainableLayer {
      */
     @Override
     public void setParams(Matrix... params) {
-        if(params.length!=2) {
-            throw new IllegalArgumentException("Expecting 2 parameter matrices for Linear layer of form {Weights, bias} but " +
-                    "got " + params.length + ".");
-        }
-        if(!params[0].sameShape(weights)) {
-            throw new IllegalArgumentException("First parameter matrix does not have same shape as weight matrix. Expecting "
-            + weights.shape() + " but got " + params[0].shape() + ".");
-        }
-        if(!params[1].sameShape(bias)) {
-            throw new IllegalArgumentException("Second parameter matrix does not have same shape as bias matrix. Expecting "
-                    + bias.shape() + " but got " + params[1].shape() + ".");
-        }
+        if(!frozen) {
+            if(params.length!=2) {
+                throw new IllegalArgumentException("Expecting 2 parameter matrices for Linear layer of form {Weights, bias} but " +
+                        "got " + params.length + ".");
+            }
+            if(!params[0].sameShape(weights)) {
+                throw new IllegalArgumentException("First parameter matrix does not have same shape as weight matrix. Expecting "
+                        + weights.shape() + " but got " + params[0].shape() + ".");
+            }
+            if(!params[1].sameShape(bias)) {
+                throw new IllegalArgumentException("Second parameter matrix does not have same shape as bias matrix. Expecting "
+                        + bias.shape() + " but got " + params[1].shape() + ".");
+            }
 
-        this.weights = params[0];
-        this.bias = params[1];
+            this.weights = params[0];
+            this.bias = params[1];
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * @return
+     */
+    @Override
+    public boolean isFrozen() {
+        return this.frozen;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void freeze() {
+        this.frozen = true;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unfreeze() {
+        this.frozen = false;
     }
 
 

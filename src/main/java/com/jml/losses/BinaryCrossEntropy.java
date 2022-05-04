@@ -4,7 +4,7 @@ import linalg.Matrix;
 
 
 /**
- * Class for computing binary cross-entropy and its derivative.
+ * Class for computing binary cross-entropy loss and its derivative.
  */
 public class BinaryCrossEntropy implements LossFunction {
     // Small value to ensure no division by zero occurs as a result of floating point precision.
